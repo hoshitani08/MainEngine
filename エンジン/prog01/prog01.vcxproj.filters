@@ -74,6 +74,9 @@
     <Filter Include="エンジンシステム\3d\Light">
       <UniqueIdentifier>{1325bed7-614d-4884-af75-f595a1df194a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="エンジンシステム\math">
+      <UniqueIdentifier>{505da05c-c3c1-4614-951e-515525b86798}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -224,6 +227,9 @@
     <ClCompile Include="Scene\ClearScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Math\Vector.cpp">
+      <Filter>エンジンシステム\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -363,6 +369,9 @@
     </ClInclude>
     <ClInclude Include="3d\SpotLight.h">
       <Filter>エンジンシステム\3d\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector.h">
+      <Filter>エンジンシステム\math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

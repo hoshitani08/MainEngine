@@ -294,3 +294,74 @@ bool Collision::CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB,
 
 	return false;
 }
+
+bool Collision::CheckSphere2Capsule(const Sphere& sphere, const Capsule& capsule)
+{
+	Vector3 vStartToEnd = capsule.endPosition - capsule.startPosition;
+
+	Vector3 n = vStartToEnd;
+	n.normalize();
+
+	Vector3 sPos = { sphere.center.m128_f32[0], sphere.center.m128_f32[1], sphere.center.m128_f32[2] };
+
+	float t = n.dot(Vector3(sPos - capsule.startPosition));
+
+	Vector3 vPsPn = n * t;
+	Vector3 posPn = capsule.startPosition + vPsPn;
+
+	float lengthRate = t / vStartToEnd.length();
+
+	float distance;
+	if (lengthRate < 0.0f)
+	{
+		distance = (sPos + capsule.startPosition).length() - capsule.radius;
+	}
+	else if (lengthRate <= 1.0f)
+	{
+		distance = (posPn - sPos).length() - capsule.radius;
+	}
+	else
+	{
+		distance = (sPos + capsule.endPosition).length() - capsule.radius;
+	}
+
+	return distance < sphere.radius;
+}
+
+bool Collision::CheckSphere2Box(const Sphere& sphere, const Box& box)
+{
+	float sqDistance = 0.0f;
+	float pos;
+
+	pos = sphere.center.m128_f32[0];
+	if (pos < box.minPosition.x)
+	{
+		sqDistance += (pos - box.minPosition.x) * (pos - box.minPosition.x);
+	}
+	else if (pos > box.maxPosition.x)
+	{
+		sqDistance += (pos - box.maxPosition.x) * (pos - box.maxPosition.x);
+	}
+
+	pos = sphere.center.m128_f32[1];
+	if (pos < box.minPosition.y)
+	{
+		sqDistance += (pos - box.minPosition.y) * (pos - box.minPosition.y);
+	}
+	else if (pos > box.maxPosition.y)
+	{
+		sqDistance += (pos - box.maxPosition.y) * (pos - box.maxPosition.y);
+	}
+
+	pos = sphere.center.m128_f32[2];
+	if (pos < box.minPosition.z)
+	{
+		sqDistance += (pos - box.minPosition.z) * (pos - box.minPosition.z);
+	}
+	else if (pos > box.maxPosition.z)
+	{
+		sqDistance += (pos - box.maxPosition.z) * (pos - box.maxPosition.z);
+	}
+
+	return sqDistance < sphere.radius * sphere.radius;
+}

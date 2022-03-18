@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\</IncludePath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\</IncludePath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -280,6 +280,7 @@
     <ClCompile Include="GameObject\Player.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
@@ -327,6 +328,7 @@
     <ClInclude Include="GameObject\MapChip.h" />
     <ClInclude Include="GameObject\Player.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
