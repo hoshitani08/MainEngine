@@ -53,11 +53,12 @@ void GameScene::Initialize()
 
 	//ライト生成
 	light = LightGroup::Create();
-	//3Dオブジェクトにライトをセット
+	//オブジェクトにライトをセット
 	Object3d::SetLight(light.get());
+	FbxObject3d::SetLight(light.get());
 	light->SetDirLightActive(0, true);
-	light->SetDirLightActive(1, true);
-	light->SetDirLightActive(2, true);
+	light->SetDirLightActive(1, false);
+	light->SetDirLightActive(2, false);
 	light->SetPointLightActive(0, false);
 	light->SetPointLightActive(1, false);
 	light->SetPointLightActive(2, false);
@@ -92,6 +93,31 @@ void GameScene::Update()
 	light->Update();
 	camera->Update();
 	particleMan->Update();
+
+	// オブジェクト移動
+	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+	{
+		static XMVECTOR p = { 1,-1,1,0 };
+		// 移動後の座標を計算
+		if (input->PushKey(DIK_W))
+		{
+			p.m128_f32[1] += 0.1f;
+		}
+		else if (input->PushKey(DIK_S))
+		{
+			p.m128_f32[1] -= 0.1f;
+		}
+
+		if (input->PushKey(DIK_D))
+		{
+			p.m128_f32[0] += 0.1f;
+		}
+		else if (input->PushKey(DIK_A))
+		{
+			p.m128_f32[0] -= 0.1f;
+		}
+		light->SetDirLightDir(0, p);
+	}
 
 	XMFLOAT3 rot = fbxObject3d->GetRotation();
 	rot.y += 1.0f;

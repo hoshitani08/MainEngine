@@ -290,6 +290,7 @@
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
     <ClInclude Include="2d\Sprite.h" />
+    <ClInclude Include="3d\CircleShadow.h" />
     <ClInclude Include="3d\DirectionalLight.h" />
     <ClInclude Include="3d\FbxLoader.h" />
     <ClInclude Include="3d\FbxModel.h" />
@@ -301,6 +302,8 @@
     <ClInclude Include="3d\Object3d.h" />
     <ClInclude Include="3d\ParticleEmitter.h" />
     <ClInclude Include="3d\ParticleManager.h" />
+    <ClInclude Include="3d\PointLight.h" />
+    <ClInclude Include="3d\SpotLight.h" />
     <ClInclude Include="Audio\Audio.h" />
     <ClInclude Include="Base\BaseGame.h" />
     <ClInclude Include="Base\BaseScene.h" />
@@ -309,7 +312,6 @@
     <ClInclude Include="Base\SafeDelete.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />
-    <ClInclude Include="CircleShadow.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
     <ClInclude Include="Collision\Collision.h" />
     <ClInclude Include="Collision\CollisionAttribute.h" />
@@ -325,7 +327,6 @@
     <ClInclude Include="GameObject\MapChip.h" />
     <ClInclude Include="GameObject\Player.h" />
     <ClInclude Include="Input\Input.h" />
-    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
@@ -333,7 +334,6 @@
     <ClInclude Include="Scene\SceneFactory.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="SpotLight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
