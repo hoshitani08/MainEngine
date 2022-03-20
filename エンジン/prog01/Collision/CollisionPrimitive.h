@@ -53,6 +53,8 @@ struct Capsule //カプセル
 
 struct Box //箱
 {
-	Vector3 minPosition;
-	Vector3 maxPosition;
+	//中心座標
+	DirectX::XMVECTOR center = { 0,0,0,1 };
+	//半径
+	DirectX::XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
 };
