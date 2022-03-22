@@ -30,4 +30,6 @@ public:
 	static bool CheckSphere2Capsule(const Sphere& sphere, const Capsule& capsule);
 	//球とボックスの当たり判定
 	static bool CheckSphere2Box(const Sphere& sphere, const Box& box);
+	//カプセルとボックスの当たり判定
+	static bool CheckCapsule2Box(const Capsule& capsule, const Box& box);
 };
