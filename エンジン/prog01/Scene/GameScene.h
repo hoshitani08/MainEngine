@@ -17,6 +17,7 @@
 #include "FbxObject3d.h"
 #include "FbxModel.h"
 #include "FbxLoader.h"
+#include "MapChip.h"
 
 #include <vector>
 #include <memory>
