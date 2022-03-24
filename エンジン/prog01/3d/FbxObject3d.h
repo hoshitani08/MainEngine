@@ -24,7 +24,7 @@ protected: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:// 定数
-//ボーンの最大数
+	//ボーンの最大数
 	static const int MAX_BONES = 32;
 
 public: // サブクラス
