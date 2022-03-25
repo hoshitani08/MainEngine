@@ -230,6 +230,9 @@
     <ClCompile Include="Math\Vector.cpp">
       <Filter>エンジンシステム\math</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteFactory.cpp">
+      <Filter>エンジンシステム\2d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -372,6 +375,9 @@
     </ClInclude>
     <ClInclude Include="Math\Vector.h">
       <Filter>エンジンシステム\math</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFactory.h">
+      <Filter>エンジンシステム\2d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

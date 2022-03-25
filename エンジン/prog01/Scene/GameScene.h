@@ -1,13 +1,9 @@
 #pragma once
 
+#include "BaseScene.h"
 #include "SafeDelete.h"
-#include "DirectXCommon.h"
-#include <DirectXMath.h>
-#include "Input.h"
 #include "Sprite.h"
 #include "Object3d.h"
-#include "DebugText.h"
-#include "Audio.h"
 #include "Model.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
@@ -19,10 +15,9 @@
 #include "FbxLoader.h"
 #include "MapChip.h"
 
+#include <DirectXMath.h>
 #include <vector>
 #include <memory>
-
-#include "BaseScene.h"
 
 class CollisionManager;
 class Player;

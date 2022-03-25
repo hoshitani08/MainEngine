@@ -1,14 +1,19 @@
 #include "GameScene.h"
-#include "Collision.h"
 #include <cassert>
 #include <sstream>
 #include <iomanip>
+#include "Collision.h"
 #include "SphereCollider.h"
 #include "MeshCollider.h"
 #include "CollisionManager.h"
 #include "Player.h"
 #include "ContactableObject.h"
 #include "SceneManager.h"
+
+#include "DirectXCommon.h"
+#include "DebugText.h"
+#include "Audio.h"
+#include "Input.h"
 
 using namespace DirectX;
 
@@ -28,20 +33,6 @@ void GameScene::Initialize()
 	Object3d::SetCamera(camera.get());
 	// FBXオブジェクトにカメラをセット
 	FbxObject3d::SetCamera(camera.get());
-
-	// デバッグテキスト用テクスチャ読み込み
-	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png"))
-	{
-		assert(0);
-	}
-	// デバッグテキスト初期化
-	DebugText::GetInstance()->Initialize(debugTextTexNumber);
-
-	// テクスチャ読み込み
-	if (!Sprite::LoadTexture(1, L"Resources/APEX_01.png"))
-	{
-		assert(0);
-	}
 
 	// 背景スプライト生成
 	sprite = Sprite::Create(1, { 0.0f,0.0f });
@@ -74,9 +65,6 @@ void GameScene::Initialize()
 	fbxObject3d = FbxObject3d::Create(fbxModel.get(), true);
 	//アニメーション
 	fbxObject3d->PlayAnimation();
-
-	//サウンド再生
-	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 0, 0 });
