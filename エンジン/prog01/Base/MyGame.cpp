@@ -3,6 +3,7 @@
 #include "SceneFactory.h"
 #include "SpriteFactory.h"
 #include "FbxFactory.h"
+#include "ObjFactory.h"
 
 void MyGame::Initialize()
 {
@@ -15,6 +16,8 @@ void MyGame::Initialize()
 	SpriteFactory::GetInstance()->Initialize();
 	//ゲームで必要なモデル(.fbx)のロード
 	FbxFactory::GetInstance()->Initialize();
+	//ゲームで必要なモデル(.obj)のロード
+	ObjFactory::GetInstance()->Initialize();
 	//ゲームで必要なサウンドのロード
 	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
 
@@ -32,6 +35,7 @@ void MyGame::Finalize()
 	SceneManager::GetInstance()->Finalize();
 	//各Factoryの解放
 	FbxFactory::GetInstance()->Finalize();
+	ObjFactory::GetInstance()->Finalize();
 	//基底クラスの解放
 	BaseGame::Finalize();
 }

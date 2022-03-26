@@ -2,16 +2,16 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "FbxModel.h"
-#include "FbxLoader.h"
 
-class FbxFactory final
+#include "Model.h"
+
+class ObjFactory final
 {
 public: // サブクラス
 	struct ModelData
 	{
 		std::string fName;
-		std::unique_ptr<FbxModel> fbxModel;
+		std::unique_ptr<Model> model;
 	};
 
 public:
@@ -19,23 +19,23 @@ public:
 	static const std::string baseDirectory;
 
 private:
-	FbxFactory() = default;
-	~FbxFactory() = default;
+	ObjFactory() = default;
+	~ObjFactory() = default;
 
 public:
-	FbxFactory(const FbxFactory & fbxFactory) = delete;
-	FbxFactory& operator=(const FbxFactory & fbxFactory) = delete;
+	ObjFactory(const ObjFactory& objFactory) = delete;
+	ObjFactory& operator=(const ObjFactory& objFactory) = delete;
 
 	// 初期化
 	void Initialize();
 	// 終了
 	void Finalize();
 	// モデルのロード
-	void LoadModel(std::string fName);
+	void LoadModel(std::string fName, bool smoothing = false);
 	// モデルの取得
-	FbxModel* GetModel(std::string fName);
+	Model* GetModel(std::string fName);
 	// インスタンス生成
-	static FbxFactory* GetInstance();
+	static ObjFactory* GetInstance();
 
 private:
 	std::vector<ModelData> modelData;

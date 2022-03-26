@@ -259,6 +259,7 @@
     <ClCompile Include="3d\Mesh.cpp" />
     <ClCompile Include="3d\Model.cpp" />
     <ClCompile Include="3d\Object3d.cpp" />
+    <ClCompile Include="3d\ObjFactory.cpp" />
     <ClCompile Include="3d\ParticleEmitter.cpp" />
     <ClCompile Include="3d\ParticleManager.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="3d\Mesh.h" />
     <ClInclude Include="3d\Model.h" />
     <ClInclude Include="3d\Object3d.h" />
+    <ClInclude Include="3d\ObjFactory.h" />
     <ClInclude Include="3d\ParticleEmitter.h" />
     <ClInclude Include="3d\ParticleManager.h" />
     <ClInclude Include="3d\PointLight.h" />

@@ -236,6 +236,9 @@
     <ClCompile Include="3d\FbxFactory.cpp">
       <Filter>エンジンシステム\3d\FBX</Filter>
     </ClCompile>
+    <ClCompile Include="3d\ObjFactory.cpp">
+      <Filter>エンジンシステム\3d\OBJ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -384,6 +387,9 @@
     </ClInclude>
     <ClInclude Include="3d\FbxFactory.h">
       <Filter>エンジンシステム\3d\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="3d\ObjFactory.h">
+      <Filter>エンジンシステム\3d\OBJ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
