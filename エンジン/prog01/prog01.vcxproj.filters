@@ -230,7 +230,7 @@
     <ClCompile Include="Math\Vector.cpp">
       <Filter>エンジンシステム\math</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteFactory.cpp">
+    <ClCompile Include="2d\SpriteFactory.cpp">
       <Filter>エンジンシステム\2d</Filter>
     </ClCompile>
   </ItemGroup>
@@ -376,7 +376,7 @@
     <ClInclude Include="Math\Vector.h">
       <Filter>エンジンシステム\math</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteFactory.h">
+    <ClInclude Include="2d\SpriteFactory.h">
       <Filter>エンジンシステム\2d</Filter>
     </ClInclude>
   </ItemGroup>

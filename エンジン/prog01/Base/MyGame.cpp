@@ -1,10 +1,20 @@
 #include "MyGame.h"
+#include "MapChip.h"
 #include "SceneFactory.h"
+#include "SpriteFactory.h"
 
 void MyGame::Initialize()
 {
 	//基底クラスの初期化
 	BaseGame::Initialize();
+
+	//ゲームで必要なマップデータのロード
+	//MapChip::GetInstance()->CsvLoad();
+	//ゲームで必要な画像のロード
+	SpriteFactory::GetInstance()->Initialize();
+	//ゲームで必要なサウンドのロード
+	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
+	
 
 	// シーンの初期化
 	//シーンファクトリを生成し、マネージャーにセット

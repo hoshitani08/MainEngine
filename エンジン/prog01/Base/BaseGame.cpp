@@ -4,7 +4,6 @@
 #include "Object3d.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
-#include "SpriteFactory.h"
 
 void BaseGame::Run()
 {
@@ -59,11 +58,6 @@ void BaseGame::Initialize()
 	FbxObject3d::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
 	//FBXオブジェクト初期化
 	FbxLoader::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
-
-	//ゲームで必要な画像のロード
-	SpriteFactory::GetInstance()->Initialize();
-	//ゲームで必要なサウンドのロード
-	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
 }
 
 void BaseGame::Finalize()
