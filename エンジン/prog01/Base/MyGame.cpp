@@ -2,6 +2,7 @@
 #include "MapChip.h"
 #include "SceneFactory.h"
 #include "SpriteFactory.h"
+#include "FbxFactory.h"
 
 void MyGame::Initialize()
 {
@@ -12,9 +13,10 @@ void MyGame::Initialize()
 	//MapChip::GetInstance()->CsvLoad();
 	//ゲームで必要な画像のロード
 	SpriteFactory::GetInstance()->Initialize();
+	//ゲームで必要なモデル(.fbx)のロード
+	FbxFactory::GetInstance()->Initialize();
 	//ゲームで必要なサウンドのロード
 	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
-	
 
 	// シーンの初期化
 	//シーンファクトリを生成し、マネージャーにセット
@@ -28,6 +30,8 @@ void MyGame::Finalize()
 {
 	// シーンの終了
 	SceneManager::GetInstance()->Finalize();
+	//各Factoryの解放
+	FbxFactory::GetInstance()->Finalize();
 	//基底クラスの解放
 	BaseGame::Finalize();
 }

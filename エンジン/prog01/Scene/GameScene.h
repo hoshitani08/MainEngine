@@ -11,8 +11,6 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include "FbxObject3d.h"
-#include "FbxModel.h"
-#include "FbxLoader.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -58,7 +56,6 @@ private: // メンバ変数
 	std::unique_ptr<ParticleManager> particleMan;
 	//オブジェクト
 	std::unique_ptr<FbxObject3d> fbxObject3d;
-	std::unique_ptr<FbxModel> fbxModel;
 
 	//ライト
 	std::unique_ptr<LightGroup> light;

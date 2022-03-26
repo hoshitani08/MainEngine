@@ -233,6 +233,9 @@
     <ClCompile Include="2d\SpriteFactory.cpp">
       <Filter>エンジンシステム\2d</Filter>
     </ClCompile>
+    <ClCompile Include="3d\FbxFactory.cpp">
+      <Filter>エンジンシステム\3d\FBX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -378,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="2d\SpriteFactory.h">
       <Filter>エンジンシステム\2d</Filter>
+    </ClInclude>
+    <ClInclude Include="3d\FbxFactory.h">
+      <Filter>エンジンシステム\3d\FBX</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

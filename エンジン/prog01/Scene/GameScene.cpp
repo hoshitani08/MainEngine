@@ -8,7 +8,9 @@
 #include "CollisionManager.h"
 #include "Player.h"
 #include "ContactableObject.h"
+
 #include "SceneManager.h"
+#include "FbxFactory.h"
 
 #include "DirectXCommon.h"
 #include "DebugText.h"
@@ -55,14 +57,10 @@ void GameScene::Initialize()
 	light->SetPointLightActive(2, false);
 	light->SetCircleShadowActive(0, true);
 
-	// モデル読み込み
-
 	// 3Dオブジェクト生成
 
-	//.fbxの名前を指定してモデルを読み込む
-	fbxModel = FbxLoader::GetInstance()->LoadModelFromFile("uma");
 	// FBXオブジェクト生成
-	fbxObject3d = FbxObject3d::Create(fbxModel.get(), true);
+	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("uma"), true);
 	//アニメーション
 	fbxObject3d->PlayAnimation();
 
