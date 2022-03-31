@@ -9,8 +9,6 @@ using namespace DirectX;
 ID3D12Device* FbxObject3d::device = nullptr;
 Camera* FbxObject3d::camera = nullptr;
 LightGroup* FbxObject3d::light = nullptr;
-ComPtr<ID3D12RootSignature> FbxObject3d::rootsignature;
-ComPtr<ID3D12PipelineState> FbxObject3d::pipelinestate;
 
 void FbxObject3d::StaticInitialize(ID3D12Device* device, Camera* camera)
 {
@@ -19,18 +17,14 @@ void FbxObject3d::StaticInitialize(ID3D12Device* device, Camera* camera)
 
 	FbxObject3d::device = device;
 	FbxObject3d::camera = camera;
-
-	// パイプライン初期化
-	CreateGraphicsPipeline();
 }
 
 void FbxObject3d::StaticFinalize()
 {
-	rootsignature.Reset();
-	pipelinestate.Reset();
+	
 }
 
-void FbxObject3d::CreateGraphicsPipeline()
+void FbxObject3d::CreateGraphicsPipeline(std::wstring fName)
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; //頂点シェーダオブジェクト
@@ -39,10 +33,12 @@ void FbxObject3d::CreateGraphicsPipeline()
 
 	assert(device);
 
+	//頂点シェーダのパス生成
+	std::wstring fNameVS = L"Resources/shaders/" + fName + L"VS.hlsl";
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile
 	(
-		L"Resources/shaders/FBXVS.hlsl",    // シェーダファイル名
+		fNameVS.c_str(),    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -65,10 +61,12 @@ void FbxObject3d::CreateGraphicsPipeline()
 		exit(1);
 	}
 
+	//頂点シェーダのパス生成
+	std::wstring fNamePS = L"Resources/shaders/" + fName + L"PS.hlsl";
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile
 	(
-		L"Resources/shaders/FBXPS.hlsl",    // シェーダファイル名
+		fNamePS.c_str(),    // シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",    // エントリーポイント名、シェーダーモデル指定
@@ -202,7 +200,7 @@ void FbxObject3d::CreateGraphicsPipeline()
 	if (FAILED(result)) { assert(0); }
 }
 
-std::unique_ptr<FbxObject3d> FbxObject3d::Create(FbxModel* model, bool isAnimation)
+std::unique_ptr<FbxObject3d> FbxObject3d::Create(FbxModel* model, std::wstring HLSLfName, bool isAnimation)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	FbxObject3d* fbxObject3d = new FbxObject3d();
@@ -210,6 +208,8 @@ std::unique_ptr<FbxObject3d> FbxObject3d::Create(FbxModel* model, bool isAnimati
 	{
 		return nullptr;
 	}
+	// パイプライン初期化
+	fbxObject3d->CreateGraphicsPipeline(HLSLfName);
 
 	// 初期化
 	if (!fbxObject3d->Initialize())
@@ -235,6 +235,8 @@ FbxObject3d::~FbxObject3d()
 {
 	constBuffTransform.Reset();
 	constBuffSkin.Reset();
+	rootsignature.Reset();
+	pipelinestate.Reset();
 }
 
 bool FbxObject3d::Initialize()

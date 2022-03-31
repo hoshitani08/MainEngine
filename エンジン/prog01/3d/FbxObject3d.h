@@ -54,10 +54,8 @@ public: // 静的メンバ関数
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
 	// 静的破棄
 	static void StaticFinalize();
-	// グラフィックパイプラインの生成
-	static void CreateGraphicsPipeline();
 	// 3Dオブジェクト生成
-	static std::unique_ptr<FbxObject3d> Create(FbxModel* model = nullptr, bool isAnimation = false);
+	static std::unique_ptr<FbxObject3d> Create(FbxModel* model = nullptr, std::wstring HLSLfName = L"BasicFBX", bool isAnimation = false);
 	// setter
 	static void SetDevice(ID3D12Device* device) { FbxObject3d::device = device; }
 	static void SetCamera(Camera* camera) { FbxObject3d::camera = camera; }
@@ -70,14 +68,12 @@ private: // 静的メンバ変数
 	static Camera* camera;
 	//ライト
 	static LightGroup* light;
-	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
 
 public: // メンバ関数
 	//デストラクタ
 	~FbxObject3d();
+	// グラフィックパイプラインの生成
+	void CreateGraphicsPipeline(std::wstring fName);
 	// 初期化
 	bool Initialize();
 	// 毎フレーム処理
@@ -109,6 +105,10 @@ protected: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffTransform;
 	// 定数バッファ(スキン)
 	ComPtr<ID3D12Resource> constBuffSkin;
+	// ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootsignature;
+	// パイプラインステートオブジェクト
+	ComPtr<ID3D12PipelineState> pipelinestate;
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
 	// X,Y,Z軸回りのローカル回転角

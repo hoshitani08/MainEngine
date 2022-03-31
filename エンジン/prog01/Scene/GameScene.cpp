@@ -60,7 +60,7 @@ void GameScene::Initialize()
 	// 3Dオブジェクト生成
 
 	// FBXオブジェクト生成
-	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("uma"), true);
+	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("uma"), L"BasicFBX", true);
 	//アニメーション
 	fbxObject3d->PlayAnimation();
 
