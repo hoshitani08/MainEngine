@@ -159,40 +159,14 @@ void FbxLoader::ParseMesh(FbxModel* model, FbxNode* fbxNode)
 	// ノードのメッシュを取得
 	FbxMesh* fbxMesh = fbxNode->GetMesh();
 
-	// 頂点座標読み取り
-	ParseMeshVertices(model, fbxMesh);
-	// 面を構成するデータの読み取り
+	// 頂点座標読み取り、面を構成するデータの読み取り
 	ParseMeshFaces(model, fbxMesh);
 	// マテリアルの読み取り
 	ParseMaterial(model, fbxNode);
+	//3頂点からローカル座標とUV座標からU軸(angent)とV軸(Binormal)を求める
+	BuildTangentAndBiNormalImp(model);
 	//スキニング情報の読み取り
 	ParseSkin(model, fbxMesh);
-}
-
-void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
-{
-	//auto& vertices = model->vertices;
-
-	////頂点座標データの数
-	//const int controlPointsCount = fbxMesh->GetControlPointsCount();
-	////必要数だけ頂点データ配列を確保
-	//FbxModel::VertexPosNormalUvSkin vert{};
-	//model->vertices.resize(controlPointsCount, vert);
-
-	////FBXメッシュの頂点座標配列を取得
-	//FbxVector4* pCoord = fbxMesh->GetControlPoints();
-
-	////FBXメッシュの全頂点座標をモデル内の配列にコピーする。
-	//for (int i = 0; i < controlPointsCount; i++)
-	//{
-	//    FbxModel::VertexPosNormalUvSkin& vertex = vertices[i];
-	//    // 座標のコピー
-	//    vertex.pos.x = (float)pCoord[i][0];
-	//    vertex.pos.y = (float)pCoord[i][1];
-	//    vertex.pos.z = (float)pCoord[i][2];
-
-	//    vertices.push_back(vertex);
-	//}
 }
 
 void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
@@ -320,9 +294,27 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 				model->diffuse.z = (float)diffuse.Get()[2];
 			}
 
+			//マテリアル名(デバック用)
+			string name = material->GetName();
 			// ディフューズテクスチャを取り出す
 			const FbxProperty diffuseProperty = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
-			if (diffuseProperty.IsValid())
+			//ベースカラー
+			const FbxProperty propBaseColor = FbxSurfaceMaterialUtils::GetProperty("baseColor", material);
+			if (propBaseColor.IsValid())
+			{
+				const FbxFileTexture* texture = propBaseColor.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filepath = texture->GetFileName();
+					// ファイルパスからファイル名抽出
+					string path_str(filepath);
+					string name = ExtractFileName(path_str);
+					// テクスチャ読み込み
+					LoadTexture(&model->baseTexture, baseDirectory + model->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+			else if (diffuseProperty.IsValid())
 			{
 				const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
 				if (texture)
@@ -332,7 +324,68 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(model, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->baseTexture, baseDirectory + model->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+
+			//金属度
+			const FbxProperty propMetalness = FbxSurfaceMaterialUtils::GetProperty("metalness", material);
+			if (propMetalness.IsValid())
+			{
+				const FbxFileTexture* texture = propMetalness.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filepath = texture->GetFileName();
+					// ファイルパスからファイル名抽出
+					string path_str(filepath);
+					string name = ExtractFileName(path_str);
+					// テクスチャ読み込み
+					LoadTexture(&model->metalnessTexture, baseDirectory + model->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+			else if (diffuseProperty.IsValid())
+			{
+				const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filepath = texture->GetFileName();
+					// ファイルパスからファイル名抽出
+					string path_str(filepath);
+					string name = ExtractFileName(path_str);
+					// テクスチャ読み込み
+					LoadTexture(&model->metalnessTexture, baseDirectory + model->name + "/" + name);
+					textureLoaded = true;
+				}
+			}
+
+			//法線マップ
+			const FbxProperty propNormalCamera = FbxSurfaceMaterialUtils::GetProperty("normalCamera", material);
+			if (propNormalCamera.IsValid())
+			{
+				const FbxFileTexture* texture = propNormalCamera.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filepath = texture->GetFileName();
+					// ファイルパスからファイル名抽出
+					string path_str(filepath);
+					string name = ExtractFileName(path_str);
+					// テクスチャ読み込み
+					LoadTexture(&model->normalTexture, baseDirectory + model->name + "/" + name);
+				}
+			}
+			else if (diffuseProperty.IsValid())
+			{
+				const FbxFileTexture* texture = diffuseProperty.GetSrcObject<FbxFileTexture>();
+				if (texture)
+				{
+					const char* filepath = texture->GetFileName();
+					// ファイルパスからファイル名抽出
+					string path_str(filepath);
+					string name = ExtractFileName(path_str);
+					// テクスチャ読み込み
+					LoadTexture(&model->normalTexture, baseDirectory + model->name + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -341,18 +394,18 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 		// テクスチャがない場合は白テクスチャを貼る
 		if (!textureLoaded)
 		{
-			LoadTexture(model, baseDirectory + defaultTextureFileName);
+			LoadTexture(&model->baseTexture, baseDirectory + defaultTextureFileName);
 		}
 	}
 }
 
-void FbxLoader::LoadTexture(FbxModel* model, const std::string& fullpath)
+void FbxLoader::LoadTexture(TextureData* texData, const std::string& fullpath)
 {
 	HRESULT result = S_FALSE;
 
 	// WICテクスチャのロード
-	TexMetadata& metadata = model->metadata;
-	ScratchImage& scratchImg = model->scratchImg;
+	TexMetadata& metadata = texData->metaData;
+	ScratchImage& scratchImg = texData->scratchImg;
 
 	// ユニコード文字列に変換
 	wchar_t wfilepath[128];
@@ -528,4 +581,126 @@ std::string FbxLoader::ExtractFileName(const std::string& path)
 	}
 
 	return path;
+}
+
+void FbxLoader::BuildTangentAndBiNormalImp(FbxModel* model)
+{
+	auto& vertices = model->vertices;
+	auto& indices = model->indices;
+
+	//頂点スムースは気にしない。
+	auto numPolygon = indices.size() / 3;
+	for (auto polyNo = 0; polyNo < numPolygon; polyNo++)
+	{
+		auto no = polyNo * 3;
+		auto vertNo_0 = indices[no];
+		auto vertNo_1 = indices[no + 1];
+		auto vertNo_2 = indices[no + 2];
+
+		auto& vert_0 = vertices[vertNo_0];
+		auto& vert_1 = vertices[vertNo_1];
+		auto& vert_2 = vertices[vertNo_2];
+
+		XMFLOAT3 cp0[] =
+		{
+			{ vert_0.pos.x, vert_0.uv.x, vert_0.uv.y},
+			{ vert_0.pos.y, vert_0.uv.x, vert_0.uv.y},
+			{ vert_0.pos.z, vert_0.uv.x, vert_0.uv.y}
+		};
+
+		XMFLOAT3 cp1[] =
+		{
+			{ vert_1.pos.x, vert_1.uv.x, vert_1.uv.y},
+			{ vert_1.pos.y, vert_1.uv.x, vert_1.uv.y},
+			{ vert_1.pos.z, vert_1.uv.x, vert_1.uv.y}
+		};
+
+		XMFLOAT3 cp2[] =
+		{
+			{ vert_2.pos.x, vert_2.uv.x, vert_2.uv.y},
+			{ vert_2.pos.y, vert_2.uv.x, vert_2.uv.y},
+			{ vert_2.pos.z, vert_2.uv.x, vert_2.uv.y}
+		};
+
+		// 平面パラメータからUV軸座標算出する。
+		float U[3], V[3];
+		for (int i = 0; i < 3; ++i)
+		{
+			XMFLOAT3 V1 =
+			{
+				cp1[i].x - cp0[i].x,
+				cp1[i].y - cp0[i].y,
+				cp1[i].z - cp0[i].z
+			};
+
+			XMFLOAT3 V2 =
+			{
+				cp2[i].x - cp1[i].x,
+				cp2[i].y - cp1[i].y,
+				cp2[i].z - cp1[i].z
+			};
+
+			// 外積を計算
+			XMFLOAT3 ABC = Cross(V1, V2);
+			if (ABC.x == 0.0f)
+			{
+				U[i] = 0.0f;
+				V[i] = 0.0f;
+			}
+			else
+			{
+				U[i] = -ABC.y / ABC.x;
+				V[i] = -ABC.z / ABC.x;
+			}
+		}
+
+		XMFLOAT3 tangent = { U[0], U[1], U[2] };
+		XMFLOAT3 binormal = { V[0], V[1], V[2] };
+
+		// ベクトルを正規化
+		tangent = Normalize(tangent);
+		binormal = Normalize(binormal);
+
+		// ベクトルの加算(tangent)
+		vert_0.tangent = Add(vert_0.tangent, tangent);
+		vert_1.tangent = Add(vert_1.tangent, tangent);
+		vert_2.tangent = Add(vert_2.tangent, tangent);
+		// ベクトルの加算(binormal)
+		vert_0.binormal = Add(vert_0.binormal, binormal);
+		vert_1.binormal = Add(vert_1.binormal, binormal);
+		vert_2.binormal = Add(vert_2.binormal, binormal);
+	}
+
+	//法線、接ベクトル、従ベクトルを平均化する。
+	for (auto& vert : vertices)
+	{
+		vert.tangent = Normalize(vert.tangent);
+		vert.binormal = Normalize(vert.binormal);
+	}
+}
+
+const XMFLOAT3& FbxLoader::Add(XMFLOAT3 m, XMFLOAT3 k)
+{
+	XMVECTOR xmv0 = XMLoadFloat3(&m);
+	XMVECTOR xmv1 = XMLoadFloat3(&k);
+	XMVECTOR xmvr = XMVectorAdd(xmv0, xmv1);
+
+	return XMFLOAT3(xmvr.m128_f32[0], xmvr.m128_f32[1], xmvr.m128_f32[2]);
+}
+
+const XMFLOAT3& FbxLoader::Normalize(XMFLOAT3 m)
+{
+	XMVECTOR xmv = XMLoadFloat3(&m);
+	xmv = XMVector3Normalize(xmv);
+
+	return XMFLOAT3(xmv.m128_f32[0], xmv.m128_f32[1], xmv.m128_f32[2]);
+}
+
+const XMFLOAT3& FbxLoader::Cross(XMFLOAT3 m, XMFLOAT3 k)
+{
+	XMVECTOR xmv0 = DirectX::XMLoadFloat3(&m);
+	XMVECTOR xmv1 = DirectX::XMLoadFloat3(&k);
+	XMVECTOR xmvr = DirectX::XMVector3Cross(xmv0, xmv1);
+
+	return XMFLOAT3(xmvr.m128_f32[0], xmvr.m128_f32[1], xmvr.m128_f32[2]);
 }

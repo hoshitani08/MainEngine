@@ -20,6 +20,8 @@ struct VSInput
 	float4 pos : POSITION;//位置
 	float3 normal : NORMAL;//頂点法線
 	float2 uv : TEXCOORD;//テクスチャー座標
+	float3 tangent : TANGENT; //U軸
+	float3 biNormal : BINORMAL; //V軸
 	uint4 boneIndices : BONEINDICES;//ボーン番号
 	float4 boneWeights : BONEWEIGHTS;//ボーンのスキンウェイト
 };
@@ -31,6 +33,8 @@ struct VSOutput
 	float3 worldpos : POS; // ワールド座標
 	float3 normal :NORMAL; //法線
 	float2 uv  :TEXCOORD; //uv値
+	float3 tangent : TANGENT; //U軸
+	float3 biNormal : BINORMAL; //V軸
 };
 
 //スキニング後の頂点・法線が入る
@@ -38,6 +42,8 @@ struct SkinOutput
 {
 	float4 pos;
 	float3 normal;
+	float3 tangent;
+	float3 biNormal;
 };
 
 // 平行光源の数

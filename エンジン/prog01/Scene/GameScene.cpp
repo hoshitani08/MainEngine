@@ -57,16 +57,18 @@ void GameScene::Initialize()
 	light->SetPointLightActive(2, false);
 	light->SetCircleShadowActive(0, true);
 
+	light->SetDirLightDir(0, { 0,0,1,0 });
+
 	// 3Dオブジェクト生成
 
 	// FBXオブジェクト生成
-	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("uma"), L"BasicFBX", true);
+	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("a"), L"NormalMapFBX");
 	//アニメーション
-	fbxObject3d->PlayAnimation();
+	//fbxObject3d->PlayAnimation();
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 0, 0 });
-	camera->SetEye({ 0,1,-15 });
+	camera->SetEye({ 0,1,-500 });
 }
 
 void GameScene::Finalize()
@@ -80,33 +82,15 @@ void GameScene::Update()
 	camera->Update();
 	particleMan->Update();
 
-	// オブジェクト移動
-	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
-	{
-		static XMVECTOR p = { 1,-1,1,0 };
-		// 移動後の座標を計算
-		if (input->PushKey(DIK_W))
-		{
-			p.m128_f32[1] += 0.1f;
-		}
-		else if (input->PushKey(DIK_S))
-		{
-			p.m128_f32[1] -= 0.1f;
-		}
-
-		if (input->PushKey(DIK_D))
-		{
-			p.m128_f32[0] += 0.1f;
-		}
-		else if (input->PushKey(DIK_A))
-		{
-			p.m128_f32[0] -= 0.1f;
-		}
-		light->SetDirLightDir(0, p);
-	}
-
 	XMFLOAT3 rot = fbxObject3d->GetRotation();
-	rot.y += 1.0f;
+	if (input->PushKey(DIK_A))
+	{
+		rot.y += 1.0f;
+	}
+	else if (input->PushKey(DIK_D))
+	{
+		rot.y -= 1.0f;
+	}
 	fbxObject3d->SetRotation(rot);
 
 	if (input->TriggerKey(DIK_C))

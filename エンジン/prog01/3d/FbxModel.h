@@ -28,6 +28,19 @@ struct Node
 	Node* parent = nullptr;
 };
 
+//テクスチャデータ
+struct TextureData
+{
+	//テクスチャメタデータ
+	DirectX::TexMetadata metaData = {};
+	//スクラッチイメージ
+	DirectX::ScratchImage scratchImg = {};
+	//テクスチャバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> texbuff;
+	//SRVのGPUハンドル
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
+};
+
 class FbxModel
 {
 public:
@@ -51,6 +64,8 @@ private: // エイリアス
 public:// 定数
 	//ボーンインデックスの最大数
 	static const int MAX_BONE_INDICES = 4;
+	//テクスチャの最大数
+	static const int MAX_TEXTURES = 4;
 
 public: // サブクラス
 	// 頂点データ構造体
@@ -59,6 +74,8 @@ public: // サブクラス
 		DirectX::XMFLOAT3 pos;              //xyz座標
 		DirectX::XMFLOAT3 normal;           //法線ベクトル
 		DirectX::XMFLOAT2 uv;               //uv座標
+		DirectX::XMFLOAT3 tangent;          //接ベクトル
+		DirectX::XMFLOAT3 binormal;         //従ベクトル
 		UINT boneIndex[MAX_BONE_INDICES];   //ボーン番号
 		float boneWeight[MAX_BONE_INDICES]; //ボーン重み
 	};
@@ -86,6 +103,8 @@ public:
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//モデルの変形行列取得
 	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	//テクスチャバッファ生成
+	void CreateTexture(TextureData& texture, ID3D12Device* device, int srvIndex);
 	//getrer
 	std::vector<Bone>& GetBones() { return bones; }
 	FbxScene* GetFbxScene() { return fbxScene; }
@@ -128,4 +147,10 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	//SRV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	//ベーステクスチャ
+	TextureData baseTexture;
+	//メタルネステクスチャ
+	TextureData metalnessTexture;
+	//法線テクスチャ
+	TextureData normalTexture;
 };
