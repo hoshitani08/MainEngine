@@ -3,17 +3,6 @@
 #include <string>
 #include <vector>
 
-namespace
-{
-	enum TypeName
-	{
-		Sprite,
-		Particle,
-		OBJ,
-		FBX,
-	};
-}
-
 class ShaderManager
 {
 protected: // エイリアス
@@ -52,7 +41,7 @@ public:
 	// 終了
 	void Finalize();
 	// グラフィックパイプラインの生成
-	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, TypeName name);
+	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
 

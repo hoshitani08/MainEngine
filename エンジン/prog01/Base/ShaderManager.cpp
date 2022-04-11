@@ -6,9 +6,9 @@
 
 void ShaderManager::Initialize(ID3D12Device* device)
 {
-	CreateGraphicsPipeline(device, L"Object", OBJ);
-	CreateGraphicsPipeline(device, L"BasicFBX", FBX);
-	CreateGraphicsPipeline(device, L"NormalMapFBX", FBX);
+	CreateGraphicsPipeline(device, L"Object", "OBJ");
+	CreateGraphicsPipeline(device, L"BasicFBX", "FBX");
+	CreateGraphicsPipeline(device, L"NormalMapFBX", "FBX");
 }
 
 void ShaderManager::Finalize()
@@ -21,7 +21,7 @@ void ShaderManager::Finalize()
 	}
 }
 
-void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fName, TypeName name)
+void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fName, std::string typeName)
 {
 	HRESULT result = S_FALSE;
 
@@ -93,11 +93,11 @@ void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fN
 		exit(1);
 	}
 
-	if (name == OBJ)
+	if (typeName == "OBJ")
 	{
 		ObjPipeline(device, tempData);
 	}
-	else if (name == FBX)
+	else if (typeName == "FBX")
 	{
 		FbxPipeline(device, tempData);
 	}
@@ -308,7 +308,7 @@ void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[4];
+	CD3DX12_ROOT_PARAMETER rootparams[4] = {};
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
