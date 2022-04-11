@@ -4,6 +4,7 @@
 #include "Object3d.h"
 #include "FbxLoader.h"
 #include "FbxObject3d.h"
+#include "ShaderManager.h"
 
 void BaseGame::Run()
 {
@@ -58,6 +59,8 @@ void BaseGame::Initialize()
 	FbxObject3d::StaticInitialize(DirectXCommon::GetInstance()->GetDevice());
 	//FBXオブジェクト初期化
 	FbxLoader::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
+	//シェーダマネージャー初期化
+	ShaderManager::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
 }
 
 void BaseGame::Finalize()
@@ -67,6 +70,7 @@ void BaseGame::Finalize()
 	Object3d::StaticFinalize();
 	FbxObject3d::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
+	ShaderManager::GetInstance()->Finalize();
 	// ゲームウィンドウの破棄
 	win->TerminateGameWindow();
 }

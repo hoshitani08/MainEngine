@@ -72,8 +72,6 @@ private: // 静的メンバ変数
 public: // メンバ関数
 	//デストラクタ
 	~FbxObject3d();
-	// グラフィックパイプラインの生成
-	void CreateGraphicsPipeline(std::wstring fName);
 	// 初期化
 	bool Initialize();
 	// 毎フレーム処理
@@ -105,10 +103,6 @@ protected: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffTransform;
 	// 定数バッファ(スキン)
 	ComPtr<ID3D12Resource> constBuffSkin;
-	// ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	ComPtr<ID3D12PipelineState> pipelinestate;
 	// ローカルスケール
 	XMFLOAT3 scale = { 1,1,1 };
 	// X,Y,Z軸回りのローカル回転角
@@ -131,4 +125,6 @@ protected: // メンバ変数
 	bool isPlay = false;
 	//アニメーションのデータ
 	std::vector<Animation> animationData;
+	// シェーダファイル名
+	std::wstring fName;
 };

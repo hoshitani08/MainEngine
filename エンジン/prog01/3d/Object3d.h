@@ -40,8 +40,6 @@ public: // 静的メンバ関数
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
 	// 静的破棄
 	static void StaticFinalize();
-	// グラフィックパイプライン生成
-	static bool InitializeGraphicsPipeline();
 	// 描画前処理
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
 	// 描画後処理
@@ -58,10 +56,6 @@ private: // 静的メンバ変数
 	static ID3D12Device* device;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelinestate;
 	// カメラ
 	static Camera* camera;
 	//ライト

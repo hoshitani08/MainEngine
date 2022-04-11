@@ -274,6 +274,7 @@
     <ClCompile Include="Base\BaseGame.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\MyGame.cpp" />
+    <ClCompile Include="Base\ShaderManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\Collision.cpp">
@@ -325,6 +326,7 @@
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\MyGame.h" />
     <ClInclude Include="Base\SafeDelete.h" />
+    <ClInclude Include="Base\ShaderManager.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
