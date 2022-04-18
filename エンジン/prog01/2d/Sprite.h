@@ -56,10 +56,6 @@ private: // 静的メンバ変数
 	static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
 	static ID3D12GraphicsCommandList* cmdList;
-	// ルートシグネチャ
-	static ComPtr<ID3D12RootSignature> rootSignature;
-	// パイプラインステートオブジェクト
-	static ComPtr<ID3D12PipelineState> pipelineState;
 	// 射影行列
 	static XMMATRIX matProjection;
 	// デスクリプタヒープ

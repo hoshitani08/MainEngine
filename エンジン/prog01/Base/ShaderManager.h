@@ -20,6 +20,8 @@ public: // サブクラス
 		ComPtr<ID3DBlob> vsBlob;
 		//ピクセルシェーダオブジェクト
 		ComPtr<ID3DBlob> psBlob;
+		// ジオメトリシェーダオブジェクト
+		ComPtr<ID3DBlob> gsBlob;
 		//エラーオブジェクト
 		ComPtr<ID3DBlob> errorBlob;
 		// ルートシグネチャ
@@ -44,6 +46,8 @@ public:
 	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
+	void SpritePipeline(ID3D12Device* device, ShaderData tempData);
+	void ParticlePipeline(ID3D12Device* device, ShaderData tempData);
 
 	ID3D12RootSignature* GetRootSignature(std::wstring fName);
 	ID3D12PipelineState* GetPipelineState(std::wstring fName);

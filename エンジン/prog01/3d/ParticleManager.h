@@ -94,8 +94,6 @@ public: // メンバ関数
 		float start_scale, float end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color);
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
-	// グラフィックパイプライン生成
-	void InitializeGraphicsPipeline();
 	// テクスチャ読み込み
 	void LoadTexture();
 	// モデル作成
@@ -106,10 +104,6 @@ private: // 静的メンバ変数
 	ID3D12Device* device = nullptr;
 	// デスクリプタサイズ
 	UINT descriptorHandleIncrementSize = 0u;
-	// ルートシグネチャ
-	ComPtr<ID3D12RootSignature> rootsignature;
-	// パイプラインステートオブジェクト
-	ComPtr<ID3D12PipelineState> pipelinestate;
 	// デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeap;
 	// 頂点バッファ
