@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-class PixLoader
+class PmxLoader
 {
 public:
 	// PMXのモデルデータ型

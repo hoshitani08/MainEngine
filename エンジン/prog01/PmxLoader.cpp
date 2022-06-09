@@ -1,8 +1,8 @@
-#include "PixLoader.h"
+#include "PmxLoader.h"
 #include <fstream>
 #include <array>
 
-bool PixLoader::GetPMXStringUTF16(std::ifstream& _file, std::wstring& output)
+bool PmxLoader::GetPMXStringUTF16(std::ifstream& _file, std::wstring& output)
 {
 	std::array<wchar_t, 512> wBuffer{};
 	int textSize;
@@ -15,7 +15,7 @@ bool PixLoader::GetPMXStringUTF16(std::ifstream& _file, std::wstring& output)
 	return true;
 }
 
-bool PixLoader::loadPMX(PMXModelData& data, const std::wstring& _filePath)
+bool PmxLoader::loadPMX(PMXModelData& data, const std::wstring& _filePath)
 {
 	if (_filePath.empty()) { return false; }
 
