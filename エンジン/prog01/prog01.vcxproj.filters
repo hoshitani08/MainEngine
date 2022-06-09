@@ -248,6 +248,7 @@
     <ClCompile Include="Base\ShaderManager.cpp">
       <Filter>エンジンシステム\Base</Filter>
     </ClCompile>
+    <ClCompile Include="PmxLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -403,5 +404,6 @@
     <ClInclude Include="Base\ShaderManager.h">
       <Filter>エンジンシステム\Base</Filter>
     </ClInclude>
+    <ClInclude Include="PmxLoader.h" />
   </ItemGroup>
 </Project>
