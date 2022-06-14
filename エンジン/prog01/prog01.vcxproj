@@ -294,6 +294,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
     <ClCompile Include="PmxLoader.cpp" />
+    <ClCompile Include="PmxMesh.cpp" />
+    <ClCompile Include="PmxModel.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
@@ -347,6 +349,8 @@
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="PmxLoader.h" />
+    <ClInclude Include="PmxMesh.h" />
+    <ClInclude Include="PmxModel.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Scene\GameOverScene.h" />

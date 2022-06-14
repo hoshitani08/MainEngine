@@ -249,6 +249,8 @@
       <Filter>エンジンシステム\Base</Filter>
     </ClCompile>
     <ClCompile Include="PmxLoader.cpp" />
+    <ClCompile Include="PmxModel.cpp" />
+    <ClCompile Include="PmxMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -405,5 +407,7 @@
       <Filter>エンジンシステム\Base</Filter>
     </ClInclude>
     <ClInclude Include="PmxLoader.h" />
+    <ClInclude Include="PmxModel.h" />
+    <ClInclude Include="PmxMesh.h" />
   </ItemGroup>
 </Project>
