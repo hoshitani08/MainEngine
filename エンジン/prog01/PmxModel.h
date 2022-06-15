@@ -157,8 +157,6 @@ public:
 	bool Initialize(const std::wstring& _filePath, ID3D12Device* const _pDevice);
 	//void Draw(DirectX11& _directX11, int _meshIndex, const void* const _pConstantBufferData);
 
-	std::vector<PmxMesh*> meshes;
-
 private:
 	enum VertexBuffer
 	{
@@ -173,6 +171,7 @@ private:
 	unsigned mIndexCount;
 
 	PMXModelData allData;
+	std::vector<PmxMesh*> meshes;
 
 	HRESULT createTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
 	HRESULT createNotTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
