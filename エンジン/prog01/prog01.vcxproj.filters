@@ -251,6 +251,7 @@
     <ClCompile Include="PmxLoader.cpp" />
     <ClCompile Include="PmxModel.cpp" />
     <ClCompile Include="PmxMesh.cpp" />
+    <ClCompile Include="PmxObject3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\Audio.h">
@@ -409,5 +410,6 @@
     <ClInclude Include="PmxLoader.h" />
     <ClInclude Include="PmxModel.h" />
     <ClInclude Include="PmxMesh.h" />
+    <ClInclude Include="PmxObject3d.h" />
   </ItemGroup>
 </Project>

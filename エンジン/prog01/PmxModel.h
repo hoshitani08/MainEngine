@@ -154,8 +154,8 @@ public: // サブクラス
 public:
 	inline size_t getMeshesSize() { return meshes.size(); }
 	//inline bool meshHasTexture(int _meshIndex) { return meshes[_meshIndex]->GetpTexture(); }
-	bool Initialize(const std::wstring& _filePath, ID3D12Device* const _pDevice);
-	//void Draw(DirectX11& _directX11, int _meshIndex, const void* const _pConstantBufferData);
+	bool Initialize(ID3D12Device* device);
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private:
 	enum VertexBuffer
@@ -175,4 +175,22 @@ private:
 
 	HRESULT createTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
 	HRESULT createNotTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
+
+private: //FBXから必要だと思って引っ張ってきたもの
+	//頂点データ配列
+	std::vector<PMXModelData::Vertex> vertices;
+	//頂点インデックス配列
+	std::vector<unsigned short> indices;
+	//頂点バッファ
+	ComPtr<ID3D12Resource> vertBuff;
+	//インデックスバッファ
+	ComPtr<ID3D12Resource> indexBuff;
+	//テクスチャバッファ
+	ComPtr<ID3D12Resource> texbuff;
+	//頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	//インデックスバッファビュー
+	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	//SRV用デスクリプタヒープ
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
 };

@@ -46,6 +46,7 @@ public:
 	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
+	void PmxPipeline(ID3D12Device* device, ShaderData tempData);
 	void SpritePipeline(ID3D12Device* device, ShaderData tempData);
 	void ParticlePipeline(ID3D12Device* device, ShaderData tempData);
 

@@ -296,6 +296,7 @@
     <ClCompile Include="PmxLoader.cpp" />
     <ClCompile Include="PmxMesh.cpp" />
     <ClCompile Include="PmxModel.cpp" />
+    <ClCompile Include="PmxObject3d.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="PmxLoader.h" />
     <ClInclude Include="PmxMesh.h" />
     <ClInclude Include="PmxModel.h" />
+    <ClInclude Include="PmxObject3d.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
