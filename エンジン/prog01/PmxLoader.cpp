@@ -24,7 +24,7 @@ PmxLoader* PmxLoader::GetInstance()
 	return &instance;
 }
 
-std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
+PmxModel* PmxLoader::loadPMX(const wstring& _filePath)
 {
 	// モデルと同じ名前のフォルダから読み込む
 	const wstring directoryPath = baseDirectory + _filePath + L"/";
@@ -106,21 +106,21 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 	}
 
 	// 頂点 -----------------------------------
-	using Vertex = PMXModelData::Vertex;
+	using Vertex = PmxModel::Vertex;
 	int numberOfVertex{};
 	pmxFile.read(reinterpret_cast<char*>(&numberOfVertex), 4);
-	temp->allData.vertices.resize(numberOfVertex);
+	temp->vertices.resize(numberOfVertex);
 
 	for (int i = 0; i < numberOfVertex; i++)
 	{
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].position), 12);
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].normal), 12);
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].uv), 8);
+		pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].position), 12);
+		pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].normal), 12);
+		pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].uv), 8);
 		if (hederData[NUMBER_OF_ADD_UV] != 0)
 		{
 			for (int j = 0; j < hederData[NUMBER_OF_ADD_UV]; ++j)
 			{
-				pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].additionalUV[j]), 16);
+				pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].additionalUV[j]), 16);
 			}
 		}
 
@@ -128,47 +128,47 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 		switch (weightMethod)
 		{
 		case Vertex::Weight::BDEF1:
-			temp->allData.vertices[i].weight.type = Vertex::Weight::BDEF1;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
-			temp->allData.vertices[i].weight.born2 = PMXModelData::NO_DATA_FLAG;
-			temp->allData.vertices[i].weight.born3 = PMXModelData::NO_DATA_FLAG;
-			temp->allData.vertices[i].weight.born4 = PMXModelData::NO_DATA_FLAG;
-			temp->allData.vertices[i].weight.weight1 = 1.0f;
+			temp->vertices[i].weight.type = Vertex::Weight::BDEF1;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
+			temp->vertices[i].weight.born2 = PmxModel::NO_DATA_FLAG;
+			temp->vertices[i].weight.born3 = PmxModel::NO_DATA_FLAG;
+			temp->vertices[i].weight.born4 = PmxModel::NO_DATA_FLAG;
+			temp->vertices[i].weight.weight1 = 1.0f;
 			break;
 
 		case Vertex::Weight::BDEF2:
-			temp->allData.vertices[i].weight.type = Vertex::Weight::BDEF2;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
-			temp->allData.vertices[i].weight.born3 = PMXModelData::NO_DATA_FLAG;
-			temp->allData.vertices[i].weight.born4 = PMXModelData::NO_DATA_FLAG;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight1), 4);
-			temp->allData.vertices[i].weight.weight2 = 1.0f - temp->allData.vertices[i].weight.weight1;
+			temp->vertices[i].weight.type = Vertex::Weight::BDEF2;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
+			temp->vertices[i].weight.born3 = PmxModel::NO_DATA_FLAG;
+			temp->vertices[i].weight.born4 = PmxModel::NO_DATA_FLAG;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight1), 4);
+			temp->vertices[i].weight.weight2 = 1.0f - temp->vertices[i].weight.weight1;
 			break;
 
 		case Vertex::Weight::BDEF4:
-			temp->allData.vertices[i].weight.type = Vertex::Weight::BDEF4;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born3), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born4), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight1), 4);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight2), 4);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight3), 4);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight4), 4);
+			temp->vertices[i].weight.type = Vertex::Weight::BDEF4;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born3), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born4), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight1), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight2), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight3), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight4), 4);
 			break;
 
 		case Vertex::Weight::SDEF:
-			temp->allData.vertices[i].weight.type = Vertex::Weight::SDEF;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
-			temp->allData.vertices[i].weight.born3 = PMXModelData::NO_DATA_FLAG;
-			temp->allData.vertices[i].weight.born4 = PMXModelData::NO_DATA_FLAG;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.weight1), 4);
-			temp->allData.vertices[i].weight.weight2 = 1.0f - temp->allData.vertices[i].weight.weight1;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.c), 12);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.r0), 12);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].weight.r1), 12);
+			temp->vertices[i].weight.type = Vertex::Weight::SDEF;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born1), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.born2), hederData[BONE_INDEX_SIZE]);
+			temp->vertices[i].weight.born3 = PmxModel::NO_DATA_FLAG;
+			temp->vertices[i].weight.born4 = PmxModel::NO_DATA_FLAG;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.weight1), 4);
+			temp->vertices[i].weight.weight2 = 1.0f - temp->vertices[i].weight.weight1;
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.c), 12);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.r0), 12);
+			pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].weight.r1), 12);
 			break;
 
 		default:
@@ -176,9 +176,9 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 			return false;
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.vertices[i].edgeMagnif), 4);
+		pmxFile.read(reinterpret_cast<char*>(&temp->vertices[i].edgeMagnif), 4);
 
-		if (temp->allData.vertices[i].weight.born1 == PMXModelData::NO_DATA_FLAG)
+		if (temp->vertices[i].weight.born1 == PmxModel::NO_DATA_FLAG)
 		{
 			pmxFile.close();
 			return false;
@@ -188,13 +188,13 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 	// 面  ------------------------------------
 	int numOfSurface{};
 	pmxFile.read(reinterpret_cast<char*>(&numOfSurface), 4);
-	temp->allData.surfaces.resize(numOfSurface);
+	temp->surfaces.resize(numOfSurface);
 
 	for (int i = 0; i < numOfSurface; i++)
 	{
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.surfaces[i].vertexIndex), hederData[VERTEX_INDEX_SIZE]);
+		pmxFile.read(reinterpret_cast<char*>(&temp->surfaces[i].vertexIndex), hederData[VERTEX_INDEX_SIZE]);
 
-		if (temp->allData.surfaces[i].vertexIndex == PMXModelData::NO_DATA_FLAG || temp->allData.surfaces[i].vertexIndex == PMXModelData::NO_DATA_FLAG || temp->allData.surfaces[i].vertexIndex == PMXModelData::NO_DATA_FLAG)
+		if (temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG || temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG || temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG)
 		{
 			pmxFile.close();
 			return false;
@@ -204,21 +204,21 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 	// テクスチャ -----------------------------
 	int numOfTexture{};
 	pmxFile.read(reinterpret_cast<char*>(&numOfTexture), 4);
-	temp->allData.texturePaths.resize(numOfTexture);
+	temp->texturePaths.resize(numOfTexture);
 
 	std::wstring texturePath{};
 	for (int i = 0; i < numOfTexture; i++)
 	{
-		temp->allData.texturePaths[i] = directoryPath;
+		temp->texturePaths[i] = directoryPath;
 		GetPMXStringUTF16(pmxFile, texturePath);
-		temp->allData.texturePaths[i] += texturePath;
+		temp->texturePaths[i] += texturePath;
 	}
 
 	// マテリアル -----------------------------
 	int numOfMaterial{};
 	pmxFile.read(reinterpret_cast<char*>(&numOfMaterial), 4);
 
-	temp->allData.materials.resize(numOfMaterial);
+	temp->materials.resize(numOfMaterial);
 	for (int i = 0; i < numOfMaterial; i++)
 	{
 		for (int j = 0; j < 2; ++j)
@@ -230,10 +230,10 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 			}
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].diffuse), 16);
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].specular), 12);
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].specularity), 4);
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].ambient), 12);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].diffuse), 16);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].specular), 12);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].specularity), 4);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].ambient), 12);
 
 		pmxFile.get();
 		for (int i = 0; i < 16; i++)
@@ -245,7 +245,7 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 			pmxFile.get();
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].colorMapTextureIndex), hederData[TEXTURE_INDEX_SIZE]);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].colorMapTextureIndex), hederData[TEXTURE_INDEX_SIZE]);
 		for (unsigned char i = 0; i < hederData[TEXTURE_INDEX_SIZE]; i++)
 		{
 			pmxFile.get();
@@ -259,7 +259,7 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 		}
 		else
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].toonTextureIndex), hederData[TEXTURE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].toonTextureIndex), hederData[TEXTURE_INDEX_SIZE]);
 		}
 
 		pmxFile.read(reinterpret_cast<char*>(&arrayLength), 4);
@@ -268,38 +268,38 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 			pmxFile.get();
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.materials[i].vertexNum), 4);
+		pmxFile.read(reinterpret_cast<char*>(&temp->materials[i].vertexNum), 4);
 	}
 
 	// ボーン ---------------------------------
 	int numOfBone{};
 	pmxFile.read(reinterpret_cast<char*>(&numOfBone), 4);
 
-	temp->allData.bones.resize(numOfBone);
+	temp->bones.resize(numOfBone);
 	int ikLinkSize = 0;
 	unsigned char angleLim = 0;
 
 	for (int i = 0; i < numOfBone; i++)
 	{
-		GetPMXStringUTF16(pmxFile, temp->allData.bones[i].name);
+		GetPMXStringUTF16(pmxFile, temp->bones[i].name);
 		pmxFile.read(reinterpret_cast<char*>(&arrayLength), 4);
-		temp->allData.bones[i].nameEnglish.resize(arrayLength);
+		temp->bones[i].nameEnglish.resize(arrayLength);
 		for (unsigned j = 0; j < arrayLength; ++j)
 		{
-			temp->allData.bones[i].nameEnglish[j] = pmxFile.get();
+			temp->bones[i].nameEnglish[j] = pmxFile.get();
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].position), 12);
+		pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].position), 12);
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].parentIndex), hederData[BONE_INDEX_SIZE]);
-		if (numOfBone <= temp->allData.bones[i].parentIndex)
+		pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].parentIndex), hederData[BONE_INDEX_SIZE]);
+		if (numOfBone <= temp->bones[i].parentIndex)
 		{
-			temp->allData.bones[i].parentIndex = PMXModelData::NO_DATA_FLAG;
+			temp->bones[i].parentIndex = PmxModel::NO_DATA_FLAG;
 		}
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].transformationLevel), 4);
+		pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].transformationLevel), 4);
 
-		pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].flag), 2);
+		pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].flag), 2);
 
 		enum BoneFlagMask
 		{
@@ -312,64 +312,64 @@ std::unique_ptr<PmxModel> PmxLoader::loadPMX(const wstring& _filePath)
 			EXTERNAL_PARENT_TRANS = 0x2000,
 		};
 
-		if (temp->allData.bones[i].flag & ACCESS_POINT)
+		if (temp->bones[i].flag & ACCESS_POINT)
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].childrenIndex), hederData[BONE_INDEX_SIZE]);
-			if (numOfBone <= temp->allData.bones[i].childrenIndex)
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].childrenIndex), hederData[BONE_INDEX_SIZE]);
+			if (numOfBone <= temp->bones[i].childrenIndex)
 			{
-				temp->allData.bones[i].childrenIndex = PMXModelData::NO_DATA_FLAG;
+				temp->bones[i].childrenIndex = PmxModel::NO_DATA_FLAG;
 			}
 		}
 		else
 		{
-			temp->allData.bones[i].childrenIndex = PMXModelData::NO_DATA_FLAG;
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].coordOffset), 12);
+			temp->bones[i].childrenIndex = PmxModel::NO_DATA_FLAG;
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].coordOffset), 12);
 		}
-		if ((temp->allData.bones[i].flag & IMPART_TRANSLATION) || (temp->allData.bones[i].flag & IMPART_ROTATION))
+		if ((temp->bones[i].flag & IMPART_TRANSLATION) || (temp->bones[i].flag & IMPART_ROTATION))
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].impartParentIndex), hederData[BONE_INDEX_SIZE]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].impartRate), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].impartParentIndex), hederData[BONE_INDEX_SIZE]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].impartRate), 4);
 		}
-		if (temp->allData.bones[i].flag & AXIS_FIXING)
+		if (temp->bones[i].flag & AXIS_FIXING)
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].fixedAxis), 12);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].fixedAxis), 12);
 		}
-		if (temp->allData.bones[i].flag & LOCAL_AXIS)
+		if (temp->bones[i].flag & LOCAL_AXIS)
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].localAxisX), 12);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].localAxisZ), 12);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].localAxisX), 12);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].localAxisZ), 12);
 		}
-		if (temp->allData.bones[i].flag & EXTERNAL_PARENT_TRANS)
+		if (temp->bones[i].flag & EXTERNAL_PARENT_TRANS)
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].externalParentKey), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].externalParentKey), 4);
 		}
-		if (temp->allData.bones[i].flag & IK)
+		if (temp->bones[i].flag & IK)
 		{
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikTargetIndex), hederData[5]);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikLoopCount), 4);
-			pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikUnitAngle), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikTargetIndex), hederData[5]);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikLoopCount), 4);
+			pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikUnitAngle), 4);
 			pmxFile.read(reinterpret_cast<char*>(&ikLinkSize), 4);
-			temp->allData.bones[i].ikLinks.resize(ikLinkSize);
+			temp->bones[i].ikLinks.resize(ikLinkSize);
 			for (int j = 0; j < ikLinkSize; ++j)
 			{
-				pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikLinks[j].index), hederData[5]);
+				pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikLinks[j].index), hederData[5]);
 				angleLim = pmxFile.get();
-				temp->allData.bones[i].ikLinks[j].existAngleLimited = false;
+				temp->bones[i].ikLinks[j].existAngleLimited = false;
 				if (angleLim == 1)
 				{
-					pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikLinks[j].limitAngleMin), 12);
-					pmxFile.read(reinterpret_cast<char*>(&temp->allData.bones[i].ikLinks[j].limitAngleMax), 12);
-					temp->allData.bones[i].ikLinks[j].existAngleLimited = true;
+					pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikLinks[j].limitAngleMin), 12);
+					pmxFile.read(reinterpret_cast<char*>(&temp->bones[i].ikLinks[j].limitAngleMax), 12);
+					temp->bones[i].ikLinks[j].existAngleLimited = true;
 				}
 			}
 		}
 		else
 		{
-			temp->allData.bones[i].ikTargetIndex = PMXModelData::NO_DATA_FLAG;
+			temp->bones[i].ikTargetIndex = PmxModel::NO_DATA_FLAG;
 		}
 	}
 
 	pmxFile.close();
 
-	return std::unique_ptr<PmxModel>(temp);
+	return temp;
 }

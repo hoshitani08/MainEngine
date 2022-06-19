@@ -1,12 +1,18 @@
 #include "PmxModel.h"
 #include "PmxLoader.h"
 
-bool PmxModel::Initialize(ID3D12Device* device)
+#include <DirectXTex.h>
+#include <cassert>
+
+// 静的メンバ変数の実体
+ID3D12Device* PmxModel::device = nullptr;
+
+bool PmxModel::Initialize()
 {
 	// 頂点バッファ ---------------------------
 	HRESULT result;
 	// 頂点データ全体のサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(PMXModelData::Vertex) * allData.vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
 	// 頂点バッファ生成
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -17,7 +23,7 @@ bool PmxModel::Initialize(ID3D12Device* device)
 		IID_PPV_ARGS(&vertBuff));
 
 	// 頂点バッファへのデータ転送
-	PMXModelData::Vertex* vertMap = nullptr;
+	Vertex* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		std::copy(vertices.begin(), vertices.end(), vertMap);
@@ -28,34 +34,6 @@ bool PmxModel::Initialize(ID3D12Device* device)
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(vertices[0]);
-
-	// UV座標 ---------------------------------
-	bufferDesc.ByteWidth = sizeof(XMFLOAT2) * allData.vertices.size();
-	std::vector<XMFLOAT2> uv;
-	uv.resize(data.vertices.size());
-	for (unsigned i = 0; i < uv.size(); i++)
-	{
-		uv[i] = data.vertices[i].uv;
-	}
-	subresourceData.pSysMem = &uv[0];
-	result = _pDevice->CreateBuffer(&bufferDesc, &subresourceData, &pVertexBuffers[UV]);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// 法線バッファ ---------------------------
-	bufferDesc.ByteWidth = sizeof(XMFLOAT3) * data.vertices.size();
-	for (unsigned i = 0; i < vertices.size(); i++)
-	{
-		vertices[i] = data.vertices[i].normal;
-	}
-	subresourceData.pSysMem = &vertices[0];
-	result = _pDevice->CreateBuffer(&bufferDesc, &subresourceData, &pVertexBuffers[NORMAL]);
-	if (FAILED(result))
-	{
-		return false;
-	}
 
 	// インデックスバッファ -------------------
 	// 頂点インデックス全体のサイズ
@@ -86,57 +64,81 @@ bool PmxModel::Initialize(ID3D12Device* device)
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc = {};
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;//シェーダから見えるように
-	descHeapDesc.NumDescriptors = allData.texturePaths.size(); // テクスチャ枚数
+	descHeapDesc.NumDescriptors = texturePaths.size(); // テクスチャ枚数
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapSRV));//生成
 
 	// メッシュ -------------------------------
-	meshes.resize(data.materials.size());
-	D3DX11_IMAGE_LOAD_INFO loadInfo{};
-	D3DX11_IMAGE_INFO imageInfo{};
+	meshes.resize(materials.size());
+	// WICテクスチャのロード
+	TexMetadata metadata{};
+	ScratchImage scratchImg{};
 	for (unsigned i = 0; i < meshes.size(); ++i)
 	{
-		if (data.materials[i].colorMapTextureIndex != PMXModelData::NO_DATA_FLAG)
+		if (materials[i].colorMapTextureIndex != NO_DATA_FLAG)
 		{
-			// テクスチャ
-			result = D3DX11GetImageInfoFromFileW(data.texturePaths[data.materials[i].colorMapTextureIndex].c_str(), NULL, &imageInfo, NULL);
+			// ファイルパスを結合
+			wchar_t wfilepath[128];
+
+			// ユニコード文字列に変換
+			MultiByteToWideChar(CP_ACP, 0, texturePaths[materials[i].colorMapTextureIndex].c_str(), -1, wfilepath, _countof(wfilepath));
+
+			result = LoadFromWICFile
+			(
+				wfilepath, WIC_FLAGS_NONE,
+				&metadata, scratchImg
+			);
 			if (FAILED(result))
 			{
-				return false;
+				assert(0);
 			}
-			loadInfo.Width = imageInfo.Width;
-			loadInfo.Height = imageInfo.Height;
-			loadInfo.Depth = imageInfo.Depth;
-			loadInfo.FirstMipLevel = 0;
-			loadInfo.MipLevels = imageInfo.MipLevels;
-			loadInfo.Usage = D3D11_USAGE_DEFAULT;
-			loadInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-			loadInfo.CpuAccessFlags = NULL;
-			loadInfo.MiscFlags = NULL;
-			loadInfo.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-			loadInfo.Filter = D3DX11_FILTER_LINEAR | D3DX11_FILTER_SRGB_IN;
-			loadInfo.MipFilter = D3DX11_FILTER_LINEAR;
-			loadInfo.pSrcInfo = &imageInfo;
 
-			result = D3DX11CreateShaderResourceViewFromFileW(_pDevice, data.texturePaths[data.materials[i].colorMapTextureIndex].c_str(), &loadInfo, NULL, &meshes[i].pTexture, nullptr);
+			const Image* img = scratchImg.GetImage(0, 0, 0); // 生データ抽出
+
+			// リソース設定
+			CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D
+			(
+				metadata.format,
+				metadata.width,
+				(UINT)metadata.height,
+				(UINT16)metadata.arraySize,
+				(UINT16)metadata.mipLevels
+			);
+
+			// テクスチャ用バッファの生成
+			result = device->CreateCommittedResource
+			(
+				&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
+				D3D12_HEAP_FLAG_NONE,
+				&texresDesc,
+				D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
+				nullptr,
+				IID_PPV_ARGS(&texbuff)
+			);
 			if (FAILED(result))
 			{
-				return false;
+				assert(0);
 			}
 
-			// テクスチャシェーダー
-			createTexturedShader(_pDevice, meshes[i]);
-		}
-		else
-		{
-			// 単色シェーダー
-			createNotTexturedShader(_pDevice, meshes[i]);
+			// テクスチャバッファにデータ転送
+			result = texbuff->WriteToSubresource
+			(
+				0,
+				nullptr, // 全領域へコピー
+				img->pixels, // 元データアドレス
+				(UINT)img->rowPitch, // 1ラインサイズ
+				(UINT)img->slicePitch // 1枚サイズ
+			);
+			if (FAILED(result))
+			{
+				assert(0);
+			}
 		}
 
-		meshes[i].vertexNum = data.materials[i].vertexNum;
-		meshes[i].diffuseColor = data.materials[i].diffuse;
-		meshes[i].specularColor = data.materials[i].specular;
-		meshes[i].specularity = data.materials[i].specularity;
-		meshes[i].ambientColor = data.materials[i].ambient;
+		meshes[i].vertexNum = materials[i].vertexNum;
+		meshes[i].diffuseColor = materials[i].diffuse;
+		meshes[i].specularColor = materials[i].specular;
+		meshes[i].specularity = materials[i].specularity;
+		meshes[i].ambientColor = materials[i].ambient;
 	}
 
 	return true;
@@ -157,4 +159,33 @@ void PmxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
+}
+
+void PmxModel::StaticInitialize(ID3D12Device* device)
+{
+	// nullptrチェック
+	assert(device);
+
+	PmxModel::device = device;
+}
+
+std::unique_ptr<PmxModel> PmxModel::CreateFromObject(const std::wstring& text, bool smoothing)
+{
+	// 3Dオブジェクトのインスタンスを生成
+	PmxModel* model = new PmxModel();
+	if (model == nullptr)
+	{
+		return nullptr;
+	}
+
+	model = PmxLoader::GetInstance()->loadPMX(text);
+
+	// 初期化
+	if (!model->Initialize())
+	{
+		delete model;
+		assert(0);
+		return nullptr;
+	}
+	return std::unique_ptr<PmxModel>(model);
 }

@@ -22,7 +22,24 @@ protected: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // サブクラス
+	// texturedModelシェーダーの定数バッファデータ型
+	struct TexturedModelConstantBufferData
+	{
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
+	};
 
+	// notTexturedModelシェーダーの定数バッファデータ型
+	struct NotTexturedModelConstantBufferData
+	{
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
+
+		XMVECTOR diffuseColor;
+		XMVECTOR ambientColor;
+	};
 
 public: // 静的メンバ関数
 	// 静的初期化

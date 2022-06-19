@@ -25,7 +25,7 @@ public:
 	// シングルトンインスタンスの取得
 	static PmxLoader* GetInstance();
 	// PMXモデルデータのロード関数
-	std::unique_ptr<PmxModel> loadPMX(const wstring& _filePath);
+	PmxModel* loadPMX(const wstring& _filePath);
 
 private:
 	// privateなコンストラクタ（シングルトンパターン）

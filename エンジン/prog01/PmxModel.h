@@ -8,11 +8,29 @@
 
 using namespace DirectX;
 
-// PMXのモデルデータ型
-struct PMXModelData
+class PmxModel
 {
+public:
+	//フレンドクラス
+	friend class PmxLoader;
+
+private: // エイリアス
+	// Microsoft::WRL::を省略
+	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	// DirectX::を省略
+	using XMFLOAT2 = DirectX::XMFLOAT2;
+	using XMFLOAT3 = DirectX::XMFLOAT3;
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+	using XMVECTOR = DirectX::XMVECTOR;
+	using XMMATRIX = DirectX::XMMATRIX;
+	// std::を省略
+	using string = std::string;
+	using wstring = std::wstring;
+
+private: // 定数
 	static constexpr int NO_DATA_FLAG = -1;
 
+public: // サブクラス
 	struct Vertex
 	{
 		// 頂点座標
@@ -107,78 +125,43 @@ struct PMXModelData
 		std::vector<IKLink> ikLinks;
 	};
 
-
-	std::vector<Vertex> vertices;
-	std::vector<Surface> surfaces;
-	std::vector<std::wstring> texturePaths;
-	std::vector<Material> materials;
-	std::vector<Bone> bones;
-};
-
-class PmxModel
-{
-public:
-	//フレンドクラス
-	friend class PmxLoader;
-
-private: // エイリアス
-	// Microsoft::WRL::を省略
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-	// DirectX::を省略
-	using XMFLOAT2 = DirectX::XMFLOAT2;
-	using XMFLOAT3 = DirectX::XMFLOAT3;
-	using XMFLOAT4 = DirectX::XMFLOAT4;
-	using XMVECTOR = DirectX::XMVECTOR;
-	using XMMATRIX = DirectX::XMMATRIX;
-
-public: // サブクラス
-	// texturedModelシェーダーの定数バッファデータ型
-	struct TexturedModelConstantBufferData
+	// メッシュ
+	struct Mesh
 	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-	};
-
-	// notTexturedModelシェーダーの定数バッファデータ型
-	struct NotTexturedModelConstantBufferData
-	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-
-		XMVECTOR diffuseColor;
-		XMVECTOR ambientColor;
+		unsigned vertexNum;
+		ComPtr<ID3D12Resource> texbuff;
+		XMFLOAT4 diffuseColor;
+		XMFLOAT3 specularColor;
+		float specularity;
+		XMFLOAT3 ambientColor;
 	};
 
 public:
 	inline size_t getMeshesSize() { return meshes.size(); }
 	//inline bool meshHasTexture(int _meshIndex) { return meshes[_meshIndex]->GetpTexture(); }
-	bool Initialize(ID3D12Device* device);
+	bool Initialize();
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	// 静的初期化
+	static void StaticInitialize(ID3D12Device* device);
+
+	static std::unique_ptr<PmxModel> CreateFromObject(const std::wstring& text, bool smoothing = false);
+
+private: // 静的メンバ変数
+	// デバイス
+	static ID3D12Device* device;
+
 private:
-	enum VertexBuffer
-	{
-		POSITION,
-		UV,
-		NORMAL,
-		VertexBuffer_SIZE,
-	};
-
-	//std::array<ComPtr<ID3D12Resource>, VertexBuffer_SIZE> pVertexBuffers;
-	ComPtr<ID3D12Resource> pIndexBuffer;
 	unsigned mIndexCount;
-
-	PMXModelData allData;
-	std::vector<PmxMesh*> meshes;
-
-	HRESULT createTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
-	HRESULT createNotTexturedShader(ID3D12Device* const _pDevice, PmxMesh& mesh);
+	std::vector<Mesh> meshes;
 
 private: //FBXから必要だと思って引っ張ってきたもの
 	//頂点データ配列
-	std::vector<PMXModelData::Vertex> vertices;
+	std::vector<Vertex> vertices;
+	std::vector<Surface> surfaces;
+	std::vector<wstring> texturePaths;
+	std::vector<Material> materials;
+	std::vector<Bone> bones;
 	//頂点インデックス配列
 	std::vector<unsigned short> indices;
 	//頂点バッファ
