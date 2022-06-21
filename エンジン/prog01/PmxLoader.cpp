@@ -194,7 +194,7 @@ PmxModel* PmxLoader::loadPMX(const wstring& _filePath)
 	{
 		pmxFile.read(reinterpret_cast<char*>(&temp->surfaces[i].vertexIndex), hederData[VERTEX_INDEX_SIZE]);
 
-		if (temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG || temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG || temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG)
+		if (temp->surfaces[i].vertexIndex == PmxModel::NO_DATA_FLAG)
 		{
 			pmxFile.close();
 			return false;

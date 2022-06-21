@@ -11,7 +11,7 @@ void ShaderManager::Initialize(ID3D12Device* device)
 	CreateGraphicsPipeline(device, L"Object", "OBJ");
 	CreateGraphicsPipeline(device, L"BasicFBX", "FBX");
 	CreateGraphicsPipeline(device, L"NormalMapFBX", "FBX");
-	CreateGraphicsPipeline(device, L"NormalMapFBX", "PMX");
+	CreateGraphicsPipeline(device, L"PMX", "PMX");
 }
 
 void ShaderManager::Finalize()
@@ -439,7 +439,7 @@ void ShaderManager::PmxPipeline(ID3D12Device* device, ShaderData tempData)
 	rootparams[4].InitAsConstantBufferView(2, 0, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
-	CD3DX12_STATIC_SAMPLER_DESC samplerDesc[2] = { CD3DX12_STATIC_SAMPLER_DESC(0), CD3DX12_STATIC_SAMPLER_DESC(1) };	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
+	CD3DX12_STATIC_SAMPLER_DESC samplerDesc[2] = { CD3DX12_STATIC_SAMPLER_DESC(0), CD3DX12_STATIC_SAMPLER_DESC(1) };
 	samplerDesc[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 	samplerDesc[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 

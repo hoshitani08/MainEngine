@@ -41,9 +41,19 @@ public: // サブクラス
 		XMVECTOR ambientColor;
 	};
 
+	// 定数バッファ用データ構造体（座標変換行列用）
+	struct ConstBufferData
+	{
+		XMMATRIX viewproj;    // ビュープロジェクション行列
+		XMMATRIX world; // ワールド行列
+		XMFLOAT3 cameraPos; // カメラ座標（ワールド座標）
+	};
+
 public: // 静的メンバ関数
 	// 静的初期化
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
+	// 3Dオブジェクト生成
+	static std::unique_ptr<PmxObject3d> Create(PmxModel* model = nullptr);
 	// setter
 	static void SetDevice(ID3D12Device* device) { PmxObject3d::device = device; }
 	static void SetCamera(Camera* camera) { PmxObject3d::camera = camera; }
@@ -64,6 +74,8 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// 行列の更新
+	void UpdateWorldMatrix();
 	//モデルを設定
 	void SetModel(PmxModel* _model) { model = _model; }
 
@@ -93,5 +105,7 @@ protected: // メンバ変数
 	XMMATRIX matWorld;
 	// モデル
 	PmxModel* model = nullptr;
+	//クラス名(デバック用)
+	const char* name = nullptr;
 };
 

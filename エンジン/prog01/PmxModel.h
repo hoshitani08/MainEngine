@@ -152,7 +152,7 @@ private: // 静的メンバ変数
 	static ID3D12Device* device;
 
 private:
-	unsigned mIndexCount;
+	//unsigned mIndexCount;
 	std::vector<Mesh> meshes;
 
 private: //FBXから必要だと思って引っ張ってきたもの

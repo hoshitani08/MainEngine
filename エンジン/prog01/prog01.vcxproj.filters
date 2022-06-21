@@ -77,6 +77,9 @@
     <Filter Include="ゲームシステム\Base\Scene">
       <UniqueIdentifier>{83995099-a486-4534-b18a-6d55403c3d00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダーファイル\PMX">
+      <UniqueIdentifier>{a4ffdb2b-b1c9-4a75-b5b5-13337b2ab7b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -90,6 +93,9 @@
     </None>
     <None Include="Resources\shaders\Sprite.hlsli">
       <Filter>シェーダーファイル\Sprite</Filter>
+    </None>
+    <None Include="Resources\shaders\PMX.hlsli">
+      <Filter>シェーダーファイル\PMX</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +131,12 @@
     </FxCompile>
     <FxCompile Include="Resources\shaders\NormalMapFBXVS.hlsl">
       <Filter>シェーダーファイル\FBX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PMXPS.hlsl">
+      <Filter>シェーダーファイル\PMX</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PMXVS.hlsl">
+      <Filter>シェーダーファイル\PMX</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

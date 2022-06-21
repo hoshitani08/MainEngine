@@ -44,11 +44,14 @@ void GameScene::Initialize()
 	// パーティクルマネージャ生成
 	particleMan = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera.get());
 
+	PmxObject3d::StaticInitialize(DirectXCommon::GetInstance()->GetDevice(), camera.get());
+
 	//ライト生成
 	light = LightGroup::Create();
 	//オブジェクトにライトをセット
 	Object3d::SetLight(light.get());
 	FbxObject3d::SetLight(light.get());
+	PmxObject3d::SetLight(light.get());
 	light->SetDirLightActive(0, true);
 	light->SetDirLightActive(1, false);
 	light->SetDirLightActive(2, false);
@@ -62,13 +65,16 @@ void GameScene::Initialize()
 	// 3Dオブジェクト生成
 
 	// FBXオブジェクト生成
-	fbxObject3d = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("a"), L"NormalMapFBX");
+	model = PmxModel::CreateFromObject(L"初音ミクver.2.1");
+	fbxObject3d = PmxObject3d::Create(model.get());
+
+	
 	//アニメーション
 	//fbxObject3d->PlayAnimation();
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 0, 0 });
-	camera->SetEye({ 0,1,-500 });
+	camera->SetEye({ 0,1,-50 });
 }
 
 void GameScene::Finalize()
@@ -111,6 +117,8 @@ void GameScene::Draw()
 {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
+
+	fbxObject3d->Draw(cmdList);
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
@@ -128,7 +136,7 @@ void GameScene::Draw()
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
-	fbxObject3d->Draw(cmdList);
+
 #pragma endregion 3Dオブジェクト(FBX)描画
 #pragma region パーティクル
 	// パーティクルの描画
