@@ -176,4 +176,6 @@ private: //FBXから必要だと思って引っ張ってきたもの
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	//SRV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	//SRVのGPUハンドル
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
 };

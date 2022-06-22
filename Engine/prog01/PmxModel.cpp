@@ -163,6 +163,35 @@ bool PmxModel::Initialize()
 			{
 				assert(0);
 			}
+
+			// シェーダリソースビュー作成
+			D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
+			D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
+
+			srvDesc.Format = resDesc.Format;
+			srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; //2Dテクスチャ
+			srvDesc.Texture2D.MipLevels = 1;
+
+			device->CreateShaderResourceView
+			(
+				texbuff.Get(), //ビューと関連付けるバッファ
+				&srvDesc, //テクスチャ設定情報
+				CD3DX12_CPU_DESCRIPTOR_HANDLE
+				(
+					descHeapSRV->GetCPUDescriptorHandleForHeapStart(), // ヒープの先頭アドレス
+					0,
+					device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+				)
+			);
+
+			//GPUハンドル取得
+			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE
+			(
+				descHeapSRV->GetGPUDescriptorHandleForHeapStart(),
+				0,
+				device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)
+			);
 		}
 
 		meshes[i].vertexNum = materials[i].vertexNum;
