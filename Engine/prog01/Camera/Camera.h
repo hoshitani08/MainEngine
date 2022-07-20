@@ -46,6 +46,7 @@ public: // 静的メンバ関数
 	// ベクトルによる移動
 	void CameraMoveVector(const XMFLOAT3& move);
 	void CameraMoveEyeVector(const XMFLOAT3& move);
+	void CameraMoveTargetVector(const XMFLOAT3& move);
 
 protected: // メンバ変数
 	// ビュー行列

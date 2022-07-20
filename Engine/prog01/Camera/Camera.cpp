@@ -165,3 +165,14 @@ void Camera::CameraMoveEyeVector(const XMFLOAT3& move)
 
 	SetEye(eye_moved);
 }
+
+void Camera::CameraMoveTargetVector(const XMFLOAT3& move)
+{
+	XMFLOAT3 target_moved = GetTarget();
+
+	target_moved.x += move.x;
+	target_moved.y += move.y;
+	target_moved.z += move.z;
+
+	SetTarget(target_moved);
+}

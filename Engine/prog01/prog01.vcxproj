@@ -172,12 +172,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\BasicFBXVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\shaders\NormalMapFBXPS.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -302,10 +304,13 @@
     <ClCompile Include="GameObject\Ease.cpp" />
     <ClCompile Include="GameObject\MapChip.cpp" />
     <ClCompile Include="GameObject\Player.cpp" />
+    <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="PmxLoader.cpp" />
+    <ClCompile Include="PmxMaterial.cpp" />
     <ClCompile Include="PmxMesh.cpp" />
     <ClCompile Include="PmxModel.cpp" />
     <ClCompile Include="PmxObject3d.cpp" />
@@ -359,9 +364,12 @@
     <ClInclude Include="GameObject\Ease.h" />
     <ClInclude Include="GameObject\MapChip.h" />
     <ClInclude Include="GameObject\Player.h" />
+    <ClInclude Include="Hunter.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Math\Vector.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="PmxLoader.h" />
+    <ClInclude Include="PmxMaterial.h" />
     <ClInclude Include="PmxMesh.h" />
     <ClInclude Include="PmxModel.h" />
     <ClInclude Include="PmxObject3d.h" />

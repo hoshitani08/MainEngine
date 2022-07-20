@@ -174,6 +174,11 @@
     <ClCompile Include="main.cpp">
       <Filter>ゲームシステム</Filter>
     </ClCompile>
+    <ClCompile Include="PmxMaterial.cpp">
+      <Filter>エンジンシステム\3d\PMX</Filter>
+    </ClCompile>
+    <ClCompile Include="Hunter.cpp" />
+    <ClCompile Include="Monster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -341,6 +346,11 @@
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="PmxMaterial.h">
+      <Filter>エンジンシステム\3d\PMX</Filter>
+    </ClInclude>
+    <ClInclude Include="Hunter.h" />
+    <ClInclude Include="Monster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">

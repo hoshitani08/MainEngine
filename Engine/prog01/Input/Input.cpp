@@ -255,56 +255,49 @@ BOOL CALLBACK Input::DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 	return DIENUM_CONTINUE;
 }
 
-bool Input::PushPadStickUp()
-{
-	if (padData.lY < -angle)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Input::PushPadStickDown()
-{
-	if (padData.lY > angle)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Input::PushPadStickRight()
-{
-	if (padData.lX > angle)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Input::PushPadStickLeft()
-{
-	if (padData.lX < -angle)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 XMFLOAT2& Input::PadStickGradient()
 {
-	float x = padData.lX / 1000;
-	float y = padData.lY / 1000;
+	float x = padData.lX / 1000.0f;
+	float y = padData.lY / 1000.0f;
+
+	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
+	{
+		x = 0.0f;
+	}
+	if (fabsf(y) < 0.2f && fabsf(y) > -0.2f)
+	{
+		y = 0.0f;
+	}
+
+	return XMFLOAT2(x, y);
+}
+
+XMFLOAT2& Input::PadRightStickGradient()
+{
+	float x = padData.lRx / 1000.0f;
+	float y = padData.lRy / 1000.0f;
+
+	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
+	{
+		x = 0.0f;
+	}
+	if (fabsf(y) < 0.2f && fabsf(y) > -0.2f)
+	{
+		y = 0.0f;
+	}
+
 	return XMFLOAT2(x, y);
 }
 
 double Input::PadStickAngle()
 {
 	double radian = atan2(padData.lY - 0, padData.lX - 0);
+	return radian * (180.0f / 3.14159265359f);
+}
+
+double Input::PadRightStickAngle()
+{
+	double radian = atan2(padData.lRy - 0, padData.lRx - 0);
 	return radian * (180.0f / 3.14159265359f);
 }
 

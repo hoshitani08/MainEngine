@@ -1,5 +1,5 @@
 //ƒ{[ƒ“‚ÌÅ‘å”
-static const int MAX_BONES = 32;
+static const int MAX_BONES = 200;
 
 cbuffer cbuff0 : register(b0)
 {

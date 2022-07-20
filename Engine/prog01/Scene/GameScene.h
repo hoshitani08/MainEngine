@@ -14,6 +14,9 @@
 #include "PmxObject3d.h"
 #include "PmxModel.h"
 
+#include "Hunter.h"
+#include "Monster.h"
+
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
@@ -34,8 +37,11 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMVECTOR = DirectX::XMVECTOR;
 
-private: // 静的メンバ変数
-	static const int debugTextTexNumber = 0;
+private: // 静的定数
+	static const int DEBUG_TEXT_TEX_NUMBER = 0;
+
+private: // 定数
+	const XMFLOAT2 RESTRICTION_ANGLE = { 360.0f, 80.0f };
 
 public: // メンバ関数
 	// デストラクタ
@@ -51,17 +57,19 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//カメラ
-	std::unique_ptr<Camera> camera;
+	std::unique_ptr<Camera> camera_;
 	//スプライト
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> sprite_;
 	//パーティクル
-	std::unique_ptr<ParticleManager> particleMan;
+	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
-	std::unique_ptr<PmxObject3d> fbxObject3d;
-	std::unique_ptr<PmxModel> model;
+	std::unique_ptr<Object3d> skydome_;
+	std::unique_ptr<Object3d> ground_;
+	std::unique_ptr<Hunter> hunter_;
+	std::unique_ptr<Monster> monster_;
 
 	//ライト
-	std::unique_ptr<LightGroup> light;
+	std::unique_ptr<LightGroup> light_;
 	//光線方向初期値
 	float circleShadowDir[3] = { 0,-1,0 };
 	float circleShadowPos[3] = { 1,2,0 };
@@ -70,5 +78,7 @@ private: // メンバ変数
 
 	float fighterPos[3] = { 1, 0.0f, 0 };
 	//当たり判定
-	CollisionManager* collisionManager = nullptr;
+	CollisionManager* collisionManager_ = nullptr;
+	// 角度
+	XMFLOAT2 angle_ = {90.0f, 0.0f};
 };

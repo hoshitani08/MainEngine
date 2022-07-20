@@ -3,6 +3,9 @@
 #include <vector>
 #include <d3d12.h>
 #include <d3dx12.h>
+#include <string>
+#include <unordered_map>
+#include <memory>
 
 #include "PmxMesh.h"
 

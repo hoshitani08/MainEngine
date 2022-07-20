@@ -8,6 +8,7 @@ void FbxFactory::Initialize()
 {
 	LoadModel("uma");
 	LoadModel("a");
+	LoadModel("player");
 }
 
 void FbxFactory::Finalize()

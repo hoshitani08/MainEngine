@@ -56,20 +56,16 @@ public: //メンバ関数
 
 	static BOOL CALLBACK DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef);
 
-	//ゲームパッドのスティック
-	bool PushPadStickUp();
-	bool PushPadStickDown();
-	bool PushPadStickRight();
-	bool PushPadStickLeft();
 	//スティックの傾き
 	XMFLOAT2& PadStickGradient();
+	XMFLOAT2& PadRightStickGradient();
 	//スティックの角度
 	double PadStickAngle();
+	double PadRightStickAngle();
 	// キーの左ボタントリガーをチェック
 	bool TriggerPadLeft();
 	// キーの右ボタントリガーをチェック
 	bool TriggerPadRight();
-
 	//ゲームパッドのキーの押下をチェック
 	bool PushPadKey(PadKey keyNumber);
 	// キーのトリガーをチェック

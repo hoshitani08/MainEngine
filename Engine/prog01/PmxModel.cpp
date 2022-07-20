@@ -3,14 +3,14 @@
 
 #include <DirectXTex.h>
 #include <cassert>
+#include <fstream>
+#include <sstream>
+#include <array>
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
 ID3D12Device* PmxModel::device = nullptr;
 
-std::string WStringToString
-(
-	std::wstring oWString
-)
+std::string WStringToString(std::wstring oWString)
 {
 	// wstring ¨ SJIS
 	int iBufferSize = WideCharToMultiByte(CP_OEMCP, 0, oWString.c_str()
