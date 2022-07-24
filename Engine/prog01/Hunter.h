@@ -34,6 +34,8 @@ public: // メンバ関数
 
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
 
+	void SetVector(XMVECTOR vector) { vector_ = vector; }
+
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
 
@@ -50,4 +52,6 @@ private: // メンバ変数
 	int avoidTimer_ = 0;
 	//　カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
+
+	XMVECTOR vector_;
 };

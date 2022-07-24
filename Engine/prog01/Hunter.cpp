@@ -74,11 +74,14 @@ void Hunter::Move()
 
 	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
 	{
-		float angle = cameraAngle_.x + input->PadStickAngle();
+		float a = cameraAngle_.x + input->PadStickAngle();
+		XMFLOAT2 angle = { a, cameraAngle_.y };
 
-		position_.x +=  cosf((angle * 3.14) / 180.0f) * speed_;
-		position_.z += -sinf((angle * 3.14) / 180.0f) * speed_;
-		rotation.y = input->PadStickAngle() + cameraAngle_.x;
+		position_.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
+		position_.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
+		position_.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
+		rotation.y = angle.x;
+		rotation.z = -angle.y;
 	}
 	hunter_->SetPosition(position_);
 	hunter_->SetRotation(rotation);

@@ -123,6 +123,8 @@ void GameScene::Update()
 	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
 	XMFLOAT3 pos = f;
 
+	hunter_->SetVector(v);
+
 	camera_->SetTarget(center);
 	camera_->SetEye(pos);
 	camera_->Update();
