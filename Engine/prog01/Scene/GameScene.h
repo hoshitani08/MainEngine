@@ -16,6 +16,7 @@
 
 #include "Hunter.h"
 #include "Monster.h"
+#include "UserInterface.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -60,6 +61,8 @@ private: // メンバ変数
 	std::unique_ptr<Camera> camera_;
 	//スプライト
 	std::unique_ptr<Sprite> sprite_;
+	//UI
+	std::unique_ptr<UserInterface> ui;
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト

@@ -19,7 +19,7 @@ void MyGame::Initialize()
 	//ゲームで必要なモデル(.obj)のロード
 	ObjFactory::GetInstance()->Initialize();
 	//ゲームで必要なサウンドのロード
-	Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
+	//Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
 
 	// シーンの初期化
 	//シーンファクトリを生成し、マネージャーにセット

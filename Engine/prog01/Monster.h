@@ -2,7 +2,10 @@
 #include <DirectXMath.h>
 #include <memory>
 
+#include "Hunter.h"
 #include "FbxObject3d.h"
+
+class Hunter;
 
 enum class Phase
 {
@@ -38,13 +41,18 @@ public: // ƒƒ“ƒoŠÖ”
 	void Draw();
 
 	void Move();
-	void Attack();
+
+	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
 
 private: // ƒƒ“ƒo•Ï”
 	std::unique_ptr<FbxObject3d> monster_;
+	Hunter* hunter_ = nullptr;
+
 	float speed_ = 0.5f;
 	bool avoidFlag_ = false;
-	int avoidTimer_ = 0;
+	int moveTimer_ = 0;
+	int max = 0;
+	int count = 0;
 
-	Phase phase_ = Phase::Stop;
+	Phase phase_ = Phase::Approach;
 };

@@ -11,7 +11,25 @@ void SpriteFactory::Initialize()
 	DebugText::GetInstance()->Initialize(0);
 
 	// テクスチャ読み込み
-	if (!Sprite::LoadTexture(1, L"Resources/APEX_01.png"))
+
+	//UI : Player関係
+	if (!Sprite::LoadTexture(1, L"Resources/UI/play/lifeframe.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(2, L"Resources/UI/play/strengthframe.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(3, L"Resources/UI/play/lifegauge.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(4, L"Resources/UI/play/innerlifegauge.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(5, L"Resources/UI/play/strengthgauge.png"))
 	{
 		assert(0);
 	}

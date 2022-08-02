@@ -179,6 +179,7 @@
     </ClCompile>
     <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -351,6 +352,7 @@
     </ClInclude>
     <ClInclude Include="Hunter.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">

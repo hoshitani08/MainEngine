@@ -26,7 +26,6 @@ void Hunter::Initialize()
 	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX");
 	hunter_->SetScale({ size, size, size });
 	hunter_->SetPosition({ 0, 10, -30 });
-	//fbxObject3d->PlayAnimation(2);
 }
 
 void Hunter::Finalize()
@@ -60,8 +59,12 @@ void Hunter::Move()
 		{
 			avoidTimer_ = 0;
 			avoidFlag_ = false;
-			//fbxObject3d->PlayAnimation(2);
 		}
+	}
+	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER))
+	{
+		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
+		avoidTimer_++;
 	}
 	else
 	{
@@ -90,7 +93,6 @@ void Hunter::Move()
 	{
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
-		//fbxObject3d->PlayAnimation();
 	}
 }
 
