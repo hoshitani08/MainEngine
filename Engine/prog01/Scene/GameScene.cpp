@@ -148,6 +148,8 @@ void GameScene::Update()
 	monster_->Update();
 	skydome_->Update();
 	ground_->Update();
+
+	ui->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }

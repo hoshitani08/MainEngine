@@ -76,6 +76,8 @@ public: // メンバ関数
 	void SetPosition(XMFLOAT2 position);
 	// サイズの設定
 	void SetSize(XMFLOAT2 size);
+	// サイズの取得
+	const XMFLOAT2& GetSize() { return size; }
 	// アンカーポイントの設定
 	void SetAnchorPoint(XMFLOAT2 anchorpoint);
 	// 左右反転の設定

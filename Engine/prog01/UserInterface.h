@@ -32,6 +32,8 @@ public: // メンバ関数
 	// 手前の描画
 	void NearDraw();
 
+	void HpEase();
+
 private: // メンバ変数
 	//スタミナのフレーム
 	std::unique_ptr<Sprite> strengthFrame_;
@@ -43,4 +45,12 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> lifeGauge_;
 	//体力の赤ゲージ
 	std::unique_ptr<Sprite> innerLifeGauge_;
+	//時計のフレーム
+	std::unique_ptr<Sprite> clockFrame_;
+
+	//イージングの進行度用
+	float easeTimer = 0.0f;
+
+	XMFLOAT2 hpGaugeSize = {};
+	XMFLOAT2 hpGaugeDamageSize = {};
 };
