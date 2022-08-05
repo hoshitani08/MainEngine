@@ -5,14 +5,19 @@
 #include "Hunter.h"
 #include "FbxObject3d.h"
 
-class Hunter;
-
 enum class Phase
 {
 	Approach,
 	Stop,
 	Attack,
 	Leave
+};
+
+enum class AttackType
+{
+	Weak,
+	Ordinary,
+	Strong
 };
 
 class Monster
@@ -26,6 +31,8 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMVECTOR = DirectX::XMVECTOR;
+
+public: // サブクラス
 
 public: // 静的メンバ関数
 	static std::unique_ptr<Monster> Create();
@@ -55,4 +62,6 @@ private: // メンバ変数
 	int count = 0;
 
 	Phase phase_ = Phase::Approach;
+
+	AttackType attackType_ = AttackType::Ordinary;
 };

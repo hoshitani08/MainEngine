@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Sprite.h"
+#include "Hunter.h"
 
 class UserInterface
 {
@@ -17,13 +18,13 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // メンバ関数
-	//コンストラクタ
+	// コンストラクタ
 	UserInterface();
-	//デストラクタ
+	// デストラクタ
 	~UserInterface();
 	// 初期化
 	void Initialize();
-	//終了
+	// 終了
 	void Finalize();
 	// 毎フレーム処理
 	void Update();
@@ -31,10 +32,20 @@ public: // メンバ関数
 	void BackDraw();
 	// 手前の描画
 	void NearDraw();
-
+	// HP減少時のイージング
 	void HpEase();
+	// ハンターを設定
+	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
+	// ダメージを計算
+	void DamageCalculate();
+	// スタミナ計算
+	void StrengthCalculate();
+	// 生きているかどうか
+	bool GetIsDeath() { return isDeath_; }
 
 private: // メンバ変数
+	//ハンター
+	Hunter* hunter_ = nullptr;
 	//スタミナのフレーム
 	std::unique_ptr<Sprite> strengthFrame_;
 	//体力のフレーム
@@ -47,10 +58,8 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> innerLifeGauge_;
 	//時計のフレーム
 	std::unique_ptr<Sprite> clockFrame_;
-
 	//イージングの進行度用
-	float easeTimer = 0.0f;
-
-	XMFLOAT2 hpGaugeSize = {};
-	XMFLOAT2 hpGaugeDamageSize = {};
+	float easeTimer_ = 0.0f;
+	// 生きているかどうか
+	bool isDeath_ = false;
 };

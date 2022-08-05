@@ -51,6 +51,15 @@ void Hunter::Move()
 
 	if (avoidFlag_)
 	{
+		if (avoidTimer_ <= 0)
+		{
+			strengthDecrement = 10;
+		}
+		else
+		{
+			strengthDecrement = 0.0f;
+		}
+
 		avoidTimer_++;
 
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f;
@@ -64,11 +73,13 @@ void Hunter::Move()
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER))
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
+		strengthDecrement = 0.6f;
 		avoidTimer_++;
 	}
 	else
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
+		strengthDecrement = 0.0f;
 		avoidTimer_++;
 	}
 
@@ -94,9 +105,24 @@ void Hunter::Move()
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
 	}
+
+	if (!damageFlag_)
+	{
+		invincibleTimer_++;
+	}
 }
 
 void Hunter::Attack()
 {
 
+}
+
+void Hunter::SetDamageFlag(bool damageFlag)
+{
+	damageFlag_ = damageFlag;
+
+	if (invincibleTimer_ >= 60 && damageFlag)
+	{
+		invincibleTimer_ = 0;
+	}
 }

@@ -74,6 +74,7 @@ void GameScene::Initialize()
 	monster_ = Monster::Create();
 
 	monster_->SetHunter(hunter_.get());
+	ui->SetHunter(hunter_.get());
 
 	// カメラ注視点をセット
 	/*camera->SetTarget({ 0, 0, 0 });
@@ -129,8 +130,6 @@ void GameScene::Update()
 	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
 	XMFLOAT3 pos = f;
 
-	hunter_->SetVector(v);
-
 	camera_->SetTarget(center);
 	camera_->SetEye(pos);
 	camera_->Update();
@@ -139,7 +138,7 @@ void GameScene::Update()
 	{
 		SceneManager::GetInstance()->ChangeScene("ClearScene");
 	}
-	else if (input->TriggerKey(DIK_B))
+	else if (ui->GetIsDeath())
 	{
 		SceneManager::GetInstance()->ChangeScene("GameOverScene");
 	}

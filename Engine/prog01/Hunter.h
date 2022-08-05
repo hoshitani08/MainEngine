@@ -34,10 +34,22 @@ public: // メンバ関数
 
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
 
-	void SetVector(XMVECTOR vector) { vector_ = vector; }
-
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
+	// ダメージのパーセントを取得
+	float GetDamagePercent() { return damagePercent_; }
+	// ダメージのフラグを取得
+	bool GetDamageFlag() { return damageFlag_; }
+	// 回避フラグ
+	bool GetAvoidFlag() { return avoidFlag_; }
+	// 無敵時間を取得
+	int GetInvincibleTimer() { return invincibleTimer_; }
+	//スタミナの減少値を取得
+	float GetStrengthDecrement() { return strengthDecrement; }
+	// ダメージのフラグを設定
+	void SetDamageFlag(bool damageFlag);
+	// ダメージのパーセントを設定
+	void SetDamagePercent(float damagePercent) { damagePercent_ = damagePercent; }
 
 private: // メンバ変数
 	//　モデル
@@ -52,6 +64,12 @@ private: // メンバ変数
 	int avoidTimer_ = 0;
 	//　カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
-
-	XMVECTOR vector_;
+	// ダメージ
+	float damagePercent_ = 0.0f;
+	// ダメージフラグ
+	bool damageFlag_ = false;
+	// 無敵時間
+	int invincibleTimer_ = 300;
+	// スタミナの減少値
+	float strengthDecrement = 0.0f;
 };
