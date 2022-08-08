@@ -61,6 +61,9 @@ void BaseGame::Initialize()
 	FbxLoader::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
 	//シェーダマネージャー初期化
 	ShaderManager::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
+
+	postEffect = std::make_unique<PostEffect>();
+	postEffect->Initialize(DirectXCommon::GetInstance()->GetDevice());
 }
 
 void BaseGame::Finalize()
@@ -93,11 +96,18 @@ void BaseGame::Update()
 
 void BaseGame::Draw()
 {
-	// 描画開始
-	DirectXCommon::GetInstance()->PreDraw();
+
+	postEffect->PreDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// ゲームシーンの描画
 	SceneManager::GetInstance()->Draw();
+
+	postEffect->PostDrawScene(DirectXCommon::GetInstance()->GetCommandList());
+
+	// 描画開始
+	DirectXCommon::GetInstance()->PreDraw();
+	postEffect->Draw(DirectXCommon::GetInstance()->GetCommandList());
+	
 
 	// 描画終了
 	DirectXCommon::GetInstance()->PostDraw();

@@ -40,6 +40,12 @@
     <FxCompile Include="Resources\shaders\PMXVS.hlsl">
       <Filter>シェーダファイル\PMX</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectTestPS.hlsl">
+      <Filter>シェーダファイル\PostEffect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectTestVS.hlsl">
+      <Filter>シェーダファイル\PostEffect</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="2d\DebugText.cpp">
@@ -180,6 +186,7 @@
     <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -353,6 +360,7 @@
     <ClInclude Include="Hunter.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="PostEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -369,6 +377,9 @@
     </None>
     <None Include="Resources\shaders\PMX.hlsli">
       <Filter>シェーダファイル\PMX</Filter>
+    </None>
+    <None Include="Resources\shaders\PostEffectTest.hlsli">
+      <Filter>シェーダファイル\PostEffect</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -449,6 +460,9 @@
     </Filter>
     <Filter Include="シェーダファイル\PMX">
       <UniqueIdentifier>{e2874ba0-af65-459f-b973-211e921725f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダファイル\PostEffect">
+      <UniqueIdentifier>{f556f7cb-ad4d-4976-b415-946b6cce0ddc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

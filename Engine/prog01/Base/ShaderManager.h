@@ -49,6 +49,7 @@ public:
 	void PmxPipeline(ID3D12Device* device, ShaderData tempData);
 	void SpritePipeline(ID3D12Device* device, ShaderData tempData);
 	void ParticlePipeline(ID3D12Device* device, ShaderData tempData);
+	void PostEffectPipeline(ID3D12Device* device, ShaderData tempData);
 
 	ID3D12RootSignature* GetRootSignature(std::wstring fName);
 	ID3D12PipelineState* GetPipelineState(std::wstring fName);

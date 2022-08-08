@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "SceneManager.h"
 #include "AbstractSceneFactory.h"
+#include "PostEffect.h"
 
 #include <memory>
 
@@ -25,6 +26,7 @@ public:
 protected:
 	bool endRequst = false;
 	std::unique_ptr<WinApp> win;
+	std::unique_ptr<PostEffect> postEffect;
 	//シーンファクトリ
 	AbstractSceneFactory* sceneFactory = nullptr;
 };
