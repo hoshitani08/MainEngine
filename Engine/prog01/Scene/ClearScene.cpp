@@ -56,3 +56,7 @@ void ClearScene::Draw()
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
 }
+
+void ClearScene::EffectDraw()
+{
+}

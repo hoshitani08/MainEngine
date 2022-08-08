@@ -20,6 +20,8 @@ public:
 	void Update();
 	// 描画
 	void Draw();
+	// エフェクト描画
+	void EffectDraw();
 	//次シーンの予約
 	void ChangeScene(const std::string& sceneName);
 

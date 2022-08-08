@@ -56,3 +56,7 @@ void GameOverScene::Draw()
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
 }
+
+void GameOverScene::EffectDraw()
+{
+}

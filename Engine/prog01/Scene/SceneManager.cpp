@@ -45,6 +45,11 @@ void SceneManager::Draw()
 	scene->Draw();
 }
 
+void SceneManager::EffectDraw()
+{
+	scene->EffectDraw();
+}
+
 void SceneManager::ChangeScene(const std::string& sceneName)
 {
 	assert(sceneFactory);

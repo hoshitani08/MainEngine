@@ -55,6 +55,8 @@ public: // メンバ関数
 	void Update() override;
 	// 描画
 	void Draw() override;
+	// エフェクト描画
+	void EffectDraw() override;
 
 private: // メンバ変数
 	//カメラ

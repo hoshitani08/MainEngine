@@ -100,15 +100,15 @@ void BaseGame::Draw()
 	postEffect->PreDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// ƒQ[ƒ€ƒV[ƒ“‚Ì•`‰æ
-	SceneManager::GetInstance()->Draw();
+	SceneManager::GetInstance()->EffectDraw();
 
 	postEffect->PostDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// •`‰æŠJŽn
 	DirectXCommon::GetInstance()->PreDraw();
-	postEffect->Draw(DirectXCommon::GetInstance()->GetCommandList());
-	
 
+	postEffect->Draw(DirectXCommon::GetInstance()->GetCommandList());
+	SceneManager::GetInstance()->Draw();
 	// •`‰æI—¹
 	DirectXCommon::GetInstance()->PostDraw();
 }

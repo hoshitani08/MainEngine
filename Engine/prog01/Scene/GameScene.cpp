@@ -170,6 +170,44 @@ void GameScene::Draw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
 	Object3d::PreDraw(cmdList);
+
+	Object3d::PostDraw();
+#pragma endregion 3Dオブジェクト描画
+#pragma region 3Dオブジェクト(FBX)描画
+
+#pragma endregion 3Dオブジェクト(FBX)描画
+#pragma region パーティクル
+	// パーティクルの描画
+
+#pragma endregion パーティクル
+#pragma region 前景スプライト描画
+	// 前景スプライト描画前処理
+	Sprite::PreDraw(cmdList);
+	// デバッグテキストの描画
+	DebugText::GetInstance()->DrawAll(cmdList);
+	ui->NearDraw();
+	// スプライト描画後処理
+	Sprite::PostDraw();
+#pragma endregion 前景スプライト描画
+}
+
+void GameScene::EffectDraw()
+{
+	// コマンドリストの取得
+	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
+#pragma region 背景スプライト描画
+	// 背景スプライト描画前処理
+	Sprite::PreDraw(cmdList);
+	// 背景スプライト描画
+
+	// スプライト描画後処理
+	Sprite::PostDraw();
+	// 深度バッファクリア
+	DirectXCommon::GetInstance()->ClearDepthBuffer();
+#pragma endregion 背景スプライト描画
+#pragma region 3Dオブジェクト描画
+	// 3Dオブクジェクトの描画
+	Object3d::PreDraw(cmdList);
 	skydome_->Draw();
 	ground_->Draw();
 	Object3d::PostDraw();
@@ -185,9 +223,7 @@ void GameScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-	// デバッグテキストの描画
-	DebugText::GetInstance()->DrawAll(cmdList);
-	ui->NearDraw();
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

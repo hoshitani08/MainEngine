@@ -56,3 +56,7 @@ void TitleScene::Draw()
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
 }
+
+void TitleScene::EffectDraw()
+{
+}
