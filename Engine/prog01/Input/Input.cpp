@@ -217,6 +217,11 @@ void Input::Update()
 		// ゲームパッドの入力情報取得
 		result = devGamePad->GetDeviceState(sizeof(padData), &padData);
 	}
+
+	// 前回のキー入力を保存
+	memcpy(&statePre, &state, sizeof(state));
+	XInputGetState(0, &state);
+	Vibration();
 #pragma endregion
 }
 
@@ -328,6 +333,32 @@ bool Input::PushPadKey(PadKey keyNumber)
 	{
 		return true;
 	}
+	else
+	{
+		// 角度を利用した方法
+		float mainRad = XMConvertToRadians((padData.rgdwPOV[0] / 100.0f));
+		float sabRad = XMConvertToRadians((padDataPre.rgdwPOV[0] / 100.0f));
+
+		float x = sinf(mainRad);
+		float y = cosf(mainRad);
+
+		if (keyNumber == BUTTON_DPAD_UP && y > 0.01f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_DOWN && y < -0.7f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_LEFT && x < -0.8f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_RIGHT && x > 0.01f)
+		{
+			return true;
+		}
+	}
 
 	// 押していない
 	return false;
@@ -339,6 +370,35 @@ bool Input::TriggerPadKey(PadKey keyNumber)
 	if (!padDataPre.rgbButtons[keyNumber] && padData.rgbButtons[keyNumber])
 	{
 		return true;
+	}
+	else
+	{
+		// 角度を利用した方法
+		float mainRad = XMConvertToRadians((padData.rgdwPOV[0] / 100.0f));
+		float sabRad = XMConvertToRadians((padDataPre.rgdwPOV[0] / 100.0f));
+
+		float x = sinf(mainRad);
+		float x2 = sinf(sabRad);
+
+		float y = cosf(mainRad);
+		float y2 = cosf(sabRad);
+
+		if (keyNumber == BUTTON_DPAD_UP && y > 0.01f && y2 < 0.01f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_DOWN && y < -0.7f && y2 > -0.7f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_LEFT && x < -0.8f && x2 > -0.8f)
+		{
+			return true;
+		}
+		else if (keyNumber == BUTTON_DPAD_RIGHT && x > 0.01f && x2 < 0.01f)
+		{
+			return true;
+		}
 	}
 
 	// トリガーでない
@@ -432,6 +492,20 @@ Input::Input()
 
 Input::~Input()
 {
+}
+
+void Input::Vibration()
+{
+	if (!vibrationFlag)
+	{
+		vibration.wLeftMotorSpeed = 0;
+		XInputSetState(0, &vibration);
+	}
+	else if (vibrationFlag)
+	{
+		vibration.wLeftMotorSpeed = vibrationPower;
+		XInputSetState(0, &vibration);
+	}
 }
 
 Input* Input::GetInstance()

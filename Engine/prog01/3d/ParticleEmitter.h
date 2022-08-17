@@ -2,6 +2,8 @@
 
 #include "ParticleManager.h"
 
+#include <memory>
+
 class ParticleEmitter
 {
 private: // エイリアス
@@ -14,10 +16,11 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // 静的メンバ関数
-	static ParticleEmitter* Create();
+	static std::unique_ptr<ParticleEmitter> Create();
 
 public: // メンバ関数
 	// 追加
+	void BubbleAdd(XMFLOAT3 position = { 0,0,0 });
 	void Add(XMFLOAT3 position = { 0,0,0 });
 	// 毎フレーム処理
 	void Update();

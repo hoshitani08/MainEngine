@@ -1,7 +1,6 @@
 #include "ParticleEmitter.h"
 
-
-ParticleEmitter* ParticleEmitter::Create()
+std::unique_ptr<ParticleEmitter> ParticleEmitter::Create()
 {
 	ParticleEmitter* particleEmitter = new ParticleEmitter();
 	if (particleEmitter == nullptr)
@@ -9,7 +8,24 @@ ParticleEmitter* ParticleEmitter::Create()
 		return nullptr;
 	}
 
-	return particleEmitter;
+	return std::unique_ptr<ParticleEmitter>(particleEmitter);
+}
+
+void ParticleEmitter::BubbleAdd(XMFLOAT3 position)
+{
+	for (int i = 0; i < 1; i++)
+	{
+		//X,Y,Z全て[-5.0,+5.0]でランダムに分布
+		this->position.x = ((float)rand() / RAND_MAX * md_pos - md_pos / 2.0f) + position.x;
+		this->position.y = position.y;
+		this->position.z = ((float)rand() / RAND_MAX * md_pos - md_pos / 2.0f) + position.z;
+		//X,Y,Z全て[-0.05,+0.05]でランダムに分布
+		velocity.y = md_vel;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+
+		//追加
+		particleMan->Add(900, this->position, velocity, accel, s_scale, e_scale, s_color, e_color);
+	}
 }
 
 void ParticleEmitter::Add(XMFLOAT3 position)

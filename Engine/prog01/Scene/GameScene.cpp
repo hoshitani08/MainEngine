@@ -58,7 +58,7 @@ void GameScene::Initialize()
 	FbxObject3d::SetLight(light_.get());
 	PmxObject3d::SetLight(light_.get());
 	light_->SetDirLightActive(0, true);
-	light_->SetDirLightActive(1, true);
+	light_->SetDirLightActive(1, false);
 	light_->SetDirLightActive(2, false);
 	light_->SetPointLightActive(0, false);
 	light_->SetPointLightActive(1, false);

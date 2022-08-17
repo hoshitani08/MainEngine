@@ -7,6 +7,10 @@ void ObjFactory::Initialize()
 {
 	LoadModel("skydome");
 	LoadModel("ground");
+	LoadModel("title");
+	LoadModel("escape");
+	LoadModel("start");
+	LoadModel("bubble");
 }
 
 void ObjFactory::Finalize()

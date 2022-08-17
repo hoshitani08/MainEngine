@@ -244,7 +244,7 @@ void ParticleManager::LoadTexture()
 
 	result = LoadFromWICFile
 	(
-		L"Resources/effect1.png", WIC_FLAGS_NONE,
+		L"Resources/bubble.png", WIC_FLAGS_NONE,
 		&metadata, scratchImg
 	);
 	if (FAILED(result))

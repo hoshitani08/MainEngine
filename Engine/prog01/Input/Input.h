@@ -6,8 +6,11 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
+#include <xinput.h>
 
-enum PadKey
+#pragma comment (lib, "xinput.lib")
+
+enum  PadKey
 {
 	BUTTON_A, // Aボタン
 	BUTTON_B, // Bボタン
@@ -62,6 +65,9 @@ public: //メンバ関数
 	//スティックの角度
 	double PadStickAngle();
 	double PadRightStickAngle();
+	//振動のフラグ設定
+	void SetVibration(bool _vibration) { vibrationFlag = _vibration; }
+	void SetVibrationPower(int _vibrationPower) { vibrationPower = _vibrationPower; }
 	// キーの左ボタントリガーをチェック
 	bool TriggerPadLeft();
 	// キーの右ボタントリガーをチェック
@@ -90,6 +96,8 @@ private:
 	Input();
 	~Input();
 
+	void Vibration();
+
 public:
 	Input(const Input& input) = delete;
 	Input& operator=(const Input& input) = delete;
@@ -103,7 +111,7 @@ private: //メンバ変数
 	BYTE key[256] = {};
 	BYTE keyPre[256] = {};
 
-	//ゲームパッド
+	//dゲームパッド
 	ComPtr<IDirectInput8> dinputPad;
 	ComPtr<IDirectInputDevice8> devGamePad;
 	LPVOID parameter;
@@ -118,6 +126,12 @@ private: //メンバ変数
 	DIJOYSTATE padDataPre;
 	//接続確認
 	bool padFlag = true;
+	//xゲームパッド
+	XINPUT_STATE state;
+	XINPUT_STATE statePre;
+	bool vibrationFlag = false;
+	XINPUT_VIBRATION vibration;
+	int vibrationPower = 65535;
 
 	//マウス
 	ComPtr<IDirectInputDevice8> devMouse;

@@ -1,16 +1,19 @@
 #pragma once
 #include "BaseScene.h"
-#include "DirectXCommon.h"
 #include "Input.h"
 #include "Audio.h"
 #include "Camera.h"
+#include "LightGroup.h"
 
 #include "Sprite.h"
 #include "DebugText.h"
 #include "Object3d.h"
-#include "Model.h"
+
+#include "ParticleEmitter.h"
 
 #include <memory>
+#include <array>
+#include <algorithm>
 
 class TitleScene : public BaseScene
 {
@@ -38,7 +41,32 @@ public: // メンバ関数
 	// エフェクト描画
 	void EffectDraw() override;
 
+	//ボタン関係
+	void Select();
+	void Shake();
+
 private: // メンバ変数
-	//スプライト
-	std::unique_ptr<Sprite> sprite;
+	//カメラ
+	std::unique_ptr<Camera> camera_;
+	//ライト
+	std::unique_ptr<LightGroup> light_;
+	//パーティクル
+	std::unique_ptr<ParticleManager> particleMan_;
+	std::unique_ptr<ParticleEmitter> bubble_;
+	//オブジェクト
+	std::unique_ptr<Object3d> titleTile_;
+	std::unique_ptr<Object3d> startTile_;
+	std::unique_ptr<Object3d> escapeTile_;
+	// 決定フラグ
+	bool determinationFlag = true;
+	// シェイクしているか
+	bool isShake = false;
+	// シェイクタイマー
+	int shakeTimer = 0;
+	// 減衰値
+	int attenuation = 0;
+	// シェイク前の位置
+	XMFLOAT3 savePos = {};
+	// 泡の量の調整用タイマー
+	int bubbleTimer_ = 100;
 };
