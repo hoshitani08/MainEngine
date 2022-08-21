@@ -41,9 +41,11 @@ public: // メンバ関数
 	// エフェクト描画
 	void EffectDraw() override;
 
-	//ボタン関係
+	// ボタン関係
 	void Select();
 	void Shake();
+	// イージング
+	void EaseMove();
 
 private: // メンバ変数
 	//カメラ
@@ -56,7 +58,7 @@ private: // メンバ変数
 	//オブジェクト
 	std::unique_ptr<Object3d> titleTile_;
 	std::unique_ptr<Object3d> startTile_;
-	std::unique_ptr<Object3d> escapeTile_;
+	std::unique_ptr<Object3d> quitTile_;
 	// 決定フラグ
 	bool determinationFlag = true;
 	// シェイクしているか
@@ -69,4 +71,11 @@ private: // メンバ変数
 	XMFLOAT3 savePos = {};
 	// 泡の量の調整用タイマー
 	int bubbleTimer_ = 100;
+	// イージング用位置
+	std::array<XMFLOAT3, 3> startPosition_ = {};
+	std::array<XMFLOAT3, 3> endPosition_ = {};
+	// イージングの進行度用
+	float easeTimer = 0.0f;
+	// イージングし終わったか
+	bool isEaseFlag = false;
 };

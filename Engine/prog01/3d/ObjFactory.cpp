@@ -8,9 +8,11 @@ void ObjFactory::Initialize()
 	LoadModel("skydome");
 	LoadModel("ground");
 	LoadModel("title");
-	LoadModel("escape");
+	LoadModel("quit");
 	LoadModel("start");
-	LoadModel("bubble");
+	LoadModel("clear");
+	LoadModel("continue");
+	LoadModel("gameover");
 }
 
 void ObjFactory::Finalize()

@@ -11,6 +11,8 @@
 #include "Model.h"
 
 #include <memory>
+#include <array>
+#include <algorithm>
 
 class GameOverScene : public BaseScene
 {
@@ -38,7 +40,38 @@ public: // メンバ関数
 	// エフェクト描画
 	void EffectDraw() override;
 
+	// ボタン関係
+	void Select();
+	void Shake();
+	// イージング
+	void EaseMove();
+
 private: // メンバ変数
-	//スプライト
-	std::unique_ptr<Sprite> sprite;
+	// カメラ
+	std::unique_ptr<Camera> camera_;
+	// ライト
+	std::unique_ptr<LightGroup> light_;
+	// オブジェクト
+	std::unique_ptr<Object3d> gameoverTile_;
+	std::unique_ptr<Object3d> continueTile_;
+	std::unique_ptr<Object3d> quitTile_;
+	// 決定フラグ
+	bool determinationFlag = true;
+	// シェイクしているか
+	bool isShake = false;
+	// シェイクタイマー
+	int shakeTimer = 0;
+	// 減衰値
+	int attenuation = 0;
+	// シェイク前の位置
+	XMFLOAT3 savePos = {};
+	// 泡の量の調整用タイマー
+	int bubbleTimer_ = 100;
+	// イージング用位置
+	std::array<XMFLOAT3, 3> startPosition_ = {};
+	std::array<XMFLOAT3, 3> endPosition_ = {};
+	// イージングの進行度用
+	float easeTimer = 0.0f;
+	// イージングし終わったか
+	bool isEaseFlag = false;
 };

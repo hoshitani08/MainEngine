@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "DirectXCommon.h"
 #include "ObjFactory.h"
+#include "Ease.h"
 
 TitleScene::~TitleScene()
 {
@@ -37,17 +38,26 @@ void TitleScene::Initialize()
 	titleTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("title"));
 	titleTile_->SetRotation({ -90,-20,0 });
 	titleTile_->SetScale({ 50, 1, 16.6f });
-	titleTile_->SetPosition({-10,10,0});
+	titleTile_->SetPosition({-10,10,50});
 
 	startTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("start"));
 	startTile_->SetRotation({ -90,20,0 });
 	startTile_->SetScale({ 30, 1, 10 });
-	startTile_->SetPosition({ 30,-5,0 });
+	startTile_->SetPosition({ 30,-5,50 });
 
-	escapeTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("escape"));
-	escapeTile_->SetRotation({ -90,20,0 });
-	escapeTile_->SetScale({ 30, 1, 10 });
-	escapeTile_->SetPosition({ 30,-20,0 });
+	quitTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("quit"));
+	quitTile_->SetRotation({ -90,20,0 });
+	quitTile_->SetScale({ 30, 1, 10 });
+	quitTile_->SetPosition({ 30,-15,50 });
+
+	//スタート位置を設定
+	startPosition_[0] = titleTile_->GetPosition();
+	startPosition_[1] = startTile_->GetPosition();
+	startPosition_[2] = quitTile_->GetPosition();
+	//エンド位置を設定
+	endPosition_[0] = { startPosition_[0].x, startPosition_[0].y, 0 };
+	endPosition_[1] = { startPosition_[1].x, startPosition_[1].y, 0 };
+	endPosition_[2] = { startPosition_[2].x, startPosition_[2].y, 0 };
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
@@ -62,32 +72,35 @@ void TitleScene::Update()
 {
 	Input* input = Input::GetInstance();
 
-	if (input->TriggerPadKey(BUTTON_A))
+	if (isEaseFlag)
 	{
-		if (determinationFlag)
+		if (input->TriggerPadKey(BUTTON_A))
 		{
-			SceneManager::GetInstance()->ChangeScene("GameScene");
+			if (determinationFlag)
+			{
+				SceneManager::GetInstance()->ChangeScene("GameScene");
+			}
+			else if (!determinationFlag)
+			{
+				exit(1);
+			}
 		}
-		else if (!determinationFlag)
+		if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || input->PadStickGradient().y != 0)
 		{
-			exit(1);
+			if (!determinationFlag)
+			{
+				determinationFlag = true;
+				savePos = { 30,-5,0 };
+			}
+			else if (determinationFlag)
+			{
+				determinationFlag = false;
+				savePos = { 30,-15,0 };
+			}
+			isShake = true;
 		}
 	}
-
-	if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || input->PadStickGradient().y != 0)
-	{
-		if (!determinationFlag)
-		{
-			determinationFlag = true;
-			savePos = { 30,-5,0 };
-		}
-		else if (determinationFlag)
-		{
-			determinationFlag = false;
-			savePos = { 30,-20,0 };
-		}
-		isShake = true;
-	}
+	
 	bubbleTimer_++;
 	if (bubbleTimer_ >= 20)
 	{
@@ -96,10 +109,11 @@ void TitleScene::Update()
 	}
 
 	Select();
+	EaseMove();
 
 	titleTile_->Update();
 	startTile_->Update();
-	escapeTile_->Update();
+	quitTile_->Update();
 	bubble_->Update();
 }
 
@@ -121,7 +135,7 @@ void TitleScene::Draw()
 	Object3d::PreDraw(cmdList);
 	titleTile_->Draw();
 	startTile_->Draw();
-	escapeTile_->Draw();
+	quitTile_->Draw();
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 	bubble_->Draw(cmdList);
@@ -164,71 +178,112 @@ void TitleScene::EffectDraw()
 
 void TitleScene::Select()
 {
-	if (!determinationFlag) {
+	if (!determinationFlag)
+	{
 		startTile_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		startTile_->SetScale({ 10, 1, 5 });
-		escapeTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
-		escapeTile_->SetScale({ 30, 1, 10 });
+		quitTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
+		quitTile_->SetScale({ 30, 1, 10 });
 	}
-	else if (determinationFlag) {
+	else if (determinationFlag)
+	{
 		startTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 		startTile_->SetScale({ 30, 1, 10 });
-		escapeTile_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
-		escapeTile_->SetScale({ 10, 1, 5 });
+		quitTile_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		quitTile_->SetScale({ 10, 1, 5 });
 	}
 
-	Shake();
+	if (isEaseFlag)
+	{
+		Shake();
+	}
 }
 
 void TitleScene::Shake()
 {
 	Input* input = Input::GetInstance();
 
-	if (!determinationFlag && isShake) {
+	if (!determinationFlag && isShake)
+	{
 		XMFLOAT3 shake = {};
 		shakeTimer++;
 
 		input->SetVibration(true);
 
-		if (shakeTimer > 0) {
+		if (shakeTimer > 0)
+		{
 			shake.x = (rand() % (7 - attenuation) - 3) + savePos.x;
 			shake.y = (rand() % (7 - attenuation) - 3) + savePos.y;
 			shake.z = savePos.z;
 		}
 
-		if (shakeTimer >= attenuation * 2) {
+		if (shakeTimer >= attenuation * 2)
+		{
 			attenuation += 1;
-			escapeTile_->SetPosition(shake);
+			quitTile_->SetPosition(shake);
 		}
-		else if (attenuation >= 6) {
+		else if (attenuation >= 6)
+		{
 			shakeTimer = 0;
 			attenuation = 0;
 			isShake = 0;
 			input->SetVibration(false);
-			escapeTile_->SetPosition(savePos);
+			quitTile_->SetPosition(savePos);
 		}
 	}
-	else if (determinationFlag && isShake) {
+	else if (determinationFlag && isShake)
+	{
 		XMFLOAT3 shake = {};
 		shakeTimer++;
 		input->SetVibration(true);
 
-		if (shakeTimer > 0) {
+		if (shakeTimer > 0)
+		{
 			shake.x = (rand() % (7 - attenuation) - 3) + savePos.x;
 			shake.y = (rand() % (7 - attenuation) - 3) + savePos.y;
 			shake.z = savePos.z;
 		}
 
-		if (shakeTimer >= attenuation * 2) {
+		if (shakeTimer >= attenuation * 2)
+		{
 			attenuation += 1;
 			startTile_->SetPosition(shake);
 		}
-		else if (attenuation >= 6) {
+		else if (attenuation >= 6)
+		{
 			shakeTimer = 0;
 			attenuation = 0;
 			isShake = 0;
 			input->SetVibration(false);
 			startTile_->SetPosition(savePos);
+		}
+	}
+}
+
+void TitleScene::EaseMove()
+{
+	XMFLOAT4 startColor = { 1, 1, 1, 0 };
+	XMFLOAT4 endColor = { 1, 1, 1, 1 };
+	float timeRate = 0.0f;
+
+	if (!isEaseFlag)
+	{
+		int countNum = 120;
+		timeRate = easeTimer / countNum;
+		easeTimer++;
+
+		titleTile_->SetPosition(Ease::easeOut(startPosition_[0], endPosition_[0], timeRate));
+		startTile_->SetPosition(Ease::easeOut(startPosition_[1], endPosition_[1], timeRate));
+		quitTile_->SetPosition(Ease::easeOut(startPosition_[2], endPosition_[2], timeRate));
+
+		titleTile_->SetColor(Ease::easeOut(startColor, endColor, timeRate));
+		startTile_->SetColor(Ease::easeOut({ 1.0f, 0.5f, 0.5f, 0.0f }, { 1.0f, 0.5f, 0.5f, 1.0f }, timeRate));
+		quitTile_->SetColor(Ease::easeOut(startColor, endColor, timeRate));
+
+		if (easeTimer > countNum)
+		{
+			isEaseFlag = true;
+			easeTimer = 0;
 		}
 	}
 }
