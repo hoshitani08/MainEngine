@@ -57,6 +57,10 @@ public: // メンバ関数
 	void Draw() override;
 	// エフェクト描画
 	void EffectDraw() override;
+	// カメラの動き
+	void CameraMove();
+	// プレイヤーの攻撃判定
+	void PlayerAttack();
 
 private: // メンバ変数
 	//カメラ
@@ -72,6 +76,7 @@ private: // メンバ変数
 	std::unique_ptr<Object3d> ground_;
 	std::unique_ptr<Hunter> hunter_;
 	std::unique_ptr<Monster> monster_;
+	std::unique_ptr<Object3d> hitSphere_;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;
@@ -85,5 +90,5 @@ private: // メンバ変数
 	//当たり判定
 	CollisionManager* collisionManager_ = nullptr;
 	// 角度
-	XMFLOAT2 angle_ = {90.0f, 0.0f};
+	XMFLOAT2 angle_ = { 0.0f, 0.0f};
 };

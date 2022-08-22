@@ -68,6 +68,7 @@ void GameScene::Initialize()
 	// 3Dオブジェクト生成
 	skydome_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("skydome"));
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
+	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
@@ -118,23 +119,10 @@ void GameScene::Update()
 	hunter_->SetAngle(angle_);
 	hunter_->Move();
 
-	//半径は-10
-	XMVECTOR v0 = { 0, 0, -10, 0 };
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(angle_.y));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(angle_.x));
-	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-	XMVECTOR v3 = bossTarget + v;
-	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-	XMFLOAT3 pos = f;
+	CameraMove();
+	PlayerAttack();
 
-	camera_->SetTarget(center);
-	camera_->SetEye(pos);
-	camera_->Update();
-
-	if (input->TriggerKey(DIK_C))
+	if (monster_->GetIsDead())
 	{
 		SceneManager::GetInstance()->ChangeScene("ClearScene");
 	}
@@ -147,7 +135,7 @@ void GameScene::Update()
 	monster_->Update();
 	skydome_->Update();
 	ground_->Update();
-
+	hitSphere_->Update();
 	ui->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
@@ -210,6 +198,10 @@ void GameScene::EffectDraw()
 	Object3d::PreDraw(cmdList);
 	skydome_->Draw();
 	ground_->Draw();
+	if (hunter_->IsAttackFlag())
+	{
+		hitSphere_->Draw();
+	}
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
@@ -227,4 +219,56 @@ void GameScene::EffectDraw()
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
+}
+
+void GameScene::CameraMove()
+{
+	//半径は-10
+	XMVECTOR v0 = { 0, 0, -10, 0 };
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationX(XMConvertToRadians(angle_.y));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(angle_.x));
+	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+	XMVECTOR v3 = bossTarget + v;
+	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+	XMFLOAT3 pos = f;
+
+	camera_->SetTarget(center);
+	camera_->SetEye(pos);
+	camera_->Update();
+}
+
+void GameScene::PlayerAttack()
+{
+	if (hunter_->IsAttackFlag())
+	{
+		//攻撃範囲
+		XMVECTOR v0 = { 0, 0, 1, 0 };
+		XMMATRIX  rotM = XMMatrixIdentity();
+		rotM *= XMMatrixRotationX(XMConvertToRadians(-hunter_->GetRotation().z));
+		rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y + 90));
+		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+		XMVECTOR v3 = bossTarget + v;
+		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+		XMFLOAT3 pos = f;
+
+		Sphere hitSphere;
+		hitSphere.center = { pos.x, pos.y, pos.z, 1 };
+		Sphere eSphere;
+		eSphere.center = { monster_->GetPosition().x, monster_->GetPosition().y, monster_->GetPosition().z, 1 };
+
+		hitSphere_->SetPosition(pos);
+		int eHp = monster_->GetHp();
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			int eHp = monster_->GetHp();
+			eHp--;
+			monster_->SetHp(eHp);
+		}
+	}
 }

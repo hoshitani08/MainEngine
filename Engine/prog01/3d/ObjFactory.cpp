@@ -13,6 +13,7 @@ void ObjFactory::Initialize()
 	LoadModel("clear");
 	LoadModel("continue");
 	LoadModel("gameover");
+	LoadModel("sphere");
 }
 
 void ObjFactory::Finalize()

@@ -1,9 +1,11 @@
 #include "Hunter.h"
 #include "FbxFactory.h"
+#include "ObjFactory.h"
 
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Vector.h"
+#include "Collision.h"
 
 #include "DebugText.h"
 
@@ -25,6 +27,7 @@ void Hunter::Initialize()
 	float size = 0.006f;
 	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX");
 	hunter_->SetScale({ size, size, size });
+	hunter_->SetRotation({0,-90,0});
 	hunter_->SetPosition({ 0, 10, -30 });
 }
 
@@ -41,7 +44,7 @@ void Hunter::Draw()
 {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
-
+	
 	hunter_->Draw(cmdList);
 }
 
@@ -53,11 +56,11 @@ void Hunter::Move()
 	{
 		if (avoidTimer_ <= 0)
 		{
-			strengthDecrement = 10;
+			strengthDecrement_ = 10;
 		}
 		else
 		{
-			strengthDecrement = 0.0f;
+			strengthDecrement_ = 0.0f;
 		}
 
 		avoidTimer_++;
@@ -73,13 +76,13 @@ void Hunter::Move()
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER))
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
-		strengthDecrement = 0.6f;
+		strengthDecrement_ = 0.6f;
 		avoidTimer_++;
 	}
 	else
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
-		strengthDecrement = 0.0f;
+		strengthDecrement_ = 0.0f;
 		avoidTimer_++;
 	}
 
@@ -100,6 +103,7 @@ void Hunter::Move()
 	hunter_->SetPosition(position_);
 	hunter_->SetRotation(rotation);
 
+	// 回避
 	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10)
 	{
 		avoidFlag_ = true;
@@ -110,10 +114,23 @@ void Hunter::Move()
 	{
 		invincibleTimer_++;
 	}
-}
 
-void Hunter::Attack()
-{
+	// 攻撃
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && avoidTimer_ >= 10 && !isAttackFlag_ && attackCoolTimer >= 10)
+	{
+		isAttackFlag_ = true;
+		attackCoolTimer = 0;
+	}
+
+	if (isAttackFlag_)
+	{
+		if (attackCoolTimer >= 10)
+		{
+			isAttackFlag_ = false;
+			attackCoolTimer = 0;
+		}
+	}
+	attackCoolTimer++;
 
 }
 

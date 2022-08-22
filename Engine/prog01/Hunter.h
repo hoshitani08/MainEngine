@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "FbxObject3d.h"
+#include "Object3d.h"
 
 class Hunter
 {
@@ -30,12 +31,13 @@ public: // メンバ関数
 	void Draw();
 
 	void Move();
-	void Attack();
 
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
 
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position_; }
+	// X,Y,Z軸回りの取得
+	const XMFLOAT3& GetRotation() { return hunter_->GetRotation(); }
 	// ダメージのパーセントを取得
 	float GetDamagePercent() { return damagePercent_; }
 	// ダメージのフラグを取得
@@ -45,24 +47,26 @@ public: // メンバ関数
 	// 無敵時間を取得
 	int GetInvincibleTimer() { return invincibleTimer_; }
 	//スタミナの減少値を取得
-	float GetStrengthDecrement() { return strengthDecrement; }
+	float GetStrengthDecrement() { return strengthDecrement_; }
 	// ダメージのフラグを設定
 	void SetDamageFlag(bool damageFlag);
 	// ダメージのパーセントを設定
 	void SetDamagePercent(float damagePercent) { damagePercent_ = damagePercent; }
+	// 攻撃をしたか
+	bool IsAttackFlag() { return isAttackFlag_; }
 
 private: // メンバ変数
 	//　モデル
 	std::unique_ptr<FbxObject3d> hunter_;
-	//　位置
+	// 位置
 	XMFLOAT3 position_;
-	//　移動倍率
+	// 移動倍率
 	float speed_ = 0.0f;
-	//　回避フラグ
+	// 回避フラグ
 	bool avoidFlag_ = false;
-	//　回避タイマー
+	// 回避タイマー
 	int avoidTimer_ = 0;
-	//　カメラの角度
+	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
 	// ダメージ
 	float damagePercent_ = 0.0f;
@@ -71,5 +75,9 @@ private: // メンバ変数
 	// 無敵時間
 	int invincibleTimer_ = 300;
 	// スタミナの減少値
-	float strengthDecrement = 0.0f;
+	float strengthDecrement_ = 0.0f;
+	// 攻撃が当たったか
+	bool isAttackFlag_ = false;
+	// 攻撃のクールタイム
+	int attackCoolTimer = 0;
 };

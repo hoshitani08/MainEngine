@@ -35,7 +35,15 @@ void Monster::Finalize()
 
 void Monster::Update()
 {
-	Move();
+	if (hp_ >= 1)
+	{
+		Move();
+	}
+	else
+	{
+		isDead_ = true;
+	}
+
 	monster_->Update();
 }
 
@@ -44,7 +52,10 @@ void Monster::Draw()
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
 
-	monster_->Draw(cmdList);
+	if (hp_ >= 1)
+	{
+		monster_->Draw(cmdList);
+	}
 }
 
 void Monster::Move()
@@ -60,7 +71,7 @@ void Monster::Move()
 	{
 	case Phase::Approach:
 		v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-		vector = { (vector.x / v) * 0.8f, (vector.y / v) * 0.8f, (vector.z / v) * 0.8f };
+		vector = { (vector.x / v) * 0.5f, (vector.y / v) * 0.5f, (vector.z / v) * 0.5f };
 
 		enemyPos.x += vector.x;
 		enemyPos.y += vector.y;
@@ -116,7 +127,7 @@ void Monster::Move()
 			break;
 		case AttackType::Ordinary:
 			v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-			vector = { (vector.x / v) * 1.0f, (vector.y / v) * 1.0f, (vector.z / v) * 1.0f };
+			vector = { (vector.x / v) * 0.8f, (vector.y / v) * 0.8f, (vector.z / v) * 0.8f };
 
 			enemyPos.x += vector.x;
 			enemyPos.y += vector.y;
