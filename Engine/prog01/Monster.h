@@ -1,6 +1,9 @@
 #pragma once
 #include <DirectXMath.h>
 #include <memory>
+#include <iostream>
+#include <array>
+#include <algorithm>
 
 #include "Hunter.h"
 #include "FbxObject3d.h"
@@ -48,7 +51,7 @@ public: // ƒƒ“ƒoŠÖ”
 	void Draw();
 
 	// À•W‚Ìæ“¾
-	const XMFLOAT3& GetPosition() { return monster_->GetPosition(); }
+	const XMFLOAT3& GetPosition() { return nucleus_[0]->GetPosition(); }
 	// HP‚Ìæ“¾
 	int GetHp() { return hp_; }
 	// HP‚Ìİ’è
@@ -59,9 +62,23 @@ public: // ƒƒ“ƒoŠÖ”
 	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
 	// €‚ñ‚¾‚©‚Ìæ“¾
 	bool GetIsDead() { return isDead_; }
+	// Œü‚«‚Ìİ’è
+	void AngleAdjustment();
+	// UŒ‚‚ª“–‚½‚Á‚½‚©
+	void Hit();
+	// UŒ‚‚Ì“®‚«
+	void AttackMove(float speed);
 
 private: // ƒƒ“ƒo•Ï”
-	std::unique_ptr<FbxObject3d> monster_;
+	//Šj
+	std::array<std::unique_ptr<Object3d>, 5> nucleus_;
+	//‰E˜r
+	std::array<std::unique_ptr<Object3d>, 2> rightArm_;
+	//¶˜r
+	std::array<std::unique_ptr<Object3d>, 2> leftArm_;
+	//K”ö
+	std::array<std::unique_ptr<Object3d>, 3> tail_;
+
 	Hunter* hunter_ = nullptr;
 
 	float speed_ = 0.5f;

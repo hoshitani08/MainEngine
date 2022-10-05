@@ -76,10 +76,6 @@ void GameScene::Initialize()
 
 	monster_->SetHunter(hunter_.get());
 	ui->SetHunter(hunter_.get());
-
-	// カメラ注視点をセット
-	/*camera->SetTarget({ 0, 0, 0 });
-	camera->SetEye({ 0,30,-50 });*/
 }
 
 void GameScene::Finalize()
@@ -89,6 +85,7 @@ void GameScene::Finalize()
 void GameScene::Update()
 {
 	Input* input = Input::GetInstance();
+	input->SetVibration(false);
 	light_->Update();
 	particleMan_->Update();
 
@@ -242,6 +239,8 @@ void GameScene::CameraMove()
 
 void GameScene::PlayerAttack()
 {
+	coolTimer++;
+
 	if (hunter_->IsAttackFlag())
 	{
 		//攻撃範囲
@@ -262,13 +261,13 @@ void GameScene::PlayerAttack()
 		eSphere.center = { monster_->GetPosition().x, monster_->GetPosition().y, monster_->GetPosition().z, 1 };
 
 		hitSphere_->SetPosition(pos);
-		int eHp = monster_->GetHp();
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && coolTimer >= 60)
 		{
 			int eHp = monster_->GetHp();
 			eHp--;
 			monster_->SetHp(eHp);
+			coolTimer = 0;
 		}
 	}
 }

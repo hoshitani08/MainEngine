@@ -104,6 +104,8 @@ public: // メンバ関数
 	inline Model* GetModel() { return model; }
 	// 色の設定
 	void SetColor(XMFLOAT4 _color) { this->color = _color; }
+	// 親オブジェクトの設定
+	void SetParent(Object3d* parent) { this->parent = parent; }
 
 protected: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ

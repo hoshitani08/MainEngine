@@ -73,7 +73,7 @@ void Hunter::Move()
 			avoidFlag_ = false;
 		}
 	}
-	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER))
+	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isDash_)
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
 		strengthDecrement_ = 0.6f;
@@ -116,21 +116,21 @@ void Hunter::Move()
 	}
 
 	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && avoidTimer_ >= 10 && !isAttackFlag_ && attackCoolTimer >= 10)
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && avoidTimer_ >= 10 && !isAttackFlag_ && attackCoolTimer_ >= 10)
 	{
 		isAttackFlag_ = true;
-		attackCoolTimer = 0;
+		attackCoolTimer_ = 0;
 	}
 
 	if (isAttackFlag_)
 	{
-		if (attackCoolTimer >= 10)
+		if (attackCoolTimer_ >= 10)
 		{
 			isAttackFlag_ = false;
-			attackCoolTimer = 0;
+			attackCoolTimer_ = 0;
 		}
 	}
-	attackCoolTimer++;
+	attackCoolTimer_++;
 
 }
 

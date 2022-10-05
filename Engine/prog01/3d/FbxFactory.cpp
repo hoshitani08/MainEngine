@@ -6,7 +6,6 @@ const std::string FbxFactory::baseDirectory = "Resources/";
 
 void FbxFactory::Initialize()
 {
-	LoadModel("a");
 	LoadModel("player");
 }
 

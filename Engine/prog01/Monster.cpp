@@ -4,6 +4,7 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "DebugText.h"
+#include "ObjFactory.h"
 
 #include <math.h>
 
@@ -22,11 +23,63 @@ std::unique_ptr<Monster> Monster::Create()
 
 void Monster::Initialize()
 {
-	float size = 0.006f;
-	monster_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("a"), L"BasicFBX");
-	monster_->SetScale({ size, size, size });
-	monster_->SetPosition({ 0, 10, 50 });
-	//fbxObject3d->PlayAnimation(2);
+	for (int i = 0; i < nucleus_.size(); i++)
+	{
+		nucleus_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+
+		if (i != 0)
+		{
+			nucleus_[i]->SetPosition({ -1.5f,0,0 });
+			nucleus_[i]->SetParent(nucleus_[i - 1].get());
+		}
+	}
+
+	for (int i = 0; i < rightArm_.size(); i++)
+	{
+		rightArm_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
+		{
+			rightArm_[i]->SetPosition({ -3,0,-1 });
+			rightArm_[i]->SetParent(nucleus_[0].get());
+		}
+		else
+		{
+			rightArm_[i]->SetPosition({ -1.5f,0,-1 });
+			rightArm_[i]->SetParent(rightArm_[i - 1].get());
+		}
+	}
+
+	for (int i = 0; i < leftArm_.size(); i++)
+	{
+		leftArm_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
+		{
+			leftArm_[i]->SetPosition({ -3,0,1 });
+			leftArm_[i]->SetParent(nucleus_[0].get());
+		}
+		else
+		{
+			leftArm_[i]->SetPosition({ -1.5f,0,1 });
+			leftArm_[i]->SetParent(leftArm_[i - 1].get());
+		}
+	}
+
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		tail_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
+		{
+			tail_[i]->SetPosition({ -1.5f,0,0 });
+			tail_[i]->SetParent(nucleus_[4].get());
+		}
+		else
+		{
+			tail_[i]->SetPosition({ -1.5f,0,0 });
+			tail_[i]->SetParent(tail_[i - 1].get());
+		}
+	}
+
+	nucleus_[0]->SetPosition({ 0,10,50 });
 }
 
 void Monster::Finalize()
@@ -44,7 +97,26 @@ void Monster::Update()
 		isDead_ = true;
 	}
 
-	monster_->Update();
+
+
+
+	//更新
+	for (int i = 0; i < nucleus_.size(); i++)
+	{
+		nucleus_[i]->Update();
+	}
+	for (int i = 0; i < rightArm_.size(); i++)
+	{
+		rightArm_[i]->Update();
+	}
+	for (int i = 0; i < leftArm_.size(); i++)
+	{
+		leftArm_[i]->Update();
+	}
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		tail_[i]->Update();
+	}
 }
 
 void Monster::Draw()
@@ -52,32 +124,37 @@ void Monster::Draw()
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
 
+	Object3d::PreDraw(cmdList);
 	if (hp_ >= 1)
 	{
-		monster_->Draw(cmdList);
+		for (int i = 0; i < nucleus_.size(); i++)
+		{
+			nucleus_[i]->Draw();
+		}
+		for (int i = 0; i < rightArm_.size(); i++)
+		{
+			rightArm_[i]->Draw();
+		}
+		for (int i = 0; i < leftArm_.size(); i++)
+		{
+			leftArm_[i]->Draw();
+		}
+		for (int i = 0; i < tail_.size(); i++)
+		{
+			tail_[i]->Draw();
+		}
 	}
+	Object3d::PostDraw();
+	
 }
 
 void Monster::Move()
 {
-	XMFLOAT3 enemyPos = monster_->GetPosition();
-	XMFLOAT3 playerPos = hunter_->GetPosition();
-	XMFLOAT3 vector = { playerPos.x - enemyPos.x, playerPos.y - enemyPos.y, playerPos.z - enemyPos.z };
-	float v = 0.0f;
-	Sphere eSphere;
-	Sphere pSphere;
-
 	switch (phase_)
 	{
 	case Phase::Approach:
-		v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-		vector = { (vector.x / v) * 0.5f, (vector.y / v) * 0.5f, (vector.z / v) * 0.5f };
-
-		enemyPos.x += vector.x;
-		enemyPos.y += vector.y;
-		enemyPos.z += vector.z;
-
-		monster_->SetPosition(enemyPos);
+		AngleAdjustment();
+		AttackMove(0.5f);
 		max = 30;
 		break;
 	case Phase::Stop:
@@ -103,72 +180,21 @@ void Monster::Move()
 		switch (attackType_)
 		{
 		case AttackType::Weak:
-			v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-			vector = { (vector.x / v) * 1.0f, (vector.y / v) * 1.0f, (vector.z / v) * 1.0f };
-
-			enemyPos.x += vector.x;
-			enemyPos.y += vector.y;
-			enemyPos.z += vector.z;
-
-			monster_->SetPosition(enemyPos);
-
-
-			eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
-
-			pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
-
-			if (Collision::CheckSphere2Sphere(eSphere, pSphere) && hunter_->GetInvincibleTimer() >= 60)
-			{
-				hunter_->SetDamageFlag(true);
-				hunter_->SetDamagePercent(10);
-			}
-
+			AngleAdjustment();
+			AttackMove(0.5f);
+			Hit();
 			max = 60;
 			break;
 		case AttackType::Ordinary:
-			v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-			vector = { (vector.x / v) * 0.8f, (vector.y / v) * 0.8f, (vector.z / v) * 0.8f };
-
-			enemyPos.x += vector.x;
-			enemyPos.y += vector.y;
-			enemyPos.z += vector.z;
-
-			monster_->SetPosition(enemyPos);
-
-
-			eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
-
-			pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
-
-			if (Collision::CheckSphere2Sphere(eSphere, pSphere) && hunter_->GetInvincibleTimer() >= 60)
-			{
-				hunter_->SetDamageFlag(true);
-				hunter_->SetDamagePercent(30);
-			}
-
+			AngleAdjustment();
+			AttackMove(0.8f);
+			Hit();
 			max = 60;
 			break;
 		case AttackType::Strong:
-			v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-			vector = { (vector.x / v) * 1.0f, (vector.y / v) * 1.0f, (vector.z / v) * 1.0f };
-
-			enemyPos.x += vector.x;
-			enemyPos.y += vector.y;
-			enemyPos.z += vector.z;
-
-			monster_->SetPosition(enemyPos);
-
-
-			eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
-
-			pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
-
-			if (Collision::CheckSphere2Sphere(eSphere, pSphere) && hunter_->GetInvincibleTimer() >= 60)
-			{
-				hunter_->SetDamageFlag(true);
-				hunter_->SetDamagePercent(50);
-			}
-
+			AngleAdjustment();
+			AttackMove(1.0f);
+			Hit();
 			max = 60;
 			break;
 		default:
@@ -177,14 +203,8 @@ void Monster::Move()
 		
 		break;
 	case Phase::Leave:
-		v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-		vector = { (vector.x / v) * -0.8f, (vector.y / v) * -0.8f, (vector.z / v) * -0.8f };
-
-		enemyPos.x += vector.x;
-		enemyPos.y += vector.y;
-		enemyPos.z += vector.z;
-
-		monster_->SetPosition(enemyPos);
+		AngleAdjustment();
+		AttackMove(-0.8f);
 		max = 20;
 		break;
 	default:
@@ -212,7 +232,6 @@ void Monster::Move()
 		{
 			phase_ = Phase::Leave;
 		}
-		
 		moveTimer_ = 0;
 	}
 
@@ -221,4 +240,61 @@ void Monster::Move()
 	DebugText::GetInstance()->VariablePrint(0, 32, "monster_.z", monster_->GetPosition().z, 1.0f);
 	DebugText::GetInstance()->VariablePrint(0, 48, "count", count, 1.0f);*/
 	
+}
+
+void Monster::AngleAdjustment()
+{
+
+	XMFLOAT3 enemyPos = nucleus_[0]->GetPosition();
+	XMFLOAT3 playerPos = hunter_->GetPosition();
+	XMFLOAT3 vector = { playerPos.x - enemyPos.x, playerPos.y - enemyPos.y, playerPos.z - enemyPos.z };
+	XMFLOAT3 enemyRot = nucleus_[0]->GetRotation();
+
+	XMFLOAT3 radian = { atan2(vector.z - 0, vector.x - 0), atan2(vector.y - 0, vector.x - 0), atan2(vector.y - 0, vector.z - 0) };
+	enemyRot.y = -radian.x * (180.0f / 3.14159265359f);
+
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
+	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
+	XMFLOAT3 result
+	{
+		(vector.x * rotM.r[0].m128_f32[0] + vector.y * rotM.r[1].m128_f32[0] + vector.z * rotM.r[2].m128_f32[0] + rotM.r[3].m128_f32[0]) / w,
+		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
+		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
+	};
+	enemyRot.z = atan2(result.y - 0, result.x - 0) * (180.0f / 3.14159265359f);
+
+	nucleus_[0]->SetRotation(enemyRot);
+}
+
+void Monster::Hit()
+{
+	XMFLOAT3 enemyPos = nucleus_[0]->GetPosition();
+	XMFLOAT3 playerPos = hunter_->GetPosition();
+	Sphere eSphere;
+	Sphere pSphere;
+
+	eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
+	pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
+
+	if (Collision::CheckSphere2Sphere(eSphere, pSphere) && hunter_->GetInvincibleTimer() >= 60)
+	{
+		hunter_->SetDamageFlag(true);
+		hunter_->SetDamagePercent(10);
+	}
+}
+
+void Monster::AttackMove(float speed)
+{
+	XMFLOAT3 pos = nucleus_[0]->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
+
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	pos.x += vector.x;
+	pos.y += vector.y;
+	pos.z += vector.z;
+
+	nucleus_[0]->SetPosition(pos);
 }

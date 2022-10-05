@@ -94,6 +94,12 @@ void UserInterface::StrengthCalculate()
 	{
 		strengthGaugeSize.x -= (508 * hunter_->GetStrengthDecrement()) / 100;
 
+		if (strengthGaugeSize.x <= 0.0f)
+		{
+			strengthGaugeSize.x = 0.0f;
+			hunter_->SetIsDash(false);
+		}
+
 		strengthGauge_->SetSize(strengthGaugeSize);
 	}
 	else if (!hunter_->GetAvoidFlag())
@@ -103,6 +109,11 @@ void UserInterface::StrengthCalculate()
 		if (strengthGaugeSize.x >= 508)
 		{
 			strengthGaugeSize.x = 508;
+		}
+
+		if (strengthGaugeSize.x >= 100)
+		{
+			hunter_->SetIsDash(true);
 		}
 
 		strengthGauge_->SetSize(strengthGaugeSize);

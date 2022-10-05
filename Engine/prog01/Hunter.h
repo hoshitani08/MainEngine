@@ -54,6 +54,8 @@ public: // メンバ関数
 	void SetDamagePercent(float damagePercent) { damagePercent_ = damagePercent; }
 	// 攻撃をしたか
 	bool IsAttackFlag() { return isAttackFlag_; }
+	// ダッシュのフラグを設定
+	void SetIsDash(bool isDash) { isDash_ = isDash; }
 
 private: // メンバ変数
 	//　モデル
@@ -74,10 +76,12 @@ private: // メンバ変数
 	bool damageFlag_ = false;
 	// 無敵時間
 	int invincibleTimer_ = 300;
+	//ダッシュ出来るか
+	bool isDash_ = true;
 	// スタミナの減少値
 	float strengthDecrement_ = 0.0f;
 	// 攻撃が当たったか
 	bool isAttackFlag_ = false;
 	// 攻撃のクールタイム
-	int attackCoolTimer = 0;
+	int attackCoolTimer_ = 0;
 };
