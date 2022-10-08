@@ -65,24 +65,30 @@ public: // メンバ関数
 	// 向きの設定
 	void AngleAdjustment();
 	// 攻撃が当たったか
-	void Hit();
+	void Hit(float damage);
 	// 攻撃の動き
 	void AttackMove(float speed);
+	// 接近の動き
+	void ApproachMove(float speed);
+
+	// 基本のアニメーション
+	void Animation(int type);
 
 private: // メンバ変数
 	//核
 	std::array<std::unique_ptr<Object3d>, 5> nucleus_;
 	//右腕
-	std::array<std::unique_ptr<Object3d>, 2> rightArm_;
+	std::array<std::unique_ptr<Object3d>, 3> rightArm_;
 	//左腕
-	std::array<std::unique_ptr<Object3d>, 2> leftArm_;
+	std::array<std::unique_ptr<Object3d>, 3> leftArm_;
 	//尻尾
 	std::array<std::unique_ptr<Object3d>, 3> tail_;
-
+	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
-
-	float speed_ = 0.5f;
-	bool avoidFlag_ = false;
+	// 位置の保存
+	XMFLOAT3 saveVector_ = {};
+	//
+	float saveAngle_ = 1.0f;
 	// 行動をする時間
 	int moveTimer_ = 0;
 	// 行動をする時間の最大
@@ -95,6 +101,8 @@ private: // メンバ変数
 	AttackType attackType_ = AttackType::Ordinary;
 	//ヒットポイント
 	int hp_ = 3;
+	// 当たったか
+	bool hitFlag_ = false;
 	// 死んだか
 	bool isDead_ = false;
 };

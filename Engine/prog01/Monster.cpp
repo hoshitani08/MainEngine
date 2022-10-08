@@ -90,7 +90,9 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		Move();
+		//Move();
+		//Animation(1);
+		AngleAdjustment();
 	}
 	else
 	{
@@ -150,11 +152,13 @@ void Monster::Draw()
 
 void Monster::Move()
 {
+	Animation(0);
 	switch (phase_)
 	{
 	case Phase::Approach:
 		AngleAdjustment();
-		AttackMove(0.5f);
+		ApproachMove(0.4f);
+		Hit(0);
 		max = 30;
 		break;
 	case Phase::Stop:
@@ -182,19 +186,19 @@ void Monster::Move()
 		case AttackType::Weak:
 			AngleAdjustment();
 			AttackMove(0.5f);
-			Hit();
+			Hit(10);
 			max = 60;
 			break;
 		case AttackType::Ordinary:
 			AngleAdjustment();
 			AttackMove(0.8f);
-			Hit();
+			Hit(20);
 			max = 60;
 			break;
 		case AttackType::Strong:
 			AngleAdjustment();
 			AttackMove(1.0f);
-			Hit();
+			Hit(30);
 			max = 60;
 			break;
 		default:
@@ -204,7 +208,7 @@ void Monster::Move()
 		break;
 	case Phase::Leave:
 		AngleAdjustment();
-		AttackMove(-0.8f);
+		AttackMove(-1.0f);
 		max = 20;
 		break;
 	default:
@@ -233,6 +237,7 @@ void Monster::Move()
 			phase_ = Phase::Leave;
 		}
 		moveTimer_ = 0;
+		hitFlag_ = false;
 	}
 
 	/*DebugText::GetInstance()->VariablePrint(0, 0, "monster_.x", monster_->GetPosition().x, 1.0f);
@@ -244,15 +249,10 @@ void Monster::Move()
 
 void Monster::AngleAdjustment()
 {
-
-	XMFLOAT3 enemyPos = nucleus_[0]->GetPosition();
-	XMFLOAT3 playerPos = hunter_->GetPosition();
-	XMFLOAT3 vector = { playerPos.x - enemyPos.x, playerPos.y - enemyPos.y, playerPos.z - enemyPos.z };
+	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
 	XMFLOAT3 enemyRot = nucleus_[0]->GetRotation();
 
-	XMFLOAT3 radian = { atan2(vector.z - 0, vector.x - 0), atan2(vector.y - 0, vector.x - 0), atan2(vector.y - 0, vector.z - 0) };
-	enemyRot.y = -radian.x * (180.0f / 3.14159265359f);
-
+	enemyRot.y = -atan2(vector.z - 0, vector.x - 0) * (180.0f / 3.14159265359f);
 	XMMATRIX  rotM = XMMatrixIdentity();
 	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
 	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
@@ -267,7 +267,7 @@ void Monster::AngleAdjustment()
 	nucleus_[0]->SetRotation(enemyRot);
 }
 
-void Monster::Hit()
+void Monster::Hit(float damage)
 {
 	XMFLOAT3 enemyPos = nucleus_[0]->GetPosition();
 	XMFLOAT3 playerPos = hunter_->GetPosition();
@@ -277,10 +277,15 @@ void Monster::Hit()
 	eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
 	pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
 
-	if (Collision::CheckSphere2Sphere(eSphere, pSphere) && hunter_->GetInvincibleTimer() >= 60)
+	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
 	{
-		hunter_->SetDamageFlag(true);
-		hunter_->SetDamagePercent(10);
+		if (hunter_->GetInvincibleTimer() >= 60)
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamagePercent(damage);
+		}
+
+		hitFlag_ = true;
 	}
 }
 
@@ -289,12 +294,68 @@ void Monster::AttackMove(float speed)
 	XMFLOAT3 pos = nucleus_[0]->GetPosition();
 	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
 
-	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+	if (!hitFlag_)
+	{
+		saveVector_ = vector;
+	}
 
-	pos.x += vector.x;
-	pos.y += vector.y;
-	pos.z += vector.z;
+	float v = sqrtf((saveVector_.x * saveVector_.x) + (saveVector_.y * saveVector_.y) + (saveVector_.z * saveVector_.z));
+	saveVector_ = { (saveVector_.x / v) * speed, (saveVector_.y / v) * speed, (saveVector_.z / v) * speed };
+
+	pos.x += saveVector_.x;
+	pos.y += saveVector_.y;
+	pos.z += saveVector_.z;
 
 	nucleus_[0]->SetPosition(pos);
+}
+
+void Monster::ApproachMove(float speed)
+{
+	if (!hitFlag_)
+	{
+		XMFLOAT3 pos = nucleus_[0]->GetPosition();
+		XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
+		float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+		vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+		pos.x += vector.x;
+		pos.y += vector.y;
+		pos.z += vector.z;
+
+		nucleus_[0]->SetPosition(pos);
+	}
+	else
+	{
+		moveTimer_ = 999;
+	}
+}
+
+void Monster::Animation(int type)
+{
+	//äÓñ{
+	if (type == 0)
+	{
+		XMFLOAT3 rot = rightArm_[0]->GetRotation();
+		XMFLOAT3 rot2 = leftArm_[0]->GetRotation();
+
+		if (rot.z >= 15)
+		{
+			saveAngle_ -= 1;
+		}
+		else if (rot.z <= -15)
+		{
+			saveAngle_ += 1;
+		}
+
+		rot.z += saveAngle_;
+		rot2.z -= saveAngle_;
+
+		rightArm_[0]->SetRotation(rot);
+		leftArm_[0]->SetRotation(rot2);
+	}
+	//ìÀêi
+	else if (type == 1)
+	{
+
+	}
 }
