@@ -23,14 +23,20 @@ std::unique_ptr<Monster> Monster::Create()
 
 void Monster::Initialize()
 {
-	for (int i = 0; i < nucleus_.size(); i++)
-	{
-		nucleus_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	nucleus_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+	nucleus_->SetPosition({ 0,10,50 });
 
-		if (i != 0)
+	for (int i = 0; i < body_.size(); i++)
+	{
+		body_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
 		{
-			nucleus_[i]->SetPosition({ -1.5f,0,0 });
-			nucleus_[i]->SetParent(nucleus_[i - 1].get());
+			body_[i]->SetParent(nucleus_.get());
+		}
+		else
+		{
+			body_[i]->SetPosition({ -1.5f,0,0 });
+			body_[i]->SetParent(body_[i - 1].get());
 		}
 	}
 
@@ -40,7 +46,7 @@ void Monster::Initialize()
 		if (i == 0)
 		{
 			rightArm_[i]->SetPosition({ -3,0,-1 });
-			rightArm_[i]->SetParent(nucleus_[0].get());
+			rightArm_[i]->SetParent(body_[0].get());
 		}
 		else
 		{
@@ -55,7 +61,7 @@ void Monster::Initialize()
 		if (i == 0)
 		{
 			leftArm_[i]->SetPosition({ -3,0,1 });
-			leftArm_[i]->SetParent(nucleus_[0].get());
+			leftArm_[i]->SetParent(body_[0].get());
 		}
 		else
 		{
@@ -70,7 +76,7 @@ void Monster::Initialize()
 		if (i == 0)
 		{
 			tail_[i]->SetPosition({ -1.5f,0,0 });
-			tail_[i]->SetParent(nucleus_[4].get());
+			tail_[i]->SetParent(body_[4].get());
 		}
 		else
 		{
@@ -78,8 +84,6 @@ void Monster::Initialize()
 			tail_[i]->SetParent(tail_[i - 1].get());
 		}
 	}
-
-	nucleus_[0]->SetPosition({ 0,10,50 });
 }
 
 void Monster::Finalize()
@@ -91,8 +95,8 @@ void Monster::Update()
 	if (hp_ >= 1)
 	{
 		//Move();
-		//Animation(1);
-		AngleAdjustment();
+		Animation(0);
+		//AngleAdjustment();
 	}
 	else
 	{
@@ -103,9 +107,10 @@ void Monster::Update()
 
 
 	//更新
-	for (int i = 0; i < nucleus_.size(); i++)
+	nucleus_->Update();
+	for (int i = 0; i < body_.size(); i++)
 	{
-		nucleus_[i]->Update();
+		body_[i]->Update();
 	}
 	for (int i = 0; i < rightArm_.size(); i++)
 	{
@@ -129,9 +134,9 @@ void Monster::Draw()
 	Object3d::PreDraw(cmdList);
 	if (hp_ >= 1)
 	{
-		for (int i = 0; i < nucleus_.size(); i++)
+		for (int i = 0; i < body_.size(); i++)
 		{
-			nucleus_[i]->Draw();
+			body_[i]->Draw();
 		}
 		for (int i = 0; i < rightArm_.size(); i++)
 		{
@@ -165,6 +170,7 @@ void Monster::Move()
 		max = 10;
 		break;
 	case Phase::Attack:
+		Animation(1);
 		if (moveTimer_ <= 0)
 		{
 			count = rand() % 4;
@@ -249,10 +255,10 @@ void Monster::Move()
 
 void Monster::AngleAdjustment()
 {
-	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
-	XMFLOAT3 enemyRot = nucleus_[0]->GetRotation();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
+	XMFLOAT3 enemyRot = nucleus_->GetRotation();
 
-	enemyRot.y = -atan2(vector.z - 0, vector.x - 0) * (180.0f / 3.14159265359f);
+	enemyRot.y = -atan2(vector.z - 0, vector.x - 0) * (ANGLE / PI);
 	XMMATRIX  rotM = XMMatrixIdentity();
 	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
 	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
@@ -262,14 +268,14 @@ void Monster::AngleAdjustment()
 		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
 		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
 	};
-	enemyRot.z = atan2(result.y - 0, result.x - 0) * (180.0f / 3.14159265359f);
+	enemyRot.z = atan2(result.y - 0, result.x - 0) * (ANGLE / PI);
 
-	nucleus_[0]->SetRotation(enemyRot);
+	nucleus_->SetRotation(enemyRot);
 }
 
 void Monster::Hit(float damage)
 {
-	XMFLOAT3 enemyPos = nucleus_[0]->GetPosition();
+	XMFLOAT3 enemyPos = nucleus_->GetPosition();
 	XMFLOAT3 playerPos = hunter_->GetPosition();
 	Sphere eSphere;
 	Sphere pSphere;
@@ -291,8 +297,8 @@ void Monster::Hit(float damage)
 
 void Monster::AttackMove(float speed)
 {
-	XMFLOAT3 pos = nucleus_[0]->GetPosition();
-	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
+	XMFLOAT3 pos = nucleus_->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
 
 	if (!hitFlag_)
 	{
@@ -306,15 +312,15 @@ void Monster::AttackMove(float speed)
 	pos.y += saveVector_.y;
 	pos.z += saveVector_.z;
 
-	nucleus_[0]->SetPosition(pos);
+	nucleus_->SetPosition(pos);
 }
 
 void Monster::ApproachMove(float speed)
 {
 	if (!hitFlag_)
 	{
-		XMFLOAT3 pos = nucleus_[0]->GetPosition();
-		XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_[0]->GetPosition().x, hunter_->GetPosition().y - nucleus_[0]->GetPosition().y, hunter_->GetPosition().z - nucleus_[0]->GetPosition().z };
+		XMFLOAT3 pos = nucleus_->GetPosition();
+		XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
 		float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
 		vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
 
@@ -322,7 +328,7 @@ void Monster::ApproachMove(float speed)
 		pos.y += vector.y;
 		pos.z += vector.z;
 
-		nucleus_[0]->SetPosition(pos);
+		nucleus_->SetPosition(pos);
 	}
 	else
 	{
@@ -335,27 +341,36 @@ void Monster::Animation(int type)
 	//基本
 	if (type == 0)
 	{
-		XMFLOAT3 rot = rightArm_[0]->GetRotation();
-		XMFLOAT3 rot2 = leftArm_[0]->GetRotation();
+		XMFLOAT3 rot = rightArm_[waveCount]->GetRotation();
+		XMFLOAT3 rot2 = leftArm_[waveCount]->GetRotation();
+		// 幅の制限
+		float restrictionAngle = 15;
 
-		if (rot.z >= 15)
+		rot.z  += cosf(PI * 2 / 90 * waveTimer);
+		rot2.z -= cosf(PI * 2 / 90 * waveTimer);
+
+		rightArm_[waveCount]->SetRotation(rot);
+		leftArm_[waveCount]->SetRotation(rot2);
+
+
+		for (int i = 0; i < tail_.size(); i++)
 		{
-			saveAngle_ -= 1;
-		}
-		else if (rot.z <= -15)
-		{
-			saveAngle_ += 1;
+			XMFLOAT3 tailRot = tail_[i]->GetRotation();
+
+			tailRot.y += cosf(PI * 2 / 90 * waveTimer);
+
+			tail_[i]->SetRotation(tailRot);
 		}
 
-		rot.z += saveAngle_;
-		rot2.z -= saveAngle_;
-
-		rightArm_[0]->SetRotation(rot);
-		leftArm_[0]->SetRotation(rot2);
+		waveTimer++;
 	}
 	//突進
 	else if (type == 1)
 	{
+		XMFLOAT3 rot = body_[0]->GetRotation();
 
+		rot.x += MAX_ANGLE;
+
+		body_[0]->SetRotation(rot);
 	}
 }
