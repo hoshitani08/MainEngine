@@ -439,3 +439,5 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 *.rej
+!/Engine/prog01/lib/fbx_sdk/lib/debug/
+!/Engine/prog01/lib/fbx_sdk/lib/release/
