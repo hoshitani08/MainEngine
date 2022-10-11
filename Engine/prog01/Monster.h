@@ -49,6 +49,13 @@ public: // サブクラス
 		Strong
 	};
 
+	enum class AnimationType
+	{
+		Stop,
+		Move,
+		Assault,
+	};
+
 public: // 静的メンバ関数
 	static std::unique_ptr<Monster> Create();
 
@@ -86,7 +93,7 @@ public: // メンバ関数
 	// 移動
 	void Move(float speed);
 	// 基本のアニメーション
-	void Animation(int type);
+	void Animation(AnimationType type);
 	// 行動の終了
 	void ActEnd();
 
@@ -115,19 +122,19 @@ private: // メンバ変数
 
 	// 加算アングル
 	float addAngle_ = 2.0f;
-
 	// 行動をする時間
-	int moveTimer_ = 0;
+	float moveTimer_ = 0.0f;
+	// sin波のタイマー
+	float waveTimer_ = 0.0f;
+	//クールタイム
+	float coolTimer = 0.0f;
+
 	// 行動をする時間の最大
 	int maxTime_ = 0;
 	// 行動を決めるカウント
 	int actCount_ = 0;
-	// sin波のタイマー
-	int waveTimer_ = 0;
 	//ヒットポイント
 	int hp_ = 3;
-	//クールタイム
-	int coolTimer = 0;
 
 	// 当たったか
 	bool hitFlag_ = false;

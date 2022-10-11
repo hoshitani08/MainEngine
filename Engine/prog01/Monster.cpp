@@ -235,15 +235,15 @@ void Monster::Activity()
 	switch (phase_)
 	{
 	case Phase::Approach:
-		Animation(0);
+		Animation(AnimationType::Move);
 		AngleAdjustment();
 		Move(0.8f);
 		break;
 	case Phase::Stop:
-		Animation(0);
+		Animation(AnimationType::Stop);
 		break;
 	case Phase::Attack:
-		Animation(1);
+		Animation(AnimationType::Assault);
 		if (!saveFlag_)
 		{
 			AngleAdjustment();
@@ -251,7 +251,7 @@ void Monster::Activity()
 		Move(1.0f);
 		break;
 	case Phase::Leave:
-		Animation(0);
+		Animation(AnimationType::Move);
 		AngleAdjustment();
 		Move(-1.0f);
 		break;
@@ -353,21 +353,21 @@ void Monster::Move(float speed)
 	switch (phase_)
 	{
 	case Phase::Approach:
-		RangeHit(nucleus_->GetPosition(), 1.0f, 40);
 		if (!saveFlag_)
 		{
 			saveVector_ = vector;
 		}
+		RangeHit(nucleus_->GetPosition(), 1.0f, 40);
 		break;
 	case Phase::Stop:
 		break;
 	case Phase::Attack:
-		RangeHit(nucleus_->GetPosition(), 1.0f, 20);
-		DamageHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
 		if (!saveFlag_)
 		{
 			saveVector_ = vector;
 		}
+		RangeHit(nucleus_->GetPosition(), 1.0f, 20);
+		DamageHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
 		break;
 	case Phase::Leave:
 		if (!saveFlag_)
@@ -389,10 +389,75 @@ void Monster::Move(float speed)
 	nucleus_->SetPosition(pos);
 }
 
-void Monster::Animation(int type)
+void Monster::Animation(AnimationType type)
 {
-	// à⁄ìÆ
-	if (type == 0)
+	// èâä˙épê®
+	if (type == AnimationType::Stop)
+	{
+		XMFLOAT3 rot = {};
+
+		for (int i = 0; i < body_.size(); i++)
+		{
+			if (rot.x == body_[i]->GetRotation().x,
+				rot.y == body_[i]->GetRotation().y,
+				rot.z == body_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			body_[i]->SetRotation(rot);
+		}
+		for (int i = 0; i < rightForeFoot_.size(); i++)
+		{
+			if (rot.x == rightForeFoot_[i]->GetRotation().x,
+				rot.y == rightForeFoot_[i]->GetRotation().y,
+				rot.z == rightForeFoot_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			rightForeFoot_[i]->SetRotation(rot);
+		}
+		for (int i = 0; i < leftForeFoot_.size(); i++)
+		{
+			if (rot.x == leftForeFoot_[i]->GetRotation().x,
+				rot.y == leftForeFoot_[i]->GetRotation().y,
+				rot.z == leftForeFoot_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			leftForeFoot_[i]->SetRotation(rot);
+		}
+		for (int i = 0; i < rightHindFoot_.size(); i++)
+		{
+			if (rot.x == rightHindFoot_[i]->GetRotation().x,
+				rot.y == rightHindFoot_[i]->GetRotation().y,
+				rot.z == rightHindFoot_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			rightHindFoot_[i]->SetRotation(rot);
+		}
+		for (int i = 0; i < leftHindFoot_.size(); i++)
+		{
+			if (rot.x == leftHindFoot_[i]->GetRotation().x,
+				rot.y == leftHindFoot_[i]->GetRotation().y,
+				rot.z == leftHindFoot_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			leftHindFoot_[i]->SetRotation(rot);
+		}
+		for (int i = 0; i < tail_.size(); i++)
+		{
+			if (rot.x == tail_[i]->GetRotation().x,
+				rot.y == tail_[i]->GetRotation().y,
+				rot.z == tail_[i]->GetRotation().z)
+			{
+				continue;
+			}
+			tail_[i]->SetRotation(rot);
+		}
+	}
+	else if (type == AnimationType::Move)
 	{
 		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
 		XMFLOAT3 rot2 = leftForeFoot_[0]->GetRotation();
@@ -417,10 +482,10 @@ void Monster::Animation(int type)
 			tail_[i]->SetRotation(tailRot);
 		}
 
-		waveTimer_ += 2;
+		waveTimer_ += 4;
 	}
 	//ìÀêi
-	else if (type == 1)
+	else if (type == AnimationType::Assault)
 	{
 		XMFLOAT3 rot = body_[0]->GetRotation();
 
@@ -493,40 +558,41 @@ void Monster::ActEnd()
 
 		break;
 	case Phase::CoolTime:
-
+		Animation(AnimationType::Stop);
+		moveTimer_ = 0;
+		saveFlag_ = false;
+		hitFlag_ = false;
 		break;
 	default:
 		break;
 	}
 
-	if (actEndFlag_ && coolTimer < 40)
+	if (actEndFlag_ && coolTimer < 30)
 	{
 		coolTimer++;
 		phase_ = Phase::CoolTime;
 	}
-	else if(coolTimer >= 40)
+	else if(coolTimer >= 30)
 	{
-		actCount_ = rand() % 4;
-		if (actCount_ == 0)
+		actCount_ = rand() % 101;
+		if (actCount_ >= 0 && actCount_ <= 49)
 		{
 			phase_ = Phase::Approach;
 		}
-		else if (actCount_ == 1)
+		else if (actCount_ >= 50 && actCount_ <= 59)
 		{
 			phase_ = Phase::Stop;
 		}
-		else if (actCount_ == 2)
+		else if (actCount_ >= 60 && actCount_ <= 89)
 		{
 			phase_ = Phase::Attack;
 		}
-		else if (actCount_ == 3)
+		else if (actCount_ >= 90 && actCount_ <= 100)
 		{
 			phase_ = Phase::Leave;
 		}
-		moveTimer_ = 0;
+		
 		coolTimer = 0;
-		saveFlag_ = false;
 		actEndFlag_ = false;
-		hitFlag_ = false;
 	}
 }
