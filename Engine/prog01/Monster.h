@@ -66,8 +66,8 @@ public: // メンバ関数
 	int GetHp() { return hp_; }
 	// HPの設定
 	void SetHp(int hp) { hp_ = hp; }
-	// 動き
-	void Move();
+	// 行動
+	void Activity();
 	// プレイヤーの設定
 	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
 	// 死んだかの取得
@@ -76,49 +76,59 @@ public: // メンバ関数
 	void AngleAdjustment();
 	// 攻撃が当たったか
 	void Hit(float damage);
-	// 攻撃の動き
-	void AttackMove(float speed);
+	// 移動
+	void Move(float speed);
 	// 接近の動き
 	void ApproachMove(float speed);
-
 	// 基本のアニメーション
 	void Animation(int type);
+	// 
+	void ActEnd();
 
 private: // メンバ変数
 	//核
 	std::unique_ptr<Object3d> nucleus_;
-
+	// 体
 	std::array<std::unique_ptr<Object3d>, 5> body_;
-	//右腕
-	std::array<std::unique_ptr<Object3d>, 3> rightArm_;
-	//左腕
-	std::array<std::unique_ptr<Object3d>, 3> leftArm_;
+	//右前足
+	std::array<std::unique_ptr<Object3d>, 3> rightForeFoot_;
+	//左前足
+	std::array<std::unique_ptr<Object3d>, 3> leftForeFoot_;
+	//右後ろ足
+	std::array<std::unique_ptr<Object3d>, 3> rightHindFoot_;
+	//左後ろ足
+	std::array<std::unique_ptr<Object3d>, 3> leftHindFoot_;
 	//尻尾
-	std::array<std::unique_ptr<Object3d>, 6> tail_;
+	std::array<std::unique_ptr<Object3d>, 4> tail_;
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
+
 	// 位置の保存
 	XMFLOAT3 saveVector_ = {};
+
 	// 足すアングル
 	float addAngle_ = 2.0f;
+
 	// 行動をする時間
 	int moveTimer_ = 0;
 	// 行動をする時間の最大
-	int max = 0;
+	int maxTime_ = 0;
 	// 行動を決めるカウント
-	int count = 0;
-	// 行動の種類
-	Phase phase_ = Phase::Approach;
-	// 攻撃の種類
-	AttackType attackType_ = AttackType::Ordinary;
+	int actCount_ = 0;
+	// sin波のタイマー
+	int waveTimer_ = 0;
 	//ヒットポイント
 	int hp_ = 3;
+
 	// 当たったか
 	bool hitFlag_ = false;
 	// 死んだか
 	bool isDead_ = false;
-	// 
-	int waveTimer = 0;
-	// 
-	int waveCount = 0;
+	// 行動の終了
+	bool actEndFlag_ = false;
+
+	// 行動の種類
+	Phase phase_ = Phase::Approach;
+	// 攻撃の種類
+	AttackType attackType_ = AttackType::Ordinary;
 };

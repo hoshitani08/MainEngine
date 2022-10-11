@@ -38,36 +38,93 @@ void Monster::Initialize()
 			body_[i]->SetPosition({ -1.5f,0,0 });
 			body_[i]->SetParent(body_[i - 1].get());
 		}
+
+		body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
 	}
 
-	for (int i = 0; i < rightArm_.size(); i++)
+	for (int i = 0; i < rightForeFoot_.size(); i++)
 	{
-		rightArm_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		rightForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			rightArm_[i]->SetPosition({ -3,0,-1 });
-			rightArm_[i]->SetParent(body_[0].get());
+			rightForeFoot_[i]->SetPosition({ -1.5f,0,-1 });
+			rightForeFoot_[i]->SetParent(body_[0].get());
+		}
+		else if (i == 1)
+		{
+			rightForeFoot_[i]->SetPosition({ 0,-1.0f,-1 });
+			rightForeFoot_[i]->SetParent(rightForeFoot_[i - 1].get());
 		}
 		else
 		{
-			rightArm_[i]->SetPosition({ -1.5f,0,-1 });
-			rightArm_[i]->SetParent(rightArm_[i - 1].get());
+			rightForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
+			rightForeFoot_[i]->SetParent(rightForeFoot_[i - 1].get());
 		}
+		rightForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
 	}
 
-	for (int i = 0; i < leftArm_.size(); i++)
+	for (int i = 0; i < leftForeFoot_.size(); i++)
 	{
-		leftArm_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		leftForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			leftArm_[i]->SetPosition({ -3,0,1 });
-			leftArm_[i]->SetParent(body_[0].get());
+			leftForeFoot_[i]->SetPosition({ -1.5f,0,1 });
+			leftForeFoot_[i]->SetParent(body_[0].get());
+		}
+		else if (i == 1)
+		{
+			leftForeFoot_[i]->SetPosition({ 0,-1.0f,1 });
+			leftForeFoot_[i]->SetParent(leftForeFoot_[i - 1].get());
 		}
 		else
 		{
-			leftArm_[i]->SetPosition({ -1.5f,0,1 });
-			leftArm_[i]->SetParent(leftArm_[i - 1].get());
+			leftForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
+			leftForeFoot_[i]->SetParent(leftForeFoot_[i - 1].get());
 		}
+		leftForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+	}
+
+	for (int i = 0; i < rightHindFoot_.size(); i++)
+	{
+		rightHindFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
+		{
+			rightHindFoot_[i]->SetPosition({ -5.5f,0,-1 });
+			rightHindFoot_[i]->SetParent(body_[0].get());
+		}
+		else if (i == 1)
+		{
+			rightHindFoot_[i]->SetPosition({ 0,-1.0f,-1 });
+			rightHindFoot_[i]->SetParent(rightHindFoot_[i - 1].get());
+		}
+		else
+		{
+			rightHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
+			rightHindFoot_[i]->SetParent(rightHindFoot_[i - 1].get());
+		}
+		rightHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+	}
+
+	for (int i = 0; i < leftHindFoot_.size(); i++)
+	{
+		leftHindFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
+		if (i == 0)
+		{
+			leftHindFoot_[i]->SetPosition({ -5.5f,0,1 });
+			leftHindFoot_[i]->SetParent(body_[0].get());
+		}
+		else if (i == 1)
+		{
+			leftHindFoot_[i]->SetPosition({ 0,-1.0f,1 });
+			leftHindFoot_[i]->SetParent(leftHindFoot_[i - 1].get());
+		}
+		else
+		{
+			leftHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
+			leftHindFoot_[i]->SetParent(leftHindFoot_[i - 1].get());
+		}
+
+		leftHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
 	}
 
 	for (int i = 0; i < tail_.size(); i++)
@@ -83,6 +140,8 @@ void Monster::Initialize()
 			tail_[i]->SetPosition({ -1.5f,0,0 });
 			tail_[i]->SetParent(tail_[i - 1].get());
 		}
+
+		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
 	}
 }
 
@@ -94,8 +153,8 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		//Move();
-		Animation(0);
+		Activity();
+		//Animation(0);
 		//AngleAdjustment();
 	}
 	else
@@ -112,13 +171,21 @@ void Monster::Update()
 	{
 		body_[i]->Update();
 	}
-	for (int i = 0; i < rightArm_.size(); i++)
+	for (int i = 0; i < rightForeFoot_.size(); i++)
 	{
-		rightArm_[i]->Update();
+		rightForeFoot_[i]->Update();
 	}
-	for (int i = 0; i < leftArm_.size(); i++)
+	for (int i = 0; i < leftForeFoot_.size(); i++)
 	{
-		leftArm_[i]->Update();
+		leftForeFoot_[i]->Update();
+	}
+	for (int i = 0; i < rightHindFoot_.size(); i++)
+	{
+		rightHindFoot_[i]->Update();
+	}
+	for (int i = 0; i < leftHindFoot_.size(); i++)
+	{
+		leftHindFoot_[i]->Update();
 	}
 	for (int i = 0; i < tail_.size(); i++)
 	{
@@ -138,13 +205,21 @@ void Monster::Draw()
 		{
 			body_[i]->Draw();
 		}
-		for (int i = 0; i < rightArm_.size(); i++)
+		for (int i = 0; i < rightForeFoot_.size(); i++)
 		{
-			rightArm_[i]->Draw();
+			rightForeFoot_[i]->Draw();
 		}
-		for (int i = 0; i < leftArm_.size(); i++)
+		for (int i = 0; i < leftForeFoot_.size(); i++)
 		{
-			leftArm_[i]->Draw();
+			leftForeFoot_[i]->Draw();
+		}
+		for (int i = 0; i < rightHindFoot_.size(); i++)
+		{
+			rightHindFoot_[i]->Draw();
+		}
+		for (int i = 0; i < leftHindFoot_.size(); i++)
+		{
+			leftHindFoot_[i]->Draw();
 		}
 		for (int i = 0; i < tail_.size(); i++)
 		{
@@ -155,7 +230,7 @@ void Monster::Draw()
 	
 }
 
-void Monster::Move()
+void Monster::Activity()
 {
 	Animation(0);
 	switch (phase_)
@@ -164,25 +239,23 @@ void Monster::Move()
 		AngleAdjustment();
 		ApproachMove(0.4f);
 		Hit(0);
-		max = 30;
 		break;
 	case Phase::Stop:
-		max = 10;
 		break;
 	case Phase::Attack:
 		Animation(1);
 		if (moveTimer_ <= 0)
 		{
-			count = rand() % 4;
-			if (count == 0)
+			actCount_ = rand() % 4;
+			if (actCount_ == 0)
 			{
 				attackType_ = AttackType::Weak;
 			}
-			else if (count == 1)
+			else if (actCount_ == 1)
 			{
 				attackType_ = AttackType::Ordinary;
 			}
-			else if (count == 2)
+			else if (actCount_ == 2)
 			{
 				attackType_ = AttackType::Strong;
 			}
@@ -191,21 +264,18 @@ void Monster::Move()
 		{
 		case AttackType::Weak:
 			AngleAdjustment();
-			AttackMove(0.5f);
+			Move(0.5f);
 			Hit(10);
-			max = 60;
 			break;
 		case AttackType::Ordinary:
 			AngleAdjustment();
-			AttackMove(0.8f);
+			Move(0.8f);
 			Hit(20);
-			max = 60;
 			break;
 		case AttackType::Strong:
 			AngleAdjustment();
-			AttackMove(1.0f);
+			Move(1.0f);
 			Hit(30);
-			max = 60;
 			break;
 		default:
 			break;
@@ -214,37 +284,13 @@ void Monster::Move()
 		break;
 	case Phase::Leave:
 		AngleAdjustment();
-		AttackMove(-1.0f);
-		max = 20;
+		Move(-1.0f);
 		break;
 	default:
 		break;
 	}
 
-	moveTimer_++;
-	
-	if (moveTimer_ >= max)
-	{
-		count = rand() % 4;
-		if (count == 0)
-		{
-			phase_ = Phase::Approach;
-		}
-		else if (count == 1)
-		{
-			phase_ = Phase::Stop;
-		}
-		else if (count == 2)
-		{
-			phase_ = Phase::Attack;
-		}
-		else if (count == 3)
-		{
-			phase_ = Phase::Leave;
-		}
-		moveTimer_ = 0;
-		hitFlag_ = false;
-	}
+	ActEnd();
 
 	/*DebugText::GetInstance()->VariablePrint(0, 0, "monster_.x", monster_->GetPosition().x, 1.0f);
 	DebugText::GetInstance()->VariablePrint(0, 16, "monster_.y", monster_->GetPosition().y, 1.0f);
@@ -295,7 +341,7 @@ void Monster::Hit(float damage)
 	}
 }
 
-void Monster::AttackMove(float speed)
+void Monster::Move(float speed)
 {
 	XMFLOAT3 pos = nucleus_->GetPosition();
 	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
@@ -341,28 +387,30 @@ void Monster::Animation(int type)
 	//Šî–{
 	if (type == 0)
 	{
-		XMFLOAT3 rot = rightArm_[waveCount]->GetRotation();
-		XMFLOAT3 rot2 = leftArm_[waveCount]->GetRotation();
+		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
+		XMFLOAT3 rot2 = leftForeFoot_[0]->GetRotation();
 		// •‚Ì§ŒÀ
 		float restrictionAngle = 15;
 
-		rot.z  += cosf(PI * 2 / 90 * waveTimer);
-		rot2.z -= cosf(PI * 2 / 90 * waveTimer);
+		rot.z  += cosf(PI * 2 / 135 * waveTimer_);
+		rot2.z -= cosf(PI * 2 / 135 * waveTimer_);
 
-		rightArm_[waveCount]->SetRotation(rot);
-		leftArm_[waveCount]->SetRotation(rot2);
+		rightForeFoot_[0]->SetRotation(rot);
+		leftForeFoot_[0]->SetRotation(rot2);
+		leftHindFoot_[0]->SetRotation(rot);
+		rightHindFoot_[0]->SetRotation(rot2);
 
 
 		for (int i = 0; i < tail_.size(); i++)
 		{
 			XMFLOAT3 tailRot = tail_[i]->GetRotation();
 
-			tailRot.y += cosf(PI * 2 / 90 * waveTimer);
+			tailRot.y += cosf(PI * 2 / 45 * (waveTimer_ / 2));
 
 			tail_[i]->SetRotation(tailRot);
 		}
 
-		waveTimer++;
+		waveTimer_ += 2;
 	}
 	//“Ëi
 	else if (type == 1)
@@ -371,6 +419,57 @@ void Monster::Animation(int type)
 
 		rot.x += MAX_ANGLE;
 
+		if (rot.x >= 360)
+		{
+			rot.x = 0;
+		}
+
 		body_[0]->SetRotation(rot);
+	}
+}
+
+void Monster::ActEnd()
+{
+	moveTimer_++;
+
+	switch (phase_)
+	{
+	case Phase::Approach:
+		maxTime_ = 30;
+		break;
+	case Phase::Stop:
+		maxTime_ = 10;
+		break;
+	case Phase::Attack:
+		maxTime_ = 60;
+		break;
+	case Phase::Leave:
+		maxTime_ = 20;
+		break;
+	default:
+		break;
+	}
+
+	if (moveTimer_ >= maxTime_)
+	{
+		actCount_ = rand() % 4;
+		if (actCount_ == 0)
+		{
+			phase_ = Phase::Approach;
+		}
+		else if (actCount_ == 1)
+		{
+			phase_ = Phase::Stop;
+		}
+		else if (actCount_ == 2)
+		{
+			phase_ = Phase::Attack;
+		}
+		else if (actCount_ == 3)
+		{
+			phase_ = Phase::Leave;
+		}
+		moveTimer_ = 0;
+		hitFlag_ = false;
 	}
 }
