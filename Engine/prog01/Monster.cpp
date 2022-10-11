@@ -232,57 +232,26 @@ void Monster::Draw()
 
 void Monster::Activity()
 {
-	Animation(0);
 	switch (phase_)
 	{
 	case Phase::Approach:
+		Animation(0);
 		AngleAdjustment();
-		ApproachMove(0.4f);
-		Hit(0);
+		Move(0.8f);
 		break;
 	case Phase::Stop:
+		Animation(0);
 		break;
 	case Phase::Attack:
 		Animation(1);
-		if (moveTimer_ <= 0)
+		if (!saveFlag_)
 		{
-			actCount_ = rand() % 4;
-			if (actCount_ == 0)
-			{
-				attackType_ = AttackType::Weak;
-			}
-			else if (actCount_ == 1)
-			{
-				attackType_ = AttackType::Ordinary;
-			}
-			else if (actCount_ == 2)
-			{
-				attackType_ = AttackType::Strong;
-			}
+			AngleAdjustment();
 		}
-		switch (attackType_)
-		{
-		case AttackType::Weak:
-			AngleAdjustment();
-			Move(0.5f);
-			Hit(10);
-			break;
-		case AttackType::Ordinary:
-			AngleAdjustment();
-			Move(0.8f);
-			Hit(20);
-			break;
-		case AttackType::Strong:
-			AngleAdjustment();
-			Move(1.0f);
-			Hit(30);
-			break;
-		default:
-			break;
-		}
-		
+		Move(1.0f);
 		break;
 	case Phase::Leave:
+		Animation(0);
 		AngleAdjustment();
 		Move(-1.0f);
 		break;
@@ -319,40 +288,99 @@ void Monster::AngleAdjustment()
 	nucleus_->SetRotation(enemyRot);
 }
 
-void Monster::Hit(float damage)
+void Monster::DamageHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange, float damage)
 {
-	XMFLOAT3 enemyPos = nucleus_->GetPosition();
-	XMFLOAT3 playerPos = hunter_->GetPosition();
 	Sphere eSphere;
 	Sphere pSphere;
 
-	eSphere.center = { enemyPos.x, enemyPos.y, enemyPos.z, 1 };
-	pSphere.center = { playerPos.x, playerPos.y, playerPos.z, 1 };
+	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
+	eSphere.radius = enemyRange;
+	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
+	pSphere.radius = playerRange;
 
-	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
+	if (Collision::CheckSphere2Sphere(eSphere, pSphere) && !hitFlag_)
 	{
 		if (hunter_->GetInvincibleTimer() >= 60)
 		{
 			hunter_->SetDamageFlag(true);
 			hunter_->SetDamagePercent(damage);
+			hitFlag_ = true;
 		}
-
-		hitFlag_ = true;
 	}
+}
+
+void Monster::RangeHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
+{
+	Sphere eSphere;
+	Sphere pSphere;
+
+	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
+	eSphere.radius = enemyRange;
+	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
+	pSphere.radius = playerRange;
+
+	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
+	{
+		saveFlag_ = true;
+	}
+}
+
+bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
+{
+	Sphere eSphere;
+	Sphere pSphere;
+
+	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
+	eSphere.radius = enemyRange;
+	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
+	pSphere.radius = playerRange;
+
+	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
+	{
+		return true;
+	}
+	return false;
 }
 
 void Monster::Move(float speed)
 {
 	XMFLOAT3 pos = nucleus_->GetPosition();
-	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
+	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
 
-	if (!hitFlag_)
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	switch (phase_)
 	{
-		saveVector_ = vector;
+	case Phase::Approach:
+		RangeHit(nucleus_->GetPosition(), 1.0f, 40);
+		if (!saveFlag_)
+		{
+			saveVector_ = vector;
+		}
+		break;
+	case Phase::Stop:
+		break;
+	case Phase::Attack:
+		RangeHit(nucleus_->GetPosition(), 1.0f, 20);
+		DamageHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
+		if (!saveFlag_)
+		{
+			saveVector_ = vector;
+		}
+		break;
+	case Phase::Leave:
+		if (!saveFlag_)
+		{
+			saveVector_ = vector;
+			saveFlag_ = true;
+		}
+		break;
+	case Phase::CoolTime:
+		break;
+	default:
+		break;
 	}
-
-	float v = sqrtf((saveVector_.x * saveVector_.x) + (saveVector_.y * saveVector_.y) + (saveVector_.z * saveVector_.z));
-	saveVector_ = { (saveVector_.x / v) * speed, (saveVector_.y / v) * speed, (saveVector_.z / v) * speed };
 
 	pos.x += saveVector_.x;
 	pos.y += saveVector_.y;
@@ -361,30 +389,9 @@ void Monster::Move(float speed)
 	nucleus_->SetPosition(pos);
 }
 
-void Monster::ApproachMove(float speed)
-{
-	if (!hitFlag_)
-	{
-		XMFLOAT3 pos = nucleus_->GetPosition();
-		XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
-		float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-		vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
-
-		pos.x += vector.x;
-		pos.y += vector.y;
-		pos.z += vector.z;
-
-		nucleus_->SetPosition(pos);
-	}
-	else
-	{
-		moveTimer_ = 999;
-	}
-}
-
 void Monster::Animation(int type)
 {
-	//基本
+	// 移動
 	if (type == 0)
 	{
 		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
@@ -430,27 +437,74 @@ void Monster::Animation(int type)
 
 void Monster::ActEnd()
 {
-	moveTimer_++;
-
 	switch (phase_)
 	{
 	case Phase::Approach:
+		// タイマーの最大値
 		maxTime_ = 30;
+		if (saveFlag_)
+		{
+			// タイマーの加算
+			moveTimer_++;
+
+			if (Hit(nucleus_->GetPosition()))
+			{
+				moveTimer_ = 999;
+			}
+		}
+
+		if (moveTimer_ >= maxTime_)
+		{
+			actEndFlag_ = true;
+		}
 		break;
 	case Phase::Stop:
-		maxTime_ = 10;
+		// タイマーの最大値
+		maxTime_ = 30;
+		// タイマーの加算
+		moveTimer_++;
+		if (moveTimer_ >= maxTime_)
+		{
+			actEndFlag_ = true;
+		}
 		break;
 	case Phase::Attack:
+		// タイマーの最大値
 		maxTime_ = 60;
+		if (saveFlag_)
+		{
+			// タイマーの加算
+			moveTimer_++;
+		}
+		if (body_[0]->GetRotation().x <= 0 && moveTimer_ >= maxTime_)
+		{
+			actEndFlag_ = true;
+		}
 		break;
 	case Phase::Leave:
-		maxTime_ = 20;
+		// タイマーの最大値
+		maxTime_ = 30;
+		// タイマーの加算
+		moveTimer_++;
+		if (moveTimer_ >= maxTime_)
+		{
+			actEndFlag_ = true;
+		}
+
+		break;
+	case Phase::CoolTime:
+
 		break;
 	default:
 		break;
 	}
 
-	if (moveTimer_ >= maxTime_)
+	if (actEndFlag_ && coolTimer < 40)
+	{
+		coolTimer++;
+		phase_ = Phase::CoolTime;
+	}
+	else if(coolTimer >= 40)
 	{
 		actCount_ = rand() % 4;
 		if (actCount_ == 0)
@@ -470,6 +524,9 @@ void Monster::ActEnd()
 			phase_ = Phase::Leave;
 		}
 		moveTimer_ = 0;
+		coolTimer = 0;
+		saveFlag_ = false;
+		actEndFlag_ = false;
 		hitFlag_ = false;
 	}
 }

@@ -8,20 +8,7 @@
 #include "Hunter.h"
 #include "FbxObject3d.h"
 
-enum class Phase
-{
-	Approach,
-	Stop,
-	Attack,
-	Leave
-};
 
-enum class AttackType
-{
-	Weak,
-	Ordinary,
-	Strong
-};
 
 class Monster
 {
@@ -46,6 +33,21 @@ private: // 定数
 	const float ANGLE = 180.0f;
 
 public: // サブクラス
+	enum class Phase
+	{
+		Approach,
+		Stop,
+		Attack,
+		Leave,
+		CoolTime
+	};
+
+	enum class AttackType
+	{
+		Weak,
+		Ordinary,
+		Strong
+	};
 
 public: // 静的メンバ関数
 	static std::unique_ptr<Monster> Create();
@@ -75,14 +77,17 @@ public: // メンバ関数
 	// 向きの設定
 	void AngleAdjustment();
 	// 攻撃が当たったか
-	void Hit(float damage);
+	void DamageHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f, float damage = 0.0f);
+	// 範囲に入ったか
+	void RangeHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
+	//
+	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
+
 	// 移動
 	void Move(float speed);
-	// 接近の動き
-	void ApproachMove(float speed);
 	// 基本のアニメーション
 	void Animation(int type);
-	// 
+	// 行動の終了
 	void ActEnd();
 
 private: // メンバ変数
@@ -103,10 +108,12 @@ private: // メンバ変数
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
 
-	// 位置の保存
+	// 進行方向の保存
 	XMFLOAT3 saveVector_ = {};
+	// プレイヤーの位置の保存
+	XMFLOAT3 savePlayerPosition = {};
 
-	// 足すアングル
+	// 加算アングル
 	float addAngle_ = 2.0f;
 
 	// 行動をする時間
@@ -119,9 +126,13 @@ private: // メンバ変数
 	int waveTimer_ = 0;
 	//ヒットポイント
 	int hp_ = 3;
+	//クールタイム
+	int coolTimer = 0;
 
 	// 当たったか
 	bool hitFlag_ = false;
+	// 保存出来るか
+	bool saveFlag_ = false;
 	// 死んだか
 	bool isDead_ = false;
 	// 行動の終了
