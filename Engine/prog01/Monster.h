@@ -5,6 +5,7 @@
 #include <array>
 #include <algorithm>
 
+#include "Collision.h"
 #include "Hunter.h"
 #include "FbxObject3d.h"
 
@@ -87,12 +88,13 @@ public: // メンバ関数
 	// 向きの設定
 	void AngleAdjustment();
 	// 攻撃が当たったか
-	void DamageHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f, float damage = 0.0f);
+	void AttackHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f, float damage = 0.0f);
 	// 範囲に入ったか
 	void RangeHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
 	// 当たったか
 	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
-
+	// ダメージを受けたか
+	void DamageHit(Sphere hitSphere);
 	// 移動
 	void Move(float speed);
 	// 基本のアニメーション

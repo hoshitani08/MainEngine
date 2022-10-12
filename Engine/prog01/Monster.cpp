@@ -1,6 +1,5 @@
 #include "Monster.h"
 #include "FbxFactory.h"
-#include "Collision.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "DebugText.h"
@@ -153,17 +152,13 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		Activity();
-		//Animation(0);
-		//AngleAdjustment();
+		//Activity();
+		Animation(AnimationType::Move);
 	}
 	else
 	{
 		isDead_ = true;
 	}
-
-
-
 
 	//更新
 	nucleus_->Update();
@@ -288,7 +283,7 @@ void Monster::AngleAdjustment()
 	nucleus_->SetRotation(enemyRot);
 }
 
-void Monster::DamageHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange, float damage)
+void Monster::AttackHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange, float damage)
 {
 	Sphere eSphere;
 	Sphere pSphere;
@@ -342,6 +337,180 @@ bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
 	return false;
 }
 
+void Monster::DamageHit(Sphere hitSphere)
+{
+	XMFLOAT3 center = { nucleus_->GetPosition().x, nucleus_->GetPosition().y, nucleus_->GetPosition().z };
+	Sphere eSphere;
+	XMFLOAT3 savePos = {};
+
+	// 体
+	for (int i = 0; i < body_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			center.x + body_[i]->GetPosition().x + savePos.x,
+			center.y + body_[i]->GetPosition().y + savePos.y,
+			center.z + body_[i]->GetPosition().z + savePos.z, 1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 10;
+		}
+
+		savePos.x += body_[i]->GetPosition().x;
+		savePos.y += body_[i]->GetPosition().y;
+		savePos.z += body_[i]->GetPosition().z;
+	}
+
+	// 右前足
+	savePos = {};
+	for (int i = 0; i < rightForeFoot_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			center.x + rightForeFoot_[i]->GetPosition().x + savePos.x,
+			center.y + rightForeFoot_[i]->GetPosition().y + savePos.y,
+			center.z + rightForeFoot_[i]->GetPosition().z + savePos.z, 1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 5;
+		}
+
+		savePos.x += rightForeFoot_[i]->GetPosition().x;
+		savePos.y += rightForeFoot_[i]->GetPosition().y;
+		savePos.z += rightForeFoot_[i]->GetPosition().z;
+	}
+
+	// 左前足
+	savePos = {};
+	for (int i = 0; i < leftForeFoot_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			center.x + leftForeFoot_[i]->GetPosition().x + savePos.x,
+			center.y + leftForeFoot_[i]->GetPosition().y + savePos.y,
+			center.z + leftForeFoot_[i]->GetPosition().z + savePos.z, 1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 5;
+		}
+
+		savePos.x += leftForeFoot_[i]->GetPosition().x;
+		savePos.y += leftForeFoot_[i]->GetPosition().y;
+		savePos.z += leftForeFoot_[i]->GetPosition().z;
+	}
+
+	// 右後足
+	savePos = {};
+	for (int i = 0; i < rightHindFoot_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			center.x + rightHindFoot_[i]->GetPosition().x + savePos.x,
+			center.y + rightHindFoot_[i]->GetPosition().y + savePos.y,
+			center.z + rightHindFoot_[i]->GetPosition().z + savePos.z, 1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 5;
+		}
+
+		savePos.x += rightHindFoot_[i]->GetPosition().x;
+		savePos.y += rightHindFoot_[i]->GetPosition().y;
+		savePos.z += rightHindFoot_[i]->GetPosition().z;
+	}
+
+	// 右後足
+	savePos = {};
+	for (int i = 0; i < leftHindFoot_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			center.x + leftHindFoot_[i]->GetPosition().x + savePos.x,
+			center.y + leftHindFoot_[i]->GetPosition().y + savePos.y,
+			center.z + leftHindFoot_[i]->GetPosition().z + savePos.z, 1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 5;
+		}
+
+		savePos.x += leftHindFoot_[i]->GetPosition().x;
+		savePos.y += leftHindFoot_[i]->GetPosition().y;
+		savePos.z += leftHindFoot_[i]->GetPosition().z;
+	}
+
+	// 尻尾
+	savePos = {};
+	XMFLOAT3 tailCenter = {};
+	for (int i = 0; i < body_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		tailCenter.x += body_[i]->GetPosition().x;
+		tailCenter.y += body_[i]->GetPosition().y;
+		tailCenter.z += body_[i]->GetPosition().z;
+	}
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		if (!hunter_->IsAttackFlag())
+		{
+			break;
+		}
+		eSphere.center =
+		{
+			(tailCenter.x + center.x) + tail_[i]->GetPosition().x + savePos.x,
+			(tailCenter.y + center.y) + tail_[i]->GetPosition().y + savePos.y,
+			(tailCenter.z + center.z) + tail_[i]->GetPosition().z + savePos.z,
+			1
+		};
+
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		{
+			hunter_->AttackHit(false);
+			hp_ -= 8;
+		}
+
+		savePos.x += tail_[i]->GetPosition().x;
+		savePos.y += tail_[i]->GetPosition().y;
+		savePos.z += tail_[i]->GetPosition().z;
+	}
+}
+
 void Monster::Move(float speed)
 {
 	XMFLOAT3 pos = nucleus_->GetPosition();
@@ -367,7 +536,7 @@ void Monster::Move(float speed)
 			saveVector_ = vector;
 		}
 		RangeHit(nucleus_->GetPosition(), 1.0f, 20);
-		DamageHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
+		AttackHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
 		break;
 	case Phase::Leave:
 		if (!saveFlag_)
@@ -478,7 +647,7 @@ void Monster::Animation(AnimationType type)
 		{
 			XMFLOAT3 tailRot = tail_[i]->GetRotation();
 
-			tailRot.y += cosf(PI * 2 / 45 * (waveTimer_ / 2));
+			tailRot.z += cosf(PI * 2 / 70 * (waveTimer_ / 2));
 
 			tail_[i]->SetRotation(tailRot);
 		}
@@ -488,16 +657,30 @@ void Monster::Animation(AnimationType type)
 	//突進
 	else if (type == AnimationType::Assault)
 	{
-		XMFLOAT3 rot = body_[0]->GetRotation();
+		XMFLOAT3 bodyRot = body_[0]->GetRotation();
 
-		rot.x += MAX_ANGLE;
+		bodyRot.x += MAX_ANGLE;
 
-		if (rot.x >= 360)
+		if (bodyRot.x >= 360)
 		{
-			rot.x = 0;
+			bodyRot.x = 0;
 		}
 
-		body_[0]->SetRotation(rot);
+		body_[0]->SetRotation(bodyRot);
+
+		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
+
+		rot.z -= 10;
+
+		if (rot.z <= -90)
+		{
+			rot.z = -90;
+		}
+
+		rightForeFoot_[0]->SetRotation(rot);
+		leftForeFoot_[0]->SetRotation(rot);
+		leftHindFoot_[0]->SetRotation(rot);
+		rightHindFoot_[0]->SetRotation(rot);
 	}
 }
 

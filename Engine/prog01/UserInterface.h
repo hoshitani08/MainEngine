@@ -67,9 +67,12 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> enemyLifeFrame_;
 	//敵の体力のゲージ
 	std::unique_ptr<Sprite> enemyLifeGauge_;
+	//体力の赤ゲージ
+	std::unique_ptr<Sprite> enemyInnerLifeGauge_;
 
 	//イージングの進行度用
-	float easeTimer_ = 0.0f;
+	float hunterEaseTimer_ = 0.0f;
+	float monsterEaseTimer_ = 0.0f;
 	//モンスターのHP
 	float monsterHp_ = 0.0f;
 	//ハンターのHP

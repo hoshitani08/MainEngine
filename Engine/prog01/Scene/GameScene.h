@@ -91,6 +91,4 @@ private: // メンバ変数
 	CollisionManager* collisionManager_ = nullptr;
 	// 角度
 	XMFLOAT2 angle_ = { 0.0f, 0.0f};
-	//クールタイム
-	int coolTimer = 0;
 };

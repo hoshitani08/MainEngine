@@ -23,6 +23,7 @@ void UserInterface::Initialize()
 
 	enemyLifeFrame_ = Sprite::Create(1, { 390, 620 });
 	enemyLifeGauge_ = Sprite::Create(3, { 392, 622 });
+	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
 
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
@@ -38,10 +39,7 @@ void UserInterface::Update()
 	DamageCalculate();
 	StrengthCalculate();
 
-	if (lifeGauge_->GetSize().x < innerLifeGauge_->GetSize().x)
-	{
-		HpEase();
-	}
+	HpEase();
 
 	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
 }
@@ -61,21 +59,38 @@ void UserInterface::NearDraw()
 	clockFrame_->Draw();
 
 	enemyLifeFrame_->Draw();
+	enemyInnerLifeGauge_->Draw();
 	enemyLifeGauge_->Draw();
 }
 
 void UserInterface::HpEase()
 {
-	float timeRate = 0.0f;
 	float countNum = 20;
-	timeRate = easeTimer_ / countNum;
-	easeTimer_++;
 
-	innerLifeGauge_->SetSize(Ease::easeIn(innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), timeRate));
-
-	if (easeTimer_ > countNum)
+	if (lifeGauge_->GetSize().x < innerLifeGauge_->GetSize().x)
 	{
-		easeTimer_ = 0;
+		float timeRate = hunterEaseTimer_ / countNum;
+		hunterEaseTimer_++;
+
+		innerLifeGauge_->SetSize(Ease::easeIn(innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), timeRate));
+
+		if (hunterEaseTimer_ > countNum)
+		{
+			hunterEaseTimer_ = 0;
+		}
+	}
+
+	if (enemyLifeGauge_->GetSize().x < enemyInnerLifeGauge_->GetSize().x)
+	{
+		float timeRate = monsterEaseTimer_ / countNum;
+		monsterEaseTimer_++;
+
+		enemyInnerLifeGauge_->SetSize(Ease::easeIn(enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), timeRate));
+
+		if (monsterEaseTimer_ > countNum)
+		{
+			monsterEaseTimer_ = 0;
+		}
 	}
 }
 

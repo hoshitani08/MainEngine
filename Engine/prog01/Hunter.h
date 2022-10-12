@@ -53,6 +53,8 @@ public: // メンバ関数
 	int GetInvincibleTimer() { return invincibleTimer_; }
 	// 攻撃をしたか
 	bool IsAttackFlag() { return isAttackFlag_; }
+	// 攻撃フラグの設定
+	void AttackHit(bool isAttackFlag);
 	// ダッシュのフラグを設定
 	void SetIsDash(bool isDash) { isDash_ = isDash; }
 	// ダメージのパーセントを設定

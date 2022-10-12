@@ -240,15 +240,13 @@ void GameScene::CameraMove()
 
 void GameScene::PlayerAttack()
 {
-	coolTimer++;
-
 	if (hunter_->IsAttackFlag())
 	{
 		//UŒ‚”ÍˆÍ
 		XMVECTOR v0 = { 0, 0, 1, 0 };
 		XMMATRIX  rotM = XMMatrixIdentity();
 		rotM *= XMMatrixRotationX(XMConvertToRadians(-hunter_->GetRotation().z));
-		rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y + 90));
+		rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y));
 		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
 		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
 		XMVECTOR v3 = bossTarget + v;
@@ -258,17 +256,8 @@ void GameScene::PlayerAttack()
 
 		Sphere hitSphere;
 		hitSphere.center = { pos.x, pos.y, pos.z, 1 };
-		Sphere eSphere;
-		eSphere.center = { monster_->GetPosition().x, monster_->GetPosition().y, monster_->GetPosition().z, 1 };
 
+		monster_->DamageHit(hitSphere);
 		hitSphere_->SetPosition(pos);
-
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && coolTimer >= 60)
-		{
-			int eHp = monster_->GetHp();
-			eHp -= 5;
-			monster_->SetHp(eHp);
-			coolTimer = 0;
-		}
 	}
 }

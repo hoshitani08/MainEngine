@@ -25,10 +25,11 @@ std::unique_ptr<Hunter> Hunter::Create()
 void Hunter::Initialize()
 {
 	float size = 0.006f;
-	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX");
+	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX", true);
 	hunter_->SetScale({ size, size, size });
-	hunter_->SetRotation({0,-90,0});
+	hunter_->SetRotation({0,0,0});
 	hunter_->SetPosition({ 0, 10, -30 });
+	hunter_->PlayAnimation();
 }
 
 void Hunter::Finalize()
@@ -93,8 +94,8 @@ void Hunter::Move()
 		position_.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
 		position_.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
 		position_.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
-		rotation.y = angle.x;
-		rotation.z = -angle.y;
+		rotation.y = angle.x + 90;
+		rotation.x = angle.y;
 	}
 	hunter_->SetPosition(position_);
 	hunter_->SetRotation(rotation);
@@ -106,13 +107,8 @@ void Hunter::Move()
 		avoidTimer_ = 0;
 	}
 
-	if (!damageFlag_)
-	{
-		invincibleTimer_++;
-	}
-
 	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && avoidTimer_ >= 10 && !isAttackFlag_ && attackCoolTimer_ >= 10)
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10)
 	{
 		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
@@ -128,6 +124,12 @@ void Hunter::Move()
 	}
 	attackCoolTimer_++;
 
+}
+
+void Hunter::AttackHit(bool isAttackFlag)
+{
+	isAttackFlag_ = isAttackFlag;
+	attackCoolTimer_ = 0;
 }
 
 void Hunter::DamageHit()
