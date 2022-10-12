@@ -32,6 +32,9 @@ private: // 定数
 	// 度数法
 	const float ANGLE = 180.0f;
 
+public: // 定数
+	const float MAX_HP = 200.0f;
+
 public: // サブクラス
 	enum class Phase
 	{
@@ -72,9 +75,9 @@ public: // メンバ関数
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return nucleus_->GetPosition(); }
 	// HPの取得
-	int GetHp() { return hp_; }
+	float GetHp() { return hp_; }
 	// HPの設定
-	void SetHp(int hp) { hp_ = hp; }
+	void SetHp(float hp) { hp_ = hp; }
 	// 行動
 	void Activity();
 	// プレイヤーの設定
@@ -87,7 +90,7 @@ public: // メンバ関数
 	void DamageHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f, float damage = 0.0f);
 	// 範囲に入ったか
 	void RangeHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
-	//
+	// 当たったか
 	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
 
 	// 移動
@@ -134,7 +137,7 @@ private: // メンバ変数
 	// 行動を決めるカウント
 	int actCount_ = 0;
 	//ヒットポイント
-	int hp_ = 3;
+	float hp_ = MAX_HP;
 
 	// 当たったか
 	bool hitFlag_ = false;

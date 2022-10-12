@@ -1,5 +1,6 @@
 #include "UserInterface.h"
 
+#include "DebugText.h"
 #include "Input.h"
 #include "Ease.h"
 
@@ -19,6 +20,13 @@ void UserInterface::Initialize()
 	innerLifeGauge_ = Sprite::Create(3, { 62, 19 });
 	strengthGauge_ =  Sprite::Create(4, { 62, 37 });
 	clockFrame_ = Sprite::Create(10, { 0,0 });
+
+	enemyLifeFrame_ = Sprite::Create(1, { 390, 620 });
+	enemyLifeGauge_ = Sprite::Create(3, { 392, 622 });
+
+	monsterHp_ = monster_->MAX_HP;
+	hunterHp_ = hunter_->MAX_HP;
+	hunterstamina_ = hunter_->MAX_STAMINA;
 }
 
 void UserInterface::Finalize()
@@ -34,6 +42,8 @@ void UserInterface::Update()
 	{
 		HpEase();
 	}
+
+	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
 }
 
 void UserInterface::BackDraw()
@@ -49,6 +59,9 @@ void UserInterface::NearDraw()
 	lifeGauge_->Draw();
 
 	clockFrame_->Draw();
+
+	enemyLifeFrame_->Draw();
+	enemyLifeGauge_->Draw();
 }
 
 void UserInterface::HpEase()
@@ -68,54 +81,58 @@ void UserInterface::HpEase()
 
 void UserInterface::DamageCalculate()
 {
-	XMFLOAT2 hpGaugeSize = lifeGauge_->GetSize();
-
-	if (hunter_->GetDamageFlag())
+	//全体の何パーセントかという計算は ある数 ÷ 全体 × 100
+	//全体の何パーセントはいくつかという計算は、 全体 × パーセント ÷ 100
+	if (hunterHp_ > hunter_->GetHp())
 	{
-		hpGaugeSize.x -= (508 * hunter_->GetDamagePercent()) / 100;
+		XMFLOAT2 hpGaugeSize = lifeGauge_->GetSize();
 
-		if (hpGaugeSize.x <= 0)
-		{
-			hpGaugeSize.x = 0.0f;
-			isDeath_ = true;
-		}
+		float saveCount = hunter_->GetHp() / hunter_->MAX_HP * 100;
 
-		hunter_->SetDamageFlag(false);
+		hpGaugeSize.x = (508 * saveCount) / 100;
+
+		lifeGauge_->SetSize(hpGaugeSize);
+		hunterHp_ = hunter_->GetHp();
 	}
 
-	lifeGauge_->SetSize(hpGaugeSize);
+	//全体の何パーセントかという計算は ある数 ÷ 全体 × 100
+	//全体の何パーセントはいくつかという計算は、 全体 × パーセント ÷ 100
+	if (monsterHp_ > monster_->GetHp())
+	{
+		XMFLOAT2 hpGaugeSize = enemyLifeGauge_->GetSize();
+
+		float saveCount = monster_->GetHp() / monster_->MAX_HP * 100;
+
+		hpGaugeSize.x = (508 * saveCount) / 100;
+
+		enemyLifeGauge_->SetSize(hpGaugeSize);
+		monsterHp_ = monster_->GetHp();
+	}
 }
 
 void UserInterface::StrengthCalculate()
 {
-	XMFLOAT2 strengthGaugeSize = strengthGauge_->GetSize();
-
-	if (hunter_->GetStrengthDecrement() != 0)
+	if (hunterstamina_ != hunter_->GetStamina())
 	{
-		strengthGaugeSize.x -= (508 * hunter_->GetStrengthDecrement()) / 100;
+		XMFLOAT2 strengthGaugeSize = strengthGauge_->GetSize();
 
-		if (strengthGaugeSize.x <= 0.0f)
-		{
-			strengthGaugeSize.x = 0.0f;
-			hunter_->SetIsDash(false);
-		}
+		float saveCount = hunter_->GetStamina() / hunter_->MAX_STAMINA * 100;
+
+		strengthGaugeSize.x = (508 * saveCount) / 100;
 
 		strengthGauge_->SetSize(strengthGaugeSize);
+		hunterstamina_ = hunter_->GetStamina();
 	}
 	else if (!hunter_->GetAvoidFlag())
 	{
-		strengthGaugeSize.x += (508 * 1) / 100;
+		float stamina = hunter_->GetStamina();
 
-		if (strengthGaugeSize.x >= 508)
+		stamina++;
+
+		if (stamina >= hunter_->MAX_STAMINA)
 		{
-			strengthGaugeSize.x = 508;
+			stamina = hunter_->MAX_STAMINA;
 		}
-
-		if (strengthGaugeSize.x >= 100)
-		{
-			hunter_->SetIsDash(true);
-		}
-
-		strengthGauge_->SetSize(strengthGaugeSize);
+		hunter_->SetStamina(stamina);
 	}
 }

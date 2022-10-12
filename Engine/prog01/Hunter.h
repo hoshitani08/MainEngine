@@ -17,6 +17,10 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMVECTOR = DirectX::XMVECTOR;
 
+public: // 定数
+	const float MAX_HP = 150.0f;
+	const float MAX_STAMINA = 150.0f;
+
 public: // 静的メンバ関数
 	static std::unique_ptr<Hunter> Create();
 
@@ -38,24 +42,31 @@ public: // メンバ関数
 	const XMFLOAT3& GetPosition() { return position_; }
 	// X,Y,Z軸回りの取得
 	const XMFLOAT3& GetRotation() { return hunter_->GetRotation(); }
-	// ダメージのパーセントを取得
-	float GetDamagePercent() { return damagePercent_; }
+
 	// ダメージのフラグを取得
 	bool GetDamageFlag() { return damageFlag_; }
+	// ダメージのフラグを設定
+	void SetDamageFlag(bool damageFlag) { damageFlag_ = damageFlag; }
 	// 回避フラグ
 	bool GetAvoidFlag() { return avoidFlag_; }
 	// 無敵時間を取得
 	int GetInvincibleTimer() { return invincibleTimer_; }
-	//スタミナの減少値を取得
-	float GetStrengthDecrement() { return strengthDecrement_; }
-	// ダメージのフラグを設定
-	void SetDamageFlag(bool damageFlag);
-	// ダメージのパーセントを設定
-	void SetDamagePercent(float damagePercent) { damagePercent_ = damagePercent; }
 	// 攻撃をしたか
 	bool IsAttackFlag() { return isAttackFlag_; }
 	// ダッシュのフラグを設定
 	void SetIsDash(bool isDash) { isDash_ = isDash; }
+	// ダメージのパーセントを設定
+	void SetDamage(float damage) { damage_ = damage; }
+	// HPの取得
+	float GetHp() { return hp_; }
+	// HPの設定
+	void SetHp(float hp) { hp_ = hp; }
+	// HPの取得
+	float GetStamina() { return stamina_; }
+	// HPの設定
+	void SetStamina(float stamina) { stamina_ = stamina; }
+	//
+	void DamageHit();
 
 private: // メンバ変数
 	//　モデル
@@ -70,18 +81,20 @@ private: // メンバ変数
 	int avoidTimer_ = 0;
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
-	// ダメージ
-	float damagePercent_ = 0.0f;
 	// ダメージフラグ
 	bool damageFlag_ = false;
 	// 無敵時間
 	int invincibleTimer_ = 300;
 	//ダッシュ出来るか
 	bool isDash_ = true;
-	// スタミナの減少値
-	float strengthDecrement_ = 0.0f;
 	// 攻撃が当たったか
 	bool isAttackFlag_ = false;
 	// 攻撃のクールタイム
 	int attackCoolTimer_ = 0;
+	// ヒットポイント
+	float hp_ = MAX_HP;
+	// 
+	float stamina_ = MAX_STAMINA;
+	//
+	float damage_ = 0.0f;
 };

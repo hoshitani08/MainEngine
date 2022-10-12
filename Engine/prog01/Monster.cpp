@@ -303,7 +303,7 @@ void Monster::DamageHit(XMFLOAT3 partsPosition, float enemyRange, float playerRa
 		if (hunter_->GetInvincibleTimer() >= 60)
 		{
 			hunter_->SetDamageFlag(true);
-			hunter_->SetDamagePercent(damage);
+			hunter_->SetDamage(damage);
 			hitFlag_ = true;
 		}
 	}
@@ -457,6 +457,7 @@ void Monster::Animation(AnimationType type)
 			tail_[i]->SetRotation(rot);
 		}
 	}
+	// •às
 	else if (type == AnimationType::Move)
 	{
 		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();

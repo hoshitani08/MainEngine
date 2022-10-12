@@ -42,10 +42,6 @@ void GameScene::Initialize()
 	sprite_->SetSize({ 100.0f,100.0f });
 	sprite_->SetPosition({ 100.0f,100.0f });
 
-	//UI
-	ui = std::make_unique<UserInterface>();
-	ui->Initialize();
-
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
 
@@ -75,7 +71,12 @@ void GameScene::Initialize()
 	monster_ = Monster::Create();
 
 	monster_->SetHunter(hunter_.get());
+
+	//UI
+	ui = std::make_unique<UserInterface>();
 	ui->SetHunter(hunter_.get());
+	ui->SetMonster(monster_.get());
+	ui->Initialize();
 }
 
 void GameScene::Finalize()
@@ -91,8 +92,8 @@ void GameScene::Update()
 
 	if (input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f)
 	{
-		angle_.x += input->PadRightStickGradient().x * 2.5f;
-		angle_.y += input->PadRightStickGradient().y * 2.5f;
+		angle_.x += input->PadRightStickGradient().x * 4.5f;
+		angle_.y += input->PadRightStickGradient().y * 4.5f;
 
 		if (angle_.x >= RESTRICTION_ANGLE.x)
 		{
@@ -265,7 +266,7 @@ void GameScene::PlayerAttack()
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && coolTimer >= 60)
 		{
 			int eHp = monster_->GetHp();
-			eHp--;
+			eHp -= 5;
 			monster_->SetHp(eHp);
 			coolTimer = 0;
 		}

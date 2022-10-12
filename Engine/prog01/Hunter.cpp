@@ -37,6 +37,7 @@ void Hunter::Finalize()
 
 void Hunter::Update()
 {
+	DamageHit();
 	hunter_->Update();
 }
 
@@ -56,11 +57,7 @@ void Hunter::Move()
 	{
 		if (avoidTimer_ <= 0)
 		{
-			strengthDecrement_ = 10;
-		}
-		else
-		{
-			strengthDecrement_ = 0.0f;
+			stamina_ -= 10;
 		}
 
 		avoidTimer_++;
@@ -76,13 +73,12 @@ void Hunter::Move()
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isDash_)
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
-		strengthDecrement_ = 0.6f;
+		stamina_ -= 0.5f;
 		avoidTimer_++;
 	}
 	else
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
-		strengthDecrement_ = 0.0f;
 		avoidTimer_++;
 	}
 
@@ -134,12 +130,19 @@ void Hunter::Move()
 
 }
 
-void Hunter::SetDamageFlag(bool damageFlag)
+void Hunter::DamageHit()
 {
-	damageFlag_ = damageFlag;
-
-	if (invincibleTimer_ >= 60 && damageFlag)
+	if (damageFlag_ && invincibleTimer_ >= 60)
 	{
 		invincibleTimer_ = 0;
+		damageFlag_ = false;
+		hp_ -= damage_;
+		damage_ = 0.0f;
+	}
+	else
+	{
+		damageFlag_ = false;
+		invincibleTimer_++;
+		damage_ = 0.0f;
 	}
 }

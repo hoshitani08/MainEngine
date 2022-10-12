@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "Hunter.h"
+#include "Monster.h"
 
 class UserInterface
 {
@@ -36,6 +37,8 @@ public: // メンバ関数
 	void HpEase();
 	// ハンターを設定
 	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
+	// ハンターを設定
+	void SetMonster(Monster* monster) { monster_ = monster; }
 	// ダメージを計算
 	void DamageCalculate();
 	// スタミナ計算
@@ -46,6 +49,8 @@ public: // メンバ関数
 private: // メンバ変数
 	//ハンター
 	Hunter* hunter_ = nullptr;
+	// モンスター
+	Monster* monster_ = nullptr;
 	//スタミナのフレーム
 	std::unique_ptr<Sprite> strengthFrame_;
 	//体力のフレーム
@@ -58,8 +63,19 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> innerLifeGauge_;
 	//時計のフレーム
 	std::unique_ptr<Sprite> clockFrame_;
+	//敵の体力のフレーム
+	std::unique_ptr<Sprite> enemyLifeFrame_;
+	//敵の体力のゲージ
+	std::unique_ptr<Sprite> enemyLifeGauge_;
+
 	//イージングの進行度用
 	float easeTimer_ = 0.0f;
+	//モンスターのHP
+	float monsterHp_ = 0.0f;
+	//ハンターのHP
+	float hunterHp_ = 0.0f;
+	//ハンターのスタミナ
+	float hunterstamina_ = 0.0f;
 	// 生きているかどうか
 	bool isDeath_ = false;
 };
