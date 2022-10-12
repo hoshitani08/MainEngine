@@ -92,8 +92,19 @@ void GameScene::Update()
 
 	if (input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f)
 	{
-		angle_.x += input->PadRightStickGradient().x * 4.5f;
-		angle_.y += input->PadRightStickGradient().y * 4.5f;
+		XMFLOAT2 speed = { input->PadRightStickGradient().x * 5.5f, input->PadRightStickGradient().y * 5.5f };
+
+		if (speed.x < 0)
+		{
+			speed.x *= -1;
+		}
+		if (speed.y < 0)
+		{
+			speed.y *= -1;
+		}
+
+		angle_.x += input->PadRightStickGradient().x * speed.x;
+		angle_.y += input->PadRightStickGradient().y * speed.y;
 
 		if (angle_.x >= RESTRICTION_ANGLE.x)
 		{
