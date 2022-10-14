@@ -333,6 +333,7 @@
     <ClCompile Include="GameObject\Player.cpp" />
     <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="GameObject\Player.h" />
     <ClInclude Include="Hunter.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="ItemManager.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="PmxLoader.h" />

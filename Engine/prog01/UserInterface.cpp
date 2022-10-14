@@ -41,6 +41,11 @@ void UserInterface::Update()
 
 	HpEase();
 
+	if (!isPlayerDeath_ && lifeGauge_->GetSize().x < 1.0f)
+	{
+		isPlayerDeath_ = true;
+	}
+
 	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
 }
 

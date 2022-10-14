@@ -44,7 +44,7 @@ public: // メンバ関数
 	// スタミナ計算
 	void StrengthCalculate();
 	// 生きているかどうか
-	bool GetIsDeath() { return isDeath_; }
+	bool GetIsPlayerDeath() { return isPlayerDeath_; }
 
 private: // メンバ変数
 	//ハンター
@@ -80,5 +80,5 @@ private: // メンバ変数
 	//ハンターのスタミナ
 	float hunterstamina_ = 0.0f;
 	// 生きているかどうか
-	bool isDeath_ = false;
+	bool isPlayerDeath_ = false;
 };

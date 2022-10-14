@@ -183,10 +183,21 @@
     <ClCompile Include="PmxMaterial.cpp">
       <Filter>エンジンシステム\3d\PMX</Filter>
     </ClCompile>
-    <ClCompile Include="Hunter.cpp" />
-    <ClCompile Include="Monster.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="PostEffect.cpp">
+      <Filter>ゲームシステム\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Hunter.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemManager.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -357,10 +368,21 @@
     <ClInclude Include="PmxMaterial.h">
       <Filter>エンジンシステム\3d\PMX</Filter>
     </ClInclude>
-    <ClInclude Include="Hunter.h" />
-    <ClInclude Include="Monster.h" />
-    <ClInclude Include="UserInterface.h" />
-    <ClInclude Include="PostEffect.h" />
+    <ClInclude Include="PostEffect.h">
+      <Filter>ゲームシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Hunter.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -463,6 +485,12 @@
     </Filter>
     <Filter Include="シェーダファイル\PostEffect">
       <UniqueIdentifier>{f556f7cb-ad4d-4976-b415-946b6cce0ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\GameObject">
+      <UniqueIdentifier>{e728c820-9df8-4567-88c5-8785de158ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\PostEffect">
+      <UniqueIdentifier>{a4f540fe-ad45-484e-a63e-389c9651ec26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

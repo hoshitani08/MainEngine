@@ -18,6 +18,8 @@
 #include "Audio.h"
 #include "Input.h"
 
+#include "ItemManager.h"
+
 using namespace DirectX;
 
 GameScene::~GameScene()
@@ -77,6 +79,8 @@ void GameScene::Initialize()
 	ui->SetHunter(hunter_.get());
 	ui->SetMonster(monster_.get());
 	ui->Initialize();
+
+	ItemManager::GetInstance()->Initialize();
 }
 
 void GameScene::Finalize()
@@ -135,7 +139,7 @@ void GameScene::Update()
 	{
 		SceneManager::GetInstance()->ChangeScene("ClearScene");
 	}
-	else if (ui->GetIsDeath())
+	else if (ui->GetIsPlayerDeath())
 	{
 		SceneManager::GetInstance()->ChangeScene("GameOverScene");
 	}
