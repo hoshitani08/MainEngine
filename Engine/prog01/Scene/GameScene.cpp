@@ -130,7 +130,7 @@ void GameScene::Update()
 	}
 
 	hunter_->SetAngle(angle_);
-	hunter_->Move();
+	hunter_->Behavior();
 
 	CameraMove();
 	PlayerAttack();

@@ -33,16 +33,22 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw();
-
-	void Move();
-
+	// 行動
+	void Behavior();
+	// 移動
+	void BaseMove();
+	// 回避
+	void AvoidMove();
+	// 攻撃
+	void AttackMove();
+	// スピード計算
+	void SpeedCalculate();
+	// アングルの設定
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
-
 	// 座標の取得
-	const XMFLOAT3& GetPosition() { return position_; }
+	const XMFLOAT3& GetPosition() { return hunter_->GetPosition(); }
 	// X,Y,Z軸回りの取得
 	const XMFLOAT3& GetRotation() { return hunter_->GetRotation(); }
-
 	// ダメージのフラグを取得
 	bool GetDamageFlag() { return damageFlag_; }
 	// ダメージのフラグを設定
@@ -56,7 +62,7 @@ public: // メンバ関数
 	// 攻撃フラグの設定
 	void AttackHit(bool isAttackFlag);
 	// ダッシュのフラグを設定
-	void SetIsDash(bool isDash) { isDash_ = isDash; }
+	///void SetIsDash(bool isDash) { isDash_ = isDash; }
 	// ダメージのパーセントを設定
 	void SetDamage(float damage) { damage_ = damage; }
 	// HPの取得
@@ -73,8 +79,6 @@ public: // メンバ関数
 private: // メンバ変数
 	//　モデル
 	std::unique_ptr<FbxObject3d> hunter_;
-	// 位置
-	XMFLOAT3 position_;
 	// 移動倍率
 	float speed_ = 0.0f;
 	// 回避フラグ
@@ -87,16 +91,16 @@ private: // メンバ変数
 	bool damageFlag_ = false;
 	// 無敵時間
 	int invincibleTimer_ = 300;
-	//ダッシュ出来るか
-	bool isDash_ = true;
+	// スタミナが残ってるか
+	bool isStamina_ = true;
 	// 攻撃が当たったか
 	bool isAttackFlag_ = false;
 	// 攻撃のクールタイム
 	int attackCoolTimer_ = 0;
 	// ヒットポイント
 	float hp_ = MAX_HP;
-	// 
+	// スタミナ
 	float stamina_ = MAX_STAMINA;
-	//
+	// ダメージ量
 	float damage_ = 0.0f;
 };

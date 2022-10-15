@@ -25,11 +25,11 @@ std::unique_ptr<Hunter> Hunter::Create()
 void Hunter::Initialize()
 {
 	float size = 0.006f;
-	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX", true);
+	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX");
 	hunter_->SetScale({ size, size, size });
 	hunter_->SetRotation({0,0,0});
 	hunter_->SetPosition({ 0, 10, -30 });
-	hunter_->PlayAnimation();
+	//hunter_->PlayAnimation();
 }
 
 void Hunter::Finalize()
@@ -50,7 +50,78 @@ void Hunter::Draw()
 	hunter_->Draw(cmdList);
 }
 
-void Hunter::Move()
+void Hunter::Behavior()
+{
+	Input* input = Input::GetInstance();
+
+	// ƒXƒs[ƒhŒvŽZ
+	SpeedCalculate();
+	// ˆÚ“®
+	BaseMove();
+	// ‰ñ”ð
+	AvoidMove();
+	// UŒ‚
+	AttackMove();
+}
+
+void Hunter::BaseMove()
+{
+	Input* input = Input::GetInstance();
+
+	XMFLOAT3 position = hunter_->GetPosition();
+	XMFLOAT3 rotation = hunter_->GetRotation();
+
+	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
+	{
+		float a = cameraAngle_.x + input->PadStickAngle();
+		XMFLOAT2 angle = { a, cameraAngle_.y };
+
+		position.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
+		position.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
+		position.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
+
+		rotation.y = angle.x + 90;
+		rotation.x = angle.y;
+	}
+	hunter_->SetPosition(position);
+	hunter_->SetRotation(rotation);
+}
+
+void Hunter::AvoidMove()
+{
+	Input* input = Input::GetInstance();
+
+	// ‰ñ”ð
+	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_)
+	{
+		avoidFlag_ = true;
+		avoidTimer_ = 0;
+	}
+}
+
+void Hunter::AttackMove()
+{
+	Input* input = Input::GetInstance();
+
+	// UŒ‚
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10)
+	{
+		isAttackFlag_ = true;
+		attackCoolTimer_ = 0;
+	}
+
+	if (isAttackFlag_)
+	{
+		if (attackCoolTimer_ >= 10)
+		{
+			isAttackFlag_ = false;
+			attackCoolTimer_ = 0;
+		}
+	}
+	attackCoolTimer_++;
+}
+
+void Hunter::SpeedCalculate()
 {
 	Input* input = Input::GetInstance();
 
@@ -71,7 +142,7 @@ void Hunter::Move()
 			avoidFlag_ = false;
 		}
 	}
-	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isDash_)
+	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
 		stamina_ -= 0.5f;
@@ -83,47 +154,15 @@ void Hunter::Move()
 		avoidTimer_++;
 	}
 
-	position_ = hunter_->GetPosition();
-	XMFLOAT3 rotation = hunter_->GetRotation();
-
-	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
+	if (isStamina_ && stamina_ <= 0.0f)
 	{
-		float a = cameraAngle_.x + input->PadStickAngle();
-		XMFLOAT2 angle = { a, cameraAngle_.y };
-
-		position_.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
-		position_.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
-		position_.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
-		rotation.y = angle.x + 90;
-		rotation.x = angle.y;
+		stamina_ = 0.0f;
+		isStamina_ = false;
 	}
-	hunter_->SetPosition(position_);
-	hunter_->SetRotation(rotation);
-
-	// ‰ñ”ð
-	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10)
+	else if (!isStamina_ && stamina_ >= 50)
 	{
-		avoidFlag_ = true;
-		avoidTimer_ = 0;
+		isStamina_ = true;
 	}
-
-	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10)
-	{
-		isAttackFlag_ = true;
-		attackCoolTimer_ = 0;
-	}
-
-	if (isAttackFlag_)
-	{
-		if (attackCoolTimer_ >= 10)
-		{
-			isAttackFlag_ = false;
-			attackCoolTimer_ = 0;
-		}
-	}
-	attackCoolTimer_++;
-
 }
 
 void Hunter::AttackHit(bool isAttackFlag)

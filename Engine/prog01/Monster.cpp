@@ -152,8 +152,8 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		//Activity();
-		Animation(AnimationType::Move);
+		Activity();
+		//Animation(AnimationType::Move);
 	}
 	else
 	{
