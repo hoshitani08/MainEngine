@@ -38,6 +38,14 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 	using XMVECTOR = DirectX::XMVECTOR;
 
+public: // サブクラス
+	struct Quest
+	{
+		int timer = 0;
+		int second = 0;
+		int minute = 0;
+	};
+
 private: // 静的定数
 	static const int DEBUG_TEXT_TEX_NUMBER = 0;
 
@@ -91,4 +99,7 @@ private: // メンバ変数
 	CollisionManager* collisionManager_ = nullptr;
 	// 角度
 	XMFLOAT2 angle_ = { 0.0f, 0.0f};
+
+	// タイマー
+	Quest quest;
 };

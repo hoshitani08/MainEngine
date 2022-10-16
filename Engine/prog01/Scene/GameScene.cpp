@@ -90,6 +90,18 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
+	quest.timer++;
+	if (quest.timer >= 60)
+	{
+		quest.second++;
+		quest.timer = 0;
+	}
+	if (quest.second >= 60)
+	{
+		quest.minute++;
+		quest.second = 0;
+	}
+
 	Input* input = Input::GetInstance();
 	input->SetVibration(false);
 	light_->Update();
@@ -140,7 +152,7 @@ void GameScene::Update()
 	{
 		SceneManager::GetInstance()->ChangeScene("ClearScene");
 	}
-	else if (ui->GetIsPlayerDeath())
+	else if (ui->GetIsPlayerDeath() || quest.minute >= 15)
 	{
 		SceneManager::GetInstance()->ChangeScene("GameOverScene");
 	}
