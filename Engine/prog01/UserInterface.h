@@ -35,14 +35,16 @@ public: // メンバ関数
 	void NearDraw();
 	// HP減少時のイージング
 	void HpEase();
-	// ハンターを設定
-	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
-	// ハンターを設定
-	void SetMonster(Monster* monster) { monster_ = monster; }
 	// ダメージを計算
 	void DamageCalculate();
 	// スタミナ計算
 	void StrengthCalculate();
+
+public: // メンバ関数
+	// ハンターを設定
+	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
+	// ハンターを設定
+	void SetMonster(Monster* monster) { monster_ = monster; }
 	// 生きているかどうか
 	bool GetIsPlayerDeath() { return isPlayerDeath_; }
 
@@ -79,6 +81,7 @@ private: // メンバ変数
 	float hunterHp_ = 0.0f;
 	//ハンターのスタミナ
 	float hunterstamina_ = 0.0f;
+
 	// 生きているかどうか
 	bool isPlayerDeath_ = false;
 };

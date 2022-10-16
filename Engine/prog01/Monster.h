@@ -82,19 +82,8 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw();
-
-	// 座標の取得
-	const XMFLOAT3& GetPosition() { return nucleus_->GetPosition(); }
-	// HPの取得
-	float GetHp() { return hp_; }
-	// HPの設定
-	void SetHp(float hp) { hp_ = hp; }
 	// 行動
 	void Activity();
-	// プレイヤーの設定
-	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
-	// 死んだかの取得
-	bool GetIsDead() { return isDead_; }
 	// 向きの設定
 	void AngleAdjustment();
 	// 攻撃が当たったか
@@ -111,6 +100,19 @@ public: // メンバ関数
 	void Animation(AnimationType type);
 	// 行動の終了
 	void ActEnd();
+
+public: // メンバ関数
+	// 座標の取得
+	const XMFLOAT3& GetPosition() { return nucleus_->GetPosition(); }
+	// HPの取得
+	float GetHp() { return hp_; }
+	// 死んだかの取得
+	bool GetIsDead() { return isDead_; }
+
+	// プレイヤーの設定
+	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
+	// HPの設定
+	void SetHp(float hp) { hp_ = hp; }
 
 private: // メンバ変数
 	//核
@@ -143,13 +145,13 @@ private: // メンバ変数
 	float waveTimer_ = 0.0f;
 	//クールタイム
 	float coolTimer = 0.0f;
+	//ヒットポイント
+	float hp_ = MAX_HP;
 
 	// 行動をする時間の最大
 	int maxTime_ = 0;
 	// 行動を決めるカウント
 	int actCount_ = 0;
-	//ヒットポイント
-	float hp_ = MAX_HP;
 
 	// 当たったか
 	bool hitFlag_ = false;
