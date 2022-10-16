@@ -103,7 +103,7 @@ void UserInterface::DamageCalculate()
 {
 	//全体の何パーセントかという計算は ある数 ÷ 全体 × 100
 	//全体の何パーセントはいくつかという計算は、 全体 × パーセント ÷ 100
-	if (hunterHp_ > hunter_->GetHp())
+	if (hunterHp_ != hunter_->GetHp())
 	{
 		XMFLOAT2 hpGaugeSize = lifeGauge_->GetSize();
 
@@ -113,6 +113,11 @@ void UserInterface::DamageCalculate()
 
 		lifeGauge_->SetSize(hpGaugeSize);
 		hunterHp_ = hunter_->GetHp();
+	}
+
+	if (lifeGauge_->GetSize().x > innerLifeGauge_->GetSize().x)
+	{
+		innerLifeGauge_->SetSize(lifeGauge_->GetSize());
 	}
 
 	//全体の何パーセントかという計算は ある数 ÷ 全体 × 100

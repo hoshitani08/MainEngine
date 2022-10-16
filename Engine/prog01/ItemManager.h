@@ -69,7 +69,7 @@ public: // メンバ関数
 
 public: // メンバ関数
 	// アイテムの種類の取得
-	int GetItemType(int count) { return (int)itemData[count].name; }
+	ItemType GetItemType(int count) { return itemData[count].name; }
 	// アイテムの個数の取得
 	int GetItemQuantity(int count) { return itemData[count].quantity; }
 	// アイテムの個数の設定

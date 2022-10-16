@@ -6,8 +6,8 @@
 #include "Input.h"
 #include "Vector.h"
 #include "Collision.h"
-
 #include "DebugText.h"
+#include "ItemManager.h"
 
 std::unique_ptr<Hunter> Hunter::Create()
 {
@@ -38,6 +38,7 @@ void Hunter::Finalize()
 
 void Hunter::Update()
 {
+	ItemUse();
 	DamageHit();
 	hunter_->Update();
 }
@@ -52,8 +53,6 @@ void Hunter::Draw()
 
 void Hunter::Behavior()
 {
-	Input* input = Input::GetInstance();
-
 	// スピード計算
 	SpeedCalculate();
 	// 移動
@@ -104,7 +103,7 @@ void Hunter::AttackMove()
 	Input* input = Input::GetInstance();
 
 	// 攻撃
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10)
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10 && !itemSelectionFlag_)
 	{
 		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
@@ -162,6 +161,79 @@ void Hunter::SpeedCalculate()
 	else if (!isStamina_ && stamina_ >= 50)
 	{
 		isStamina_ = true;
+	}
+}
+
+void Hunter::ItemUse()
+{
+	Input* input = Input::GetInstance();
+
+	// アイテムの選択
+	if (input->PushPadKey(BUTTON_LEFT_SHOULDER))
+	{
+		if (input->TriggerPadKey(BUTTON_X))
+		{
+			itemType_++;
+		}
+		else if (input->TriggerPadKey(BUTTON_B))
+		{
+			itemType_--;
+		}
+
+		if (itemType_ > 2)
+		{
+			itemType_ = 0;
+		}
+		else if (itemType_ < 0)
+		{
+			itemType_ = 2;
+		}
+
+		itemSelectionFlag_ = true;
+	}
+	else
+	{
+		itemSelectionFlag_ = false;
+	}
+
+	// アイテムの使用
+	if (input->TriggerPadKey(BUTTON_X) && !itemSelectionFlag_)
+	{
+		int count = ItemManager::GetInstance()->GetItemQuantity(itemType_);
+		
+
+		if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		{
+			count--;
+			hp_ += 10;
+			if (hp_ >= MAX_HP)
+			{
+				hp_ = MAX_HP;
+			}
+		}
+		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		{
+			count--;
+		}
+		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		{
+			count--;
+		}
+
+		ItemManager::GetInstance()->SetItemQuantity(itemType_, count);
+	}
+	
+	if (itemType_ == (int)ItemManager::ItemType::Healing)
+	{
+		DebugText::GetInstance()->VariablePrint(1020, 550, "Healing : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
+	}
+	else if (itemType_ == (int)ItemManager::ItemType::AttackBuff)
+	{
+		DebugText::GetInstance()->VariablePrint(1020, 550, "AttackBuff : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
+	}
+	else if (itemType_ == (int)ItemManager::ItemType::DefenseBuff)
+	{
+		DebugText::GetInstance()->VariablePrint(1020, 550, "DefenseBuff : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
 	}
 }
 

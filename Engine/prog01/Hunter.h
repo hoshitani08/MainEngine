@@ -43,6 +43,8 @@ public: // メンバ関数
 	void AttackMove();
 	// スピード計算
 	void SpeedCalculate();
+	// アイテムの仕様
+	void ItemUse();
 	// アングルの設定
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
 	// 座標の取得
@@ -73,7 +75,7 @@ public: // メンバ関数
 	float GetStamina() { return stamina_; }
 	// HPの設定
 	void SetStamina(float stamina) { stamina_ = stamina; }
-	//
+	// ダメージの計算
 	void DamageHit();
 
 private: // メンバ変数
@@ -103,4 +105,8 @@ private: // メンバ変数
 	float stamina_ = MAX_STAMINA;
 	// ダメージ量
 	float damage_ = 0.0f;
+	// アイテムのタイプ
+	int itemType_ = 0;
+	// アイテムの選択してるか
+	bool itemSelectionFlag_ = false;
 };
