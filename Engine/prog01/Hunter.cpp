@@ -211,18 +211,22 @@ void Hunter::ItemUse()
 				hp_ = MAX_HP;
 			}
 		}
-		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::AttackBuff && count > 0)
 		{
 			count--;
+			ItemManager::GetInstance()->SetAttackBuff(true, 0, 0, 1.5f);
 		}
-		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::DefenseBuff && count > 0)
 		{
 			count--;
+			ItemManager::GetInstance()->SetDefenseBuff(true, 0, 0, 2.0f);
 		}
 
 		ItemManager::GetInstance()->SetItemQuantity(itemType_, count);
 	}
-	
+
+	ItemManager::GetInstance()->BuffUpdate();
+
 	if (itemType_ == (int)ItemManager::ItemType::Healing)
 	{
 		DebugText::GetInstance()->VariablePrint(1020, 550, "Healing : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
@@ -249,7 +253,7 @@ void Hunter::DamageHit()
 	{
 		invincibleTimer_ = 0;
 		damageFlag_ = false;
-		hp_ -= damage_;
+		hp_ -= damage_ / ItemManager::GetInstance()->DefenseBuffMagnification();
 		damage_ = 0.0f;
 	}
 	else

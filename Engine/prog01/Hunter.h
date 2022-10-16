@@ -21,6 +21,8 @@ public: // 定数
 	const float MAX_HP = 150.0f;
 	const float MAX_STAMINA = 150.0f;
 
+public: // サブクラス
+
 public: // 静的メンバ関数
 	static std::unique_ptr<Hunter> Create();
 
@@ -63,8 +65,6 @@ public: // メンバ関数
 	bool IsAttackFlag() { return isAttackFlag_; }
 	// 攻撃フラグの設定
 	void AttackHit(bool isAttackFlag);
-	// ダッシュのフラグを設定
-	///void SetIsDash(bool isDash) { isDash_ = isDash; }
 	// ダメージのパーセントを設定
 	void SetDamage(float damage) { damage_ = damage; }
 	// HPの取得

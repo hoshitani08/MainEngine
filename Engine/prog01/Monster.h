@@ -60,6 +60,16 @@ public: // サブクラス
 		Assault,
 	};
 
+	enum class PartsDamage
+	{
+		Body = 10,
+		RightForeFoot = 5,
+		LeftForeFoot = 5,
+		RightHindFoot = 5,
+		LeftHindFoot = 5,
+		Tail = 8,
+	};
+
 public: // 静的メンバ関数
 	static std::unique_ptr<Monster> Create();
 

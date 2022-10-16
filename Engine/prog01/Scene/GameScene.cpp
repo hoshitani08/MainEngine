@@ -85,6 +85,7 @@ void GameScene::Initialize()
 
 void GameScene::Finalize()
 {
+	ItemManager::GetInstance()->Finalize();
 }
 
 void GameScene::Update()

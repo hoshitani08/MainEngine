@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "DebugText.h"
 #include "ObjFactory.h"
+#include "ItemManager.h"
 
 #include <math.h>
 
@@ -360,7 +361,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 10;
+			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += body_[i]->GetPosition().x;
@@ -386,7 +387,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 5;
+			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += rightForeFoot_[i]->GetPosition().x;
@@ -412,7 +413,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 5;
+			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += leftForeFoot_[i]->GetPosition().x;
@@ -438,7 +439,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 5;
+			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += rightHindFoot_[i]->GetPosition().x;
@@ -446,7 +447,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		savePos.z += rightHindFoot_[i]->GetPosition().z;
 	}
 
-	// ‰EŒã‘«
+	// ¶Œã‘«
 	savePos = {};
 	for (int i = 0; i < leftHindFoot_.size(); i++)
 	{
@@ -464,7 +465,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 5;
+			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += leftHindFoot_[i]->GetPosition().x;
@@ -502,7 +503,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
-			hp_ -= 8;
+			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
 		}
 
 		savePos.x += tail_[i]->GetPosition().x;

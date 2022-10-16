@@ -83,8 +83,66 @@ void ItemManager::Initialize()
 
 void ItemManager::Finalize()
 {
+	itemData.clear();
 }
 
 void ItemManager::Update()
 {
+}
+
+void ItemManager::BuffUpdate()
+{
+	if (defense_.isBuff)
+	{
+		defense_.buffTimer++;
+
+		if (defense_.buffTimer >= 60)
+		{
+			defense_.second++;
+			defense_.buffTimer = 0;
+		}
+
+		if (defense_.second >= 120)
+		{
+			defense_.isBuff = false;
+			defense_.second = 0;
+			defense_.buffTimer = 0;
+			defense_.magnification = 1.0f;
+		}
+	}
+
+	if (attack_.isBuff)
+	{
+		attack_.buffTimer++;
+
+		if (attack_.buffTimer >= 60)
+		{
+			attack_.second++;
+			attack_.buffTimer = 0;
+		}
+
+		if (attack_.second >= 120)
+		{
+			attack_.isBuff = false;
+			attack_.second = 0;
+			attack_.buffTimer = 0;
+			attack_.magnification = 1.0f;
+		}
+	}
+}
+
+void ItemManager::SetDefenseBuff(bool isBuff, int buffTimer, int second, float magnification)
+{
+	defense_.isBuff = isBuff;
+	defense_.buffTimer = buffTimer;
+	defense_.second = second;
+	defense_.magnification = magnification;
+}
+
+void ItemManager::SetAttackBuff(bool isBuff, int buffTimer, int second, float magnification)
+{
+	attack_.isBuff = isBuff;
+	attack_.buffTimer = buffTimer;
+	attack_.second = second;
+	attack_.magnification = magnification;
 }
