@@ -20,8 +20,8 @@ public: // 静的メンバ関数
 
 public: // メンバ関数
 	// 追加
-	void BubbleAdd(XMFLOAT3 position = { 0,0,0 });
-	void Add(XMFLOAT3 position = { 0,0,0 });
+	void BubbleAdd(int count, int life, XMFLOAT3 position = { 0,0,0 });
+	void Add(int count, int life, XMFLOAT3 position = { 0,0,0 });
 	// 毎フレーム処理
 	void Update();
 	// 描画

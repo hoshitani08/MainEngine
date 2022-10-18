@@ -8,7 +8,7 @@
 
 #include <math.h>
 
-std::unique_ptr<Monster> Monster::Create()
+std::unique_ptr<Monster> Monster::Create(Camera* camera)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Monster* monster = new Monster();
@@ -16,12 +16,12 @@ std::unique_ptr<Monster> Monster::Create()
 	{
 		return nullptr;
 	}
-	monster->Initialize();
+	monster->Initialize(camera);
 
 	return std::unique_ptr<Monster>(monster);
 }
 
-void Monster::Initialize()
+void Monster::Initialize(Camera* camera)
 {
 	nucleus_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 	nucleus_->SetPosition({ 0,10,50 });
@@ -143,6 +143,10 @@ void Monster::Initialize()
 
 		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
 	}
+
+	particleManager_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera);
+	blood_ = ParticleEmitter::Create(particleManager_.get());
+	blood_->SetCenter(1);
 }
 
 void Monster::Finalize()
@@ -153,7 +157,7 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		Activity();
+		//Activity();
 		//Animation(AnimationType::Move);
 	}
 	else
@@ -187,6 +191,8 @@ void Monster::Update()
 	{
 		tail_[i]->Update();
 	}
+
+	blood_->Update();
 }
 
 void Monster::Draw()
@@ -223,7 +229,12 @@ void Monster::Draw()
 		}
 	}
 	Object3d::PostDraw();
-	
+}
+
+void Monster::ParticleDraw()
+{
+	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
+	blood_->Draw(cmdList);
 }
 
 void Monster::Activity()
@@ -340,9 +351,10 @@ bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
 
 void Monster::DamageHit(Sphere hitSphere)
 {
-	XMFLOAT3 center = { nucleus_->GetPosition().x, nucleus_->GetPosition().y, nucleus_->GetPosition().z };
 	Sphere eSphere;
-	XMFLOAT3 savePos = {};
+
+	int count = 15;
+	int life = 120;
 
 	// 体
 	for (int i = 0; i < body_.size(); i++)
@@ -353,24 +365,21 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			center.x + body_[i]->GetPosition().x + savePos.x,
-			center.y + body_[i]->GetPosition().y + savePos.y,
-			center.z + body_[i]->GetPosition().z + savePos.z, 1
+			body_[i]->GetWorldPosition().x,
+			body_[i]->GetWorldPosition().y,
+			body_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += body_[i]->GetPosition().x;
-		savePos.y += body_[i]->GetPosition().y;
-		savePos.z += body_[i]->GetPosition().z;
+			blood_->Add(count, life, body_[i]->GetWorldPosition());
+		}
 	}
 
 	// 右前足
-	savePos = {};
 	for (int i = 0; i < rightForeFoot_.size(); i++)
 	{
 		if (!hunter_->IsAttackFlag())
@@ -379,24 +388,21 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			center.x + rightForeFoot_[i]->GetPosition().x + savePos.x,
-			center.y + rightForeFoot_[i]->GetPosition().y + savePos.y,
-			center.z + rightForeFoot_[i]->GetPosition().z + savePos.z, 1
+			rightForeFoot_[i]->GetWorldPosition().x,
+			rightForeFoot_[i]->GetWorldPosition().y,
+			rightForeFoot_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += rightForeFoot_[i]->GetPosition().x;
-		savePos.y += rightForeFoot_[i]->GetPosition().y;
-		savePos.z += rightForeFoot_[i]->GetPosition().z;
+			blood_->Add(count, life, rightForeFoot_[i]->GetWorldPosition());
+		}
 	}
 
 	// 左前足
-	savePos = {};
 	for (int i = 0; i < leftForeFoot_.size(); i++)
 	{
 		if (!hunter_->IsAttackFlag())
@@ -405,24 +411,21 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			center.x + leftForeFoot_[i]->GetPosition().x + savePos.x,
-			center.y + leftForeFoot_[i]->GetPosition().y + savePos.y,
-			center.z + leftForeFoot_[i]->GetPosition().z + savePos.z, 1
+			leftForeFoot_[i]->GetWorldPosition().x,
+			leftForeFoot_[i]->GetWorldPosition().y,
+			leftForeFoot_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += leftForeFoot_[i]->GetPosition().x;
-		savePos.y += leftForeFoot_[i]->GetPosition().y;
-		savePos.z += leftForeFoot_[i]->GetPosition().z;
+			blood_->Add(count, life, leftForeFoot_[i]->GetWorldPosition());
+		}
 	}
 
 	// 右後足
-	savePos = {};
 	for (int i = 0; i < rightHindFoot_.size(); i++)
 	{
 		if (!hunter_->IsAttackFlag())
@@ -431,24 +434,21 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			center.x + rightHindFoot_[i]->GetPosition().x + savePos.x,
-			center.y + rightHindFoot_[i]->GetPosition().y + savePos.y,
-			center.z + rightHindFoot_[i]->GetPosition().z + savePos.z, 1
+			rightHindFoot_[i]->GetWorldPosition().x,
+			rightHindFoot_[i]->GetWorldPosition().y,
+			rightHindFoot_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += rightHindFoot_[i]->GetPosition().x;
-		savePos.y += rightHindFoot_[i]->GetPosition().y;
-		savePos.z += rightHindFoot_[i]->GetPosition().z;
+			blood_->Add(count, life, rightHindFoot_[i]->GetWorldPosition());
+		}
 	}
 
 	// 左後足
-	savePos = {};
 	for (int i = 0; i < leftHindFoot_.size(); i++)
 	{
 		if (!hunter_->IsAttackFlag())
@@ -457,35 +457,21 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			center.x + leftHindFoot_[i]->GetPosition().x + savePos.x,
-			center.y + leftHindFoot_[i]->GetPosition().y + savePos.y,
-			center.z + leftHindFoot_[i]->GetPosition().z + savePos.z, 1
+			leftHindFoot_[i]->GetWorldPosition().x,
+			leftHindFoot_[i]->GetWorldPosition().y,
+			leftHindFoot_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += leftHindFoot_[i]->GetPosition().x;
-		savePos.y += leftHindFoot_[i]->GetPosition().y;
-		savePos.z += leftHindFoot_[i]->GetPosition().z;
+			blood_->Add(count, life, leftHindFoot_[i]->GetWorldPosition());
+		}
 	}
 
 	// 尻尾
-	savePos = {};
-	XMFLOAT3 tailCenter = {};
-	for (int i = 0; i < body_.size(); i++)
-	{
-		if (!hunter_->IsAttackFlag())
-		{
-			break;
-		}
-		tailCenter.x += body_[i]->GetPosition().x;
-		tailCenter.y += body_[i]->GetPosition().y;
-		tailCenter.z += body_[i]->GetPosition().z;
-	}
 	for (int i = 0; i < tail_.size(); i++)
 	{
 		if (!hunter_->IsAttackFlag())
@@ -494,21 +480,18 @@ void Monster::DamageHit(Sphere hitSphere)
 		}
 		eSphere.center =
 		{
-			(tailCenter.x + center.x) + tail_[i]->GetPosition().x + savePos.x,
-			(tailCenter.y + center.y) + tail_[i]->GetPosition().y + savePos.y,
-			(tailCenter.z + center.z) + tail_[i]->GetPosition().z + savePos.z,
-			1
+			tail_[i]->GetWorldPosition().x,
+			tail_[i]->GetWorldPosition().y,
+			tail_[i]->GetWorldPosition().z, 1
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
 		{
 			hunter_->AttackHit(false);
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
-		}
 
-		savePos.x += tail_[i]->GetPosition().x;
-		savePos.y += tail_[i]->GetPosition().y;
-		savePos.z += tail_[i]->GetPosition().z;
+			blood_->Add(count, life, tail_[i]->GetWorldPosition());
+		}
 	}
 }
 

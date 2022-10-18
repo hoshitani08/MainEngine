@@ -8,8 +8,9 @@
 #include "Collision.h"
 #include "Hunter.h"
 #include "FbxObject3d.h"
-
-
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
+#include "Camera.h"
 
 class Monster
 {
@@ -71,11 +72,11 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
-	static std::unique_ptr<Monster> Create();
+	static std::unique_ptr<Monster> Create(Camera* camera);
 
 public: // メンバ関数
 	// 初期化
-	void Initialize();
+	void Initialize(Camera* camera);
 	//終了
 	void Finalize();
 	// 毎フレーム処理
@@ -100,6 +101,8 @@ public: // メンバ関数
 	void Animation(AnimationType type);
 	// 行動の終了
 	void ActEnd();
+
+	void ParticleDraw();
 
 public: // メンバ関数
 	// 座標の取得
@@ -131,6 +134,9 @@ private: // メンバ変数
 	std::array<std::unique_ptr<Object3d>, 4> tail_;
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
+	// 血のパーティクル
+	std::unique_ptr<ParticleManager> particleManager_;
+	std::unique_ptr<ParticleEmitter> blood_;
 
 	// 進行方向の保存
 	XMFLOAT3 saveVector_ = {};

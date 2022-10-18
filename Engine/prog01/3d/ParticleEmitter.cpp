@@ -13,9 +13,9 @@ std::unique_ptr<ParticleEmitter> ParticleEmitter::Create(ParticleManager* partic
 	return std::unique_ptr<ParticleEmitter>(particleEmitter);
 }
 
-void ParticleEmitter::BubbleAdd(XMFLOAT3 position)
+void ParticleEmitter::BubbleAdd(int count, int life, XMFLOAT3 position)
 {
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < count; i++)
 	{
 		//X,Y,Z全て[-5.0,+5.0]でランダムに分布
 		this->position_.x = ((float)rand() / RAND_MAX * md_pos_ - md_pos_ / 2.0f) + position.x;
@@ -26,13 +26,13 @@ void ParticleEmitter::BubbleAdd(XMFLOAT3 position)
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 
 		//追加
-		particleMan_->Add(900, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
 	}
 }
 
-void ParticleEmitter::Add(XMFLOAT3 position)
+void ParticleEmitter::Add(int count, int life, XMFLOAT3 position)
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < count; i++)
 	{
 		//X,Y,Z全て[-5.0,+5.0]でランダムに分布
 		this->position_.x = ((float)rand() / RAND_MAX * md_pos_ - md_pos_ / 2.0f) + position.x;
@@ -46,7 +46,7 @@ void ParticleEmitter::Add(XMFLOAT3 position)
 		accel_.y = -(float)rand() / RAND_MAX * md_acc_;
 
 		//追加
-		particleMan_->Add(60, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
 	}
 }
 

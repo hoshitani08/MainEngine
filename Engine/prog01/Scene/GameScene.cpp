@@ -70,7 +70,7 @@ void GameScene::Initialize()
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
-	monster_ = Monster::Create();
+	monster_ = Monster::Create(camera_.get());
 
 	monster_->SetHunter(hunter_.get());
 
@@ -192,7 +192,7 @@ void GameScene::Draw()
 #pragma endregion 3Dオブジェクト(FBX)描画
 #pragma region パーティクル
 	// パーティクルの描画
-
+	monster_->ParticleDraw();
 #pragma endregion パーティクル
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理

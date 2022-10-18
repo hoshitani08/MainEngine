@@ -103,7 +103,7 @@ void TitleScene::Update()
 	bubbleTimer_++;
 	if (bubbleTimer_ >= 20)
 	{
-		bubble_->BubbleAdd({ 0,-50,-10 });
+		bubble_->BubbleAdd(1, 900, { 0,-50,-10 });
 		bubbleTimer_ = 0;
 	}
 
