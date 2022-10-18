@@ -147,6 +147,8 @@ void Monster::Initialize(Camera* camera)
 	particleManager_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera);
 	blood_ = ParticleEmitter::Create(particleManager_.get());
 	blood_->SetCenter(1);
+	blood_->SetStartColor({ 1,0,0,1 });
+	blood_->SetEndColor({ 1,0,0,1 });
 }
 
 void Monster::Finalize()
