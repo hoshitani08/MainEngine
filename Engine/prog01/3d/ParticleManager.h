@@ -78,13 +78,13 @@ private: // 定数
 
 public: // 静的メンバ関数
 	// 3Dオブジェクト生成
-	static std::unique_ptr<ParticleManager> Create(ID3D12Device* device, Camera* camera);
+	static std::unique_ptr<ParticleManager> Create(ID3D12Device* device, Camera* camera, std::wstring fName = L"effect1");
 
 public: // メンバ関数
 	//デストラクタ
 	~ParticleManager();
 	// 初期化
-	void Initialize();
+	void Initialize(std::wstring fName);
 	// 毎フレーム処理
 	void Update();
 	// 描画
@@ -95,7 +95,7 @@ public: // メンバ関数
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
 	// テクスチャ読み込み
-	void LoadTexture();
+	void LoadTexture(std::wstring fName);
 	// モデル作成
 	void CreateModel();
 

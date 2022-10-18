@@ -29,9 +29,8 @@ void TitleScene::Initialize()
 	light_->SetCircleShadowActive(0, true);
 
 	// パーティクルマネージャ生成
-	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
-	bubble_ = ParticleEmitter::Create();
-	bubble_->SetParticleManager(particleMan_.get());
+	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get(), L"bubble");
+	bubble_ = ParticleEmitter::Create(particleMan_.get());
 	bubble_->SetCenter(100);
 
 	// 3Dオブジェクト生成

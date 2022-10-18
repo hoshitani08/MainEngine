@@ -36,7 +36,7 @@ const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float rhs)
 	return result;
 }
 
-std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, Camera* camera)
+std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, Camera* camera, std::wstring fName)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	ParticleManager* partMan = new ParticleManager(device, camera);
@@ -46,7 +46,7 @@ std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, C
 	}
 
 	// 初期化
-	partMan->Initialize();
+	partMan->Initialize(fName);
 
 	return std::unique_ptr<ParticleManager>(partMan);
 }
@@ -60,7 +60,7 @@ ParticleManager::~ParticleManager()
 	descHeap.Reset();
 }
 
-void ParticleManager::Initialize()
+void ParticleManager::Initialize(std::wstring fName)
 {
 	// nullptrチェック
 	assert(device);
@@ -71,7 +71,7 @@ void ParticleManager::Initialize()
 	InitializeDescriptorHeap();
 
 	// テクスチャ読み込み
-	LoadTexture();
+	LoadTexture(fName);
 
 	// モデル生成
 	CreateModel();
@@ -234,7 +234,7 @@ void ParticleManager::InitializeDescriptorHeap()
 	descriptorHandleIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void ParticleManager::LoadTexture()
+void ParticleManager::LoadTexture(std::wstring fName)
 {
 	HRESULT result = S_FALSE;
 
@@ -242,9 +242,11 @@ void ParticleManager::LoadTexture()
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
 
+	std::wstring name = L"Resources/" + fName + L".png";
+
 	result = LoadFromWICFile
 	(
-		L"Resources/bubble.png", WIC_FLAGS_NONE,
+		name.c_str(), WIC_FLAGS_NONE,
 		&metadata, scratchImg
 	);
 	if (FAILED(result))
