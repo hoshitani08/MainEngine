@@ -44,6 +44,8 @@ public: // メンバ関数
 	void StrengthCalculate();
 	// アイテム関連
 	void ItemSelection();
+	// マップ関係
+	void Map();
 
 public: // メンバ関数
 	// ハンターを設定
@@ -84,6 +86,12 @@ private: // メンバ変数
 	std::array<std::unique_ptr<Sprite>, 10> tenDigits_;
 	// アイテムのフレーム
 	std::unique_ptr<Sprite> itemFrame_;
+	// マップ
+	std::unique_ptr<Sprite> mapSprite_;
+	// プレイヤーアイコン
+	std::unique_ptr<Sprite> playerIcon_;
+	// エネミーアイコン
+	std::unique_ptr<Sprite> enemyIcon_;
 
 	// 一桁
 	int oneCount = 0;

@@ -28,7 +28,7 @@ void UserInterface::Initialize()
 
 	for (int i = 0; i < itemSprite_.size(); i++)
 	{
-		itemSprite_[i] = Sprite::Create(15 + i, { 1050, 550 });
+		itemSprite_[i] = Sprite::Create(21 + i, { 1050, 550 });
 	}
 
 	XMFLOAT2 size = { 16, 16 };
@@ -44,7 +44,14 @@ void UserInterface::Initialize()
 		tenDigits_[i]->SetSize(size);
 	}
 
-	itemFrame_ = Sprite::Create(14, { 1020, 530 });
+	itemFrame_ = Sprite::Create(20, { 1020, 530 });
+
+	mapSprite_ = Sprite::Create(14, { 50, 420 });
+
+	mapSprite_->SetSize({240,240});
+
+	playerIcon_ = Sprite::Create(15, { 50, 420 }, { 1,1,1,1 }, {0.5f,0.5f});
+	enemyIcon_ = Sprite::Create(16, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
 
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
@@ -62,6 +69,7 @@ void UserInterface::Update()
 
 	HpEase();
 	ItemSelection();
+	Map();
 
 	if (!isPlayerDeath_ && lifeGauge_->GetSize().x < 1.0f)
 	{
@@ -98,6 +106,10 @@ void UserInterface::NearDraw()
 		tenDigits_[tenCount]->Draw();
 	}
 
+	//ƒ}ƒbƒvŠÖŒW
+	mapSprite_->Draw();
+	enemyIcon_->Draw();
+	playerIcon_->Draw();
 }
 
 void UserInterface::HpEase()
@@ -210,4 +222,15 @@ void UserInterface::ItemSelection()
 		oneDigits_[oneCount]->SetPosition({ 1110, 610 });
 		isTenCountFlag = true;
 	}
+}
+
+void UserInterface::Map()
+{
+	XMFLOAT2 b = { mapSprite_->GetSize().x / 2, mapSprite_->GetSize().y / 2 };
+
+	playerIcon_->SetPosition({ (50 + b.x + hunter_->GetPosition().x), (420 + b.y + -hunter_->GetPosition().z) });
+	playerIcon_->SetRotation(hunter_->GetRotation().y);
+
+	enemyIcon_->SetPosition({ (50 + b.x + monster_->GetPosition().x), (420 + b.y + -monster_->GetPosition().z) });
+	enemyIcon_->SetRotation(monster_->GetRotation().y);
 }

@@ -47,20 +47,33 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(14, L"Resources/UI/play/map.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(15, L"Resources/UI/play/playerIcon.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(16, L"Resources/UI/play/enemyIcon.png"))
+	{
+		assert(0);
+	}
+
 	// ƒAƒCƒeƒ€ŠÖŒW
-	if (!Sprite::LoadTexture(14, L"Resources/UI/play/enn.png"))
+	if (!Sprite::LoadTexture(20, L"Resources/UI/play/enn.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(15, L"Resources/UI/item/potion.png"))
+	if (!Sprite::LoadTexture(21, L"Resources/UI/item/potion.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(16, L"Resources/UI/item/attackBuff.png"))
+	if (!Sprite::LoadTexture(22, L"Resources/UI/item/attackBuff.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(17, L"Resources/UI/item/defenseBuff.png"))
+	if (!Sprite::LoadTexture(23, L"Resources/UI/item/defenseBuff.png"))
 	{
 		assert(0);
 	}

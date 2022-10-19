@@ -107,6 +107,8 @@ public: // ƒƒ“ƒoŠÖ”
 public: // ƒƒ“ƒoŠÖ”
 	// À•W‚ÌŽæ“¾
 	const XMFLOAT3& GetPosition() { return nucleus_->GetPosition(); }
+	// X,Y,ZŽ²‰ñ‚è‚ÌŽæ“¾
+	const XMFLOAT3& GetRotation() { return nucleus_->GetRotation(); }
 	// HP‚ÌŽæ“¾
 	float GetHp() { return hp_; }
 	// Ž€‚ñ‚¾‚©‚ÌŽæ“¾
