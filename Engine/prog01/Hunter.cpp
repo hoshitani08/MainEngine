@@ -226,19 +226,6 @@ void Hunter::ItemUse()
 	}
 
 	ItemManager::GetInstance()->BuffUpdate();
-
-	if (itemType_ == (int)ItemManager::ItemType::Healing)
-	{
-		DebugText::GetInstance()->VariablePrint(1020, 550, "Healing : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
-	}
-	else if (itemType_ == (int)ItemManager::ItemType::AttackBuff)
-	{
-		DebugText::GetInstance()->VariablePrint(1020, 550, "AttackBuff : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
-	}
-	else if (itemType_ == (int)ItemManager::ItemType::DefenseBuff)
-	{
-		DebugText::GetInstance()->VariablePrint(1020, 550, "DefenseBuff : ", ItemManager::GetInstance()->GetItemQuantity(itemType_), 1.0f);
-	}
 }
 
 void Hunter::AttackHit(bool isAttackFlag)

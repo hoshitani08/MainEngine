@@ -3,6 +3,7 @@
 #include "DebugText.h"
 #include "Input.h"
 #include "Ease.h"
+#include "ItemManager.h"
 
 UserInterface::UserInterface()
 {
@@ -25,6 +26,26 @@ void UserInterface::Initialize()
 	enemyLifeGauge_ = Sprite::Create(3, { 392, 622 });
 	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
 
+	for (int i = 0; i < itemSprite_.size(); i++)
+	{
+		itemSprite_[i] = Sprite::Create(15 + i, { 1050, 550 });
+	}
+
+	XMFLOAT2 size = { 16, 16 };
+
+	for (int i = 0; i < oneDigits_.size(); i++)
+	{
+		oneDigits_[i] = Sprite::Create(30 + i, { 1110, 610 });
+		oneDigits_[i]->SetSize(size);
+	}
+	for (int i = 0; i < tenDigits_.size(); i++)
+	{
+		tenDigits_[i] = Sprite::Create(30 + i, { 1100, 610 });
+		tenDigits_[i]->SetSize(size);
+	}
+
+	itemFrame_ = Sprite::Create(14, { 1020, 530 });
+
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
 	hunterstamina_ = hunter_->MAX_STAMINA;
@@ -40,6 +61,7 @@ void UserInterface::Update()
 	StrengthCalculate();
 
 	HpEase();
+	ItemSelection();
 
 	if (!isPlayerDeath_ && lifeGauge_->GetSize().x < 1.0f)
 	{
@@ -66,6 +88,16 @@ void UserInterface::NearDraw()
 	enemyLifeFrame_->Draw();
 	enemyInnerLifeGauge_->Draw();
 	enemyLifeGauge_->Draw();
+
+	// ƒAƒCƒeƒ€ŠÖŒW
+	itemFrame_->Draw();
+	itemSprite_[hunter_->GetItemType()]->Draw();
+	oneDigits_[oneCount]->Draw();
+	if (isTenCountFlag)
+	{
+		tenDigits_[tenCount]->Draw();
+	}
+
 }
 
 void UserInterface::HpEase()
@@ -159,5 +191,23 @@ void UserInterface::StrengthCalculate()
 			stamina = hunter_->MAX_STAMINA;
 		}
 		hunter_->SetStamina(stamina);
+	}
+}
+
+void UserInterface::ItemSelection()
+{
+	int count = ItemManager::GetInstance()->GetItemQuantity(hunter_->GetItemType());
+
+	tenCount = count / 10;
+	oneCount = (count - (tenCount * 10));
+	if (count / 10 == 0)
+	{
+		oneDigits_[oneCount]->SetPosition({ 1105, 610 });
+		isTenCountFlag = false;
+	}
+	else
+	{
+		oneDigits_[oneCount]->SetPosition({ 1110, 610 });
+		isTenCountFlag = true;
 	}
 }

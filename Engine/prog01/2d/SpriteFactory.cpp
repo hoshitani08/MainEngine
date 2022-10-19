@@ -35,6 +35,77 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(11, L"Resources/UI/play/map.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(12, L"Resources/UI/play/playerIcon.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(13, L"Resources/UI/play/enemyIcon.png"))
+	{
+		assert(0);
+	}
+	// ÉAÉCÉeÉÄä÷åW
+	if (!Sprite::LoadTexture(14, L"Resources/UI/play/enn.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(15, L"Resources/UI/item/potion.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(16, L"Resources/UI/item/attackBuff.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(17, L"Resources/UI/item/defenseBuff.png"))
+	{
+		assert(0);
+	}
+
+	// êîéö
+	if (!Sprite::LoadTexture(30, L"Resources/UI/number/0.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(31, L"Resources/UI/number/1.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(32, L"Resources/UI/number/2.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(33, L"Resources/UI/number/3.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(34, L"Resources/UI/number/4.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(35, L"Resources/UI/number/5.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(36, L"Resources/UI/number/6.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(37, L"Resources/UI/number/7.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(38, L"Resources/UI/number/8.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(39, L"Resources/UI/number/9.png"))
+	{
+		assert(0);
+	}
 }
 
 SpriteFactory* SpriteFactory::GetInstance()

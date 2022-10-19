@@ -1,6 +1,9 @@
 #pragma once
 #include <DirectXMath.h>
 #include <memory>
+#include <iostream>
+#include <array>
+#include <algorithm>
 
 #include "Sprite.h"
 #include "Hunter.h"
@@ -39,6 +42,8 @@ public: // メンバ関数
 	void DamageCalculate();
 	// スタミナ計算
 	void StrengthCalculate();
+	// アイテム関連
+	void ItemSelection();
 
 public: // メンバ関数
 	// ハンターを設定
@@ -71,6 +76,19 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> enemyLifeGauge_;
 	//体力の赤ゲージ
 	std::unique_ptr<Sprite> enemyInnerLifeGauge_;
+	// アイテムの種類
+	std::array<std::unique_ptr<Sprite>, 3> itemSprite_;
+	// 一桁の数字
+	std::array<std::unique_ptr<Sprite>, 10> oneDigits_;
+	// 十桁の数字
+	std::array<std::unique_ptr<Sprite>, 10> tenDigits_;
+	// アイテムのフレーム
+	std::unique_ptr<Sprite> itemFrame_;
+
+	// 一桁
+	int oneCount = 0;
+	// 十桁
+	int tenCount = 0;
 
 	//イージングの進行度用
 	float hunterEaseTimer_ = 0.0f;
@@ -84,4 +102,6 @@ private: // メンバ変数
 
 	// 生きているかどうか
 	bool isPlayerDeath_ = false;
+	// 十桁目があるか
+	bool isTenCountFlag = false;
 };

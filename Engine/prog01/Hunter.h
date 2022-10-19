@@ -57,6 +57,8 @@ public: // メンバ関数
 	const XMFLOAT3& GetRotation() { return hunter_->GetRotation(); }
 	// 無敵時間を取得
 	int GetInvincibleTimer() { return invincibleTimer_; }
+	// アイテムタイプの取得
+	int GetItemType() { return itemType_; }
 	// HPの取得
 	float GetHp() { return hp_; }
 	// スタミナの取得
