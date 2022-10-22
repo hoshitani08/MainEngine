@@ -53,6 +53,9 @@ void UserInterface::Initialize()
 	playerIcon_ = Sprite::Create(15, { 50, 420 }, { 1,1,1,1 }, {0.5f,0.5f});
 	enemyIcon_ = Sprite::Create(16, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
 
+	attackIcon_ = Sprite::Create(17, { 70, 55 });
+	defenseIcon_ = Sprite::Create(18, { 90, 60 });
+
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
 	hunterstamina_ = hunter_->MAX_STAMINA;
@@ -104,6 +107,23 @@ void UserInterface::NearDraw()
 	if (isTenCountFlag)
 	{
 		tenDigits_[tenCount]->Draw();
+	}
+
+	if (ItemManager::GetInstance()->IsAttackBuff())
+	{
+		if (ItemManager::GetInstance()->GetAttackBuffSecondTimer() < 100 ||
+			ItemManager::GetInstance()->GetAttackBuffSecondTimer() >= 100 && ItemManager::GetInstance()->GetAttackBuffTimer() >= 30)
+		{
+			attackIcon_->Draw();
+		}
+	}
+	if (ItemManager::GetInstance()->IsDefenseBuff())
+	{
+		if (ItemManager::GetInstance()->GetDefenseBuffSecondTimer() < 100 ||
+			ItemManager::GetInstance()->GetDefenseBuffSecondTimer() >= 100 && ItemManager::GetInstance()->GetDefenseBuffTimer() >= 30)
+		{
+			defenseIcon_->Draw();
+		}
 	}
 
 	//ƒ}ƒbƒvŠÖŒW
@@ -221,6 +241,15 @@ void UserInterface::ItemSelection()
 	{
 		oneDigits_[oneCount]->SetPosition({ 1110, 610 });
 		isTenCountFlag = true;
+	}
+
+	if (ItemManager::GetInstance()->IsAttackBuff())
+	{
+		defenseIcon_->SetPosition({ 90, 60 });
+	}
+	else
+	{
+		defenseIcon_->SetPosition({ 70, 60 });
 	}
 }
 

@@ -92,6 +92,16 @@ public: // メンバ関数
 	float DefenseBuffMagnification() { return defense_.magnification; }
 	// 攻撃バフ倍率
 	float AttackBuffMagnification() { return attack_.magnification; }
+	// 攻撃バフがかかっているか
+	bool IsAttackBuff() { return attack_.isBuff; }
+	// 防御バフがかかっているか
+	bool IsDefenseBuff() { return defense_.isBuff; }
+	// 攻撃バフタイマーの取得
+	int GetAttackBuffSecondTimer() { return attack_.second; }
+	int GetAttackBuffTimer() { return attack_.buffTimer; }
+	// 防御バフタイマーの取得
+	int GetDefenseBuffSecondTimer() { return defense_.second; }
+	int GetDefenseBuffTimer() { return defense_.buffTimer; }
 
 private: // メンバ変数
 	std::vector<int> csvNumber;

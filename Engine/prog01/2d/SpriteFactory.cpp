@@ -59,6 +59,14 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(17, L"Resources/UI/play/attackUI.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(18, L"Resources/UI/play/defenseUI.png"))
+	{
+		assert(0);
+	}
 
 	// ƒAƒCƒeƒ€ŠÖŒW
 	if (!Sprite::LoadTexture(20, L"Resources/UI/play/enn.png"))

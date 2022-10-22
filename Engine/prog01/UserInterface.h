@@ -92,6 +92,10 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> playerIcon_;
 	// エネミーアイコン
 	std::unique_ptr<Sprite> enemyIcon_;
+	// 攻撃力アップのアイコン
+	std::unique_ptr<Sprite> attackIcon_;
+	// 防御力アップのアイコン
+	std::unique_ptr<Sprite> defenseIcon_;
 
 	// 一桁
 	int oneCount = 0;
