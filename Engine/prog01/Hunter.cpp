@@ -25,11 +25,20 @@ std::unique_ptr<Hunter> Hunter::Create()
 void Hunter::Initialize()
 {
 	float size = 0.006f;
-	hunter_ = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("player"), L"BasicFBX");
-	hunter_->SetScale({ size, size, size });
-	hunter_->SetRotation({0,0,0});
-	hunter_->SetPosition({ 0, 10, -30 });
-	//hunter_->PlayAnimation();
+	hunter_[0] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("halt"), L"BasicFBX", true);
+	hunter_[1] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("move"), L"BasicFBX", true);
+	hunter_[2] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("damage"), L"BasicFBX", true);
+	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("attack"), L"BasicFBX", true);
+	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"), L"BasicFBX", true);
+
+	for (int i = 0; i < hunter_.size(); i++)
+	{
+		hunter_[i]->SetScale({ size, size, size });
+		hunter_[i]->SetRotation({ 0,0,0 });
+		hunter_[i]->SetPosition({ 0, 10, -30 });
+	}
+
+	hunter_[animationType_]->PlayAnimation();
 }
 
 void Hunter::Finalize()
@@ -40,7 +49,10 @@ void Hunter::Update()
 {
 	ItemUse();
 	DamageHit();
-	hunter_->Update();
+	for (int i = 0; i < hunter_.size(); i++)
+	{
+		hunter_[i]->Update();
+	}
 }
 
 void Hunter::Draw()
@@ -48,7 +60,7 @@ void Hunter::Draw()
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
 	
-	hunter_->Draw(cmdList);
+	hunter_[animationType_]->Draw(cmdList);
 }
 
 void Hunter::Behavior()
@@ -67,10 +79,10 @@ void Hunter::BaseMove()
 {
 	Input* input = Input::GetInstance();
 
-	XMFLOAT3 position = hunter_->GetPosition();
-	XMFLOAT3 rotation = hunter_->GetRotation();
+	XMFLOAT3 position = hunter_[animationType_]->GetPosition();
+	XMFLOAT3 rotation = hunter_[animationType_]->GetRotation();
 
-	if (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f)
+	if ((input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f) && !isAttackFlag_)
 	{
 		float a = cameraAngle_.x + input->PadStickAngle();
 		XMFLOAT2 angle = { a, cameraAngle_.y };
@@ -81,9 +93,37 @@ void Hunter::BaseMove()
 
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
+
+		if (!falg_.move)
+		{
+			falg_.halt = false;
+			falg_.move = true;
+			falg_.damage = false;
+			falg_.attack = false;
+			falg_.death = false;
+			animationType_ = 1;
+			hunter_[animationType_]->PlayAnimation();
+		}
 	}
-	hunter_->SetPosition(position);
-	hunter_->SetRotation(rotation);
+	else if (!isAttackFlag_)
+	{
+		if (!falg_.halt)
+		{
+			falg_.halt = true;
+			falg_.move = false;
+			falg_.damage = false;
+			falg_.attack = false;
+			falg_.death = false;
+			animationType_ = 0;
+			hunter_[animationType_]->PlayAnimation();
+		}
+	}
+
+	for (int i = 0; i < hunter_.size(); i++)
+	{
+		hunter_[i]->SetPosition(position);
+		hunter_[i]->SetRotation(rotation);
+	}
 }
 
 void Hunter::AvoidMove()
@@ -107,11 +147,21 @@ void Hunter::AttackMove()
 	{
 		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
+		if (!falg_.attack)
+		{
+			falg_.halt = false;
+			falg_.move = false;
+			falg_.damage = false;
+			falg_.attack = true;
+			falg_.death = false;
+			animationType_ = 3;
+			hunter_[animationType_]->PlayAnimation(0, false);
+		}
 	}
 
 	if (isAttackFlag_)
 	{
-		if (attackCoolTimer_ >= 10)
+		if (attackCoolTimer_ >= 10 && hunter_[animationType_]->AnimationEnd())
 		{
 			isAttackFlag_ = false;
 			attackCoolTimer_ = 0;

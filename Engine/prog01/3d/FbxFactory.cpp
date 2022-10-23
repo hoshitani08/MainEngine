@@ -7,6 +7,16 @@ const std::string FbxFactory::baseDirectory = "Resources/";
 void FbxFactory::Initialize()
 {
 	LoadModel("player");
+	// ƒ_ƒ[ƒW‚ğó‚¯‚½
+	LoadModel("damage");
+	// ˆÚ“®
+	LoadModel("move");
+	// UŒ‚
+	LoadModel("attack");
+	// €‚ñ‚¾
+	LoadModel("death");
+	// ’â~
+	LoadModel("halt");
 }
 
 void FbxFactory::Finalize()

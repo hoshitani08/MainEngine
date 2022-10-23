@@ -1,6 +1,9 @@
 #pragma once
 #include <DirectXMath.h>
 #include <memory>
+#include <iostream>
+#include <array>
+#include <algorithm>
 
 #include "FbxObject3d.h"
 #include "Object3d.h"
@@ -22,6 +25,14 @@ public: // 定数
 	const float MAX_STAMINA = 150.0f;
 
 public: // サブクラス
+	struct AnimationFlag
+	{
+		bool halt = false;
+		bool move = false;
+		bool damage = false;
+		bool attack = false;
+		bool death = false;
+	};
 
 public: // 静的メンバ関数
 	static std::unique_ptr<Hunter> Create();
@@ -52,9 +63,9 @@ public: // メンバ関数
 
 public: // メンバ関数
 	// 座標の取得
-	const XMFLOAT3& GetPosition() { return hunter_->GetPosition(); }
+	const XMFLOAT3& GetPosition() { return hunter_[0]->GetPosition(); }
 	// X,Y,Z軸回りの取得
-	const XMFLOAT3& GetRotation() { return hunter_->GetRotation(); }
+	const XMFLOAT3& GetRotation() { return hunter_[0]->GetRotation(); }
 	// 無敵時間を取得
 	int GetInvincibleTimer() { return invincibleTimer_; }
 	// アイテムタイプの取得
@@ -69,6 +80,8 @@ public: // メンバ関数
 	bool GetAvoidFlag() { return avoidFlag_; }
 	// ダメージのフラグを取得
 	bool GetDamageFlag() { return damageFlag_; }
+	// 攻撃アニメーションが動いているか
+	bool GetAnimationType() { return falg_.attack; }
 
 	// アングルの設定
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
@@ -85,7 +98,7 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//　モデル
-	std::unique_ptr<FbxObject3d> hunter_;
+	std::array<std::unique_ptr<FbxObject3d>, 5> hunter_;
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
@@ -98,6 +111,8 @@ private: // メンバ変数
 	int attackCoolTimer_ = 0;
 	// アイテムのタイプ
 	int itemType_ = 0;
+	// アニメーションのタイプ
+	int animationType_ = 0;
 
 	// 移動倍率
 	float speed_ = 0.0f;
@@ -118,4 +133,6 @@ private: // メンバ変数
 	bool isAttackFlag_ = false;
 	// アイテムの選択してるか
 	bool itemSelectionFlag_ = false;
+	// アニメーションのタイプフラグ
+	AnimationFlag falg_;
 };

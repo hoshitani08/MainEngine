@@ -83,7 +83,7 @@ public: // メンバ関数
 	//アニメーションのロード
 	void LoadAnimation();
 	//アニメーション開始
-	void PlayAnimation(int animationNumber = 0);
+	void PlayAnimation(int animationNumber = 0, bool isLoop = true);
 
 	// 座標の取得
 	const XMFLOAT3& GetPosition() { return position; }
@@ -97,6 +97,9 @@ public: // メンバ関数
 	const XMFLOAT3& GetScale() { return scale; }
 	// スケールの設定
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+
+	// アニメーションが終わったか
+	bool AnimationEnd() { return currentTime >= endTime; }
 
 protected: // メンバ変数
 	// 定数バッファ
@@ -123,6 +126,8 @@ protected: // メンバ変数
 	FbxTime currentTime;
 	//アニメーション再生中
 	bool isPlay = false;
+	//ループフラグ
+	bool isLoop = false;
 	//アニメーションのデータ
 	std::vector<Animation> animationData;
 	// シェーダファイル名

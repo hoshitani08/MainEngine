@@ -35,7 +35,7 @@ private: // 定数
 	const float ANGLE = 180.0f;
 
 public: // 定数
-	const float MAX_HP = 200.0f;
+	const float MAX_HP = 2000.0f;
 
 public: // サブクラス
 	enum class Phase
@@ -161,6 +161,8 @@ private: // メンバ変数
 	// 行動を決めるカウント
 	int actCount_ = 0;
 
+	// ダメージを受けたか
+	bool damageHitFlag_ = false;
 	// 当たったか
 	bool hitFlag_ = false;
 	// 保存出来るか

@@ -150,9 +150,14 @@ void FbxObject3d::Update()
 		currentTime += frameTime;
 
 		//最後まで再生したら先頭に戻す
-		if (currentTime > endTime)
+		if (currentTime > endTime && isLoop)
 		{
 			currentTime = startTime;
+		}
+		//ループしないときはアニメーションを終了
+		else if (currentTime > endTime)
+		{
+			currentTime = endTime;
 		}
 	}
 
@@ -219,7 +224,7 @@ void FbxObject3d::LoadAnimation()
 	}
 }
 
-void FbxObject3d::PlayAnimation(int animationNumber)
+void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 {
 	FbxScene* fbxScene = model->GetFbxScene();
 	//アニメーションの変更
@@ -232,4 +237,6 @@ void FbxObject3d::PlayAnimation(int animationNumber)
 	currentTime = startTime;
 	//再生中状態にする
 	isPlay = true;
+	//ループさせるか
+	this->isLoop = isLoop;
 }

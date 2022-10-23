@@ -167,6 +167,11 @@ void Monster::Update()
 		isDead_ = true;
 	}
 
+	if (!hunter_->GetAnimationType())
+	{
+		damageHitFlag_ = false;
+	}
+
 	//XV
 	nucleus_->Update();
 	for (int i = 0; i < body_.size(); i++)
@@ -372,11 +377,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			body_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, body_[i]->GetWorldPosition());
 		}
 	}
@@ -395,11 +399,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			rightForeFoot_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, rightForeFoot_[i]->GetWorldPosition());
 		}
 	}
@@ -418,11 +421,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			leftForeFoot_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, leftForeFoot_[i]->GetWorldPosition());
 		}
 	}
@@ -441,11 +443,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			rightHindFoot_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, rightHindFoot_[i]->GetWorldPosition());
 		}
 	}
@@ -464,11 +465,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			leftHindFoot_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, leftHindFoot_[i]->GetWorldPosition());
 		}
 	}
@@ -487,11 +487,10 @@ void Monster::DamageHit(Sphere hitSphere)
 			tail_[i]->GetWorldPosition().z, 1
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere))
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
-			hunter_->AttackHit(false);
+			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
-
 			blood_->Add(count, life, tail_[i]->GetWorldPosition());
 		}
 	}
