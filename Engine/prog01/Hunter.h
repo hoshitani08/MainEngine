@@ -82,6 +82,8 @@ public: // メンバ関数
 	bool GetDamageFlag() { return damageFlag_; }
 	// 攻撃アニメーションが動いているか
 	bool GetAnimationType() { return falg_.attack; }
+	// アイテムを選択しているか
+	bool GetItemSelectionFlag() { return itemSelectionFlag_; }
 
 	// アングルの設定
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }

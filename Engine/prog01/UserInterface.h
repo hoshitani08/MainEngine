@@ -46,6 +46,8 @@ public: // メンバ関数
 	void ItemSelection();
 	// マップ関係
 	void Map();
+	// 時計の計算
+	void ClockCalculate(int timer);
 
 public: // メンバ関数
 	// ハンターを設定
@@ -72,6 +74,8 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> innerLifeGauge_;
 	//時計のフレーム
 	std::unique_ptr<Sprite> clockFrame_;
+	// 時計の針
+	std::unique_ptr<Sprite> clockNeedle_;
 	//敵の体力のフレーム
 	std::unique_ptr<Sprite> enemyLifeFrame_;
 	//敵の体力のゲージ
@@ -96,6 +100,12 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> attackIcon_;
 	// 防御力アップのアイコン
 	std::unique_ptr<Sprite> defenseIcon_;
+	// LBボタンのアイコン
+	std::unique_ptr<Sprite> lbButtonIcon_;
+	// Xボタンのアイコン
+	std::unique_ptr<Sprite> xButtonIcon_;
+	// Bボタンのアイコン
+	std::unique_ptr<Sprite> bButtonIcon_;
 
 	// 一桁
 	int oneCount = 0;

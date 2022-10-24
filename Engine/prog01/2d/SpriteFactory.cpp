@@ -67,6 +67,10 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(19, L"Resources/UI/play/clockNeedle.png"))
+	{
+		assert(0);
+	}
 
 	// ƒAƒCƒeƒ€ŠÖŒW
 	if (!Sprite::LoadTexture(20, L"Resources/UI/play/enn.png"))
@@ -82,6 +86,18 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(23, L"Resources/UI/item/defenseBuff.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(24, L"Resources/UI/play/LBbutton.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(25, L"Resources/UI/play/Bbutton.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(26, L"Resources/UI/play/Xbutton.png"))
 	{
 		assert(0);
 	}

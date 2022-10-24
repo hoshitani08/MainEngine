@@ -56,6 +56,15 @@ void UserInterface::Initialize()
 	attackIcon_ = Sprite::Create(17, { 70, 55 });
 	defenseIcon_ = Sprite::Create(18, { 90, 60 });
 
+	lbButtonIcon_ = Sprite::Create(24, { 970, 560 });
+	xButtonIcon_ = Sprite::Create(26, { 1065, 640 });
+	xButtonIcon_->SetSize({ 32,32 });
+
+	bButtonIcon_ = Sprite::Create(25, { 1095, 640 });
+	bButtonIcon_->SetSize({ 32,32 });
+
+	clockNeedle_ = Sprite::Create(19, { 32, 32 }, { 1,1,1,1 }, { 0.5f,0.5f });
+
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
 	hunterstamina_ = hunter_->MAX_STAMINA;
@@ -95,6 +104,7 @@ void UserInterface::NearDraw()
 	lifeGauge_->Draw();
 
 	clockFrame_->Draw();
+	clockNeedle_->Draw();
 
 	enemyLifeFrame_->Draw();
 	enemyInnerLifeGauge_->Draw();
@@ -107,6 +117,12 @@ void UserInterface::NearDraw()
 	if (isTenCountFlag)
 	{
 		tenDigits_[tenCount]->Draw();
+	}
+	lbButtonIcon_->Draw();
+	xButtonIcon_->Draw();
+	if (hunter_->GetItemSelectionFlag())
+	{
+		bButtonIcon_->Draw();
 	}
 
 	if (ItemManager::GetInstance()->IsAttackBuff())
@@ -251,6 +267,15 @@ void UserInterface::ItemSelection()
 	{
 		defenseIcon_->SetPosition({ 70, 60 });
 	}
+
+	if (hunter_->GetItemSelectionFlag())
+	{
+		xButtonIcon_->SetPosition({ 1040, 640 });
+	}
+	else
+	{
+		xButtonIcon_->SetPosition({ 1065, 640 });
+	}
 }
 
 void UserInterface::Map()
@@ -262,4 +287,12 @@ void UserInterface::Map()
 
 	enemyIcon_->SetPosition({ (50 + b.x + monster_->GetPosition().x), (420 + b.y + -monster_->GetPosition().z) });
 	enemyIcon_->SetRotation(monster_->GetRotation().y);
+}
+
+void UserInterface::ClockCalculate(int timer)
+{
+
+	float count = (float)timer / 15.0f * 100;
+	float count2 = (90 * count) / 100;
+	clockNeedle_->SetRotation(count2);
 }

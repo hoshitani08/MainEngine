@@ -157,6 +157,8 @@ void GameScene::Update()
 		SceneManager::GetInstance()->ChangeScene("GameOverScene");
 	}
 
+	ui->ClockCalculate(quest.minute);
+
 	hunter_->Update();
 	monster_->Update();
 	skydome_->Update();
