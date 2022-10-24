@@ -159,8 +159,7 @@ void Monster::Update()
 {
 	if (hp_ >= 1)
 	{
-		//Activity();
-		//Animation(AnimationType::Move);
+		Activity();
 	}
 	else
 	{
@@ -514,6 +513,7 @@ void Monster::Move(float speed)
 		RangeHit(nucleus_->GetPosition(), 1.0f, 40);
 		break;
 	case Phase::Stop:
+		saveVector_ = {};
 		break;
 	case Phase::Attack:
 		if (!saveFlag_)
@@ -539,6 +539,11 @@ void Monster::Move(float speed)
 	pos.x += saveVector_.x;
 	pos.y += saveVector_.y;
 	pos.z += saveVector_.z;
+
+	if (pos.y <= 1)
+	{
+		pos.y = 1;
+	}
 
 	nucleus_->SetPosition(pos);
 }

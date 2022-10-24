@@ -35,7 +35,7 @@ private: // 定数
 	const float ANGLE = 180.0f;
 
 public: // 定数
-	const float MAX_HP = 2000.0f;
+	const float MAX_HP = 500.0f;
 
 public: // サブクラス
 	enum class Phase

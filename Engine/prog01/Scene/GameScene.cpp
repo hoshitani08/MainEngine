@@ -226,10 +226,6 @@ void GameScene::EffectDraw()
 	Object3d::PreDraw(cmdList);
 	skydome_->Draw();
 	ground_->Draw();
-	if (hunter_->IsAttackFlag())
-	{
-		hitSphere_->Draw();
-	}
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画

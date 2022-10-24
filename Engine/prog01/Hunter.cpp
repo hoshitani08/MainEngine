@@ -91,6 +91,11 @@ void Hunter::BaseMove()
 		position.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
 		position.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
 
+		if (position.y <= 1)
+		{
+			position.y = 1;
+		}
+
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
 
