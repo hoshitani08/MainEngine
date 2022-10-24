@@ -198,6 +198,7 @@ void Monster::Update()
 		tail_[i]->Update();
 	}
 
+	PartsTailDestruction();
 	blood_->Update();
 }
 
@@ -489,6 +490,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			tailDestruction_ += 10;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->Add(count, life, tail_[i]->GetWorldPosition());
 		}
@@ -613,7 +615,10 @@ void Monster::Animation(AnimationType type)
 			{
 				continue;
 			}
-			tail_[i]->SetRotation(rot);
+			if (!tailDestructionFlag_)
+			{
+				tail_[i]->SetRotation(rot);
+			}
 		}
 	}
 	// •às
@@ -639,7 +644,10 @@ void Monster::Animation(AnimationType type)
 
 			tailRot.z += cosf(PI * 2 / 70 * (waveTimer_ / 2));
 
-			tail_[i]->SetRotation(tailRot);
+			if (!tailDestructionFlag_)
+			{
+				tail_[i]->SetRotation(tailRot);
+			}
 		}
 
 		waveTimer_ += 4;
@@ -768,5 +776,29 @@ void Monster::ActEnd()
 		
 		coolTimer = 0;
 		actEndFlag_ = false;
+	}
+}
+
+void Monster::PartsTailDestruction()
+{
+	if (tailDestruction_ >= 150 && !tailDestructionFlag_)
+	{
+		tail_[0]->SetParent(nullptr);
+
+		XMFLOAT3 ppos = tail_[0]->GetPosition();
+		XMFLOAT3 prot = tail_[0]->GetRotation();
+
+		ppos.x += nucleus_->GetPosition().x;
+		ppos.y += nucleus_->GetPosition().y;
+		ppos.z += nucleus_->GetPosition().z; 
+
+		prot.x += nucleus_->GetRotation().x;
+		prot.y += nucleus_->GetRotation().y;
+		prot.z += nucleus_->GetRotation().z;
+
+		tail_[0]->SetPosition(ppos);
+		tail_[0]->SetRotation(prot);
+
+		tailDestructionFlag_ = true;
 	}
 }

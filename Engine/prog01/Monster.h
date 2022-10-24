@@ -101,8 +101,10 @@ public: // メンバ関数
 	void Animation(AnimationType type);
 	// 行動の終了
 	void ActEnd();
-
+	// 血のパーティクル
 	void ParticleDraw();
+	// 部位破壊
+	void PartsTailDestruction();
 
 public: // メンバ関数
 	// 座標の取得
@@ -160,6 +162,8 @@ private: // メンバ変数
 	int maxTime_ = 0;
 	// 行動を決めるカウント
 	int actCount_ = 0;
+	//
+	int tailDestruction_ = 0;
 
 	// ダメージを受けたか
 	bool damageHitFlag_ = false;
@@ -171,6 +175,8 @@ private: // メンバ変数
 	bool isDead_ = false;
 	// 行動の終了
 	bool actEndFlag_ = false;
+	// 尻尾が切れたか
+	bool tailDestructionFlag_ = false;
 
 	// 行動の種類
 	Phase phase_ = Phase::Approach;
