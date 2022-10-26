@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include "CollisionInfo.h"
+#include "FbxObject3d.h"
 
 #include <memory>
 
@@ -106,6 +107,9 @@ public: // メンバ関数
 	void SetColor(XMFLOAT4 _color) { this->color = _color; }
 	// 親オブジェクトの設定
 	void SetParent(Object3d* parent) { this->parent = parent; }
+	void SetParent(FbxObject3d* parent) { fbxParent = parent; }
+	// 取得するボーンの名前の設定
+	void SetBoneName(std::string boneName) { this->boneName = boneName; }
 
 protected: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
@@ -121,6 +125,7 @@ protected: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+	FbxObject3d* fbxParent = nullptr;
 	// モデル
 	Model* model = nullptr;
 	// ビルボード
@@ -129,4 +134,6 @@ protected: // メンバ変数
 	const char* name = nullptr;
 	// コライダー
 	BaseCollider* collider = nullptr;
+	// ボーンのファイル名
+	std::string boneName;
 };

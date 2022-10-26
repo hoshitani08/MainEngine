@@ -197,6 +197,11 @@ void Object3d::UpdateWorldMatrix()
 		// 親オブジェクトのワールド行列を掛ける
 		matWorld *= parent->matWorld;
 	}
+	if (fbxParent != nullptr)
+	{
+		// 親オブジェクトのワールド行列を掛ける
+		matWorld *= fbxParent->GetBoneMatWorld(boneName) * fbxParent->GetMatWorld();
+	}
 }
 
 void Object3d::SetCollider(BaseCollider* collider)

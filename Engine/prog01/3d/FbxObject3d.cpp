@@ -240,3 +240,26 @@ void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 	//ループさせるか
 	this->isLoop = isLoop;
 }
+
+const XMMATRIX& FbxObject3d::GetBoneMatWorld(std::string name)
+{
+	//ボーン配列
+	std::vector<FbxModel::Bone>& bone = model->GetBones();
+	XMMATRIX mat = {};
+
+	for (int i = 0; i < bone.size(); i++)
+	{
+		if (bone[i].name == name)
+		{
+			//今の姿勢行列を取得
+			FbxAMatrix fbxCurrentPose = bone[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
+			//XMMATRIXに変換
+			FbxLoader::ConvertMatrixFromFbx(&mat, fbxCurrentPose);
+			//合成
+			mat = model->GetModelTransform() * mat;
+			break;
+		}
+	}
+
+	return mat;
+}

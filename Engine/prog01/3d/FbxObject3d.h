@@ -97,7 +97,10 @@ public: // メンバ関数
 	const XMFLOAT3& GetScale() { return scale; }
 	// スケールの設定
 	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
-
+	// ワールド行列の取得
+	const XMMATRIX& GetMatWorld() { return matWorld; }
+	// ボーン行列の取得
+	const XMMATRIX& GetBoneMatWorld(std::string name);
 	// アニメーションが終わったか
 	bool AnimationEnd() { return currentTime >= endTime; }
 

@@ -101,6 +101,7 @@ public: // メンバ関数
 private: // メンバ変数
 	//　モデル
 	std::array<std::unique_ptr<FbxObject3d>, 5> hunter_;
+	std::unique_ptr<Object3d> buki_;
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};

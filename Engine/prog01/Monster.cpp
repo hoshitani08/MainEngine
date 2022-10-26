@@ -783,7 +783,7 @@ void Monster::PartsTailDestruction()
 {
 	if (tailDestruction_ >= 150 && !tailDestructionFlag_)
 	{
-		tail_[0]->SetParent(nullptr);
+		tail_[0]->SetParent((Object3d*)nullptr);
 
 		XMFLOAT3 ppos = tail_[0]->GetPosition();
 		XMFLOAT3 prot = tail_[0]->GetRotation();

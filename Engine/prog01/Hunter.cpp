@@ -38,6 +38,20 @@ void Hunter::Initialize()
 		hunter_[i]->SetPosition({ 0, 10, -30 });
 	}
 
+	buki_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
+	float s = 0.05f;
+	buki_->SetScale({ s,s,s });
+	// ƒ_ƒ[ƒW
+	//buki_->SetParent(hunter_[animationType_].get());
+	//buki_->SetPosition({ 0,0,2.3f });
+	//buki_->SetRotation({ 0,90,0 });
+	// Ž€–S
+	//buki_->SetPosition({ 0,0,2.3f });
+	//buki_->SetRotation({ -100,0,90 });
+
+	buki_->SetBoneName("mixamorig:LeftHandThumb4");
+	
+
 	hunter_[animationType_]->PlayAnimation();
 }
 
@@ -53,6 +67,7 @@ void Hunter::Update()
 	{
 		hunter_[i]->Update();
 	}
+	buki_->Update();
 }
 
 void Hunter::Draw()
@@ -61,6 +76,10 @@ void Hunter::Draw()
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
 	
 	hunter_[animationType_]->Draw(cmdList);
+
+	Object3d::PreDraw(cmdList);
+	buki_->Draw();
+	Object3d::PostDraw();
 }
 
 void Hunter::Behavior()
@@ -108,6 +127,10 @@ void Hunter::BaseMove()
 			falg_.death = false;
 			animationType_ = 1;
 			hunter_[animationType_]->PlayAnimation();
+			// ˆÚ“®
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0,0,2.3f });
+			buki_->SetRotation({ -60,90,45 });
 		}
 	}
 	else if (!isAttackFlag_)
@@ -121,6 +144,10 @@ void Hunter::BaseMove()
 			falg_.death = false;
 			animationType_ = 0;
 			hunter_[animationType_]->PlayAnimation();
+			// ’âŽ~
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0,0,2.3f });
+			buki_->SetRotation({ -60,90,45 });
 		}
 	}
 
@@ -161,6 +188,10 @@ void Hunter::AttackMove()
 			falg_.death = false;
 			animationType_ = 3;
 			hunter_[animationType_]->PlayAnimation(0, false);
+			// UŒ‚
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0,0,1.7f });
+			buki_->SetRotation({ 0,180,0 });
 		}
 	}
 
