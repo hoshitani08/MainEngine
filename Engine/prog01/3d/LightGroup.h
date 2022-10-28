@@ -25,13 +25,13 @@ private: // エイリアス
 
 public: // 定数
 	// 平行光源の数
-	static const int DirLightNum = 3;
+	static const int DIR_LIGHT_NUM = 3;
 	// 点光源の数
-	static const int PointLightNum = 3;
+	static const int POINT_LIGHT_NUM = 3;
 	// スポットライトの数
-	static const int SpotLightNum = 3;
+	static const int SPOT_LIGHT_NUM = 3;
 	// 丸影の数
-	static const int CircleShadowNum = 1;
+	static const int CIRCLE_SHADOW_NUM = 1;
 
 public: // サブクラス
 	//定数バッファ用データ構造体
@@ -41,13 +41,13 @@ public: // サブクラス
 		XMFLOAT3 ambientColor;
 		float pad1;
 		//平行光源用
-		DirectionalLight::ConstBufferData dirLights[DirLightNum];
+		DirectionalLight::ConstBufferData dirLights[DIR_LIGHT_NUM];
 		// 点光源用
-		PointLight::ConstBufferData pointLights[PointLightNum];
+		PointLight::ConstBufferData pointLights[POINT_LIGHT_NUM];
 		// スポットライト用
-		SpotLight::ConstBufferData spotLights[SpotLightNum];
+		SpotLight::ConstBufferData spotLights[SPOT_LIGHT_NUM];
 		// 丸影用
-		CircleShadow::ConstBufferData circleShadows[CircleShadowNum];
+		CircleShadow::ConstBufferData circleShadows[CIRCLE_SHADOW_NUM];
 	};
 
 public: // 静的メンバ関数
@@ -58,7 +58,7 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	//デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 
 public: // メンバ関数
 
@@ -116,17 +116,17 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	//環境光の色
-	XMFLOAT3 ambientColor = { 1,1,1 };
+	XMFLOAT3 ambientColor_ = { 1,1,1 };
 	//平行光源の配列
-	DirectionalLight dirLights[DirLightNum];
+	DirectionalLight dirLights_[DIR_LIGHT_NUM];
 	//点光源の配列
-	PointLight pointLights[PointLightNum];
+	PointLight pointLights_[POINT_LIGHT_NUM];
 	// スポットライトの配列
-	SpotLight spotLights[SpotLightNum];
+	SpotLight spotLights_[SPOT_LIGHT_NUM];
 	// 丸影の配列
-	CircleShadow circleShadows[CircleShadowNum];
+	CircleShadow circleShadows_[CIRCLE_SHADOW_NUM];
 	//ダーティフラグ
-	bool dirty = false;
+	bool dirty_ = false;
 };

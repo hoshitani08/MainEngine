@@ -28,45 +28,45 @@ public: // サブクラス
 
 public: // メンバ関数
 	// 方向をセット
-	inline void SetDir(const XMVECTOR& dir) { this->dir = DirectX::XMVector3Normalize(dir); }
+	inline void SetDir(const XMVECTOR& dir) { dir_ = DirectX::XMVector3Normalize(dir); }
 	// ライト方向を取得
-	inline const XMVECTOR& GetDir() { return dir; }
+	inline const XMVECTOR& GetDir() { return dir_; }
 	// キャスター座標をセット
-	inline void SetCasterPos(const XMFLOAT3& casterPos) { this->casterPos = casterPos; }
+	inline void SetCasterPos(const XMFLOAT3& casterPos) { casterPos_ = casterPos; }
 	// キャスター座標を取得
-	inline const XMFLOAT3& GetCasterPos() { return casterPos; }
+	inline const XMFLOAT3& GetCasterPos() { return casterPos_; }
 	// キャスターとライトの距離をセット
-	inline void SetDistanceCasterLight(float distanceCasterLight) { this->distanceCasterLight = distanceCasterLight; }
+	inline void SetDistanceCasterLight(float distanceCasterLight) { distanceCasterLight_ = distanceCasterLight; }
 	// キャスターとライトの距離を取得
-	inline float GetDistanceCasterLight() { return distanceCasterLight; }
+	inline float GetDistanceCasterLight() { return distanceCasterLight_; }
 	// 距離減衰係数をセット
-	inline void SetAtten(const XMFLOAT3& atten) { this->atten = atten; }
+	inline void SetAtten(const XMFLOAT3& atten) { atten_ = atten; }
 	// 距離減衰係数を取得
-	inline const XMFLOAT3& GetAtten() { return atten; }
+	inline const XMFLOAT3& GetAtten() { return atten_; }
 	// 減衰角度をセット
 	inline void SetFactorAngle(const XMFLOAT2& factorAngle)
 	{
-		this->factorAngleCos.x = cosf(DirectX::XMConvertToRadians(factorAngle.x));
-		this->factorAngleCos.y = cosf(DirectX::XMConvertToRadians(factorAngle.y));
+		factorAngleCos_.x = cosf(DirectX::XMConvertToRadians(factorAngle.x));
+		factorAngleCos_.y = cosf(DirectX::XMConvertToRadians(factorAngle.y));
 	}
 	// 減衰角度を取得
-	inline const XMFLOAT2& GetFactorAngleCos() { return factorAngleCos; }
+	inline const XMFLOAT2& GetFactorAngleCos() { return factorAngleCos_; }
 	// 有効フラグをセット
-	inline void SetActive(bool active) { this->active = active; }
+	inline void SetActive(bool active) { active_ = active; }
 	// 有効チェック
-	inline bool IsActive() { return active; }
+	inline bool IsActive() { return active_; }
 
 private: // メンバ変数
 	// 方向（単位ベクトル）
-	XMVECTOR dir = { 1,0,0,0 };
+	XMVECTOR dir_ = { 1,0,0,0 };
 	// キャスターとライトの距離
-	float distanceCasterLight = 100.0f;
+	float distanceCasterLight_ = 100.0f;
 	// キャスター座標（ワールド座標系）
-	XMFLOAT3 casterPos = { 0,0,0 };
+	XMFLOAT3 casterPos_ = { 0,0,0 };
 	// 距離減衰係数
-	XMFLOAT3 atten = { 0.5f, 0.6f, 0.0f };
+	XMFLOAT3 atten_ = { 0.5f, 0.6f, 0.0f };
 	// 減衰角度
-	XMFLOAT2 factorAngleCos = { 0.2f, 0.5f };
+	XMFLOAT2 factorAngleCos_ = { 0.2f, 0.5f };
 	// 有効フラグ
-	bool active = false;
+	bool active_ = false;
 };

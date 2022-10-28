@@ -30,45 +30,45 @@ public: // サブクラス
 
 public: // メンバ関数
 	// ライト方向をセット
-	inline void SetLightDir(const XMVECTOR& lightdir) { this->lightdir = DirectX::XMVector3Normalize(lightdir); }
+	inline void SetLightDir(const XMVECTOR& lightdir) { lightDir_ = DirectX::XMVector3Normalize(lightdir); }
 	// ライト方向を取得
-	inline const XMVECTOR& GetLightDir() { return lightdir; }
+	inline const XMVECTOR& GetLightDir() { return lightDir_; }
 	// ライト座標をセット
-	inline void SetLightPos(const XMFLOAT3& lightpos) { this->lightpos = lightpos; }
+	inline void SetLightPos(const XMFLOAT3& lightpos) { lightPos_ = lightpos; }
 	// ライト座標を取得
-	inline const XMFLOAT3& GetLightPos() { return lightpos; }
+	inline const XMFLOAT3& GetLightPos() { return lightPos_; }
 	// ライト色をセット
-	inline void SetLightColor(const XMFLOAT3& lightcolor) { this->lightcolor = lightcolor; }
+	inline void SetLightColor(const XMFLOAT3& lightcolor) { lightColor_ = lightcolor; }
 	// ライト色を取得
-	inline const XMFLOAT3& GetLightColor() { return lightcolor; }
+	inline const XMFLOAT3& GetLightColor() { return lightColor_; }
 	// ライト距離減衰係数をセット
-	inline void SetLightAtten(const XMFLOAT3& lightAtten) { this->lightAtten = lightAtten; }
+	inline void SetLightAtten(const XMFLOAT3& lightAtten) { lightAtten_ = lightAtten; }
 	// ライト距離減衰係数を取得
-	inline const XMFLOAT3& GetLightAtten() { return lightAtten; }
+	inline const XMFLOAT3& GetLightAtten() { return lightAtten_; }
 	// ライト減衰角度をセット
 	inline void SetLightFactorAngle(const XMFLOAT2& lightFactorAngle)
 	{
-		this->lightFactorAngleCos.x = cosf(DirectX::XMConvertToRadians(lightFactorAngle.x));
-		this->lightFactorAngleCos.y = cosf(DirectX::XMConvertToRadians(lightFactorAngle.y));
+		lightFactorAngleCos_.x = cosf(DirectX::XMConvertToRadians(lightFactorAngle.x));
+		lightFactorAngleCos_.y = cosf(DirectX::XMConvertToRadians(lightFactorAngle.y));
 	}
 	// ライト減衰角度を取得
-	inline const XMFLOAT2& GetLightFactorAngleCos() { return lightFactorAngleCos; }
+	inline const XMFLOAT2& GetLightFactorAngleCos() { return lightFactorAngleCos_; }
 	// 有効フラグをセット
-	inline void SetActive(bool active) { this->active = active; }
+	inline void SetActive(bool active) { active_ = active; }
 	// 有効チェック
-	inline bool IsActive() { return active; }
+	inline bool IsActive() { return active_; }
 
 private: // メンバ変数
 	// ライト方向（単位ベクトル）
-	XMVECTOR lightdir = { 1,0,0,0 };
+	XMVECTOR lightDir_ = { 1,0,0,0 };
 	// ライト座標（ワールド座標系）
-	XMFLOAT3 lightpos = { 0,0,0 };
+	XMFLOAT3 lightPos_ = { 0,0,0 };
 	// ライト色
-	XMFLOAT3 lightcolor = { 1,1,1 };
+	XMFLOAT3 lightColor_ = { 1,1,1 };
 	// ライト距離減衰係数
-	XMFLOAT3 lightAtten = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 lightAtten_ = { 1.0f, 1.0f, 1.0f };
 	// ライト減衰角度
-	XMFLOAT2 lightFactorAngleCos = { 0.2f, 0.5f };
+	XMFLOAT2 lightFactorAngleCos_ = { 0.2f, 0.5f };
 	// 有効フラグ
-	bool active = false;
+	bool active_ = false;
 };
