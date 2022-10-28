@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -16,7 +17,7 @@ public: // サブクラス
 
 public:
 	// ルートパス
-	static const std::string baseDirectory;
+	static const std::string BASE_DIRECTORY;
 
 private:
 	ObjFactory() = default;
@@ -38,5 +39,5 @@ public:
 	static ObjFactory* GetInstance();
 
 private:
-	std::vector<ModelData> modelData;
+	std::vector<ModelData> modelData_;
 };

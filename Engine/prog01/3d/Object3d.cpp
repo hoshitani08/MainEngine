@@ -1,34 +1,34 @@
 #include "Object3d.h"
-#include <d3dcompiler.h>
-#include <DirectXTex.h>
 #include "BaseCollider.h"
 #include "CollisionManager.h"
 #include "ShaderManager.h"
+
+#include <d3dcompiler.h>
+#include <DirectXTex.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
 using namespace std;
 
 // 静的メンバ変数の実体
-ID3D12Device* Object3d::device = nullptr;
-ID3D12GraphicsCommandList* Object3d::cmdList = nullptr;
-Camera* Object3d::camera = nullptr;
-LightGroup* Object3d::light = nullptr;
+ID3D12Device* Object3d::device_ = nullptr;
+ID3D12GraphicsCommandList* Object3d::cmdList_ = nullptr;
+Camera* Object3d::camera_ = nullptr;
+LightGroup* Object3d::light_ = nullptr;
 
 void Object3d::StaticInitialize(ID3D12Device* device, Camera* camera)
 {
 	// nullptrチェック
 	assert(device);
 
-	Object3d::device = device;
-	Object3d::camera = camera;
+	Object3d::device_ = device;
+	Object3d::camera_ = camera;
 
 	Model::StaticInitialize(device);
 }
@@ -41,10 +41,10 @@ void Object3d::StaticFinalize()
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList == nullptr);
+	assert(Object3d::cmdList_ == nullptr);
 
 	// コマンドリストをセット
-	Object3d::cmdList = cmdList;
+	Object3d::cmdList_ = cmdList;
 
 	// パイプラインステートの設定
 	cmdList->SetPipelineState(ShaderManager::GetInstance()->GetPipelineState(L"Object"));
@@ -57,7 +57,7 @@ void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
 void Object3d::PostDraw()
 {
 	// コマンドリストを解除
-	Object3d::cmdList = nullptr;
+	Object3d::cmdList_ = nullptr;
 }
 
 std::unique_ptr<Object3d> Object3d::Create(Model* model)
@@ -86,33 +86,33 @@ std::unique_ptr<Object3d> Object3d::Create(Model* model)
 
 Object3d::~Object3d()
 {
-	if (collider)
+	if (collider_)
 	{
 		//コリジョンマネージャから登録を解除する
-		CollisionManager::GetInstance()->RemoveCollider(collider);
-		delete collider;
+		CollisionManager::GetInstance()->RemoveCollider(collider_);
+		delete collider_;
 	}
-	constBuffB0.Reset();
+	constBuffB0_.Reset();
 }
 
 bool Object3d::Initialize()
 {
 	// nullptrチェック
-	assert(device);
+	assert(device_);
 	//クラス名の文字列を取得
-	name = typeid(*this).name();
+	name_ = typeid(*this).name();
 
 	HRESULT result;
 
 	// 定数バッファの生成
-	result = device->CreateCommittedResource
+	result = device_->CreateCommittedResource
 	(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // アップロード可能
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuffB0)
+		IID_PPV_ARGS(&constBuffB0_)
 	);
 
 	return true;
@@ -125,89 +125,89 @@ void Object3d::Update()
 	//行列の更新
 	UpdateWorldMatrix();
 
-	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
-	const XMFLOAT3& cameraPos = camera->GetEye();
+	const XMMATRIX& matViewProjection = camera_->GetViewProjectionMatrix();
+	const XMFLOAT3& cameraPos = camera_->GetEye();
 
 	// 定数バッファへデータ転送
 	ConstBufferDataB0* constMap0 = nullptr;
-	result = constBuffB0->Map(0, nullptr, (void**)&constMap0);
+	result = constBuffB0_->Map(0, nullptr, (void**)&constMap0);
 	constMap0->viewproj = matViewProjection;
-	constMap0->world = matWorld;
+	constMap0->world = matWorld_;
 	constMap0->cameraPos = cameraPos;
-	constMap0->color = color;
-	constBuffB0->Unmap(0, nullptr);
+	constMap0->color = color_;
+	constBuffB0_->Unmap(0, nullptr);
 
 	// 当たり判定更新
-	if (collider)
+	if (collider_)
 	{
-		collider->Update();
+		collider_->Update();
 	}
 }
 
 void Object3d::Draw()
 {
 	// nullptrチェック
-	assert(device);
-	assert(Object3d::cmdList);
+	assert(device_);
+	assert(Object3d::cmdList_);
 
 	// 定数バッファビューをセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0_->GetGPUVirtualAddress());
 	//ライトの描画
-	light->Draw(cmdList, 3);
+	light_->Draw(cmdList_, 3);
 	//モデル描画
-	model->Draw(cmdList);
+	model_->Draw(cmdList_);
 }
 
 void Object3d::UpdateWorldMatrix()
 {
-	assert(camera);
+	assert(camera_);
 
 	XMMATRIX matScale, matRot, matTrans;
 
 	// スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation_.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation_.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation_.y));
+	matTrans = XMMatrixTranslation(position_.x, position_.y, position_.z);
 
 	// ワールド行列の合成
-	if (isBillboard && camera)
+	if (isBillboard_ && camera_)
 	{
-		const XMMATRIX& matBillboard = camera->GetBillboardMatrix();
+		const XMMATRIX& matBillboard = camera_->GetBillboardMatrix();
 
-		matWorld = XMMatrixIdentity();
-		matWorld *= matScale; // ワールド行列にスケーリングを反映
-		matWorld *= matRot; // ワールド行列に回転を反映
-		matWorld *= matBillboard;
-		matWorld *= matTrans; // ワールド行列に平行移動を反映
+		matWorld_ = XMMatrixIdentity();
+		matWorld_ *= matScale; // ワールド行列にスケーリングを反映
+		matWorld_ *= matRot; // ワールド行列に回転を反映
+		matWorld_ *= matBillboard;
+		matWorld_ *= matTrans; // ワールド行列に平行移動を反映
 	}
 	else
 	{
-		matWorld = XMMatrixIdentity(); // 変形をリセット
-		matWorld *= matScale; // ワールド行列にスケーリングを反映
-		matWorld *= matRot; // ワールド行列に回転を反映
-		matWorld *= matTrans; // ワールド行列に平行移動を反映
+		matWorld_ = XMMatrixIdentity(); // 変形をリセット
+		matWorld_ *= matScale; // ワールド行列にスケーリングを反映
+		matWorld_ *= matRot; // ワールド行列に回転を反映
+		matWorld_ *= matTrans; // ワールド行列に平行移動を反映
 	}
 
 	// 親オブジェクトがあれば
-	if (parent != nullptr)
+	if (parent_ != nullptr)
 	{
 		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= parent->matWorld;
+		matWorld_ *= parent_->matWorld_;
 	}
-	if (fbxParent != nullptr)
+	if (fbxParent_ != nullptr)
 	{
 		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= fbxParent->GetBoneMatWorld(boneName) * fbxParent->GetMatWorld();
+		matWorld_ *= fbxParent_->GetBoneMatWorld(boneName_) * fbxParent_->GetMatWorld();
 	}
 }
 
 void Object3d::SetCollider(BaseCollider* collider)
 {
 	collider->SetObject(this);
-	this->collider = collider;
+	collider_ = collider;
 	// コリジョンマネージャに追加
 	CollisionManager::GetInstance()->AddCollider(collider);
 	//行列の更新
@@ -219,9 +219,9 @@ void Object3d::SetCollider(BaseCollider* collider)
 XMFLOAT3 Object3d::GetWorldPosition()
 {
 	XMFLOAT3 worldpos = {};
-	worldpos.x = matWorld.r[3].m128_f32[0];
-	worldpos.y = matWorld.r[3].m128_f32[1];
-	worldpos.z = matWorld.r[3].m128_f32[2];
+	worldpos.x = matWorld_.r[3].m128_f32[0];
+	worldpos.y = matWorld_.r[3].m128_f32[1];
+	worldpos.z = matWorld_.r[3].m128_f32[2];
 
 	return worldpos;
 }

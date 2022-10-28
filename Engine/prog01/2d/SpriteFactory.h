@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Sprite.h"
 #include "DebugText.h"
 

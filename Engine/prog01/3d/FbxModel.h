@@ -36,7 +36,7 @@ struct TextureData
 	//スクラッチイメージ
 	DirectX::ScratchImage scratchImg = {};
 	//テクスチャバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> texbuff;
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
 	//SRVのGPUハンドル
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
 };

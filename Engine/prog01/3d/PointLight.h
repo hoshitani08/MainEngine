@@ -16,11 +16,11 @@ public: // サブクラス
 	//定数バッファ用データ構造体
 	struct ConstBufferData
 	{
-		XMFLOAT3 lightpos;
+		XMFLOAT3 lightPos;
 		float pad1;
-		XMFLOAT3 lightcolor;
+		XMFLOAT3 lightColor;
 		float pad2;
-		XMFLOAT3 lightatten;
+		XMFLOAT3 lightAtten;
 		unsigned int active;
 	};
 

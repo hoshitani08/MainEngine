@@ -1,4 +1,5 @@
 ﻿#include "FbxLoader.h"
+
 #include <cassert>
 
 using namespace DirectX;

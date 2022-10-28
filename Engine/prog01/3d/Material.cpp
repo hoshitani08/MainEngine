@@ -1,4 +1,5 @@
 #include "Material.h"
+
 #include <DirectXTex.h>
 #include <cassert>
 
@@ -6,11 +7,11 @@ using namespace DirectX;
 using namespace std;
 
 // 静的メンバ変数の実体
-ID3D12Device* Material::device = nullptr;
+ID3D12Device* Material::device_ = nullptr;
 
 void Material::StaticInitialize(ID3D12Device* device)
 {
-	Material::device = device;
+	Material::device_ = device;
 }
 
 Material* Material::Create()
@@ -32,14 +33,14 @@ void Material::CreateConstantBuffer()
 {
 	HRESULT result;
 	// 定数バッファの生成
-	result = device->CreateCommittedResource
+	result = device_->CreateCommittedResource
 	(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), // アップロード可能
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB1) + 0xff) & ~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&constBuff)
+		IID_PPV_ARGS(&constBuff_)
 	);
 	if (FAILED(result))
 	{
@@ -49,20 +50,20 @@ void Material::CreateConstantBuffer()
 
 Material::~Material()
 {
-	texbuff.Reset();
-	constBuff.Reset();
+	texBuff_.Reset();
+	constBuff_.Reset();
 }
 
 void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle)
 {
 	// テクスチャなし
-	if (textureFilename.size() == 0)
+	if (textureFilename_.size() == 0)
 	{
-		textureFilename = "white1x1.png";
+		textureFilename_ = "white1x1.png";
 	}
 
-	cpuDescHandleSRV = cpuHandle;
-	gpuDescHandleSRV = gpuHandle;
+	cpuDescHandleSRV_ = cpuHandle;
+	gpuDescHandleSRV_ = gpuHandle;
 
 	HRESULT result = S_FALSE;
 
@@ -71,7 +72,7 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 	ScratchImage scratchImg{};
 
 	// ファイルパスを結合
-	string filepath = directoryPath + textureFilename;
+	string filepath = directoryPath + textureFilename_;
 	wchar_t wfilepath[128];
 
 	// ユニコード文字列に変換
@@ -100,14 +101,14 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 	);
 
 	// テクスチャ用バッファの生成
-	result = device->CreateCommittedResource
+	result = device_->CreateCommittedResource
 	(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0),
 		D3D12_HEAP_FLAG_NONE,
 		&texresDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
 		nullptr,
-		IID_PPV_ARGS(&texbuff)
+		IID_PPV_ARGS(&texBuff_)
 	);
 	if (FAILED(result))
 	{
@@ -115,7 +116,7 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 	}
 
 	// テクスチャバッファにデータ転送
-	result = texbuff->WriteToSubresource
+	result = texBuff_->WriteToSubresource
 	(
 		0,
 		nullptr, // 全領域へコピー
@@ -130,18 +131,18 @@ void Material::LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIP
 
 	// シェーダリソースビュー作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
-	D3D12_RESOURCE_DESC resDesc = texbuff->GetDesc();
+	D3D12_RESOURCE_DESC resDesc = texBuff_->GetDesc();
 
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; //2Dテクスチャ
 	srvDesc.Texture2D.MipLevels = 1;
 
-	device->CreateShaderResourceView
+	device_->CreateShaderResourceView
 	(
-		texbuff.Get(), //ビューと関連付けるバッファ
+		texBuff_.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報
-		cpuDescHandleSRV
+		cpuDescHandleSRV_
 	);
 }
 
@@ -150,13 +151,13 @@ void Material::Update()
 	HRESULT result;
 	// 定数バッファへデータ転送
 	ConstBufferDataB1* constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void**)&constMap);
+	result = constBuff_->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result))
 	{
-		constMap->ambient = ambient;
-		constMap->diffuse = diffuse;
-		constMap->specular = specular;
-		constMap->alpha = alpha;
-		constBuff->Unmap(0, nullptr);
+		constMap->ambient = ambient_;
+		constMap->diffuse = diffuse_;
+		constMap->specular = specular_;
+		constMap->alpha = alpha_;
+		constBuff_->Unmap(0, nullptr);
 	}
 }

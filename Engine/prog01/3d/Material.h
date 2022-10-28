@@ -37,37 +37,37 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texBuff_;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
 	// シェーダリソースビューのハンドル(GPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 
 public: // メンバ関数
 
 	~Material();
 	// 定数バッファの取得
-	ID3D12Resource* GetConstantBuffer() { return constBuff.Get(); }
+	ID3D12Resource* GetConstantBuffer() { return constBuff_.Get(); }
 	// テクスチャ読み込み
 	void LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 	// 更新
 	void Update();
 
-	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV; }
-	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV; }
+	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV_; }
+	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV_; }
 
 private: // メンバ関数
 	//コンストラクタ
 	Material()
 	{
-		ambient = { 0.3f, 0.3f, 0.3f };
-		diffuse = { 0.0f, 0.0f, 0.0f };
-		specular = { 0.0f, 0.0f, 0.0f };
-		alpha = 1.0f;
+		ambient_ = { 0.3f, 0.3f, 0.3f };
+		diffuse_ = { 0.0f, 0.0f, 0.0f };
+		specular_ = { 0.0f, 0.0f, 0.0f };
+		alpha_ = 1.0f;
 	}
 	// 初期化
 	void Initialize();
@@ -75,11 +75,11 @@ private: // メンバ関数
 	void CreateConstantBuffer();
 
 public: //メンバ変数
-	std::string name; //マテリアル名
-	XMFLOAT3 ambient; //アンビエント影響度
-	XMFLOAT3 diffuse; //ディフューズ影響度
-	XMFLOAT3 specular; //スペキュラー影響度
-	float alpha; //アルファ
-	std::string textureFilename; //テクスチャファイル名
+	std::string name_; //マテリアル名
+	XMFLOAT3 ambient_; //アンビエント影響度
+	XMFLOAT3 diffuse_; //ディフューズ影響度
+	XMFLOAT3 specular_; //スペキュラー影響度
+	float alpha_; //アルファ
+	std::string textureFilename_; //テクスチャファイル名
 };
 

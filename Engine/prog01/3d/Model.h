@@ -2,9 +2,9 @@
 
 #include <string>
 #include <unordered_map>
-#include "Mesh.h"
-
 #include <memory>
+
+#include "Mesh.h"
 
 class Model
 {
@@ -25,9 +25,9 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
+	static UINT descriptorHandleIncrementSize_;
 
 private:// 静的メンバ関数
 	//マテリアル読み込み
@@ -47,17 +47,17 @@ public: // メンバ関数
 	//アルファ値を設定
 	void SetAlpha(float alpha);
 	// メッシュコンテナを取得
-	inline const std::vector<std::unique_ptr<Mesh>>& GetMeshes() { return meshes; }
+	inline const std::vector<std::unique_ptr<Mesh>>& GetMeshes() { return meshes_; }
 
 private: // メンバ変数
 	// 名前
-	std::string name;
+	std::string name_;
 	// メッシュコンテナ
-	std::vector<std::unique_ptr<Mesh>> meshes;
+	std::vector<std::unique_ptr<Mesh>> meshes_;
 	// マテリアルコンテナ
-	std::unordered_map<std::string, std::unique_ptr<Material>> materials;
+	std::unordered_map<std::string, std::unique_ptr<Material>> materials_;
 	// デフォルトマテリアル
-	Material* defaultMaterial = nullptr;
+	Material* defaultMaterial_ = nullptr;
 	// デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap_;
 };

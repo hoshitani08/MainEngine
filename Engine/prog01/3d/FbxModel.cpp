@@ -109,11 +109,11 @@ void FbxModel::CreateTexture(TextureData& texture, ID3D12Device* device, int srv
 		&texresDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ, // テクスチャ用指定
 		nullptr,
-		IID_PPV_ARGS(&texture.texbuff)
+		IID_PPV_ARGS(&texture.texBuff)
 	);
 
 	// テクスチャバッファにデータ転送
-	result = texture.texbuff->WriteToSubresource
+	result = texture.texBuff->WriteToSubresource
 	(
 		0,
 		nullptr, // 全領域へコピー
@@ -124,7 +124,7 @@ void FbxModel::CreateTexture(TextureData& texture, ID3D12Device* device, int srv
 
 	// シェーダリソースビュー(SRV)作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{}; // 設定構造体
-	D3D12_RESOURCE_DESC resDesc = texture.texbuff->GetDesc();
+	D3D12_RESOURCE_DESC resDesc = texture.texBuff->GetDesc();
 
 	srvDesc.Format = resDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -133,7 +133,7 @@ void FbxModel::CreateTexture(TextureData& texture, ID3D12Device* device, int srv
 
 	device->CreateShaderResourceView
 	(
-		texture.texbuff.Get(), //ビューと関連付けるバッファ
+		texture.texBuff.Get(), //ビューと関連付けるバッファ
 		&srvDesc, //テクスチャ設定情報
 		CD3DX12_CPU_DESCRIPTOR_HANDLE
 		(

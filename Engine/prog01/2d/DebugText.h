@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Sprite.h"
 #include <Windows.h>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <memory>
+
+#include "Sprite.h"
 
 class DebugText final
 {
@@ -45,5 +46,5 @@ private:
 	// スプライトデータ配列の添え字番号
 	int spriteIndex_ = 0;
 
-	XMVECTOR variable_;
+	XMVECTOR variable_ = {};
 };

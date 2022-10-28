@@ -5,13 +5,13 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include <memory>
+
 #include "Model.h"
 #include "Camera.h"
 #include "LightGroup.h"
 #include "CollisionInfo.h"
 #include "FbxObject3d.h"
-
-#include <memory>
 
 class Object3d
 {
@@ -50,19 +50,19 @@ public: // 静的メンバ関数
 	// 3Dオブジェクト生成
 	static std::unique_ptr<Object3d> Create(Model* model = nullptr);
 	// カメラのセット
-	static void SetCamera(Camera* camera) { Object3d::camera = camera; }
+	static void SetCamera(Camera* camera) { Object3d::camera_ = camera; }
 	//ライトのセット
-	static void SetLight(LightGroup* light) { Object3d::light = light; }
+	static void SetLight(LightGroup* light) { Object3d::light_ = light; }
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* cmdList_;
 	// カメラ
-	static Camera* camera;
+	static Camera* camera_;
 	//ライト
-	static LightGroup* light;
+	static LightGroup* light_;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -78,23 +78,23 @@ public: // メンバ関数
 	// 行列の更新
 	void UpdateWorldMatrix();
 	// 座標の取得
-	const XMFLOAT3& GetPosition() { return position; }
+	const XMFLOAT3& GetPosition() { return position_; }
 	// 座標の設定
-	void SetPosition(XMFLOAT3 position) { this->position = position; }
+	void SetPosition(XMFLOAT3 position) { position_ = position; }
 	// X,Y,Z軸回りの取得
-	const XMFLOAT3& GetRotation() { return rotation; }
+	const XMFLOAT3& GetRotation() { return rotation_; }
 	// X,Y,Z軸回りの設定
-	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
+	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
 	// スケールの取得
-	const XMFLOAT3& GetScale() { return scale; }
+	const XMFLOAT3& GetScale() { return scale_; }
 	// スケールの設定
-	void SetScale(XMFLOAT3 scale) { this->scale = scale; }
+	void SetScale(XMFLOAT3 scale) { scale_ = scale; }
 	// モデルの設定
-	void SetModel(Model* model) { this->model = model; };
+	void SetModel(Model* model) { model_ = model; };
 	// ビルボードの設定
-	void SetBillboard(bool isBillboard) { this->isBillboard = isBillboard; }
+	void SetBillboard(bool isBillboard) { isBillboard_ = isBillboard; }
 	// ワールド行列の取得
-	const XMMATRIX& GetMatWorld() { return matWorld; }
+	const XMMATRIX& GetMatWorld() { return matWorld_; }
 	// コライダーのセット
 	void SetCollider(BaseCollider* collider);
 	// 衝突時コールバック関数
@@ -102,38 +102,38 @@ public: // メンバ関数
 	// ワールド座標を取得
 	XMFLOAT3 GetWorldPosition();
 	// モデルを取得
-	inline Model* GetModel() { return model; }
+	inline Model* GetModel() { return model_; }
 	// 色の設定
-	void SetColor(XMFLOAT4 _color) { this->color = _color; }
+	void SetColor(XMFLOAT4 _color) { color_ = _color; }
 	// 親オブジェクトの設定
-	void SetParent(Object3d* parent) { this->parent = parent; }
-	void SetParent(FbxObject3d* parent) { fbxParent = parent; }
+	void SetParent(Object3d* parent) { parent_ = parent; }
+	void SetParent(FbxObject3d* parent) { fbxParent_ = parent; }
 	// 取得するボーンの名前の設定
-	void SetBoneName(std::string boneName) { this->boneName = boneName; }
+	void SetBoneName(std::string boneName) { boneName_ = boneName; }
 
 protected: // メンバ変数
-	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB0_; // 定数バッファ
 	// 色
-	XMFLOAT4 color = { 1,1,1,1 };
+	XMFLOAT4 color_ = { 1,1,1,1 };
 	// ローカルスケール
-	XMFLOAT3 scale = { 1,1,1 };
+	XMFLOAT3 scale_ = { 1,1,1 };
 	// X,Y,Z軸回りのローカル回転角
-	XMFLOAT3 rotation = { 0,0,0 };
+	XMFLOAT3 rotation_ = { 0,0,0 };
 	// ローカル座標
-	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 position_ = { 0,0,0 };
 	// ローカルワールド変換行列
-	XMMATRIX matWorld = XMMatrixIdentity();
+	XMMATRIX matWorld_ = XMMatrixIdentity();
 	// 親オブジェクト
-	Object3d* parent = nullptr;
-	FbxObject3d* fbxParent = nullptr;
+	Object3d* parent_ = nullptr;
+	FbxObject3d* fbxParent_ = nullptr;
 	// モデル
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 	// ビルボード
-	bool isBillboard = false;
+	bool isBillboard_ = false;
 	//クラス名(デバック用)
-	const char* name = nullptr;
+	const char* name_ = nullptr;
 	// コライダー
-	BaseCollider* collider = nullptr;
+	BaseCollider* collider_ = nullptr;
 	// ボーンのファイル名
-	std::string boneName;
+	std::string boneName_;
 };

@@ -43,7 +43,7 @@ bool Player::Initialize()
 	float radius = 0.6f;
 	//半径分だけ足元から浮いた座標を球の中心にする
 	SetCollider(new SphereCollider(XMVECTOR({ 0,radius,0,0 }), radius));
-	collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	collider_->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	return true;
 }
@@ -53,30 +53,30 @@ void Player::Update()
 	// A,Dで旋回
 	if (input->PushKey(DIK_A))
 	{
-		rotation.y -= 2.0f;
+		rotation_.y -= 2.0f;
 	}
 	else if (input->PushKey(DIK_D))
 	{
-		rotation.y += 2.0f;
+		rotation_.y += 2.0f;
 	}
 
 	// 移動ベクトルをY軸周りの角度で回転
 	XMVECTOR move = { 0,0,0.1f,0 };
-	XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rotation_.y));
 	move = XMVector3TransformNormal(move, matRot);
 
 	// 向いている方向に移動
 	if (input->PushKey(DIK_S))
 	{
-		position.x -= move.m128_f32[0];
-		position.y -= move.m128_f32[1];
-		position.z -= move.m128_f32[2];
+		position_.x -= move.m128_f32[0];
+		position_.y -= move.m128_f32[1];
+		position_.z -= move.m128_f32[2];
 	}
 	else if (input->PushKey(DIK_W))
 	{
-		position.x += move.m128_f32[0];
-		position.y += move.m128_f32[1];
-		position.z += move.m128_f32[2];
+		position_.x += move.m128_f32[0];
+		position_.y += move.m128_f32[1];
+		position_.z += move.m128_f32[2];
 	}
 
 	// 落下処理
@@ -88,9 +88,9 @@ void Player::Update()
 		// 加速
 		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
 		// 移動
-		position.x += fallV.m128_f32[0];
-		position.y += fallV.m128_f32[1];
-		position.z += fallV.m128_f32[2];
+		position_.x += fallV.m128_f32[0];
+		position_.y += fallV.m128_f32[1];
+		position_.z += fallV.m128_f32[2];
 	}
 	// ジャンプ操作
 	else if (input->TriggerKey(DIK_SPACE))
@@ -102,10 +102,10 @@ void Player::Update()
 
 	//コライダー更新
 	UpdateWorldMatrix();
-	collider->Update();
+	collider_->Update();
 
 	//球コライダーを取得
-	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider);
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(collider_);
 	assert(sphereCollider);
 
 	// クエリーコールバッククラス
@@ -150,12 +150,12 @@ void Player::Update()
 	CollisionManager::GetInstance()->QuerySphere(*sphereCollider,
 		&callback, COLLISION_ATTR_LANDSHAPE);
 	// 交差による排斥分動かす
-	position.x += callback.move.m128_f32[0];
-	position.y += callback.move.m128_f32[1];
-	position.z += callback.move.m128_f32[2];
+	position_.x += callback.move.m128_f32[0];
+	position_.y += callback.move.m128_f32[1];
+	position_.z += callback.move.m128_f32[2];
 	//コライダー更新
 	UpdateWorldMatrix();
-	collider->Update();
+	collider_->Update();
 
 	// 球の上端から球の下端までのレイキャスト用レイを準備
 	Ray ray;
@@ -174,7 +174,7 @@ void Player::Update()
 			&raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
 			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
 		}
@@ -193,7 +193,7 @@ void Player::Update()
 		{
 			// 着地
 			onGround = true;
-			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
 		}

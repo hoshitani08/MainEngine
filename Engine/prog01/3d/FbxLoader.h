@@ -1,11 +1,11 @@
 ﻿#pragma once
 
-#include "fbxsdk.h"
-#include "FbxModel.h"
-
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <string>
+
+#include "fbxsdk.h"
+#include "FbxModel.h"
 
 using namespace DirectX;
 

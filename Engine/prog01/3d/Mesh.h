@@ -5,9 +5,10 @@
 #include <d3dx12.h>
 #include <DirectXMath.h>
 #include <wrl.h>
-#include "Material.h"
 #include <vector>
 #include <unordered_map>
+
+#include "Material.h"
 
 class Mesh
 {
@@ -36,13 +37,13 @@ public: // 静的メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 
 public: // メンバ関数
 
 	~Mesh();
 	// 名前を取得
-	const std::string& GetName() { return name; }
+	const std::string& GetName() { return name_; }
 	// 名前をセット
 	void SetName(const std::string& name);
 	// 頂点データの追加
@@ -50,17 +51,17 @@ public: // メンバ関数
 	// 頂点インデックスの追加
 	void AddIndex(unsigned short index);
 	// 頂点データの数を取得
-	inline size_t GetVertexCount() { return vertices.size(); }
+	inline size_t GetVertexCount() { return vertices_.size(); }
 	// マテリアルの取得
-	Material* GetMaterial() { return material; }
+	Material* GetMaterial() { return material_; }
 	// マテリアルの割り当て
 	void SetMaterial(Material* material);
 	// バッファの生成
 	void CreateBuffers();
 	// 頂点バッファ取得
-	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView; }
+	const D3D12_VERTEX_BUFFER_VIEW& GetVBView() { return vbView_; }
 	// インデックスバッファ取得
-	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView; }
+	const D3D12_INDEX_BUFFER_VIEW& GetIBView() { return ibView_; }
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//エッジ平滑化データの追加
@@ -68,27 +69,27 @@ public: // メンバ関数
 	//平滑化された頂点法線の計算
 	void CalculateSmoothedVetexNormals();
 	// 頂点配列を取得
-	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices; }
+	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices_; }
 	// インデックス配列を取得
-	inline const std::vector<unsigned short>& GetIndices() { return indices; }
+	inline const std::vector<unsigned short>& GetIndices() { return indices_; }
 
 private: // メンバ変数
 	// 名前
-	std::string name;
+	std::string name_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	// インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView;
+	D3D12_INDEX_BUFFER_VIEW ibView_;
 	// 頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUv> vertices_;
 	// 頂点インデックス配列
-	std::vector<unsigned short> indices;
+	std::vector<unsigned short> indices_;
 	// マテリアル
-	Material* material = nullptr;
+	Material* material_ = nullptr;
 	//頂点法線スムージング用データ
-	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData;
+	std::unordered_map<unsigned short, std::vector<unsigned short>> smoothData_;
 };

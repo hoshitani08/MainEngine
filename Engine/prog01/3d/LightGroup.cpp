@@ -1,4 +1,5 @@
 #include "LightGroup.h"
+
 #include <assert.h>
 
 using namespace DirectX;
@@ -90,7 +91,7 @@ void LightGroup::TransferConstBuffer()
 			if (dirLights_[i].IsActive()) {
 				constMap->dirLights[i].active = 1;
 				constMap->dirLights[i].lightv = -dirLights_[i].GetLightDir();
-				constMap->dirLights[i].lightcolor = dirLights_[i].GetLightColor();
+				constMap->dirLights[i].lightColor = dirLights_[i].GetLightColor();
 			}
 			// ライトが無効ならライト色を0に
 			else {
@@ -104,9 +105,9 @@ void LightGroup::TransferConstBuffer()
 			if (pointLights_[i].IsActive())
 			{
 				constMap->pointLights[i].active = 1;
-				constMap->pointLights[i].lightpos = pointLights_[i].GetLightPos();
-				constMap->pointLights[i].lightcolor = pointLights_[i].GetLightColor();
-				constMap->pointLights[i].lightatten = pointLights_[i].GetLightAtten();
+				constMap->pointLights[i].lightPos = pointLights_[i].GetLightPos();
+				constMap->pointLights[i].lightColor = pointLights_[i].GetLightColor();
+				constMap->pointLights[i].lightAtten = pointLights_[i].GetLightAtten();
 			}
 			// ライトが無効ならライト色を0に
 			else
@@ -122,10 +123,10 @@ void LightGroup::TransferConstBuffer()
 			{
 				constMap->spotLights[i].active = 1;
 				constMap->spotLights[i].lightv = -spotLights_[i].GetLightDir();
-				constMap->spotLights[i].lightpos = spotLights_[i].GetLightPos();
-				constMap->spotLights[i].lightcolor = spotLights_[i].GetLightColor();
-				constMap->spotLights[i].lightatten = spotLights_[i].GetLightAtten();
-				constMap->spotLights[i].lightfactoranglecos = spotLights_[i].GetLightFactorAngleCos();
+				constMap->spotLights[i].lightPos = spotLights_[i].GetLightPos();
+				constMap->spotLights[i].lightColor = spotLights_[i].GetLightColor();
+				constMap->spotLights[i].lightAtten = spotLights_[i].GetLightAtten();
+				constMap->spotLights[i].lightFactorAngleCos = spotLights_[i].GetLightFactorAngleCos();
 			}
 			// ライトが無効ならライト色を0に
 			else

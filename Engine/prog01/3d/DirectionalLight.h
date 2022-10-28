@@ -18,7 +18,7 @@ public: // サブクラス
 	struct ConstBufferData
 	{
 		XMVECTOR lightv;
-		XMFLOAT3 lightcolor;
+		XMFLOAT3 lightColor;
 		unsigned int active;
 	};
 
