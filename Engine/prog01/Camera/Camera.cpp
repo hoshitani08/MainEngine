@@ -4,7 +4,7 @@ using namespace DirectX;
 
 Camera::Camera(int window_width, int window_height)
 {
-	aspectRatio = (float)window_width / window_height;
+	aspectRatio_ = (float)window_width / window_height;
 
 	//ビュー行列の計算
 	UpdateViewMatrix();
@@ -13,30 +13,30 @@ Camera::Camera(int window_width, int window_height)
 	UpdateProjectionMatrix();
 
 	// ビュープロジェクションの合成
-	matViewProjection = matView * matProjection;
+	matViewProjection_ = matView_ * matProjection_;
 }
 
 void Camera::Update()
 {
-	if (viewDirty || projectionDirty)
+	if (viewDirty_ || projectionDirty_)
 	{
 		// 再計算必要なら
-		if (viewDirty)
+		if (viewDirty_)
 		{
 			// ビュー行列更新
 			UpdateViewMatrix();
-			viewDirty = false;
+			viewDirty_ = false;
 		}
 
 		// 再計算必要なら
-		if (projectionDirty)
+		if (projectionDirty_)
 		{
 			// ビュー行列更新
 			UpdateProjectionMatrix();
-			projectionDirty = false;
+			projectionDirty_ = false;
 		}
 		// ビュープロジェクションの合成
-		matViewProjection = matView * matProjection;
+		matViewProjection_ = matView_ * matProjection_;
 	}
 }
 
@@ -46,11 +46,11 @@ void Camera::UpdateViewMatrix()
 	//matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 
 	// 視点座標
-	XMVECTOR eyePosition = XMLoadFloat3(&eye);
+	XMVECTOR eyePosition = XMLoadFloat3(&eye_);
 	// 注視点座標
-	XMVECTOR targetPosition = XMLoadFloat3(&target);
+	XMVECTOR targetPosition = XMLoadFloat3(&target_);
 	// (仮の)上方向
-	XMVECTOR upVector = XMLoadFloat3(&up);
+	XMVECTOR upVector = XMLoadFloat3(&up_);
 
 	// カメラZ軸(視線方向)
 	XMVECTOR cameraAxisZ = XMVectorSubtract(targetPosition, eyePosition);
@@ -77,7 +77,7 @@ void Camera::UpdateViewMatrix()
 	cameraAxisY = XMVector3Cross(cameraAxisZ, cameraAxisX);
 
 	//カメラの回転行列
-	XMMATRIX matCameraRot;
+	XMMATRIX matCameraRot = DirectX::XMMatrixIdentity();
 	//カメラ座標系→ワールド座標系の変換行列
 	matCameraRot.r[0] = cameraAxisX;
 	matCameraRot.r[1] = cameraAxisY;
@@ -85,7 +85,7 @@ void Camera::UpdateViewMatrix()
 	matCameraRot.r[3] = XMVectorSet(0, 0, 0, 1);
 
 	//転置により逆行列(逆回転)を計算
-	matView = XMMatrixTranspose(matCameraRot);
+	matView_ = XMMatrixTranspose(matCameraRot);
 
 	//視点座標に-1を掛けた座標
 	XMVECTOR reverseEyePosition = XMVectorNegate(eyePosition);
@@ -97,14 +97,14 @@ void Camera::UpdateViewMatrix()
 	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
 
 	//ビュー行列に平行移動成分を設定
-	matView.r[3] = translation;
+	matView_.r[3] = translation;
 
 #pragma region 全方向ビルボード行列の計算
 	//ビルボード行列
-	matBillboard.r[0] = cameraAxisX;
-	matBillboard.r[1] = cameraAxisY;
-	matBillboard.r[2] = cameraAxisZ;
-	matBillboard.r[3] = XMVectorSet(0, 0, 0, 1);
+	matBillboard_.r[0] = cameraAxisX;
+	matBillboard_.r[1] = cameraAxisY;
+	matBillboard_.r[2] = cameraAxisZ;
+	matBillboard_.r[3] = XMVectorSet(0, 0, 0, 1);
 #pragma endregion 全方向ビルボード行列の計算
 
 #pragma region Y軸回りビルボード行列の計算
@@ -119,10 +119,10 @@ void Camera::UpdateViewMatrix()
 	ybillCameraAxisZ = XMVector3Cross(cameraAxisX, cameraAxisY);
 
 	//Y軸回りビルボード行列
-	matBillboardY.r[0] = ybillCameraAxisX;
-	matBillboardY.r[1] = ybillCameraAxisY;
-	matBillboardY.r[2] = ybillCameraAxisZ;
-	matBillboardY.r[3] = XMVectorSet(0, 0, 0, 1);
+	matBillboardY_.r[0] = ybillCameraAxisX;
+	matBillboardY_.r[1] = ybillCameraAxisY;
+	matBillboardY_.r[2] = ybillCameraAxisZ;
+	matBillboardY_.r[3] = XMVectorSet(0, 0, 0, 1);
 
 #pragma endregion Y軸回りビルボード行列の計算
 }
@@ -130,10 +130,10 @@ void Camera::UpdateViewMatrix()
 void Camera::UpdateProjectionMatrix()
 {
 	// 透視投影による射影行列の生成
-	matProjection = XMMatrixPerspectiveFovLH
+	matProjection_ = XMMatrixPerspectiveFovLH
 	(
 		XMConvertToRadians(60.0f),
-		aspectRatio,
+		aspectRatio_,
 		0.1f, 1000.0f
 	);
 }

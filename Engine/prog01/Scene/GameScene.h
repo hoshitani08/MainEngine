@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseScene.h"
-#include "SafeDelete.h"
 #include "Sprite.h"
 #include "Object3d.h"
 #include "Model.h"

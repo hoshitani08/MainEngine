@@ -1,6 +1,6 @@
 #include "WinApp.h"
 
-const wchar_t WinApp::windowClassName[] = L"SEAHUNTER";
+const wchar_t WinApp::WINDOW_CLASS_NAME[] = L"SEAHUNTER";
 
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -17,23 +17,23 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 void WinApp::CreateGameWindow()
 {
 	// ウィンドウクラスの設定
-	wndClass.cbSize = sizeof(WNDCLASSEX);
-	wndClass.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャ
-	wndClass.lpszClassName = windowClassName; // ウィンドウクラス名
-	wndClass.hInstance = GetModuleHandle(nullptr); // ウィンドウハンドル
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソル指定
+	wndClass_.cbSize = sizeof(WNDCLASSEX);
+	wndClass_.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャ
+	wndClass_.lpszClassName = WINDOW_CLASS_NAME; // ウィンドウクラス名
+	wndClass_.hInstance = GetModuleHandle(nullptr); // ウィンドウハンドル
+	wndClass_.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソル指定
 
-	RegisterClassEx(&wndClass); // ウィンドウクラスをOSに登録
+	RegisterClassEx(&wndClass_); // ウィンドウクラスをOSに登録
 
 	// ウィンドウサイズ{ X座標 Y座標 横幅 縦幅 }
-	RECT wrc = { 0, 0, window_width, window_height };
+	RECT wrc = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false); // 自動でサイズ補正
 
 	// ウィンドウオブジェクトの生成
-	hwnd = CreateWindow
+	hwnd_ = CreateWindow
 	(
-		wndClass.lpszClassName, // クラス名
-		windowClassName, // タイトルバーの文字
+		wndClass_.lpszClassName, // クラス名
+		WINDOW_CLASS_NAME, // タイトルバーの文字
 		WS_OVERLAPPEDWINDOW, // タイトルバーと境界線があるウィンドウ
 		CW_USEDEFAULT, // 表示X座標（OSに任せる）
 		CW_USEDEFAULT, // 表示Y座標（OSに任せる）
@@ -41,18 +41,18 @@ void WinApp::CreateGameWindow()
 		wrc.bottom - wrc.top, // ウィンドウ縦幅
 		nullptr, // 親ウィンドウハンドル
 		nullptr, // メニューハンドル
-		wndClass.hInstance, // 呼び出しアプリケーションハンドル
+		wndClass_.hInstance, // 呼び出しアプリケーションハンドル
 		nullptr // オプション
 	);
 
 	// ウィンドウ表示
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd_, SW_SHOW);
 }
 
 void WinApp::TerminateGameWindow()
 {
 	// ウィンドウクラスを登録解除
-	UnregisterClass(wndClass.lpszClassName, wndClass.hInstance);
+	UnregisterClass(wndClass_.lpszClassName, wndClass_.hInstance);
 }
 
 bool WinApp::ProcessMessage()

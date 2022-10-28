@@ -24,25 +24,25 @@ public: // 静的メンバ関数
 	// 射影行列を更新
 	void UpdateProjectionMatrix();
 	// ビュー行列の取得
-	const XMMATRIX& GetViewMatrix() { return matView; }
+	const XMMATRIX& GetViewMatrix() { return matView_; }
 	// 射影行列の取得
-	const XMMATRIX& GetProjectionMatrix() { return matProjection; }
+	const XMMATRIX& GetProjectionMatrix() { return matProjection_; }
 	// ビュー射影行列の取得
-	const XMMATRIX& GetViewProjectionMatrix() { return matViewProjection; }
+	const XMMATRIX& GetViewProjectionMatrix() { return matViewProjection_; }
 	// ビルボード行列の取得
-	const XMMATRIX& GetBillboardMatrix() { return matBillboard; }
+	const XMMATRIX& GetBillboardMatrix() { return matBillboard_; }
 	// 視点座標の取得
-	const XMFLOAT3& GetEye() { return eye; }
+	const XMFLOAT3& GetEye() { return eye_; }
 	// 視点座標の設定
-	void SetEye(XMFLOAT3 eye) { this->eye = eye; viewDirty = true; }
+	void SetEye(XMFLOAT3 eye) { eye_ = eye; viewDirty_ = true; }
 	// 注視点座標の取得
-	const XMFLOAT3& GetTarget() { return target; }
+	const XMFLOAT3& GetTarget() { return target_; }
 	// 注視点座標の設定
-	void SetTarget(XMFLOAT3 target) { this->target = target; viewDirty = true; }
+	void SetTarget(XMFLOAT3 target) { target_ = target; viewDirty_ = true; }
 	// ベクトルの取得
-	const XMFLOAT3& GetUp() { return up; }
+	const XMFLOAT3& GetUp() { return up_; }
 	// ベクトルの設定
-	void SetUp(XMFLOAT3 up) { this->up = up; viewDirty = true; }
+	void SetUp(XMFLOAT3 up) { up_ = up; viewDirty_ = true; }
 	// ベクトルによる移動
 	void CameraMoveVector(const XMFLOAT3& move);
 	void CameraMoveEyeVector(const XMFLOAT3& move);
@@ -50,25 +50,25 @@ public: // 静的メンバ関数
 
 protected: // メンバ変数
 	// ビュー行列
-	XMMATRIX matView = DirectX::XMMatrixIdentity();
+	XMMATRIX matView_ = DirectX::XMMatrixIdentity();
 	// ビルボード行列
-	XMMATRIX matBillboard = DirectX::XMMatrixIdentity();
+	XMMATRIX matBillboard_ = DirectX::XMMatrixIdentity();
 	// Y軸回りビルボード行列
-	XMMATRIX matBillboardY = DirectX::XMMatrixIdentity();
+	XMMATRIX matBillboardY_ = DirectX::XMMatrixIdentity();
 	// 射影行列
-	XMMATRIX matProjection = DirectX::XMMatrixIdentity();
+	XMMATRIX matProjection_ = DirectX::XMMatrixIdentity();
 	// ビュー射影行列
-	XMMATRIX matViewProjection = DirectX::XMMatrixIdentity();
+	XMMATRIX matViewProjection_ = DirectX::XMMatrixIdentity();
 	// ビュー行列ダーティフラグ
-	bool viewDirty = false;
+	bool viewDirty_ = false;
 	// 射影行列ダーティフラグ
-	bool projectionDirty = false;
+	bool projectionDirty_ = false;
 	// 視点座標
-	XMFLOAT3 eye = { 0, 0, -50 };
+	XMFLOAT3 eye_ = { 0, 0, -50 };
 	// 注視点座標
-	XMFLOAT3 target = { 0, 0, 0 };
+	XMFLOAT3 target_ = { 0, 0, 0 };
 	// 上方向ベクトル
-	XMFLOAT3 up = { 0, 1, 0 };
+	XMFLOAT3 up_ = { 0, 1, 0 };
 	// アスペクト比
-	float aspectRatio = 1.0f;
+	float aspectRatio_ = 1.0f;
 };

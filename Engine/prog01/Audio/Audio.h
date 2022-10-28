@@ -89,11 +89,11 @@ public:
 	static Audio* GetInstance();
 
 private: // ÉÅÉìÉoïœêî
-	ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice;
-	XAudio2VoiceCallback voiceCallback;
+	ComPtr<IXAudio2> xAudio2_;
+	IXAudio2MasteringVoice* masterVoice_;
+	XAudio2VoiceCallback voiceCallback_;
 
-	map<int, SoundData> soundDatas;
-	std::vector<IXAudio2SourceVoice*> pSourceVoices;
-	XAUDIO2_BUFFER buf{};
+	map<int, SoundData> soundDatas_;
+	std::vector<IXAudio2SourceVoice*> pSourceVoices_;
+	XAUDIO2_BUFFER buf_ = {};
 };

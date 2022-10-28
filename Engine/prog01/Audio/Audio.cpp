@@ -1,4 +1,5 @@
 #include "Audio.h"
+
 #include <fstream>
 #include <cassert>
 
@@ -11,10 +12,10 @@ Audio::Audio()
 
 Audio::~Audio()
 {
-	xAudio2.Reset();
+	xAudio2_.Reset();
 
 	//読み込み済みサウンドの波形データを解放
-	for (auto& pair : soundDatas)
+	for (auto& pair : soundDatas_)
 	{
 		delete pair.second.pBuffer;
 	}
@@ -31,11 +32,11 @@ bool Audio::Initialize()
 	HRESULT result;
 
 	// XAudioエンジンのインスタンスを生成
-	result = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	result = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	assert(SUCCEEDED(result));
 
 	// マスターボイスを生成
-	result = xAudio2->CreateMasteringVoice(&masterVoice);
+	result = xAudio2_->CreateMasteringVoice(&masterVoice_);
 	assert(SUCCEEDED(result));
 
 	return true;
@@ -56,7 +57,7 @@ void Audio::LoadWave(int soundNumber, const char* filename)
 	}
 
 	// RIFFヘッダーの読み込み
-	RiffHeader riff;
+	RiffHeader riff = {};
 	file.read((char*)&riff, sizeof(riff));
 	// ファイルがRIFFかチェック
 	if (strncmp(riff.chunk.id, "RIFF", 4) != 0)
@@ -70,11 +71,11 @@ void Audio::LoadWave(int soundNumber, const char* filename)
 	}
 
 	// Formatチャンクの読み込み
-	FormatChunk format;
+	FormatChunk format = {};
 	file.read((char*)&format, sizeof(format));
 
 	// Dataチャンクの読み込み
-	Chunk data;
+	Chunk data = {};
 	file.read((char*)&data, sizeof(data));
 	//JUNKチャンクを検出した場合
 	if (strncmp(data.id, "JUNK", 4) == 0)
@@ -104,18 +105,18 @@ void Audio::LoadWave(int soundNumber, const char* filename)
 	soundData.wfex.wBitsPerSample = format.fmt.nBlockAlign * 8 / format.fmt.nChannels;
 
 	//連想配列に要素を追加
-	soundDatas.insert(std::make_pair(soundNumber, soundData));
+	soundDatas_.insert(std::make_pair(soundNumber, soundData));
 }
 
 void Audio::PlayWave(int soundNumber)
 {
-	SoundData& soundData = soundDatas[soundNumber];
+	SoundData& soundData = soundDatas_[soundNumber];
 
 	HRESULT result;
 
 	// 波形フォーマットを元にSourceVoiceの生成
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex, 0, 2.0f, nullptr);
+	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData.wfex, 0, 2.0f, nullptr);
 	assert(SUCCEEDED(result));
 
 	// 再生する波形データの設定
@@ -135,15 +136,15 @@ void Audio::PlayWave(int soundNumber)
 
 void Audio::LoopPlayWave(int soundNumber)
 {
-	SoundData& soundData = soundDatas[soundNumber];
+	SoundData& soundData = soundDatas_[soundNumber];
 
 	HRESULT result;
 
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
-	result = xAudio2->CreateSourceVoice(&pSourceVoice, &soundData.wfex, 0, 2.0f, nullptr);
+	result = xAudio2_->CreateSourceVoice(&pSourceVoice, &soundData.wfex, 0, 2.0f, nullptr);
 	assert(SUCCEEDED(result));
 
-	pSourceVoices.push_back(pSourceVoice);
+	pSourceVoices_.push_back(pSourceVoice);
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf{};
@@ -165,8 +166,8 @@ void Audio::LoopStopWave()
 {
 	HRESULT result;
 
-	result = pSourceVoices[0]->Stop();
-	result = pSourceVoices[0]->FlushSourceBuffers();
-	result = pSourceVoices[0]->SubmitSourceBuffer(&buf);
-	pSourceVoices.clear();
+	result = pSourceVoices_[0]->Stop();
+	result = pSourceVoices_[0]->FlushSourceBuffers();
+	result = pSourceVoices_[0]->SubmitSourceBuffer(&buf_);
+	pSourceVoices_.clear();
 }

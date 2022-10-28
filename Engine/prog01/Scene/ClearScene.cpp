@@ -12,7 +12,7 @@ ClearScene::~ClearScene()
 void ClearScene::Initialize()
 {
 	// カメラ生成
-	camera_ = std::make_unique<Camera>(WinApp::window_width, WinApp::window_height);
+	camera_ = std::make_unique<Camera>(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 	// 3Dオブジェクトにカメラをセット
 	Object3d::SetCamera(camera_.get());
 

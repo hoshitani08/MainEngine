@@ -45,7 +45,7 @@ void BaseGame::Initialize()
 		return;
 	}
 	// スプライト静的初期化
-	if (!Sprite::StaticInitialize(DirectXCommon::GetInstance()->GetDevice(), WinApp::window_width, WinApp::window_height))
+	if (!Sprite::StaticInitialize(DirectXCommon::GetInstance()->GetDevice(), WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT))
 	{
 		assert(0);
 		return;

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <d3dcompiler.h>
+
 #pragma comment(lib, "d3dcompiler.lib")
 
 void ShaderManager::Initialize(ID3D12Device* device)
@@ -17,7 +18,7 @@ void ShaderManager::Initialize(ID3D12Device* device)
 
 void ShaderManager::Finalize()
 {
-	for (auto& a : shaderData)
+	for (auto& a : shaderData_)
 	{
 		a.fName.clear();
 		a.rootsignature.Reset();
@@ -237,7 +238,7 @@ void ShaderManager::FbxPipeline(ID3D12Device* device,  ShaderData tempData)
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -253,7 +254,7 @@ void ShaderManager::FbxPipeline(ID3D12Device* device,  ShaderData tempData)
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(tempData.pipelinestate.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
@@ -324,7 +325,7 @@ void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV = {};
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
@@ -338,7 +339,7 @@ void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -354,7 +355,7 @@ void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&tempData.pipelinestate));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 void ShaderManager::PmxPipeline(ID3D12Device* device, ShaderData tempData)
@@ -449,7 +450,7 @@ void ShaderManager::PmxPipeline(ID3D12Device* device, ShaderData tempData)
 	samplerDesc[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, _countof(samplerDesc), samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -465,7 +466,7 @@ void ShaderManager::PmxPipeline(ID3D12Device* device, ShaderData tempData)
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(tempData.pipelinestate.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 void ShaderManager::SpritePipeline(ID3D12Device* device, ShaderData tempData)
@@ -531,7 +532,7 @@ void ShaderManager::SpritePipeline(ID3D12Device* device, ShaderData tempData)
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV = {};
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
@@ -543,7 +544,7 @@ void ShaderManager::SpritePipeline(ID3D12Device* device, ShaderData tempData)
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT); // s0 レジスタ
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -560,7 +561,7 @@ void ShaderManager::SpritePipeline(ID3D12Device* device, ShaderData tempData)
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&tempData.pipelinestate));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 void ShaderManager::ParticlePipeline(ID3D12Device* device, ShaderData tempData)
@@ -670,7 +671,7 @@ void ShaderManager::ParticlePipeline(ID3D12Device* device, ShaderData tempData)
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV = {};
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
@@ -682,7 +683,7 @@ void ShaderManager::ParticlePipeline(ID3D12Device* device, ShaderData tempData)
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -698,7 +699,7 @@ void ShaderManager::ParticlePipeline(ID3D12Device* device, ShaderData tempData)
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&tempData.pipelinestate));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData)
@@ -764,13 +765,13 @@ void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData
 	gpipeline.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
 
 	// デスクリプタレンジ
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV0 = {};
 	descRangeSRV0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV1 = {};
 	descRangeSRV1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1); // t1 レジスタ
 
-	CD3DX12_DESCRIPTOR_RANGE descRangeSRV2;
+	CD3DX12_DESCRIPTOR_RANGE descRangeSRV2 = {};
 	descRangeSRV2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2); // t2 レジスタ
 
 	// ルートパラメータ
@@ -784,7 +785,7 @@ void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0, D3D12_FILTER_MIN_MAG_MIP_POINT); // s0 レジスタ
 
 	// ルートシグネチャの設定
-	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.Init_1_0(_countof(rootparams), rootparams, 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob;
@@ -801,16 +802,16 @@ void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData
 	result = device->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&tempData.pipelinestate));
 	if (FAILED(result)) { assert(0); }
 
-	shaderData.push_back(tempData);
+	shaderData_.push_back(tempData);
 }
 
 ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName)
 {
-	for (int i = 0; i < shaderData.size(); i++)
+	for (int i = 0; i < shaderData_.size(); i++)
 	{
-		if (shaderData[i].fName == fName)
+		if (shaderData_[i].fName == fName)
 		{
-			return shaderData[i].rootsignature.Get();
+			return shaderData_[i].rootsignature.Get();
 		}
 	}
 
@@ -819,11 +820,11 @@ ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName)
 
 ID3D12PipelineState* ShaderManager::GetPipelineState(std::wstring fName)
 {
-	for (int i = 0; i < shaderData.size(); i++)
+	for (int i = 0; i < shaderData_.size(); i++)
 	{
-		if (shaderData[i].fName == fName)
+		if (shaderData_[i].fName == fName)
 		{
-			return shaderData[i].pipelinestate.Get();
+			return shaderData_[i].pipelinestate.Get();
 		}
 	}
 

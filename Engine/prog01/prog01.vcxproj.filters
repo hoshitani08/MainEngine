@@ -281,9 +281,6 @@
     <ClInclude Include="Base\DirectXCommon.h">
       <Filter>エンジンシステム\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\SafeDelete.h">
-      <Filter>エンジンシステム\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Base\ShaderManager.h">
       <Filter>エンジンシステム\Base</Filter>
     </ClInclude>

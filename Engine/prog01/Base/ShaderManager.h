@@ -1,4 +1,5 @@
 #pragma once
+
 #include <d3dx12.h>
 #include <string>
 #include <vector>
@@ -58,5 +59,5 @@ public:
 	static ShaderManager* GetInstance();
 
 private:
-	std::vector<ShaderData> shaderData;
+	std::vector<ShaderData> shaderData_;
 };

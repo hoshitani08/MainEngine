@@ -379,7 +379,6 @@
     <ClInclude Include="Base\BaseScene.h" />
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\MyGame.h" />
-    <ClInclude Include="Base\SafeDelete.h" />
     <ClInclude Include="Base\ShaderManager.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />

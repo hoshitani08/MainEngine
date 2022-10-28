@@ -27,9 +27,9 @@ public: // メンバ関数
 	// 深度バッファのクリア
 	void ClearDepthBuffer();
 	// デバイスの取得
-	ID3D12Device* GetDevice() { return device.Get(); }
+	ID3D12Device* GetDevice() { return device_.Get(); }
 	// 描画コマンドリストの取得
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
 
 private:
 	DirectXCommon();
@@ -43,21 +43,21 @@ public:
 
 private: // メンバ変数
 	// ウィンドウズアプリケーション管理
-	WinApp* winApp;
+	WinApp* winApp_ = nullptr;
 
 	// Direct3D関連
-	ComPtr<IDXGIFactory6> dxgiFactory;
-	ComPtr<ID3D12Device> device;
-	ComPtr<ID3D12GraphicsCommandList> commandList;
-	ComPtr<ID3D12CommandAllocator> commandAllocator;
-	ComPtr<ID3D12CommandQueue> commandQueue;
-	ComPtr<IDXGISwapChain4> swapchain;
-	std::vector<ComPtr<ID3D12Resource>> backBuffers;
-	ComPtr<ID3D12Resource> depthBuffer;
-	ComPtr<ID3D12DescriptorHeap> rtvHeaps;
-	ComPtr<ID3D12DescriptorHeap> dsvHeap;
-	ComPtr<ID3D12Fence> fence;
-	UINT64 fenceVal = 0;
+	ComPtr<IDXGIFactory6> dxgiFactory_;
+	ComPtr<ID3D12Device> device_;
+	ComPtr<ID3D12GraphicsCommandList> commandList_;
+	ComPtr<ID3D12CommandAllocator> commandAllocator_;
+	ComPtr<ID3D12CommandQueue> commandQueue_;
+	ComPtr<IDXGISwapChain4> swapchain_;
+	std::vector<ComPtr<ID3D12Resource>> backBuffers_;
+	ComPtr<ID3D12Resource> depthBuffer_;
+	ComPtr<ID3D12DescriptorHeap> rtvHeaps_;
+	ComPtr<ID3D12DescriptorHeap> dsvHeap_;
+	ComPtr<ID3D12Fence> fence_;
+	UINT64 fenceVal_ = 0;
 
 private: // メンバ関数
 	// DXGIデバイス初期化

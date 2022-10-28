@@ -67,8 +67,8 @@ void PostEffect::Initialize(ID3D12Device* device)
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D
 	(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
-		WinApp::window_width,
-		(UINT)WinApp::window_height,
+		WinApp::WINDOW_WIDTH,
+		(UINT)WinApp::WINDOW_HEIGHT,
 		1, 0, 1, 0,
 		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
 	);
@@ -89,11 +89,11 @@ void PostEffect::Initialize(ID3D12Device* device)
 
 		{//テクスチャを赤クリア
 		//画素数(1280 × 720 = 921600ピクセル)
-			const UINT pixelCount = WinApp::window_width * WinApp::window_height;
+			const UINT pixelCount = WinApp::WINDOW_WIDTH * WinApp::WINDOW_HEIGHT;
 			//画像1行分のデータサイズ
-			const UINT rowPitch = sizeof(UINT) * WinApp::window_width;
+			const UINT rowPitch = sizeof(UINT) * WinApp::WINDOW_WIDTH;
 			//画像全体のデータサイズ
-			const UINT depthPitch = rowPitch * WinApp::window_height;
+			const UINT depthPitch = rowPitch * WinApp::WINDOW_HEIGHT;
 			//画像イメージ
 			UINT* img = new UINT[pixelCount];
 			for (int j = 0; j < pixelCount; j++) { img[j] = 0xff0000ff; }
@@ -173,8 +173,8 @@ void PostEffect::Initialize(ID3D12Device* device)
 		CD3DX12_RESOURCE_DESC::Tex2D
 		(
 			DXGI_FORMAT_D32_FLOAT,
-			WinApp::window_width,
-			WinApp::window_height,
+			WinApp::WINDOW_WIDTH,
+			WinApp::WINDOW_HEIGHT,
 			1, 0,
 			1, 0,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
@@ -304,8 +304,8 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	CD3DX12_RECT scissorRects[2];
 	for (int i = 0; i < 2; i++)
 	{
-		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::window_width, WinApp::window_height);
-		scissorRects[i] = CD3DX12_RECT(0, 0, WinApp::window_width, WinApp::window_height);
+		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+		scissorRects[i] = CD3DX12_RECT(0, 0, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
 	}
 
 	//ビューポートの設定
