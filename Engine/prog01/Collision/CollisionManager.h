@@ -1,11 +1,11 @@
 #pragma once
 
+#include <d3d12.h>
+#include <forward_list>
+
 #include "CollisionPrimitive.h"
 #include "RaycastHit.h"
 #include "QueryCallback.h"
-
-#include <d3d12.h>
-#include <forward_list>
 
 class BaseCollider;
 
@@ -18,13 +18,13 @@ public:// メンバ関数
 	// コライダーの追加
 	inline void AddCollider(BaseCollider* collider)
 	{
-		colliders.push_front(collider);
+		colliders_.push_front(collider);
 	}
 
 	// コライダーの削除
 	inline void RemoveCollider(BaseCollider* collider)
 	{
-		colliders.remove(collider);
+		colliders_.remove(collider);
 	}
 
 	// 全ての衝突チェック
@@ -46,5 +46,5 @@ private:
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
 	// コライダーのリスト
-	std::forward_list<BaseCollider*> colliders;
+	std::forward_list<BaseCollider*> colliders_;
 };

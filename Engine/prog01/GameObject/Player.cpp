@@ -174,7 +174,7 @@ void Player::Update()
 			&raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
 			onGround = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance_ - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
 		}
@@ -193,7 +193,7 @@ void Player::Update()
 		{
 			// 着地
 			onGround = true;
-			position_.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+			position_.y -= (raycastHit.distance_ - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
 		}

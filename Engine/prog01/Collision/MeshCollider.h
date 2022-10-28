@@ -1,9 +1,9 @@
 #pragma once
 
+#include <DirectXMath.h>
+
 #include "BaseCollider.h"
 #include "CollisionPrimitive.h"
-
-#include <DirectXMath.h>
 
 class MeshCollider : public BaseCollider
 {
@@ -11,7 +11,7 @@ public:
 	MeshCollider()
 	{
 		// メッシュ形状をセット
-		shapeType = COLLISIONSHAPE_MESH;
+		shapeType_ = COLLISIONSHAPE_MESH;
 	}
 
 	// 三角形の配列を構築する
@@ -26,7 +26,7 @@ public:
 		DirectX::XMVECTOR* inter = nullptr);
 
 private:
-	std::vector<Triangle> triangles;
+	std::vector<Triangle> triangles_;
 	// ワールド行列の逆行列
-	DirectX::XMMATRIX invMatWorld;
+	DirectX::XMMATRIX invMatWorld_ = DirectX::XMMatrixIdentity();
 };

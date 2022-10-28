@@ -1,6 +1,8 @@
 #pragma once
-#include "Vector.h"
+
 #include <DirectXMath.h>
+
+#include "Vector.h"
 
 struct Sphere //‹…
 {

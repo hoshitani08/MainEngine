@@ -17,12 +17,12 @@ void CollisionManager::CheckAllCollisions()
 	std::forward_list<BaseCollider*>::iterator itB;
 
 	// 全ての組み合わせについて総当りチェック
-	itA = colliders.begin();
-	for (; itA != colliders.end(); ++itA)
+	itA = colliders_.begin();
+	for (; itA != colliders_.end(); ++itA)
 	{
 		itB = itA;
 		++itB;
-		for (; itB != colliders.end(); ++itB)
+		for (; itB != colliders_.end(); ++itB)
 		{
 			BaseCollider* colA = *itA;
 			BaseCollider* colB = *itB;
@@ -87,13 +87,13 @@ bool CollisionManager::Raycast(const Ray& ray, unsigned short attribute, Raycast
 	XMVECTOR inter;
 
 	// 全てのコライダーと総当りチェック
-	it = colliders.begin();
-	for (; it != colliders.end(); ++it)
+	it = colliders_.begin();
+	for (; it != colliders_.end(); ++it)
 	{
 		BaseCollider* colA = *it;
 
 		// 属性が合わなければスキップ
-		if (!(colA->attribute & attribute))
+		if (!(colA->attribute_ & attribute))
 		{
 			continue;
 		}
@@ -135,10 +135,10 @@ bool CollisionManager::Raycast(const Ray& ray, unsigned short attribute, Raycast
 	//最終的になにかに当たっていたら結果を書き込む
 	if (result && hitInfo)
 	{
-		hitInfo->distance = distance;
-		hitInfo->inter = inter;
-		hitInfo->collider = *it_hit;
-		hitInfo->object = hitInfo->collider->GetObject3d();
+		hitInfo->distance_ = distance;
+		hitInfo->inter_ = inter;
+		hitInfo->collider_ = *it_hit;
+		hitInfo->object_ = hitInfo->collider_->GetObject3d();
 	}
 
 	return result;
@@ -151,13 +151,13 @@ void CollisionManager::QuerySphere(const Sphere& sphere, QueryCallback* callback
 	std::forward_list<BaseCollider*>::iterator it;
 
 	// 全てのコライダーと総当りチェック
-	it = colliders.begin();
-	for (; it != colliders.end(); ++it)
+	it = colliders_.begin();
+	for (; it != colliders_.end(); ++it)
 	{
 		BaseCollider* col = *it;
 
 		// 属性が合わなければスキップ
-		if (!(col->attribute & attribute))
+		if (!(col->attribute_ & attribute))
 		{
 			continue;
 		}
