@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include <memory>
 #include <iostream>
@@ -11,7 +12,6 @@
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
 #include "Camera.h"
-
 #include "ObjParticle.h"
 
 class Monster
@@ -148,11 +148,7 @@ private: // メンバ変数
 
 	// 進行方向の保存
 	XMFLOAT3 saveVector_ = {};
-	// プレイヤーの位置の保存
-	XMFLOAT3 savePlayerPosition = {};
 
-	// 加算アングル
-	float addAngle_ = 2.0f;
 	// 行動をする時間
 	float moveTimer_ = 0.0f;
 	// sin波のタイマー

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
@@ -22,7 +23,7 @@ private: // エイリアス
 
 public:
 	// ルートパス
-	static const string baseDirectory;
+	static const string BASE_DIRECTORY;
 
 public: // サブクラス
 	enum class ItemType
@@ -79,11 +80,11 @@ public: // メンバ関数
 
 public: // メンバ関数
 	// アイテムの種類の取得
-	ItemType GetItemType(int count) { return itemData[count].name; }
+	ItemType GetItemType(int count) { return itemData_[count].name; }
 	// アイテムの個数の取得
-	int GetItemQuantity(int count) { return itemData[count].quantity; }
+	int GetItemQuantity(int count) { return itemData_[count].quantity; }
 	// アイテムの個数の設定
-	void SetItemQuantity(int count, int quantity) { itemData[count].quantity = quantity; }
+	void SetItemQuantity(int count, int quantity) { itemData_[count].quantity = quantity; }
 	// 防御バフの設定
 	void SetDefenseBuff(bool isBuff, int buffTimer = 0, int second = 0, float magnification = 1.0f);
 	// 攻撃バフの設定
@@ -104,9 +105,9 @@ public: // メンバ関数
 	int GetDefenseBuffTimer() { return defense_.buffTimer; }
 
 private: // メンバ変数
-	std::vector<int> csvNumber;
+	std::vector<int> csvNumber_;
 	// アイテムのデータ
-	std::vector<ItemData> itemData;
+	std::vector<ItemData> itemData_;
 	// 防御力の上昇
 	BuffData defense_;
 	// 攻撃力の上昇

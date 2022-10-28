@@ -66,32 +66,32 @@ void GameOverScene::Update()
 {
 	Input* input = Input::GetInstance();
 
-	if (isEaseFlag)
+	if (isEaseFlag_)
 	{
 		if (input->TriggerPadKey(BUTTON_A))
 		{
-			if (determinationFlag)
+			if (determinationFlag_)
 			{
 				SceneManager::GetInstance()->ChangeScene("TitleScene");
 			}
-			else if (!determinationFlag)
+			else if (!determinationFlag_)
 			{
 				exit(1);
 			}
 		}
 		if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || input->PadStickGradient().y != 0)
 		{
-			if (!determinationFlag)
+			if (!determinationFlag_)
 			{
-				determinationFlag = true;
-				savePos = { 0,-5,0 };
+				determinationFlag_ = true;
+				savePos_ = { 0,-5,0 };
 			}
-			else if (determinationFlag)
+			else if (determinationFlag_)
 			{
-				determinationFlag = false;
-				savePos = { 0,-15,0 };
+				determinationFlag_ = false;
+				savePos_ = { 0,-15,0 };
 			}
-			isShake = true;
+			isShake_ = true;
 		}
 	}
 
@@ -140,14 +140,14 @@ void GameOverScene::EffectDraw()
 
 void GameOverScene::Select()
 {
-	if (!determinationFlag)
+	if (!determinationFlag_)
 	{
 		continueTile_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		continueTile_->SetScale({ 10, 1, 5 });
 		quitTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 		quitTile_->SetScale({ 30, 1, 10 });
 	}
-	else if (determinationFlag)
+	else if (determinationFlag_)
 	{
 		continueTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 		continueTile_->SetScale({ 30, 1, 10 });
@@ -155,7 +155,7 @@ void GameOverScene::Select()
 		quitTile_->SetScale({ 10, 1, 5 });
 	}
 
-	if (isEaseFlag)
+	if (isEaseFlag_)
 	{
 		Shake();
 	}
@@ -165,57 +165,57 @@ void GameOverScene::Shake()
 {
 	Input* input = Input::GetInstance();
 
-	if (!determinationFlag && isShake) {
+	if (!determinationFlag_ && isShake_) {
 		XMFLOAT3 shake = {};
-		shakeTimer++;
+		shakeTimer_++;
 
 		input->SetVibration(true);
 
-		if (shakeTimer > 0) {
-			shake.x = (rand() % (7 - attenuation) - 3) + savePos.x;
-			shake.y = (rand() % (7 - attenuation) - 3) + savePos.y;
-			shake.z = savePos.z;
+		if (shakeTimer_ > 0) {
+			shake.x = (rand() % (7 - attenuation_) - 3) + savePos_.x;
+			shake.y = (rand() % (7 - attenuation_) - 3) + savePos_.y;
+			shake.z = savePos_.z;
 		}
 
-		if (shakeTimer >= attenuation * 2)
+		if (shakeTimer_ >= attenuation_ * 2)
 		{
-			attenuation += 1;
+			attenuation_ += 1;
 			quitTile_->SetPosition(shake);
 		}
-		else if (attenuation >= 6)
+		else if (attenuation_ >= 6)
 		{
-			shakeTimer = 0;
-			attenuation = 0;
-			isShake = 0;
+			shakeTimer_ = 0;
+			attenuation_ = 0;
+			isShake_ = 0;
 			input->SetVibration(false);
-			quitTile_->SetPosition(savePos);
+			quitTile_->SetPosition(savePos_);
 		}
 	}
-	else if (determinationFlag && isShake)
+	else if (determinationFlag_ && isShake_)
 	{
 		XMFLOAT3 shake = {};
-		shakeTimer++;
+		shakeTimer_++;
 		input->SetVibration(true);
 
-		if (shakeTimer > 0)
+		if (shakeTimer_ > 0)
 		{
-			shake.x = (rand() % (7 - attenuation) - 3) + savePos.x;
-			shake.y = (rand() % (7 - attenuation) - 3) + savePos.y;
-			shake.z = savePos.z;
+			shake.x = (rand() % (7 - attenuation_) - 3) + savePos_.x;
+			shake.y = (rand() % (7 - attenuation_) - 3) + savePos_.y;
+			shake.z = savePos_.z;
 		}
 
-		if (shakeTimer >= attenuation * 2)
+		if (shakeTimer_ >= attenuation_ * 2)
 		{
-			attenuation += 1;
+			attenuation_ += 1;
 			continueTile_->SetPosition(shake);
 		}
-		else if (attenuation >= 6)
+		else if (attenuation_ >= 6)
 		{
-			shakeTimer = 0;
-			attenuation = 0;
-			isShake = 0;
+			shakeTimer_ = 0;
+			attenuation_ = 0;
+			isShake_ = 0;
 			input->SetVibration(false);
-			continueTile_->SetPosition(savePos);
+			continueTile_->SetPosition(savePos_);
 		}
 	}
 }
@@ -226,11 +226,11 @@ void GameOverScene::EaseMove()
 	XMFLOAT4 endColor = { 1, 1, 1, 1 };
 	float timeRate = 0.0f;
 
-	if (!isEaseFlag)
+	if (!isEaseFlag_)
 	{
 		int countNum = 120;
-		timeRate = easeTimer / countNum;
-		easeTimer++;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
 
 		gameoverTile_->SetPosition(Ease::easeOut(startPosition_[0], endPosition_[0], timeRate));
 		continueTile_->SetPosition(Ease::easeOut(startPosition_[1], endPosition_[1], timeRate));
@@ -240,10 +240,10 @@ void GameOverScene::EaseMove()
 		continueTile_->SetColor(Ease::easeOut({ 1.0f, 0.5f, 0.5f, 0.0f }, { 1.0f, 0.5f, 0.5f, 1.0f }, timeRate));
 		quitTile_->SetColor(Ease::easeOut(startColor, endColor, timeRate));
 
-		if (easeTimer > countNum)
+		if (easeTimer_ > countNum)
 		{
-			isEaseFlag = true;
-			easeTimer = 0;
+			isEaseFlag_ = true;
+			easeTimer_ = 0;
 		}
 	}
 }

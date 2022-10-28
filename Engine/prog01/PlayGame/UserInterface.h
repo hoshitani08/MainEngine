@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include <memory>
 #include <iostream>
@@ -108,9 +109,9 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> bButtonIcon_;
 
 	// 一桁
-	int oneCount = 0;
+	int oneCount_ = 0;
 	// 十桁
-	int tenCount = 0;
+	int tenCount_ = 0;
 
 	//イージングの進行度用
 	float hunterEaseTimer_ = 0.0f;
@@ -125,5 +126,5 @@ private: // メンバ変数
 	// 生きているかどうか
 	bool isPlayerDeath_ = false;
 	// 十桁目があるか
-	bool isTenCountFlag = false;
+	bool isTenCountFlag_ = false;
 };

@@ -1,5 +1,4 @@
 #include "UserInterface.h"
-
 #include "DebugText.h"
 #include "Input.h"
 #include "Ease.h"
@@ -113,10 +112,10 @@ void UserInterface::NearDraw()
 	// ƒAƒCƒeƒ€ŠÖŒW
 	itemFrame_->Draw();
 	itemSprite_[hunter_->GetItemType()]->Draw();
-	oneDigits_[oneCount]->Draw();
-	if (isTenCountFlag)
+	oneDigits_[oneCount_]->Draw();
+	if (isTenCountFlag_)
 	{
-		tenDigits_[tenCount]->Draw();
+		tenDigits_[tenCount_]->Draw();
 	}
 	lbButtonIcon_->Draw();
 	xButtonIcon_->Draw();
@@ -246,17 +245,17 @@ void UserInterface::ItemSelection()
 {
 	int count = ItemManager::GetInstance()->GetItemQuantity(hunter_->GetItemType());
 
-	tenCount = count / 10;
-	oneCount = (count - (tenCount * 10));
+	tenCount_ = count / 10;
+	oneCount_ = (count - (tenCount_ * 10));
 	if (count / 10 == 0)
 	{
-		oneDigits_[oneCount]->SetPosition({ 1105, 610 });
-		isTenCountFlag = false;
+		oneDigits_[oneCount_]->SetPosition({ 1105, 610 });
+		isTenCountFlag_ = false;
 	}
 	else
 	{
-		oneDigits_[oneCount]->SetPosition({ 1110, 610 });
-		isTenCountFlag = true;
+		oneDigits_[oneCount_]->SetPosition({ 1110, 610 });
+		isTenCountFlag_ = true;
 	}
 
 	if (ItemManager::GetInstance()->IsAttackBuff())

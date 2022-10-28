@@ -1,5 +1,9 @@
 #pragma once
 
+#include <DirectXMath.h>
+#include <vector>
+#include <memory>
+
 #include "BaseScene.h"
 #include "Sprite.h"
 #include "Object3d.h"
@@ -12,14 +16,9 @@
 #include "FbxObject3d.h"
 #include "PmxObject3d.h"
 #include "PmxModel.h"
-
 #include "Hunter.h"
 #include "Monster.h"
 #include "UserInterface.h"
-
-#include <DirectXMath.h>
-#include <vector>
-#include <memory>
 
 class CollisionManager;
 class Player;
@@ -75,7 +74,7 @@ private: // メンバ変数
 	//スプライト
 	std::unique_ptr<Sprite> sprite_;
 	//UI
-	std::unique_ptr<UserInterface> ui;
+	std::unique_ptr<UserInterface> ui_;
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
@@ -88,10 +87,10 @@ private: // メンバ変数
 	//ライト
 	std::unique_ptr<LightGroup> light_;
 	//光線方向初期値
-	float circleShadowDir[3] = { 0,-1,0 };
-	float circleShadowPos[3] = { 1,2,0 };
-	float circleShadowAtten[3] = { 0.5f,0.6f,0.0f };
-	float circleShadowFactorAngle[2] = { 0.0f, 0.5f };
+	float circleShadowDir_[3] = { 0,-1,0 };
+	float circleShadowPos_[3] = { 1,2,0 };
+	float circleShadowAtten_[3] = { 0.5f,0.6f,0.0f };
+	float circleShadowFactorAngle_[2] = { 0.0f, 0.5f };
 
 	float fighterPos[3] = { 1, 0.0f, 0 };
 	//当たり判定
@@ -100,5 +99,5 @@ private: // メンバ変数
 	XMFLOAT2 angle_ = { 0.0f, 0.0f};
 
 	// タイマー
-	Quest quest;
+	Quest quest_;
 };

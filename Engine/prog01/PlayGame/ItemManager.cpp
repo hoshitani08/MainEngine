@@ -1,7 +1,7 @@
 #include "ItemManager.h"
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-const std::string ItemManager::baseDirectory = "Resources/csv/";
+const std::string ItemManager::BASE_DIRECTORY = "Resources/csv/";
 
 ItemManager::ItemManager()
 {
@@ -13,7 +13,7 @@ ItemManager::~ItemManager()
 
 void ItemManager::CsvLoad(std::string fName)
 {
-	std::ifstream ifs(baseDirectory + fName + ".csv");
+	std::ifstream ifs(BASE_DIRECTORY + fName + ".csv");
 	std::string line;
 
 	while (getline(ifs, line))
@@ -27,7 +27,7 @@ void ItemManager::CsvLoad(std::string fName)
 		}
 		for (auto i : result)
 		{
-			csvNumber.push_back(i);
+			csvNumber_.push_back(i);
 		}
 	}
 }
@@ -39,7 +39,7 @@ int ItemManager::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 
 	int i = Y * (int)Phase::Max + X;
 
-	return csvNumber[i];
+	return csvNumber_[i];
 }
 
 ItemManager* ItemManager::GetInstance()
@@ -74,7 +74,7 @@ void ItemManager::Initialize()
 			if (j != 0)
 			{
 				tempData.quantity = GetChipNum(j, i, "item");
-				itemData.push_back(tempData);
+				itemData_.push_back(tempData);
 			}
 		}
 	}
@@ -83,7 +83,7 @@ void ItemManager::Initialize()
 
 void ItemManager::Finalize()
 {
-	itemData.clear();
+	itemData_.clear();
 }
 
 void ItemManager::Update()

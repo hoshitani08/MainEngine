@@ -1,4 +1,5 @@
 #pragma once
+
 #include <wrl.h>
 #include <d3d12.h>
 #include <DirectXMath.h>
@@ -15,9 +16,9 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 private: // 静的メンバ変数
-	static const float clearColor[4];
+	static const float CLEAR_COLOR[4];
 	// 頂点数
-	static const int vertNum = 4;
+	static const int VERT_NUM = 4;
 
 public: // サブクラス
 	// 頂点データ構造体
@@ -48,28 +49,26 @@ public: // メンバ関数
 
 private: // メンバ変数
 // D3D12デバイス
-	ID3D12Device* device = nullptr;
+	ID3D12Device* device_ = nullptr;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texBuff[2];
+	ComPtr<ID3D12Resource> texBuff_[2];
 	// 深度バッファ
-	ComPtr<ID3D12Resource> depthBuff;
+	ComPtr<ID3D12Resource> depthBuff_;
 	// SRV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
 	// RTV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapRTV;
+	ComPtr<ID3D12DescriptorHeap> descHeapRTV_;
 	// DSV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapDSV;
-
+	ComPtr<ID3D12DescriptorHeap> descHeapDSV_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
-
+	D3D12_VERTEX_BUFFER_VIEW vbView_{};
 	// 色 (RGBA)
-	XMFLOAT4 color = { 1, 1, 1, 1 };
+	XMFLOAT4 color_ = { 1, 1, 1, 1 };
 	// 明度
-	float brightnessColor = 1.0f;
+	float brightnessColor_ = 1.0f;
 };
 

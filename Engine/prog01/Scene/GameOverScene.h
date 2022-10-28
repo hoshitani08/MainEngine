@@ -1,18 +1,18 @@
 #pragma once
+
+#include <memory>
+#include <array>
+#include <algorithm>
+
 #include "BaseScene.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Audio.h"
 #include "Camera.h"
-
 #include "Sprite.h"
 #include "DebugText.h"
 #include "Object3d.h"
 #include "Model.h"
-
-#include <memory>
-#include <array>
-#include <algorithm>
 
 class GameOverScene : public BaseScene
 {
@@ -56,22 +56,22 @@ private: // メンバ変数
 	std::unique_ptr<Object3d> continueTile_;
 	std::unique_ptr<Object3d> quitTile_;
 	// 決定フラグ
-	bool determinationFlag = true;
+	bool determinationFlag_ = true;
 	// シェイクしているか
-	bool isShake = false;
+	bool isShake_ = false;
 	// シェイクタイマー
-	int shakeTimer = 0;
+	int shakeTimer_ = 0;
 	// 減衰値
-	int attenuation = 0;
+	int attenuation_ = 0;
 	// シェイク前の位置
-	XMFLOAT3 savePos = {};
+	XMFLOAT3 savePos_ = {};
 	// 泡の量の調整用タイマー
 	int bubbleTimer_ = 100;
 	// イージング用位置
 	std::array<XMFLOAT3, 3> startPosition_ = {};
 	std::array<XMFLOAT3, 3> endPosition_ = {};
 	// イージングの進行度用
-	float easeTimer = 0.0f;
+	float easeTimer_ = 0.0f;
 	// イージングし終わったか
-	bool isEaseFlag = false;
+	bool isEaseFlag_ = false;
 };

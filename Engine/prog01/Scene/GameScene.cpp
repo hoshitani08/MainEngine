@@ -1,24 +1,22 @@
 #include "GameScene.h"
-#include <cassert>
-#include <sstream>
-#include <iomanip>
 #include "Collision.h"
 #include "SphereCollider.h"
 #include "MeshCollider.h"
 #include "CollisionManager.h"
 #include "Player.h"
 #include "ContactableObject.h"
-
 #include "SceneManager.h"
 #include "FbxFactory.h"
 #include "ObjFactory.h"
-
 #include "DirectXCommon.h"
 #include "DebugText.h"
 #include "Audio.h"
 #include "Input.h"
-
 #include "ItemManager.h"
+
+#include <cassert>
+#include <sstream>
+#include <iomanip>
 
 using namespace DirectX;
 
@@ -75,10 +73,10 @@ void GameScene::Initialize()
 	monster_->SetHunter(hunter_.get());
 
 	//UI
-	ui = std::make_unique<UserInterface>();
-	ui->SetHunter(hunter_.get());
-	ui->SetMonster(monster_.get());
-	ui->Initialize();
+	ui_ = std::make_unique<UserInterface>();
+	ui_->SetHunter(hunter_.get());
+	ui_->SetMonster(monster_.get());
+	ui_->Initialize();
 
 	ItemManager::GetInstance()->Initialize();
 }
@@ -90,16 +88,16 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
-	quest.timer++;
-	if (quest.timer >= 60)
+	quest_.timer++;
+	if (quest_.timer >= 60)
 	{
-		quest.second++;
-		quest.timer = 0;
+		quest_.second++;
+		quest_.timer = 0;
 	}
-	if (quest.second >= 60)
+	if (quest_.second >= 60)
 	{
-		quest.minute++;
-		quest.second = 0;
+		quest_.minute++;
+		quest_.second = 0;
 	}
 
 	Input* input = Input::GetInstance();
@@ -152,19 +150,19 @@ void GameScene::Update()
 	{
 		SceneManager::GetInstance()->ChangeScene("ClearScene");
 	}
-	else if (ui->GetIsPlayerDeath() || quest.minute >= 15)
+	else if (ui_->GetIsPlayerDeath() || quest_.minute >= 15)
 	{
 		SceneManager::GetInstance()->ChangeScene("GameOverScene");
 	}
 
-	ui->ClockCalculate(quest.minute);
+	ui_->ClockCalculate(quest_.minute);
 
 	hunter_->Update();
 	monster_->Update();
 	skydome_->Update();
 	ground_->Update();
 	hitSphere_->Update();
-	ui->Update();
+	ui_->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -201,7 +199,7 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 	// デバッグテキストの描画
 	DebugText::GetInstance()->DrawAll(cmdList);
-	ui->NearDraw();
+	ui_->NearDraw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画
