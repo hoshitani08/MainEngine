@@ -204,7 +204,7 @@ Sprite::Sprite(UINT texNumber, XMFLOAT2 position, XMFLOAT2 size, XMFLOAT4 color,
 {
 	position_ = position;
 	size_ = size;
-	anchorpoint_ = anchorpoint;
+	anchorPoint_ = anchorpoint;
 	matWorld_ = XMMatrixIdentity();
 	color_ = color;
 	texNumber_ = texNumber;
@@ -305,7 +305,7 @@ void Sprite::SetSize(XMFLOAT2 size)
 
 void Sprite::SetAnchorPoint(XMFLOAT2 anchorpoint)
 {
-	anchorpoint_ = anchorpoint;
+	anchorPoint_ = anchorpoint;
 
 	// 頂点バッファへのデータ転送
 	TransferVertices();
@@ -374,10 +374,10 @@ void Sprite::TransferVertices()
 	// 左下、左上、右下、右上
 	enum { LB, LT, RB, RT };
 
-	float left = (0.0f - anchorpoint_.x) * size_.x;
-	float right = (1.0f - anchorpoint_.x) * size_.x;
-	float top = (0.0f - anchorpoint_.y) * size_.y;
-	float bottom = (1.0f - anchorpoint_.y) * size_.y;
+	float left = (0.0f - anchorPoint_.x) * size_.x;
+	float right = (1.0f - anchorPoint_.x) * size_.x;
+	float top = (0.0f - anchorPoint_.y) * size_.y;
+	float bottom = (1.0f - anchorPoint_.y) * size_.y;
 
 	if (isFlipX_)
 	{// 左右入れ替え

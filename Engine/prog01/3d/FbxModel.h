@@ -102,55 +102,55 @@ public:
 	//描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//モデルの変形行列取得
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const XMMATRIX& GetModelTransform() { return meshNode_->globalTransform; }
 	//テクスチャバッファ生成
 	void CreateTexture(TextureData& texture, ID3D12Device* device, int srvIndex);
 	//getrer
-	std::vector<Bone>& GetBones() { return bones; }
-	FbxScene* GetFbxScene() { return fbxScene; }
+	std::vector<Bone>& GetBones() { return bones_; }
+	FbxScene* GetFbxScene() { return fbxScene_; }
 
 	//デストラクタ
 	~FbxModel();
 
 private:
 	//モデル名
-	std::string name;
+	std::string name_;
 	//ノード配列
-	std::vector<Node> nodes;
+	std::vector<Node> nodes_;
 	//ボーン配列
-	std::vector<Bone> bones;
+	std::vector<Bone> bones_;
 	//FBXシーン
-	FbxScene* fbxScene = nullptr;
+	FbxScene* fbxScene_ = nullptr;
 	//メッシュを持つノード
-	Node* meshNode = nullptr;
+	Node* meshNode_ = nullptr;
 	//頂点データ配列
-	std::vector<VertexPosNormalUvSkin> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices_;
 	//頂点インデックス配列
-	std::vector<unsigned short> indices;
+	std::vector<unsigned short> indices_;
 	//アンビエント係数
-	DirectX::XMFLOAT3 ambient = { 1,1,1 };
+	DirectX::XMFLOAT3 ambient_ = { 1,1,1 };
 	//ディフューズ係数
-	DirectX::XMFLOAT3 diffuse = { 1,1,1 };
+	DirectX::XMFLOAT3 diffuse_ = { 1,1,1 };
 	//テクスチャメタデータ
-	DirectX::TexMetadata metadata = {};
+	DirectX::TexMetadata metaData_ = {};
 	//スクラッチイメージ
-	DirectX::ScratchImage scratchImg = {};
+	DirectX::ScratchImage scratchImg_ = {};
 	//頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	//インデックスバッファ
-	ComPtr<ID3D12Resource> indexBuff;
+	ComPtr<ID3D12Resource> indexBuff_;
 	//テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texBuff_;
 	//頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 	//インデックスバッファビュー
-	D3D12_INDEX_BUFFER_VIEW ibView = {};
+	D3D12_INDEX_BUFFER_VIEW ibView_ = {};
 	//SRV用デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
+	ComPtr<ID3D12DescriptorHeap> descHeapSRV_;
 	//ベーステクスチャ
-	TextureData baseTexture;
+	TextureData baseTexture_;
 	//メタルネステクスチャ
-	TextureData metalnessTexture;
+	TextureData metalnessTexture_;
 	//法線テクスチャ
-	TextureData normalTexture;
+	TextureData normalTexture_;
 };

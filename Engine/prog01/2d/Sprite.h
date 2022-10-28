@@ -105,7 +105,7 @@ private: // メンバ変数
 	// スプライト幅、高さ
 	XMFLOAT2 size_ = { 100.0f, 100.0f };
 	// アンカーポイント
-	XMFLOAT2 anchorpoint_ = { 0, 0 };
+	XMFLOAT2 anchorPoint_ = { 0, 0 };
 	// ワールド行列
 	XMMATRIX matWorld_ = {};
 	// 色

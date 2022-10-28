@@ -16,9 +16,9 @@ private: // エイリアス
 	using string = std::string;
 public: // 定数
 	// モデル格納ルートパス
-	static const string baseDirectory;
+	static const string BASE_DIRECTORY;
 	// テクスチャがない場合の標準テクスチャファイル名
-	static const string defaultTextureFileName;
+	static const string DEFAULT_TEXTURE_FILE_NAME;
 public:
 	// シングルトンインスタンスの取得
 	static FbxLoader* GetInstance();
@@ -35,13 +35,13 @@ public:
 
 private:
 	// D3D12デバイス
-	ID3D12Device* device = nullptr;
+	ID3D12Device* device_ = nullptr;
 	// FBXマネージャ
-	FbxManager* fbxManager = nullptr;
+	FbxManager* fbxManager_ = nullptr;
 	// FBXインポータ
-	FbxImporter* fbxImporter = nullptr;
+	FbxImporter* fbxImporter_ = nullptr;
 	// コントロールポイントのデータ
-	std::vector<std::vector<int>> controlPointsData;
+	std::vector<std::vector<int>> controlPointsData_;
 
 private:
 	// privateなコンストラクタ（シングルトンパターン）

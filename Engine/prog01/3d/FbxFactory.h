@@ -16,7 +16,7 @@ public: // サブクラス
 
 public:
 	// ルートパス
-	static const std::string baseDirectory;
+	static const std::string BASE_DIRECTORY;
 
 private:
 	FbxFactory() = default;
@@ -38,5 +38,5 @@ public:
 	static FbxFactory* GetInstance();
 
 private:
-	std::vector<ModelData> modelData;
+	std::vector<ModelData> modelData_;
 };

@@ -4,8 +4,8 @@
 using namespace DirectX;
 
 // 静的メンバ変数の実体
-const std::string FbxLoader::baseDirectory = "Resources/";
-const std::string FbxLoader::defaultTextureFileName = "white1x1.png";
+const std::string FbxLoader::BASE_DIRECTORY = "Resources/";
+const std::string FbxLoader::DEFAULT_TEXTURE_FILE_NAME = "white1x1.png";
 
 FbxLoader* FbxLoader::GetInstance()
 {
@@ -30,68 +30,68 @@ void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& s
 void FbxLoader::Initialize(ID3D12Device* device)
 {
 	//再初期化チェック
-	assert(fbxManager == nullptr);
+	assert(fbxManager_ == nullptr);
 
 	//引数からメンバ変数に代入
-	this->device = device;
+	device_ = device;
 
 	//FBXマネージャの生成
-	fbxManager = FbxManager::Create();
+	fbxManager_ = FbxManager::Create();
 
 	//FBXマネージャの入出力設定
-	FbxIOSettings* ios = FbxIOSettings::Create(fbxManager, IOSROOT);
-	fbxManager->SetIOSettings(ios);
+	FbxIOSettings* ios = FbxIOSettings::Create(fbxManager_, IOSROOT);
+	fbxManager_->SetIOSettings(ios);
 
 	//FBXインポータの生成
-	fbxImporter = FbxImporter::Create(fbxManager, "");
+	fbxImporter_ = FbxImporter::Create(fbxManager_, "");
 }
 
 void FbxLoader::Finalize()
 {
 	//各種FBXインスタンスの破棄
-	fbxImporter->Destroy();
-	fbxManager->Destroy();
+	fbxImporter_->Destroy();
+	fbxManager_->Destroy();
 }
 
 std::unique_ptr<FbxModel> FbxLoader::LoadModelFromFile(const string& modelName)
 {
 	// モデルと同じ名前のフォルダから読み込む
-	const string directoryPath = baseDirectory + modelName + "/";
+	const string directoryPath = BASE_DIRECTORY + modelName + "/";
 	// 拡張子.fbxを付加
 	const string fileName = modelName + ".fbx";
 	// 連結してフルパスを得る
 	const string fullpath = directoryPath + fileName;
 
 	// ファイル名を指定してFBXファイルを読み込む
-	if (!fbxImporter->Initialize(fullpath.c_str(), -1, fbxManager->GetIOSettings()))
+	if (!fbxImporter_->Initialize(fullpath.c_str(), -1, fbxManager_->GetIOSettings()))
 	{
 		assert(0);
 	}
 
 	// シーン生成
-	FbxScene* fbxScene = FbxScene::Create(fbxManager, "fbxScene");
+	FbxScene* fbxScene = FbxScene::Create(fbxManager_, "fbxScene");
 
 	// ファイルからロードしたFBXの情報をシーンにインポート
-	fbxImporter->Import(fbxScene);
+	fbxImporter_->Import(fbxScene);
 
-	FbxGeometryConverter fbx_converter(fbxManager);
+	FbxGeometryConverter fbx_converter(fbxManager_);
 	fbx_converter.Triangulate(fbxScene, true);
 	fbx_converter.RemoveBadPolygonsFromMeshes(fbxScene);
 
 	// モデル生成
 	FbxModel* model = new FbxModel();
-	model->name = modelName;
+	model->name_ = modelName;
 	// FBXノードの数を取得
 	int nodeCount = fbxScene->GetNodeCount();
 	// あらかじめ必要数分のメモリを確保することで、アドレスがずれるのを予防
-	model->nodes.reserve(nodeCount);
+	model->nodes_.reserve(nodeCount);
 	// ルートノードから順に解析してモデルに流し込む
 	ParseNodeRecursive(model, fbxScene->GetRootNode());
 	// FBXシーン解放
 	//fbxScene->Destroy();
-	model->fbxScene = fbxScene;
+	model->fbxScene_ = fbxScene;
 	// バッファ生成
-	model->CreateBuffers(device);
+	model->CreateBuffers(device_);
 
 	return std::unique_ptr<FbxModel>(model);
 }
@@ -99,8 +99,8 @@ std::unique_ptr<FbxModel> FbxLoader::LoadModelFromFile(const string& modelName)
 void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent)
 {
 	//モデルにノードを追加
-	model->nodes.emplace_back();
-	Node& node = model->nodes.back();
+	model->nodes_.emplace_back();
+	Node& node = model->nodes_.back();
 	// ノード名を取得
 	node.name = fbxNode->GetName();
 
@@ -142,7 +142,7 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	{
 		if (fbxNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
 		{
-			model->meshNode = &node;
+			model->meshNode_ = &node;
 			ParseMesh(model, fbxNode);
 		}
 	}
@@ -171,8 +171,8 @@ void FbxLoader::ParseMesh(FbxModel* model, FbxNode* fbxNode)
 
 void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 {
-	auto& vertices = model->vertices;
-	auto& indices = model->indices;
+	auto& vertices = model->vertices_;
+	auto& indices = model->indices_;
 
 	// 1ファイルに複数メッシュのモデルは非対応
 	assert(indices.size() == 0);
@@ -188,13 +188,13 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 
 	//必要数だけ頂点データ配列を確保
 	FbxModel::VertexPosNormalUvSkin vert{};
-	model->vertices.resize(polygonCount * 3, vert);
+	model->vertices_.resize(polygonCount * 3, vert);
 
 	//FBXメッシュの頂点座標配列を取得
 	FbxVector4* pCoord = fbxMesh->GetControlPoints();
 
 	int indexCount = 0;
-	controlPointsData.resize(fbxMesh->GetControlPointsCount());
+	controlPointsData_.resize(fbxMesh->GetControlPointsCount());
 
 	// 面ごとの情報読み取り
 	for (int i = 0; i < polygonCount; i++)
@@ -210,7 +210,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 			int controlPointIndex = fbxMesh->GetPolygonVertex(i, j);
 			assert(controlPointIndex >= 0);
 
-			controlPointsData[controlPointIndex].push_back(indexCount);
+			controlPointsData_[controlPointIndex].push_back(indexCount);
 
 			FbxModel::VertexPosNormalUvSkin& vertex = vertices[indexCount];
 			// 座標のコピー
@@ -283,15 +283,15 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 
 				//環境光係数
 				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
-				model->ambient.x = (float)ambient.Get()[0];
-				model->ambient.y = (float)ambient.Get()[1];
-				model->ambient.z = (float)ambient.Get()[2];
+				model->ambient_.x = (float)ambient.Get()[0];
+				model->ambient_.y = (float)ambient.Get()[1];
+				model->ambient_.z = (float)ambient.Get()[2];
 
 				//拡散反射光係数
 				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
-				model->diffuse.x = (float)diffuse.Get()[0];
-				model->diffuse.y = (float)diffuse.Get()[1];
-				model->diffuse.z = (float)diffuse.Get()[2];
+				model->diffuse_.x = (float)diffuse.Get()[0];
+				model->diffuse_.y = (float)diffuse.Get()[1];
+				model->diffuse_.z = (float)diffuse.Get()[2];
 			}
 
 			//マテリアル名(デバック用)
@@ -310,7 +310,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->baseTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->baseTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -324,7 +324,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->baseTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->baseTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -341,7 +341,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->metalnessTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->metalnessTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -355,7 +355,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->metalnessTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->metalnessTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -372,7 +372,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->normalTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->normalTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 				}
 			}
 			else if (diffuseProperty.IsValid())
@@ -385,7 +385,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string path_str(filepath);
 					string name = ExtractFileName(path_str);
 					// テクスチャ読み込み
-					LoadTexture(&model->normalTexture, baseDirectory + model->name + "/" + name);
+					LoadTexture(&model->normalTexture_, BASE_DIRECTORY + model->name_ + "/" + name);
 					textureLoaded = true;
 				}
 			}
@@ -394,7 +394,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 		// テクスチャがない場合は白テクスチャを貼る
 		if (!textureLoaded)
 		{
-			LoadTexture(&model->baseTexture, baseDirectory + defaultTextureFileName);
+			LoadTexture(&model->baseTexture_, BASE_DIRECTORY + DEFAULT_TEXTURE_FILE_NAME);
 		}
 	}
 }
@@ -431,17 +431,17 @@ void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
 	if (fbxSkin == nullptr)
 	{
 		//各頂点について処理
-		for (int i = 0; i < model->vertices.size(); i++)
+		for (int i = 0; i < model->vertices_.size(); i++)
 		{
 			//最初のボーン(単位行列)の影響100%にする
-			model->vertices[i].boneIndex[0] = 0;
-			model->vertices[i].boneWeight[0] = 1.0f;
+			model->vertices_[i].boneIndex[0] = 0;
+			model->vertices_[i].boneWeight[0] = 1.0f;
 		}
 		return;
 	}
 
 	//ボーン配列の参照
-	std::vector<FbxModel::Bone>& bones = model->bones;
+	std::vector<FbxModel::Bone>& bones = model->bones_;
 
 	//ボーンの数
 	int clusterCount = fbxSkin->GetClusterCount();
@@ -484,9 +484,9 @@ void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
 	//二次元配列(ジャグ配列)
 	//list:頂点が影響を受けるボーンの全リスト
 	//vector:それを全頂点分
-	std::vector<std::list<WeightSet>> weightLists(controlPointsData.size());
+	std::vector<std::list<WeightSet>> weightLists(controlPointsData_.size());
 	//頂点配列書き換え用参照
-	auto& vertices = model->vertices;
+	auto& vertices = model->vertices_;
 
 	//全てのボーンについて
 	for (int i = 0; i < clusterCount; i++)
@@ -512,7 +512,7 @@ void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
 	}
 
 	//各頂点について処理
-	for (int i = 0; i < controlPointsData.size(); i++)
+	for (int i = 0; i < controlPointsData_.size(); i++)
 	{
 		//頂点のウェイトから最も大きい4つを選択
 		auto& weightList = weightLists[i];
@@ -533,13 +533,13 @@ void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
 
 
 		//降順ソート済みのウェイトリストから
-		for (int j = 0; j < controlPointsData[i].size(); j++)
+		for (int j = 0; j < controlPointsData_[i].size(); j++)
 		{
 			int weightArrayIndex = 0;
 
 			for (auto& weightSet : weightList)
 			{
-				std::vector<int>& controlPoint = controlPointsData[i];
+				std::vector<int>& controlPoint = controlPointsData_[i];
 				int indexCount = controlPoint[j];
 
 				vertices[indexCount].boneIndex[weightArrayIndex] = weightSet.index;
@@ -585,8 +585,8 @@ std::string FbxLoader::ExtractFileName(const std::string& path)
 
 void FbxLoader::BuildTangentAndBiNormalImp(FbxModel* model)
 {
-	auto& vertices = model->vertices;
-	auto& indices = model->indices;
+	auto& vertices = model->vertices_;
+	auto& indices = model->indices_;
 
 	//頂点スムースは気にしない。
 	auto numPolygon = indices.size() / 3;

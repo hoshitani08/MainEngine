@@ -2,7 +2,7 @@
 #include "FbxLoader.h"
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌŽÀ‘Ì
-const std::string FbxFactory::baseDirectory = "Resources/";
+const std::string FbxFactory::BASE_DIRECTORY = "Resources/";
 
 void FbxFactory::Initialize()
 {
@@ -21,7 +21,7 @@ void FbxFactory::Initialize()
 
 void FbxFactory::Finalize()
 {
-	for (auto& a : modelData)
+	for (auto& a : modelData_)
 	{
 		a.fbxModel.reset();
 		a.fName.clear();
@@ -31,19 +31,19 @@ void FbxFactory::Finalize()
 void FbxFactory::LoadModel(std::string fName)
 {
 	ModelData tempData;
-	tempData.fName = baseDirectory + fName + ".fbx";
+	tempData.fName = BASE_DIRECTORY + fName + ".fbx";
 	tempData.fbxModel = FbxLoader::GetInstance()->LoadModelFromFile(fName);
 
-	modelData.push_back(std::move(tempData));
+	modelData_.push_back(std::move(tempData));
 }
 
 FbxModel* FbxFactory::GetModel(std::string fName)
 {
-	for (int i = 0; i < modelData.size(); i++)
+	for (int i = 0; i < modelData_.size(); i++)
 	{
-		if (modelData[i].fName == baseDirectory + fName + ".fbx")
+		if (modelData_[i].fName == BASE_DIRECTORY + fName + ".fbx")
 		{
-			return modelData[i].fbxModel.get();
+			return modelData_[i].fbxModel.get();
 		}
 	}
 
