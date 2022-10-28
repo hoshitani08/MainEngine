@@ -4,7 +4,7 @@
 
 SceneManager::~SceneManager()
 {
-	if (scene)
+	if (scene_)
 	{
 		Finalize();
 	}
@@ -18,42 +18,42 @@ SceneManager* SceneManager::GetInstance()
 
 void SceneManager::Finalize()
 {
-	scene->Finalize();
-	delete scene;
-	scene = nullptr;
+	scene_->Finalize();
+	delete scene_;
+	scene_ = nullptr;
 }
 
 void SceneManager::Update()
 {
-	if (nextScene)
+	if (nextScene_)
 	{
-		if (scene)
+		if (scene_)
 		{
-			scene->Finalize();
-			delete scene;
+			scene_->Finalize();
+			delete scene_;
 		}
-		scene = nextScene;
-		nextScene = nullptr;
+		scene_ = nextScene_;
+		nextScene_ = nullptr;
 
-		scene->Initialize();
+		scene_->Initialize();
 	}
-	scene->Update();
+	scene_->Update();
 }
 
 void SceneManager::Draw()
 {
-	scene->Draw();
+	scene_->Draw();
 }
 
 void SceneManager::EffectDraw()
 {
-	scene->EffectDraw();
+	scene_->EffectDraw();
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName)
 {
-	assert(sceneFactory);
-	assert(nextScene == nullptr);
+	assert(sceneFactory_);
+	assert(nextScene_ == nullptr);
 
-	nextScene = sceneFactory->CreateScene(sceneName);
+	nextScene_ = sceneFactory_->CreateScene(sceneName);
 }

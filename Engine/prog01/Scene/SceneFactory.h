@@ -1,4 +1,5 @@
 #pragma once
+
 #include "AbstractSceneFactory.h"
 
 class SceneFactory : public AbstractSceneFactory

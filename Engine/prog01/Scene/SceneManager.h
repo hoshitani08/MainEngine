@@ -1,4 +1,5 @@
 #pragma once
+
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
 
@@ -25,13 +26,13 @@ public:
 	//次シーンの予約
 	void ChangeScene(const std::string& sceneName);
 
-	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { this->sceneFactory = sceneFactory; }
+	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 private:
 	//今のシーン
-	BaseScene* scene = nullptr;
+	BaseScene* scene_ = nullptr;
 	//次のシーン
-	BaseScene* nextScene = nullptr;
+	BaseScene* nextScene_ = nullptr;
 	//シーンファクトリ
-	AbstractSceneFactory* sceneFactory = nullptr;
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 };

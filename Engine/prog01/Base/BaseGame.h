@@ -1,4 +1,7 @@
 #pragma once
+
+#include <memory>
+
 #include "WinApp.h"
 #include "DirectXCommon.h"
 #include "Audio.h"
@@ -6,8 +9,6 @@
 #include "SceneManager.h"
 #include "AbstractSceneFactory.h"
 #include "PostEffect.h"
-
-#include <memory>
 
 class BaseGame
 {
@@ -24,9 +25,9 @@ public:
 	virtual void Draw();
 
 protected:
-	bool endRequst = false;
-	std::unique_ptr<WinApp> win;
-	std::unique_ptr<PostEffect> postEffect;
+	bool endRequst_ = false;
+	std::unique_ptr<WinApp> win_;
+	std::unique_ptr<PostEffect> postEffect_;
 	//シーンファクトリ
-	AbstractSceneFactory* sceneFactory = nullptr;
+	AbstractSceneFactory* sceneFactory_ = nullptr;
 };

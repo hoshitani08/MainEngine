@@ -14,7 +14,7 @@ void BaseGame::Run()
 	{
 		Update();
 
-		if (endRequst)
+		if (endRequst_)
 		{
 			break;
 		}
@@ -28,15 +28,15 @@ void BaseGame::Run()
 void BaseGame::Initialize()
 {
 	// ゲームウィンドウの作成
-	win = std::make_unique<WinApp>();
-	win->CreateGameWindow();
+	win_ = std::make_unique<WinApp>();
+	win_->CreateGameWindow();
 
 	//DirectX初期化処理
-	DirectXCommon::GetInstance()->Initialize(win.get());
+	DirectXCommon::GetInstance()->Initialize(win_.get());
 
 	//入力の初期化
 	//input = std::make_unique<Input>();
-	Input::GetInstance()->Initialize(win->GetInstance(), win->GetHwnd());
+	Input::GetInstance()->Initialize(win_->GetInstance(), win_->GetHwnd());
 
 	// オーディオの初期化
 	if (!Audio::GetInstance()->Initialize())
@@ -62,28 +62,28 @@ void BaseGame::Initialize()
 	//シェーダマネージャー初期化
 	ShaderManager::GetInstance()->Initialize(DirectXCommon::GetInstance()->GetDevice());
 
-	postEffect = std::make_unique<PostEffect>();
-	postEffect->Initialize(DirectXCommon::GetInstance()->GetDevice());
+	postEffect_ = std::make_unique<PostEffect>();
+	postEffect_->Initialize(DirectXCommon::GetInstance()->GetDevice());
 }
 
 void BaseGame::Finalize()
 {
-	delete sceneFactory;
+	delete sceneFactory_;
 	Sprite::StaticFinalize();
 	Object3d::StaticFinalize();
 	FbxObject3d::StaticFinalize();
 	FbxLoader::GetInstance()->Finalize();
 	ShaderManager::GetInstance()->Finalize();
 	// ゲームウィンドウの破棄
-	win->TerminateGameWindow();
+	win_->TerminateGameWindow();
 }
 
 void BaseGame::Update()
 {
 	// メッセージ処理
-	if (win->ProcessMessage())
+	if (win_->ProcessMessage())
 	{
-		endRequst = true;
+		endRequst_ = true;
 		return;
 	}
 
@@ -97,17 +97,17 @@ void BaseGame::Update()
 void BaseGame::Draw()
 {
 
-	postEffect->PreDrawScene(DirectXCommon::GetInstance()->GetCommandList());
+	postEffect_->PreDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// ゲームシーンの描画
 	SceneManager::GetInstance()->EffectDraw();
 
-	postEffect->PostDrawScene(DirectXCommon::GetInstance()->GetCommandList());
+	postEffect_->PostDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// 描画開始
 	DirectXCommon::GetInstance()->PreDraw();
 
-	postEffect->Draw(DirectXCommon::GetInstance()->GetCommandList());
+	postEffect_->Draw(DirectXCommon::GetInstance()->GetCommandList());
 	SceneManager::GetInstance()->Draw();
 	// 描画終了
 	DirectXCommon::GetInstance()->PostDraw();
