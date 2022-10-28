@@ -46,7 +46,7 @@ void MapChip::CsvLoad(int mapChipMaxX, int mapChipMaxY, std::string fName)
 	//Yの最大値を保存
 	tempData.mapChipMaxY = mapChipMaxY;
 	//データ構造体に保存
-	mapData.push_back(tempData);
+	mapData_.push_back(tempData);
 }
 
 int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
@@ -55,34 +55,34 @@ int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 	const int Y = y / mapChipSize;
 	int count = 0;
 
-	for (int i = 0; i < mapData.size(); i++)
+	for (int i = 0; i < mapData_.size(); i++)
 	{
-		if (mapData[i].mapName == baseDirectory + fName + ".csv")
+		if (mapData_[i].mapName == baseDirectory + fName + ".csv")
 		{
 			break;
 		}
 		count++;
 	}
 
-	if (X < 0 || X >= mapData[count].mapChipMaxX || Y < 0 || Y >= mapData[count].mapChipMaxY)
+	if (X < 0 || X >= mapData_[count].mapChipMaxX || Y < 0 || Y >= mapData_[count].mapChipMaxY)
 	{
 		assert(0);
 	}
 
-	std::vector<int> map = mapData[count].mapCsvNumber;
+	std::vector<int> map = mapData_[count].mapCsvNumber;
 
-	return map[Y * mapData[count].mapChipMaxX + X];
+	return map[Y * mapData_[count].mapChipMaxX + X];
 }
 
 const XMFLOAT2& MapChip::GetMapChipMaxXY(std::string fName)
 {
 	int count = 0;
 
-	for (int i = 0; i < mapData.size(); i++)
+	for (int i = 0; i < mapData_.size(); i++)
 	{
-		if (mapData[i].mapName == baseDirectory + fName + ".csv")
+		if (mapData_[i].mapName == baseDirectory + fName + ".csv")
 		{
-			return XMFLOAT2(mapData[count].mapChipMaxX, mapData[count].mapChipMaxY);
+			return XMFLOAT2(mapData_[count].mapChipMaxX, mapData_[count].mapChipMaxY);
 		}
 		count++;
 	}

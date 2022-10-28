@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
@@ -49,5 +50,5 @@ public:
 	const XMFLOAT2& GetMapChipMaxXY(std::string fName);
 
 private:
-	std::vector<MapChipData> mapData;
+	std::vector<MapChipData> mapData_;
 };

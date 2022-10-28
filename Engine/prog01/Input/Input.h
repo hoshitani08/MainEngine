@@ -3,10 +3,10 @@
 #include <Windows.h>
 #include <wrl.h>
 #include <DirectXMath.h>
-
-#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include <xinput.h>
+
+#define DIRECTINPUT_VERSION 0x0800
 
 #pragma comment (lib, "xinput.lib")
 
@@ -66,8 +66,8 @@ public: //メンバ関数
 	double PadStickAngle();
 	double PadRightStickAngle();
 	//振動のフラグ設定
-	void SetVibration(bool _vibration) { vibrationFlag = _vibration; }
-	void SetVibrationPower(int _vibrationPower) { vibrationPower = _vibrationPower; }
+	void SetVibration(bool _vibration) { vibrationFlag_ = _vibration; }
+	void SetVibrationPower(int _vibrationPower) { vibrationPower_ = _vibrationPower; }
 	// キーの左ボタントリガーをチェック
 	bool TriggerPadLeft();
 	// キーの右ボタントリガーをチェック
@@ -106,35 +106,35 @@ public:
 
 private: //メンバ変数
 	//キーボード
-	ComPtr<IDirectInput8> dinput;
-	ComPtr<IDirectInputDevice8> devkeyboard;
-	BYTE key[256] = {};
-	BYTE keyPre[256] = {};
+	ComPtr<IDirectInput8> dinput_;
+	ComPtr<IDirectInputDevice8> devkeyboard_;
+	BYTE key_[256] = {};
+	BYTE keyPre_[256] = {};
 
 	//dゲームパッド
-	ComPtr<IDirectInput8> dinputPad;
-	ComPtr<IDirectInputDevice8> devGamePad;
-	LPVOID parameter;
+	ComPtr<IDirectInput8> dinputPad_;
+	ComPtr<IDirectInputDevice8> devGamePad_;
+	LPVOID parameter_;
 	// 軸モードを絶対値モードとして設定
-	DIPROPDWORD diprop;
+	DIPROPDWORD diprop_;
 	// 値の範囲設定
-	DIPROPRANGE diprg;
+	DIPROPRANGE diprg_;
 	// 無反応範囲
-	float angle = 200;
+	float angle_ = 200;
 	// 入力情報
-	DIJOYSTATE padData;
-	DIJOYSTATE padDataPre;
+	DIJOYSTATE padData_;
+	DIJOYSTATE padDataPre_;
 	//接続確認
-	bool padFlag = true;
+	bool padFlag_ = true;
 	//xゲームパッド
-	XINPUT_STATE state;
-	XINPUT_STATE statePre;
-	bool vibrationFlag = false;
-	XINPUT_VIBRATION vibration;
-	int vibrationPower = 65535;
+	XINPUT_STATE state_;
+	XINPUT_STATE statePre_;
+	bool vibrationFlag_ = false;
+	XINPUT_VIBRATION vibration_;
+	int vibrationPower_ = 65535;
 
 	//マウス
-	ComPtr<IDirectInputDevice8> devMouse;
-	DIMOUSESTATE2 mouseState = {};
-	DIMOUSESTATE2 mouseStatePre = {};
+	ComPtr<IDirectInputDevice8> devMouse_;
+	DIMOUSESTATE2 mouseState_ = {};
+	DIMOUSESTATE2 mouseStatePre_ = {};
 };

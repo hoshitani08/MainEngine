@@ -51,11 +51,11 @@ bool Player::Initialize()
 void Player::Update()
 {
 	// A,Dで旋回
-	if (input->PushKey(DIK_A))
+	if (input_->PushKey(DIK_A))
 	{
 		rotation_.y -= 2.0f;
 	}
-	else if (input->PushKey(DIK_D))
+	else if (input_->PushKey(DIK_D))
 	{
 		rotation_.y += 2.0f;
 	}
@@ -66,13 +66,13 @@ void Player::Update()
 	move = XMVector3TransformNormal(move, matRot);
 
 	// 向いている方向に移動
-	if (input->PushKey(DIK_S))
+	if (input_->PushKey(DIK_S))
 	{
 		position_.x -= move.m128_f32[0];
 		position_.y -= move.m128_f32[1];
 		position_.z -= move.m128_f32[2];
 	}
-	else if (input->PushKey(DIK_W))
+	else if (input_->PushKey(DIK_W))
 	{
 		position_.x += move.m128_f32[0];
 		position_.y += move.m128_f32[1];
@@ -80,24 +80,24 @@ void Player::Update()
 	}
 
 	// 落下処理
-	if (!onGround)
+	if (!onGround_)
 	{
 		// 下向き加速度
 		const float fallAcc = -0.01f;
 		const float fallVYMin = -0.5f;
 		// 加速
-		fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
+		fallV_.m128_f32[1] = max(fallV_.m128_f32[1] + fallAcc, fallVYMin);
 		// 移動
-		position_.x += fallV.m128_f32[0];
-		position_.y += fallV.m128_f32[1];
-		position_.z += fallV.m128_f32[2];
+		position_.x += fallV_.m128_f32[0];
+		position_.y += fallV_.m128_f32[1];
+		position_.z += fallV_.m128_f32[2];
 	}
 	// ジャンプ操作
-	else if (input->TriggerKey(DIK_SPACE))
+	else if (input_->TriggerKey(DIK_SPACE))
 	{
-		onGround = false;
+		onGround_ = false;
 		const float jumpVYFist = 0.2f; //ジャンプ時上向き初速
-		fallV = { 0, jumpVYFist, 0, 0 };
+		fallV_ = { 0, jumpVYFist, 0, 0 };
 	}
 
 	//コライダー更新
@@ -165,7 +165,7 @@ void Player::Update()
 	RaycastHit raycastHit;
 
 	// 接地状態
-	if (onGround)
+	if (onGround_)
 	{
 		// スムーズに坂を下る為の吸着距離
 		const float adsDistance = 0.2f;
@@ -173,7 +173,7 @@ void Player::Update()
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE,
 			&raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance))
 		{
-			onGround = true;
+			onGround_ = true;
 			position_.y -= (raycastHit.distance_ - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();
@@ -181,18 +181,18 @@ void Player::Update()
 		// 地面がないので落下
 		else
 		{
-			onGround = false;
-			fallV = {};
+			onGround_ = false;
+			fallV_ = {};
 		}
 	}
 	// 落下状態
-	else if (fallV.m128_f32[1] <= 0.0f)
+	else if (fallV_.m128_f32[1] <= 0.0f)
 	{
 		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE,
 			&raycastHit, sphereCollider->GetRadius() * 2.0f))
 		{
 			// 着地
-			onGround = true;
+			onGround_ = true;
 			position_.y -= (raycastHit.distance_ - sphereCollider->GetRadius() * 2.0f);
 			// 行列の更新など
 			Object3d::Update();

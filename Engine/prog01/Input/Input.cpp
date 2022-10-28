@@ -13,7 +13,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	//初期化（一度だけ行う処理）
 	result = DirectInput8Create
 	(
-		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, nullptr
+		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput_, nullptr
 	);
 	if (FAILED(result))
 	{
@@ -23,7 +23,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 
 #pragma region キーボード
 	//キーボードデバイスの生成
-	result = dinput->CreateDevice(GUID_SysKeyboard, &devkeyboard, NULL);
+	result = dinput_->CreateDevice(GUID_SysKeyboard, &devkeyboard_, NULL);
 	if (FAILED(result))
 	{
 		assert(0);
@@ -31,7 +31,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	}
 
 	//入力データ形式のセット
-	result = devkeyboard->SetDataFormat(&c_dfDIKeyboard);
+	result = devkeyboard_->SetDataFormat(&c_dfDIKeyboard);
 	if (FAILED(result))
 	{
 		assert(0);
@@ -39,7 +39,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	}
 
 	//排他制御レベルのセット
-	result = devkeyboard->SetCooperativeLevel
+	result = devkeyboard_->SetCooperativeLevel
 	(
 		hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY
 	);
@@ -51,7 +51,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 #pragma endregion
 #pragma region マウス
 	// マウスデバイスの生成	
-	result = dinput->CreateDevice(GUID_SysMouse, &devMouse, NULL);
+	result = dinput_->CreateDevice(GUID_SysMouse, &devMouse_, NULL);
 	if (FAILED(result))
 	{
 		assert(0);
@@ -59,7 +59,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	}
 
 	// 入力データ形式のセット
-	result = devMouse->SetDataFormat(&c_dfDIMouse2); // 標準形式
+	result = devMouse_->SetDataFormat(&c_dfDIMouse2); // 標準形式
 	if (FAILED(result))
 	{
 		assert(0);
@@ -67,7 +67,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	}
 
 	// 排他制御レベルのセット
-	result = devMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = devMouse_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	if (FAILED(result))
 	{
 		assert(0);
@@ -78,7 +78,7 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	//初期化（一度だけ行う処理）
 	result = DirectInput8Create
 	(
-		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinputPad, nullptr
+		hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinputPad_, nullptr
 	);
 	if (FAILED(result))
 	{
@@ -87,22 +87,22 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 	}
 
 	// デバイスの列挙
-	if (FAILED(dinputPad->EnumDevices(DI8DEVTYPE_GAMEPAD, DeviceFindCallBack, &parameter, DIEDFL_ATTACHEDONLY)))
+	if (FAILED(dinputPad_->EnumDevices(DI8DEVTYPE_GAMEPAD, DeviceFindCallBack, &parameter_, DIEDFL_ATTACHEDONLY)))
 	{
 		assert(0);
 		return result;
 	}
 
-	result = dinputPad->CreateDevice(GUID_Joystick, &devGamePad, NULL);
+	result = dinputPad_->CreateDevice(GUID_Joystick, &devGamePad_, NULL);
 	if (FAILED(result))
 	{
-		padFlag = false;
+		padFlag_ = false;
 	}
 
-	if (padFlag == true)
+	if (padFlag_ == true)
 	{
 		// デバイスのフォーマットの設定
-		result = devGamePad->SetDataFormat(&c_dfDIJoystick);
+		result = devGamePad_->SetDataFormat(&c_dfDIJoystick);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -111,13 +111,13 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 
 		// 軸モードを絶対値モードとして設定
 		//ZeroMemory(&diprop, sizeof(diprop));
-		diprop.diph.dwSize = sizeof(diprop);
-		diprop.diph.dwHeaderSize = sizeof(diprop.diph);
-		diprop.diph.dwHow = DIPH_DEVICE;
-		diprop.diph.dwObj = 0;
-		diprop.dwData = DIPROPAXISMODE_ABS;	// 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
+		diprop_.diph.dwSize = sizeof(diprop_);
+		diprop_.diph.dwHeaderSize = sizeof(diprop_.diph);
+		diprop_.diph.dwHow = DIPH_DEVICE;
+		diprop_.diph.dwObj = 0;
+		diprop_.dwData = DIPROPAXISMODE_ABS;	// 絶対値モードの指定(DIPROPAXISMODE_RELにしたら相対値)
 		// 軸モードを変更
-		result = devGamePad->SetProperty(DIPROP_AXISMODE, &diprop.diph);
+		result = devGamePad_->SetProperty(DIPROP_AXISMODE, &diprop_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -125,14 +125,14 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 		}
 
 		// X軸の値の範囲設定
-		ZeroMemory(&diprg, sizeof(diprg));
-		diprg.diph.dwSize = sizeof(diprg);
-		diprg.diph.dwHeaderSize = sizeof(diprg.diph);
-		diprg.diph.dwHow = DIPH_BYOFFSET;
-		diprg.diph.dwObj = DIJOFS_X;
-		diprg.lMin = -1000;
-		diprg.lMax = 1000;
-		result = devGamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+		ZeroMemory(&diprg_, sizeof(diprg_));
+		diprg_.diph.dwSize = sizeof(diprg_);
+		diprg_.diph.dwHeaderSize = sizeof(diprg_.diph);
+		diprg_.diph.dwHow = DIPH_BYOFFSET;
+		diprg_.diph.dwObj = DIJOFS_X;
+		diprg_.lMin = -1000;
+		diprg_.lMax = 1000;
+		result = devGamePad_->SetProperty(DIPROP_RANGE, &diprg_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -140,8 +140,8 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 		}
 
 		// Y軸の値の範囲設定
-		diprg.diph.dwObj = DIJOFS_Y;
-		result = devGamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+		diprg_.diph.dwObj = DIJOFS_Y;
+		result = devGamePad_->SetProperty(DIPROP_RANGE, &diprg_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -149,8 +149,8 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 		}
 
 		// Z軸の値の範囲設定
-		diprg.diph.dwObj = DIJOFS_Z;
-		result = devGamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+		diprg_.diph.dwObj = DIJOFS_Z;
+		result = devGamePad_->SetProperty(DIPROP_RANGE, &diprg_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -158,8 +158,8 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 		}
 
 		// RX軸の値の範囲設定
-		diprg.diph.dwObj = DIJOFS_RX;
-		result = devGamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+		diprg_.diph.dwObj = DIJOFS_RX;
+		result = devGamePad_->SetProperty(DIPROP_RANGE, &diprg_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -167,15 +167,15 @@ bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 		}
 
 		// RY軸の値の範囲設定
-		diprg.diph.dwObj = DIJOFS_RY;
-		result = devGamePad->SetProperty(DIPROP_RANGE, &diprg.diph);
+		diprg_.diph.dwObj = DIJOFS_RY;
+		result = devGamePad_->SetProperty(DIPROP_RANGE, &diprg_.diph);
 		if (FAILED(result))
 		{
 			assert(0);
 			return result;
 		}
 
-		result = devGamePad->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+		result = devGamePad_->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 		if (FAILED(result))
 		{
 			assert(0);
@@ -193,34 +193,34 @@ void Input::Update()
 
 #pragma region キーボード
 	//キーボード情報の取得開始
-	result = devkeyboard->Acquire();
+	result = devkeyboard_->Acquire();
 	// 前回のキー入力を保存
-	memcpy(keyPre, key, sizeof(key));
+	memcpy(keyPre_, key_, sizeof(key_));
 	//全キーの入力状態を取得する
-	result = devkeyboard->GetDeviceState(sizeof(key), key);
+	result = devkeyboard_->GetDeviceState(sizeof(key_), key_);
 #pragma endregion
 #pragma region マウス
 	//マウス情報の取得開始
-	result = devMouse->Acquire();
+	result = devMouse_->Acquire();
 	// 前回のキー入力を保存
-	memcpy(&mouseStatePre, &mouseState, sizeof(mouseState));
+	memcpy(&mouseStatePre_, &mouseState_, sizeof(mouseState_));
 	//マウスの入力状態を取得する
-	result = devMouse->GetDeviceState(sizeof(mouseState), &mouseState);
+	result = devMouse_->GetDeviceState(sizeof(mouseState_), &mouseState_);
 #pragma endregion
 #pragma region ゲームパッド
-	if (padFlag == true)
+	if (padFlag_ == true)
 	{
 		// 制御開始
-		result = devGamePad->Acquire();
+		result = devGamePad_->Acquire();
 		// 前回のキー入力を保存
-		memcpy(&padDataPre, &padData, sizeof(padData));
+		memcpy(&padDataPre_, &padData_, sizeof(padData_));
 		// ゲームパッドの入力情報取得
-		result = devGamePad->GetDeviceState(sizeof(padData), &padData);
+		result = devGamePad_->GetDeviceState(sizeof(padData_), &padData_);
 	}
 
 	// 前回のキー入力を保存
-	memcpy(&statePre, &state, sizeof(state));
-	XInputGetState(0, &state);
+	memcpy(&statePre_, &state_, sizeof(state_));
+	XInputGetState(0, &state_);
 	Vibration();
 #pragma endregion
 }
@@ -231,7 +231,7 @@ bool Input::PushKey(BYTE keyNumber)
 	assert(0 <= keyNumber && keyNumber <= 256);
 
 	// 0でなければ押している
-	if (key[keyNumber])
+	if (key_[keyNumber])
 	{
 		return true;
 	}
@@ -246,7 +246,7 @@ bool Input::TriggerKey(BYTE keyNumber)
 	assert(0 <= keyNumber && keyNumber <= 256);
 
 	// 前回が0で、今回が0でなければトリガー
-	if (!keyPre[keyNumber] && key[keyNumber])
+	if (!keyPre_[keyNumber] && key_[keyNumber])
 	{
 		return true;
 	}
@@ -262,8 +262,8 @@ BOOL CALLBACK Input::DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 
 XMFLOAT2& Input::PadStickGradient()
 {
-	float x = padData.lX / 1000.0f;
-	float y = padData.lY / 1000.0f;
+	float x = padData_.lX / 1000.0f;
+	float y = padData_.lY / 1000.0f;
 
 	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
 	{
@@ -279,8 +279,8 @@ XMFLOAT2& Input::PadStickGradient()
 
 XMFLOAT2& Input::PadRightStickGradient()
 {
-	float x = padData.lRx / 1000.0f;
-	float y = padData.lRy / 1000.0f;
+	float x = padData_.lRx / 1000.0f;
+	float y = padData_.lRy / 1000.0f;
 
 	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
 	{
@@ -296,19 +296,19 @@ XMFLOAT2& Input::PadRightStickGradient()
 
 double Input::PadStickAngle()
 {
-	double radian = atan2(padData.lY - 0, padData.lX - 0);
+	double radian = atan2(padData_.lY - 0, padData_.lX - 0);
 	return radian * (180.0f / 3.14159265359f);
 }
 
 double Input::PadRightStickAngle()
 {
-	double radian = atan2(padData.lRy - 0, padData.lRx - 0);
+	double radian = atan2(padData_.lRy - 0, padData_.lRx - 0);
 	return radian * (180.0f / 3.14159265359f);
 }
 
 bool Input::TriggerPadLeft()
 {
-	if (padData.lZ > angle)
+	if (padData_.lZ > angle_)
 	{
 		return true;
 	}
@@ -318,7 +318,7 @@ bool Input::TriggerPadLeft()
 
 bool Input::TriggerPadRight()
 {
-	if (padData.lZ < -angle)
+	if (padData_.lZ < -angle_)
 	{
 		return true;
 	}
@@ -329,15 +329,15 @@ bool Input::TriggerPadRight()
 bool Input::PushPadKey(PadKey keyNumber)
 {
 	// 0でなければ押している
-	if (padData.rgbButtons[keyNumber])
+	if (padData_.rgbButtons[keyNumber])
 	{
 		return true;
 	}
 	else
 	{
 		// 角度を利用した方法
-		float mainRad = XMConvertToRadians((padData.rgdwPOV[0] / 100.0f));
-		float sabRad = XMConvertToRadians((padDataPre.rgdwPOV[0] / 100.0f));
+		float mainRad = XMConvertToRadians((padData_.rgdwPOV[0] / 100.0f));
+		float sabRad = XMConvertToRadians((padDataPre_.rgdwPOV[0] / 100.0f));
 
 		float x = sinf(mainRad);
 		float y = cosf(mainRad);
@@ -367,15 +367,15 @@ bool Input::PushPadKey(PadKey keyNumber)
 bool Input::TriggerPadKey(PadKey keyNumber)
 {
 	// 前回が0で、今回が0でなければトリガー
-	if (!padDataPre.rgbButtons[keyNumber] && padData.rgbButtons[keyNumber])
+	if (!padDataPre_.rgbButtons[keyNumber] && padData_.rgbButtons[keyNumber])
 	{
 		return true;
 	}
 	else
 	{
 		// 角度を利用した方法
-		float mainRad = XMConvertToRadians((padData.rgdwPOV[0] / 100.0f));
-		float sabRad = XMConvertToRadians((padDataPre.rgdwPOV[0] / 100.0f));
+		float mainRad = XMConvertToRadians((padData_.rgdwPOV[0] / 100.0f));
+		float sabRad = XMConvertToRadians((padDataPre_.rgdwPOV[0] / 100.0f));
 
 		float x = sinf(mainRad);
 		float x2 = sinf(sabRad);
@@ -408,7 +408,7 @@ bool Input::TriggerPadKey(PadKey keyNumber)
 bool Input::PushMouseLeft()
 {
 	// 0でなければ押している
-	if (mouseState.rgbButtons[0])
+	if (mouseState_.rgbButtons[0])
 	{
 		return true;
 	}
@@ -420,7 +420,7 @@ bool Input::PushMouseLeft()
 bool Input::PushMouseMiddle()
 {
 	// 0でなければ押している
-	if (mouseState.rgbButtons[2])
+	if (mouseState_.rgbButtons[2])
 	{
 		return true;
 	}
@@ -432,7 +432,7 @@ bool Input::PushMouseMiddle()
 bool Input::PushMouseRight()
 {
 	// 0でなければ押している
-	if (mouseState.rgbButtons[1])
+	if (mouseState_.rgbButtons[1])
 	{
 		return true;
 	}
@@ -444,7 +444,7 @@ bool Input::PushMouseRight()
 bool Input::TriggerMouseLeft()
 {
 	// 前回が0で、今回が0でなければトリガー
-	if (!mouseStatePre.rgbButtons[0] && mouseState.rgbButtons[0])
+	if (!mouseStatePre_.rgbButtons[0] && mouseState_.rgbButtons[0])
 	{
 		return true;
 	}
@@ -456,7 +456,7 @@ bool Input::TriggerMouseLeft()
 bool Input::TriggerMouseMiddle()
 {
 	// 前回が0で、今回が0でなければトリガー
-	if (!mouseStatePre.rgbButtons[2] && mouseState.rgbButtons[2])
+	if (!mouseStatePre_.rgbButtons[2] && mouseState_.rgbButtons[2])
 	{
 		return true;
 	}
@@ -468,7 +468,7 @@ bool Input::TriggerMouseMiddle()
 bool Input::TriggerMouseRight()
 {
 	// 前回が0で、今回が0でなければトリガー
-	if (!mouseStatePre.rgbButtons[1] && mouseState.rgbButtons[1])
+	if (!mouseStatePre_.rgbButtons[1] && mouseState_.rgbButtons[1])
 	{
 		return true;
 	}
@@ -479,10 +479,10 @@ bool Input::TriggerMouseRight()
 
 Input::MouseMove Input::GetMouseMove()
 {
-	MouseMove tmp;
-	tmp.lX = mouseState.lX;
-	tmp.lY = mouseState.lY;
-	tmp.lZ = mouseState.lZ;
+	MouseMove tmp = {};
+	tmp.lX = mouseState_.lX;
+	tmp.lY = mouseState_.lY;
+	tmp.lZ = mouseState_.lZ;
 	return tmp;
 }
 
@@ -496,15 +496,15 @@ Input::~Input()
 
 void Input::Vibration()
 {
-	if (!vibrationFlag)
+	if (!vibrationFlag_)
 	{
-		vibration.wLeftMotorSpeed = 0;
-		XInputSetState(0, &vibration);
+		vibration_.wLeftMotorSpeed = 0;
+		XInputSetState(0, &vibration_);
 	}
-	else if (vibrationFlag)
+	else if (vibrationFlag_)
 	{
-		vibration.wLeftMotorSpeed = vibrationPower;
-		XInputSetState(0, &vibration);
+		vibration_.wLeftMotorSpeed = vibrationPower_;
+		XInputSetState(0, &vibration_);
 	}
 }
 

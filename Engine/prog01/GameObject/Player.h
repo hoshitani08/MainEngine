@@ -18,14 +18,14 @@ public:
 	// 衝突時コールバック関数
 	void OnCollision(const CollisionInfo& info) override;
 	// マネージャーの設定
-	void SetParticleManager(ParticleManager* particleMan) { this->particleMan = particleMan; }
-	void SetInput(Input* input) { this->input = input; }
+	void SetParticleManager(ParticleManager* particleMan) { particleMan_ = particleMan; }
+	void SetInput(Input* input) { input_ = input; }
 
 private: // メンバ変数
-	ParticleManager* particleMan = nullptr;
-	Input* input = nullptr;
+	ParticleManager* particleMan_ = nullptr;
+	Input* input_ = nullptr;
 	//接地フラグ
-	bool onGround = true;
+	bool onGround_ = true;
 	// 落下ベクトル
-	DirectX::XMVECTOR fallV;
+	DirectX::XMVECTOR fallV_;
 };
