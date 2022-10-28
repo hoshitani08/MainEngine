@@ -18,10 +18,10 @@ DebugText* DebugText::GetInstance()
 void DebugText::Initialize(UINT texnumber)
 {
 	// 全てのスプライトデータについて
-	for (int i = 0; i < _countof(spriteDatas); i++)
+	for (int i = 0; i < _countof(spriteDatas_); i++)
 	{
 		// スプライトを生成する
-		spriteDatas[i] = Sprite::Create(texnumber, { 0,0 });
+		spriteDatas_[i] = Sprite::Create(texnumber, { 0,0 });
 	}
 }
 
@@ -32,7 +32,7 @@ void DebugText::Print(const std::string& text, float x, float y, float scale = 1
 	for (int i = 0; i < text.size(); i++)
 	{
 		// 最大文字数超過
-		if (spriteIndex >= maxCharCount)
+		if (spriteIndex_ >= MAX_CHAR_COUNT)
 		{
 			break;
 		}
@@ -46,27 +46,27 @@ void DebugText::Print(const std::string& text, float x, float y, float scale = 1
 			fontIndex = 0;
 		}
 
-		int fontIndexY = fontIndex / fontLineCount;
-		int fontIndexX = fontIndex % fontLineCount;
+		int fontIndexY = fontIndex / FONT_LINECOUNT;
+		int fontIndexX = fontIndex % FONT_LINECOUNT;
 
 		// 座標計算
-		spriteDatas[spriteIndex]->SetPosition({ x + fontWidth * scale * i, y });
-		spriteDatas[spriteIndex]->SetTextureRect({ (float)fontIndexX * fontWidth, (float)fontIndexY * fontHeight }, { (float)fontWidth, (float)fontHeight });
-		spriteDatas[spriteIndex]->SetSize({ fontWidth * scale, fontHeight * scale });
+		spriteDatas_[spriteIndex_]->SetPosition({ x + FONT_WIDTH * scale * i, y });
+		spriteDatas_[spriteIndex_]->SetTextureRect({ (float)fontIndexX * FONT_WIDTH, (float)fontIndexY * FONT_HEIGHT }, { (float)FONT_WIDTH, (float)FONT_HEIGHT });
+		spriteDatas_[spriteIndex_]->SetSize({ FONT_WIDTH * scale, FONT_HEIGHT * scale });
 
 		// 文字を１つ進める
-		spriteIndex++;
+		spriteIndex_++;
 	}
 }
 
 void DebugText::VariablePrint(float x, float y, const std::string& text, float i, float size = 1.0f)
 {
-	variable.m128_f32[0] = i;
+	variable_.m128_f32[0] = i;
 
 	std::ostringstream spherestr;
 	spherestr << text + " : "
 		<< std::fixed << std::setprecision(2)
-		<< variable.m128_f32[0];
+		<< variable_.m128_f32[0];
 
 	Print(spherestr.str(), x, y, size);
 }
@@ -75,11 +75,11 @@ void DebugText::VariablePrint(float x, float y, const std::string& text, float i
 void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdList)
 {
 	// 全ての文字のスプライトについて
-	for (int i = 0; i < spriteIndex; i++)
+	for (int i = 0; i < spriteIndex_; i++)
 	{
 		// スプライト描画
-		spriteDatas[i]->Draw();
+		spriteDatas_[i]->Draw();
 	}
 
-	spriteIndex = 0;
+	spriteIndex_ = 0;
 }

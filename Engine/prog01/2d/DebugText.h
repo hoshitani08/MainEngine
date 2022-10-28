@@ -14,10 +14,10 @@ private: // エイリアス
 
 public:
 	// デバッグテキスト用のテクスチャ番号を指定
-	static const int maxCharCount = 256; // 最大文字数
-	static const int fontWidth = 9; // フォント画像内1文字分の横幅
-	static const int fontHeight = 18; // フォント画像内1文字分の縦幅
-	static const int fontLineCount = 14; // フォント画像内1行分の文字数
+	static const int MAX_CHAR_COUNT = 256; // 最大文字数
+	static const int FONT_WIDTH = 9; // フォント画像内1文字分の横幅
+	static const int FONT_HEIGHT = 18; // フォント画像内1文字分の縦幅
+	static const int FONT_LINECOUNT = 14; // フォント画像内1行分の文字数
 
 public:// 静的メンバ関数
 	static DebugText* GetInstance();
@@ -41,9 +41,9 @@ private:
 
 private:
 	// スプライトデータの配列
-	std::unique_ptr<Sprite> spriteDatas[maxCharCount];
+	std::unique_ptr<Sprite> spriteDatas_[MAX_CHAR_COUNT];
 	// スプライトデータ配列の添え字番号
-	int spriteIndex = 0;
+	int spriteIndex_ = 0;
 
-	XMVECTOR variable;
+	XMVECTOR variable_;
 };

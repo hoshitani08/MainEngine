@@ -77,7 +77,7 @@ public: // メンバ関数
 	// サイズの設定
 	void SetSize(XMFLOAT2 size);
 	// サイズの取得
-	const XMFLOAT2& GetSize() { return size; }
+	const XMFLOAT2& GetSize() { return size_; }
 	// アンカーポイントの設定
 	void SetAnchorPoint(XMFLOAT2 anchorpoint);
 	// 左右反転の設定
@@ -91,33 +91,33 @@ public: // メンバ関数
 
 private: // メンバ変数
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView{};
+	D3D12_VERTEX_BUFFER_VIEW vbView_ = {};
 	// テクスチャ番号
-	UINT texNumber = 0;
+	UINT texNumber_ = 0;
 	// Z軸回りの回転角
-	float rotation = 0.0f;
+	float rotation_ = 0.0f;
 	// 座標
-	XMFLOAT2 position{};
+	XMFLOAT2 position_ = {};
 	// スプライト幅、高さ
-	XMFLOAT2 size = { 100.0f, 100.0f };
+	XMFLOAT2 size_ = { 100.0f, 100.0f };
 	// アンカーポイント
-	XMFLOAT2 anchorpoint = { 0, 0 };
+	XMFLOAT2 anchorpoint_ = { 0, 0 };
 	// ワールド行列
-	XMMATRIX matWorld{};
+	XMMATRIX matWorld_ = {};
 	// 色
-	XMFLOAT4 color = { 1, 1, 1, 1 };
+	XMFLOAT4 color_ = { 1, 1, 1, 1 };
 	// 左右反転
-	bool isFlipX = false;
+	bool isFlipX_ = false;
 	// 上下反転
-	bool isFlipY = false;
+	bool isFlipY_ = false;
 	// テクスチャ始点
-	XMFLOAT2 texBase = { 0, 0 };
+	XMFLOAT2 texBase_ = { 0, 0 };
 	// テクスチャ幅、高さ
-	XMFLOAT2 texSize = { 100.0f, 100.0f };
+	XMFLOAT2 texSize_ = { 100.0f, 100.0f };
 
 private: // メンバ関数
 	// 頂点データ転送
