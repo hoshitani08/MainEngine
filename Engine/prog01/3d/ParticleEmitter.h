@@ -1,9 +1,9 @@
 #pragma once
 
+#include <memory>
+
 #include "ParticleManager.h"
 #include "ObjParticle.h"
-
-#include <memory>
 
 class ParticleEmitter
 {
@@ -32,18 +32,18 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 	// 座標の設定
-	void SetCenter(const float md_pos) { md_pos_ = md_pos; }
+	void SetCenter(const float mdPos) { mdPos_ = mdPos; }
 	// 速度の設定
-	void SetVelocity(float md_vel) { md_vel_ = md_vel; }
+	void SetVelocity(float mdVel) { mdVel_ = mdVel; }
 	// 加速度の設定
-	void SetAccel(float md_acc) { md_acc_ = md_acc; }
+	void SetAccel(float mdAcc) { mdAcc_ = mdAcc; }
 	// スケールの設定
-	void SetObjScale(XMFLOAT3 objScale) { os_scale = objScale; }
+	void SetObjScale(XMFLOAT3 objStartScale) { objStartScale_ = objStartScale; }
 
 	//色(RGBA)初期値の設定
-	void SetStartColor(XMFLOAT4 s_color) { s_color_ = s_color; }
+	void SetStartColor(XMFLOAT4 s_color) { startColor_ = s_color; }
 	//色(RGBA)最終値の設定
-	void SetEndColor(XMFLOAT4 e_color) { e_color_ = e_color; }
+	void SetEndColor(XMFLOAT4 e_color) { endColor_ = e_color; }
 	// マネージャーの設定
 	void SetParticleManager(ParticleManager* particleMan) { particleMan_ = particleMan; }
 	void SetObjParticle(ObjParticle* objParticle) { objParticle_ = objParticle; }
@@ -55,26 +55,22 @@ private: // メンバ変数
 	XMFLOAT3 velocity_ = {};
 	//加速度
 	XMFLOAT3 accel_ = {};
-	//現在フレーム
-	int frame_ = 0;
-	//終了フレーム
-	int num_frame_ = 0;
 	// スケール初期値
-	float s_scale_ = 1.0f;
-	XMFLOAT3 os_scale = { 1.0f, 1.0f, 1.0f };
+	float startScale_ = 1.0f;
+	XMFLOAT3 objStartScale_ = { 1.0f, 1.0f, 1.0f };
 	// スケール最終値
-	float e_scale_ = 0.0f;
-	XMFLOAT3 oe_scale = { 0.0f, 0.0f, 0.0f };
+	float endScale_ = 0.0f;
+	XMFLOAT3 objEndScale_ = { 0.0f, 0.0f, 0.0f };
 	// 色(RGBA)初期値
-	XMFLOAT4 s_color_ = { 1, 1, 1, 1};
+	XMFLOAT4 startColor_ = { 1, 1, 1, 1};
 	// 色(RGBA)最終値
-	XMFLOAT4 e_color_ = {};
+	XMFLOAT4 endColor_ = {};
 	//X,Y,Z全て[-5.0,+5.0]でランダムに分布
-	float md_pos_ = 10.0f;
+	float mdPos_ = 10.0f;
 	//X,Y,Z全て[-0.05,+0.05]でランダムに分布
-	float md_vel_ = 0.1f;
+	float mdVel_ = 0.1f;
 	//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-	float md_acc_ = 0.001f;
+	float mdAcc_ = 0.001f;
 
 	ParticleManager* particleMan_ = nullptr;
 	ObjParticle* objParticle_ = nullptr;

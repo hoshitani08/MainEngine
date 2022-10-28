@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DirectXMath.h>
 #include <memory>
 #include <iostream>
@@ -39,17 +40,15 @@ private: // エイリアス
 		//現在フレーム
 		int frame = 0;
 		//終了フレーム
-		int num_frame = 0;
-		// スケール
-		XMFLOAT3 scale = { 1.0f, 1.0f, 1.0f };
+		int numFrame = 0;
 		// 初期値
-		XMFLOAT3 s_scale = { 1.0f, 1.0f, 1.0f };
+		XMFLOAT3 startScale = { 1.0f, 1.0f, 1.0f };
 		// 最終値
-		XMFLOAT3 e_scale = { 0.0f, 0.0f, 0.0f };
+		XMFLOAT3 endScale = { 0.0f, 0.0f, 0.0f };
 		// 色(RGBA)初期値
-		XMFLOAT4 s_color = {};
+		XMFLOAT4 startColor = {};
 		// 色(RGBA)最終値
-		XMFLOAT4 e_color = {};
+		XMFLOAT4 endColor = {};
 	};
 
 public: // メンバ関数
@@ -62,7 +61,7 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//パーティクルの追加
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		XMFLOAT3 start_scale, XMFLOAT3 end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color, Model* model);
+		XMFLOAT3 startScale, XMFLOAT3 endScale, XMFLOAT4 startColor, XMFLOAT4 endColor, Model* model);
 
 private: // メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objParticle_;

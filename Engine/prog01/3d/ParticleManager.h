@@ -58,23 +58,23 @@ public: // サブクラス
 		//現在フレーム
 		int frame = 0;
 		//終了フレーム
-		int num_frame = 0;
+		int numFrame = 0;
 		// スケール
 		float scale = 1.0f;
 		// 初期値
-		float s_scale = 1.0f;
+		float startScale = 1.0f;
 		// 最終値
-		float e_scale = 0.0f;
+		float endScale = 0.0f;
 		// 色(RGBA)
 		XMFLOAT4 color = { 1, 1, 1, 1 };
 		// 色(RGBA)初期値
-		XMFLOAT4 s_color = {};
+		XMFLOAT4 startColor = {};
 		// 色(RGBA)最終値
-		XMFLOAT4 e_color = {};
+		XMFLOAT4 endColor = {};
 	};
 
 private: // 定数
-	static const int vertexCount = 65536; // 頂点数
+	static const int VERTEX_COUNT = 65536; // 頂点数
 
 public: // 静的メンバ関数
 	// 3Dオブジェクト生成
@@ -91,7 +91,7 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	//パーティクルの追加
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
-		float start_scale, float end_scale, XMFLOAT4 start_color, XMFLOAT4 end_color);
+		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
 	// デスクリプタヒープの初期化
 	void InitializeDescriptorHeap();
 	// テクスチャ読み込み
@@ -101,27 +101,27 @@ public: // メンバ関数
 
 private: // 静的メンバ変数
 	// デバイス
-	ID3D12Device* device = nullptr;
+	ID3D12Device* device_ = nullptr;
 	// デスクリプタサイズ
-	UINT descriptorHandleIncrementSize = 0u;
+	UINT descriptorHandleIncrementSize_ = 0u;
 	// デスクリプタヒープ
-	ComPtr<ID3D12DescriptorHeap> descHeap;
+	ComPtr<ID3D12DescriptorHeap> descHeap_;
 	// 頂点バッファ
-	ComPtr<ID3D12Resource> vertBuff;
+	ComPtr<ID3D12Resource> vertBuff_;
 	// テクスチャバッファ
-	ComPtr<ID3D12Resource> texbuff;
+	ComPtr<ID3D12Resource> texBuff_;
 	// シェーダリソースビューのハンドル(CPU)
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV_;
 	// シェーダリソースビューのハンドル(GPU)
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 	// 頂点バッファビュー
-	D3D12_VERTEX_BUFFER_VIEW vbView;
+	D3D12_VERTEX_BUFFER_VIEW vbView_;
 	// 定数バッファ
-	ComPtr<ID3D12Resource> constBuff;
+	ComPtr<ID3D12Resource> constBuff_;
 	//パーティクル配列
-	std::forward_list<Particle> particles;
+	std::forward_list<Particle> particles_;
 	// カメラ
-	Camera* camera = nullptr;
+	Camera* camera_ = nullptr;
 
 private:
 		ParticleManager(ID3D12Device* device, Camera* camera);
