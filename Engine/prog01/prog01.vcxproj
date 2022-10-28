@@ -78,12 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\</IncludePath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\</IncludePath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\</IncludePath>
     <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -309,6 +309,7 @@
     <ClCompile Include="3d\Model.cpp" />
     <ClCompile Include="3d\Object3d.cpp" />
     <ClCompile Include="3d\ObjFactory.cpp" />
+    <ClCompile Include="3d\ObjParticle.cpp" />
     <ClCompile Include="3d\ParticleEmitter.cpp" />
     <ClCompile Include="3d\ParticleManager.cpp" />
     <ClCompile Include="Audio\Audio.cpp" />
@@ -331,25 +332,26 @@
     <ClCompile Include="GameObject\Ease.cpp" />
     <ClCompile Include="GameObject\MapChip.cpp" />
     <ClCompile Include="GameObject\Player.cpp" />
-    <ClCompile Include="Hunter.cpp" />
     <ClCompile Include="Input\Input.cpp" />
-    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\BaseCalculate.cpp" />
     <ClCompile Include="Math\Vector.cpp" />
-    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="PlayGame\Hunter.cpp" />
+    <ClCompile Include="PlayGame\ItemManager.cpp" />
+    <ClCompile Include="PlayGame\Monster.cpp" />
+    <ClCompile Include="PlayGame\UserInterface.cpp" />
     <ClCompile Include="PmxLoader.cpp" />
     <ClCompile Include="PmxMaterial.cpp" />
     <ClCompile Include="PmxMesh.cpp" />
     <ClCompile Include="PmxModel.cpp" />
     <ClCompile Include="PmxObject3d.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="PostEffect\PostEffect.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\SceneFactory.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -367,6 +369,7 @@
     <ClInclude Include="3d\Model.h" />
     <ClInclude Include="3d\Object3d.h" />
     <ClInclude Include="3d\ObjFactory.h" />
+    <ClInclude Include="3d\ObjParticle.h" />
     <ClInclude Include="3d\ParticleEmitter.h" />
     <ClInclude Include="3d\ParticleManager.h" />
     <ClInclude Include="3d\PointLight.h" />
@@ -394,17 +397,19 @@
     <ClInclude Include="GameObject\Ease.h" />
     <ClInclude Include="GameObject\MapChip.h" />
     <ClInclude Include="GameObject\Player.h" />
-    <ClInclude Include="Hunter.h" />
     <ClInclude Include="Input\Input.h" />
-    <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="Math\BaseCalculate.h" />
     <ClInclude Include="Math\Vector.h" />
-    <ClInclude Include="Monster.h" />
+    <ClInclude Include="PlayGame\Hunter.h" />
+    <ClInclude Include="PlayGame\ItemManager.h" />
+    <ClInclude Include="PlayGame\Monster.h" />
+    <ClInclude Include="PlayGame\UserInterface.h" />
     <ClInclude Include="PmxLoader.h" />
     <ClInclude Include="PmxMaterial.h" />
     <ClInclude Include="PmxMesh.h" />
     <ClInclude Include="PmxModel.h" />
     <ClInclude Include="PmxObject3d.h" />
-    <ClInclude Include="PostEffect.h" />
+    <ClInclude Include="PostEffect\PostEffect.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />
     <ClInclude Include="Scene\ClearScene.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
@@ -412,7 +417,6 @@
     <ClInclude Include="Scene\SceneFactory.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

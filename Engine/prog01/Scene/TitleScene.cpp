@@ -30,7 +30,7 @@ void TitleScene::Initialize()
 
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get(), L"bubble");
-	bubble_ = ParticleEmitter::Create(particleMan_.get());
+	bubble_ = std::make_unique<ParticleEmitter>(particleMan_.get());
 	bubble_->SetCenter(100);
 
 	// 3Dオブジェクト生成

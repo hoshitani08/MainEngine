@@ -1,19 +1,16 @@
 #include "ParticleEmitter.h"
 
-std::unique_ptr<ParticleEmitter> ParticleEmitter::Create(ParticleManager* particleMan)
+ParticleEmitter::ParticleEmitter(ParticleManager* particleMan)
 {
-	ParticleEmitter* particleEmitter = new ParticleEmitter();
-	if (particleEmitter == nullptr)
-	{
-		return nullptr;
-	}
-
-	particleEmitter->SetParticleManager(particleMan);
-
-	return std::unique_ptr<ParticleEmitter>(particleEmitter);
+	particleMan_ = particleMan;
 }
 
-void ParticleEmitter::BubbleAdd(int count, int life, XMFLOAT3 position)
+ParticleEmitter::ParticleEmitter(ObjParticle* objParticle)
+{
+	objParticle_ = objParticle;
+}
+
+void ParticleEmitter::BubbleAdd(int count, int life, XMFLOAT3 position, Model* model)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -26,11 +23,19 @@ void ParticleEmitter::BubbleAdd(int count, int life, XMFLOAT3 position)
 		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚Ý[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
 
 		//’Ç‰Á
-		particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		if (particleMan_ != nullptr)
+		{
+			particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		}
+
+		if (objParticle_ != nullptr && model != nullptr)
+		{
+			objParticle_->Add(life, this->position_, velocity_, accel_, os_scale, oe_scale, s_color_, e_color_, model);
+		}
 	}
 }
 
-void ParticleEmitter::Add(int count, int life, XMFLOAT3 position)
+void ParticleEmitter::Add(int count, int life, XMFLOAT3 position, Model* model)
 {
 	for (int i = 0; i < count; i++)
 	{
@@ -46,16 +51,40 @@ void ParticleEmitter::Add(int count, int life, XMFLOAT3 position)
 		accel_.y = -(float)rand() / RAND_MAX * md_acc_;
 
 		//’Ç‰Á
-		particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		if (particleMan_ != nullptr)
+		{
+			particleMan_->Add(life, this->position_, velocity_, accel_, s_scale_, e_scale_, s_color_, e_color_);
+		}
+
+		if (objParticle_ != nullptr && model != nullptr)
+		{
+			objParticle_->Add(life, this->position_, velocity_, accel_, os_scale, oe_scale, s_color_, e_color_, model);
+		}
 	}
 }
 
 void ParticleEmitter::Update()
 {
-	particleMan_->Update();
+	if (particleMan_ != nullptr)
+	{
+		particleMan_->Update();
+	}
+
+	if (objParticle_ != nullptr)
+	{
+		objParticle_->Update();
+	}
 }
 
 void ParticleEmitter::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	particleMan_->Draw(cmdList);
+	if (particleMan_ != nullptr)
+	{
+		particleMan_->Draw(cmdList);
+	}
+
+	if (objParticle_ != nullptr)
+	{
+		objParticle_->Draw(cmdList);
+	}
 }

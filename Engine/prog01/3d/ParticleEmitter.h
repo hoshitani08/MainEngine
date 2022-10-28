@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ParticleManager.h"
+#include "ObjParticle.h"
 
 #include <memory>
 
@@ -16,12 +17,15 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // 静的メンバ関数
-	static std::unique_ptr<ParticleEmitter> Create(ParticleManager* particleMan);
+	//
 
 public: // メンバ関数
+	ParticleEmitter(ParticleManager* particleMan);
+	ParticleEmitter(ObjParticle* objParticle);
+
 	// 追加
-	void BubbleAdd(int count, int life, XMFLOAT3 position = { 0,0,0 });
-	void Add(int count, int life, XMFLOAT3 position = { 0,0,0 });
+	void BubbleAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	void Add(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
 	// 毎フレーム処理
 	void Update();
 	// 描画
@@ -33,12 +37,16 @@ public: // メンバ関数
 	void SetVelocity(float md_vel) { md_vel_ = md_vel; }
 	// 加速度の設定
 	void SetAccel(float md_acc) { md_acc_ = md_acc; }
+	// スケールの設定
+	void SetObjScale(XMFLOAT3 objScale) { os_scale = objScale; }
+
 	//色(RGBA)初期値の設定
 	void SetStartColor(XMFLOAT4 s_color) { s_color_ = s_color; }
 	//色(RGBA)最終値の設定
 	void SetEndColor(XMFLOAT4 e_color) { e_color_ = e_color; }
 	// マネージャーの設定
 	void SetParticleManager(ParticleManager* particleMan) { particleMan_ = particleMan; }
+	void SetObjParticle(ObjParticle* objParticle) { objParticle_ = objParticle; }
 
 private: // メンバ変数
 	//座標
@@ -53,8 +61,10 @@ private: // メンバ変数
 	int num_frame_ = 0;
 	// スケール初期値
 	float s_scale_ = 1.0f;
+	XMFLOAT3 os_scale = { 1.0f, 1.0f, 1.0f };
 	// スケール最終値
 	float e_scale_ = 0.0f;
+	XMFLOAT3 oe_scale = { 0.0f, 0.0f, 0.0f };
 	// 色(RGBA)初期値
 	XMFLOAT4 s_color_ = { 1, 1, 1, 1};
 	// 色(RGBA)最終値
@@ -67,4 +77,5 @@ private: // メンバ変数
 	float md_acc_ = 0.001f;
 
 	ParticleManager* particleMan_ = nullptr;
+	ObjParticle* objParticle_ = nullptr;
 };

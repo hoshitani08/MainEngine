@@ -218,8 +218,7 @@ void Object3d::SetCollider(BaseCollider* collider)
 
 XMFLOAT3 Object3d::GetWorldPosition()
 {
-	XMFLOAT3 worldpos;
-
+	XMFLOAT3 worldpos = {};
 	worldpos.x = matWorld.r[3].m128_f32[0];
 	worldpos.y = matWorld.r[3].m128_f32[1];
 	worldpos.z = matWorld.r[3].m128_f32[2];

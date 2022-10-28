@@ -183,20 +183,26 @@
     <ClCompile Include="PmxMaterial.cpp">
       <Filter>エンジンシステム\3d\PMX</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
+    <ClCompile Include="PlayGame\Hunter.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\ItemManager.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\Monster.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\UserInterface.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\BaseCalculate.cpp">
+      <Filter>エンジンシステム\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="3d\ObjParticle.cpp">
+      <Filter>エンジンシステム\3d\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffect\PostEffect.cpp">
       <Filter>ゲームシステム\PostEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Hunter.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="UserInterface.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemManager.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,20 +374,26 @@
     <ClInclude Include="PmxMaterial.h">
       <Filter>エンジンシステム\3d\PMX</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffect.h">
+    <ClInclude Include="PlayGame\Hunter.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\ItemManager.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\Monster.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\UserInterface.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\BaseCalculate.h">
+      <Filter>エンジンシステム\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="3d\ObjParticle.h">
+      <Filter>エンジンシステム\3d\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffect\PostEffect.h">
       <Filter>ゲームシステム\PostEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInterface.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Hunter.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemManager.h">
-      <Filter>ゲームシステム\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

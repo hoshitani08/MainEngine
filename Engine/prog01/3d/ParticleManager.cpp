@@ -1,5 +1,6 @@
 #include "ParticleManager.h"
 #include "ShaderManager.h"
+#include "BaseCalculate.h"
 
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
@@ -8,33 +9,6 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-
-static const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
-{
-	XMFLOAT3 result;
-	result.x = lhs.x + rhs.x;
-	result.y = lhs.y + rhs.y;
-	result.z = lhs.z + rhs.z;
-	return result;
-}
-
-static const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
-{
-	XMFLOAT3 result;
-	result.x = lhs.x - rhs.x;
-	result.y = lhs.y - rhs.y;
-	result.z = lhs.z - rhs.z;
-	return result;
-}
-
-const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float rhs)
-{
-	XMFLOAT3 result;
-	result.x = lhs.x / rhs;
-	result.y = lhs.y / rhs;
-	result.z = lhs.z / rhs;
-	return result;
-}
 
 std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, Camera* camera, std::wstring fName)
 {
