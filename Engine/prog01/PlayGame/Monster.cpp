@@ -36,7 +36,7 @@ void Monster::Initialize(Camera* camera)
 		else
 		{
 			body_[i]->SetPosition({ -1.5f,0,0 });
-			body_[i]->SetParent(body_[i - 1].get());
+			body_[i]->SetParent(body_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 5Ui64>::size_type>(i) - 1].get());
 		}
 
 		body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
@@ -53,12 +53,12 @@ void Monster::Initialize(Camera* camera)
 		else if (i == 1)
 		{
 			rightForeFoot_[i]->SetPosition({ 0,-1.0f,-1 });
-			rightForeFoot_[i]->SetParent(rightForeFoot_[i - 1].get());
+			rightForeFoot_[i]->SetParent(rightForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
 			rightForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
-			rightForeFoot_[i]->SetParent(rightForeFoot_[i - 1].get());
+			rightForeFoot_[i]->SetParent(rightForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		rightForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
 	}
@@ -74,12 +74,12 @@ void Monster::Initialize(Camera* camera)
 		else if (i == 1)
 		{
 			leftForeFoot_[i]->SetPosition({ 0,-1.0f,1 });
-			leftForeFoot_[i]->SetParent(leftForeFoot_[i - 1].get());
+			leftForeFoot_[i]->SetParent(leftForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
 			leftForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
-			leftForeFoot_[i]->SetParent(leftForeFoot_[i - 1].get());
+			leftForeFoot_[i]->SetParent(leftForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		leftForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
 	}
@@ -95,12 +95,12 @@ void Monster::Initialize(Camera* camera)
 		else if (i == 1)
 		{
 			rightHindFoot_[i]->SetPosition({ 0,-1.0f,-1 });
-			rightHindFoot_[i]->SetParent(rightHindFoot_[i - 1].get());
+			rightHindFoot_[i]->SetParent(rightHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
 			rightHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
-			rightHindFoot_[i]->SetParent(rightHindFoot_[i - 1].get());
+			rightHindFoot_[i]->SetParent(rightHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		rightHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
 	}
@@ -116,12 +116,12 @@ void Monster::Initialize(Camera* camera)
 		else if (i == 1)
 		{
 			leftHindFoot_[i]->SetPosition({ 0,-1.0f,1 });
-			leftHindFoot_[i]->SetParent(leftHindFoot_[i - 1].get());
+			leftHindFoot_[i]->SetParent(leftHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
 			leftHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
-			leftHindFoot_[i]->SetParent(leftHindFoot_[i - 1].get());
+			leftHindFoot_[i]->SetParent(leftHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 
 		leftHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
@@ -138,7 +138,7 @@ void Monster::Initialize(Camera* camera)
 		else
 		{
 			tail_[i]->SetPosition({ -1.5f,0,0 });
-			tail_[i]->SetParent(tail_[i - 1].get());
+			tail_[i]->SetParent(tail_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 4Ui64>::size_type>(i) - 1].get());
 		}
 
 		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
@@ -791,9 +791,9 @@ void Monster::PartsTailDestruction()
 		XMFLOAT3 ppos = tail_[0]->GetPosition();
 		XMFLOAT3 prot = tail_[0]->GetRotation();
 
-		ppos.x += nucleus_->GetPosition().x;
-		ppos.y += nucleus_->GetPosition().y;
-		ppos.z += nucleus_->GetPosition().z; 
+		ppos.x += body_[4]->GetWorldPosition().x;
+		ppos.y += body_[4]->GetWorldPosition().y;
+		ppos.z += body_[4]->GetWorldPosition().z; 
 
 		prot.x += nucleus_->GetRotation().x;
 		prot.y += nucleus_->GetRotation().y;
