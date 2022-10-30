@@ -204,6 +204,9 @@
     <ClCompile Include="PostEffect\PostEffect.cpp">
       <Filter>ゲームシステム\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\LoadScene.cpp">
+      <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -391,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="PostEffect\PostEffect.h">
       <Filter>ゲームシステム\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LoadScene.h">
+      <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

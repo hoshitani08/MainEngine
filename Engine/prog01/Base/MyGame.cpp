@@ -31,7 +31,7 @@ void MyGame::Initialize()
 	t2.join();
 	t3.join();
 	//シーンマネージャーにロードシーンをセット
-	//SceneManager::GetInstance()->SetLoadScene("LoadScene");
+	SceneManager::GetInstance()->SetLoadScene("LoadScene");
 	//シーンマネージャーに最初のシーンをセット
 	SceneManager::GetInstance()->ChangeScene("GameScene");
 }

@@ -32,6 +32,9 @@ void SceneManager::Finalize()
 {
 	scene_->Finalize();
 	scene_ = nullptr;
+
+	loadScene_->Finalize();
+	loadScene_ = nullptr;
 }
 
 void SceneManager::Update()
@@ -72,7 +75,7 @@ void SceneManager::Update()
 	}
 	else
 	{
-		//loadScene_->Update();
+		loadScene_->Update();
 	}
 }
 
@@ -84,7 +87,7 @@ void SceneManager::Draw()
 	}
 	else
 	{
-		//loadScene_->Draw();
+		loadScene_->Draw();
 	}
 }
 
@@ -96,7 +99,7 @@ void SceneManager::EffectDraw()
 	}
 	else
 	{
-		//loadScene_->EffectDraw();
+		loadScene_->EffectDraw();
 	}
 }
 

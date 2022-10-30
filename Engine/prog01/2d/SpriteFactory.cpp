@@ -143,6 +143,11 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+
+	if (!Sprite::LoadTexture(100, L"Resources/black.png"))
+	{
+		assert(0);
+	}
 }
 
 SpriteFactory* SpriteFactory::GetInstance()
