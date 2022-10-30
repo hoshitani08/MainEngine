@@ -19,7 +19,6 @@ SceneManager* SceneManager::GetInstance()
 void SceneManager::Finalize()
 {
 	scene_->Finalize();
-	delete scene_;
 	scene_ = nullptr;
 }
 
@@ -30,9 +29,8 @@ void SceneManager::Update()
 		if (scene_)
 		{
 			scene_->Finalize();
-			delete scene_;
 		}
-		scene_ = nextScene_;
+		scene_ = std::move(nextScene_);
 		nextScene_ = nullptr;
 
 		scene_->Initialize();
@@ -55,5 +53,5 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(sceneFactory_);
 	assert(nextScene_ == nullptr);
 
-	nextScene_ = sceneFactory_->CreateScene(sceneName);
+	nextScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
 }

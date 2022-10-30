@@ -29,5 +29,5 @@ protected:
 	std::unique_ptr<WinApp> win_;
 	std::unique_ptr<PostEffect> postEffect_;
 	//シーンファクトリ
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	std::unique_ptr<AbstractSceneFactory> sceneFactory_;
 };

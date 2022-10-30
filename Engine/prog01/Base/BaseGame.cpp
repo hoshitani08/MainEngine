@@ -68,7 +68,6 @@ void BaseGame::Initialize()
 
 void BaseGame::Finalize()
 {
-	delete sceneFactory_;
 	Sprite::StaticFinalize();
 	Object3d::StaticFinalize();
 	FbxObject3d::StaticFinalize();
