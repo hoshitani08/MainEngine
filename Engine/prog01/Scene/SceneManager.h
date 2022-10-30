@@ -1,12 +1,21 @@
 #pragma once
 
 #include <memory>
+#include <future>
 
 #include "BaseScene.h"
 #include "AbstractSceneFactory.h"
 
 class SceneManager final
 {
+public: // サブクラス
+	enum class LoadType
+	{
+		NoLoad,
+		LoadStart,
+		LoadEnd
+	};
+
 private:
 	SceneManager() = default;
 	~SceneManager();
@@ -17,7 +26,9 @@ public:
 
 	static SceneManager* GetInstance();
 
-	//終了
+	// 初期化
+	void Initialize();
+	// 終了
 	void Finalize();
 	// 毎フレーム処理
 	void Update();
@@ -25,16 +36,26 @@ public:
 	void Draw();
 	// エフェクト描画
 	void EffectDraw();
-	//次シーンの予約
+	// 次シーンの予約
 	void ChangeScene(const std::string& sceneName);
-
+	// ロードシーンの設定
+	void SetLoadScene(const std::string& sceneName);
+	// シーン生成の設定
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 private:
 	//今のシーン
 	std::unique_ptr<BaseScene> scene_;
 	//次のシーン
-	std::unique_ptr<BaseScene> nextScene_;
+	BaseScene* nextScene_ = nullptr;
+	//ロードシーン
+	std::unique_ptr<BaseScene> loadScene_;
 	//シーンファクトリ
 	AbstractSceneFactory* sceneFactory_ = nullptr;
+	// 非同期処理
+	std::thread t = {};
+	// ロード状態
+	LoadType loadType;
+	// ロードしているか
+	bool loadFlag = false;
 };

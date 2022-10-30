@@ -5,6 +5,8 @@
 #include "FbxFactory.h"
 #include "ObjFactory.h"
 
+#include <future>
+
 void MyGame::Initialize()
 {
 	//基底クラスの初期化
@@ -13,11 +15,11 @@ void MyGame::Initialize()
 	//ゲームで必要なマップデータのロード
 	//MapChip::GetInstance()->CsvLoad();
 	//ゲームで必要な画像のロード
-	SpriteFactory::GetInstance()->Initialize();
+	std::thread t = std::thread([&] { SpriteFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なモデル(.fbx)のロード
-	FbxFactory::GetInstance()->Initialize();
+	std::thread t2 = std::thread([&] { FbxFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なモデル(.obj)のロード
-	ObjFactory::GetInstance()->Initialize();
+	std::thread t3 = std::thread([&] { ObjFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なサウンドのロード
 	//Audio::GetInstance()->LoadWave(0, "Resources/Alarm01.wav");
 
@@ -25,6 +27,11 @@ void MyGame::Initialize()
 	//シーンファクトリを生成し、マネージャーにセット
 	sceneFactory_ = std::make_unique<SceneFactory>();
 	SceneManager::GetInstance()->SetSceneFactory(sceneFactory_.get());
+	t.join();
+	t2.join();
+	t3.join();
+	//シーンマネージャーにロードシーンをセット
+	//SceneManager::GetInstance()->SetLoadScene("LoadScene");
 	//シーンマネージャーに最初のシーンをセット
 	SceneManager::GetInstance()->ChangeScene("GameScene");
 }

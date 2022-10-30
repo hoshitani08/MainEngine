@@ -16,6 +16,18 @@ SceneManager* SceneManager::GetInstance()
 	return &instance;
 }
 
+void SceneManager::Initialize()
+{
+	if (scene_)
+	{
+		scene_->Finalize();
+	}
+	scene_ = std::unique_ptr<BaseScene>(nextScene_);
+	scene_->Initialize();
+
+	loadType = LoadType::LoadEnd;
+}
+
 void SceneManager::Finalize()
 {
 	scene_->Finalize();
@@ -26,26 +38,66 @@ void SceneManager::Update()
 {
 	if (nextScene_)
 	{
-		if (scene_)
+		if (!loadFlag)
 		{
-			scene_->Finalize();
+			std::thread tmp = std::thread([&] { Initialize(); });
+			t.swap(tmp);
 		}
-		scene_ = std::move(nextScene_);
-		nextScene_ = nullptr;
 
-		scene_->Initialize();
+		switch (loadType)
+		{
+		case SceneManager::LoadType::NoLoad: // ロード始まってない
+			loadFlag = true;
+			// ロード状態=ロード始まった
+			loadType = LoadType::LoadStart;
+			break;
+		case SceneManager::LoadType::LoadStart:
+			break;
+		case SceneManager::LoadType::LoadEnd:
+			t.join();
+			// ロードの終了
+			nextScene_ = nullptr;
+			loadFlag = false;
+			// 画面=ロード画面
+			loadType = LoadType::NoLoad;
+			break;
+		default:
+			break;
+		}
 	}
-	scene_->Update();
+	
+	if (!loadFlag)
+	{
+		scene_->Update();
+	}
+	else
+	{
+		//loadScene_->Update();
+	}
 }
 
 void SceneManager::Draw()
 {
-	scene_->Draw();
+	if (!loadFlag)
+	{
+		scene_->Draw();
+	}
+	else
+	{
+		//loadScene_->Draw();
+	}
 }
 
 void SceneManager::EffectDraw()
 {
-	scene_->EffectDraw();
+	if (!loadFlag)
+	{
+		scene_->EffectDraw();
+	}
+	else
+	{
+		//loadScene_->EffectDraw();
+	}
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName)
@@ -53,5 +105,11 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(sceneFactory_);
 	assert(nextScene_ == nullptr);
 
-	nextScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
+	nextScene_ = sceneFactory_->CreateScene(sceneName);
+}
+
+void SceneManager::SetLoadScene(const std::string& sceneName)
+{
+	loadScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
+	loadScene_->Initialize();
 }
