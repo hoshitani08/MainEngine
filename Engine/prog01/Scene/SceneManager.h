@@ -16,16 +16,16 @@ public: // サブクラス
 		LoadEnd
 	};
 
-private:
+private: // シングルトン
 	SceneManager() = default;
 	~SceneManager();
 
-public:
+public: // シングルトン
 	SceneManager(const SceneManager& sceneManager) = delete;
 	SceneManager& operator=(const SceneManager& sceneManager) = delete;
-
 	static SceneManager* GetInstance();
 
+public:
 	// 初期化
 	void Initialize();
 	// 終了
@@ -44,6 +44,14 @@ public:
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 private:
+	// ロードフラグの設定
+	void SetLockFlag(bool isLoaded);
+	// ロードフラグの取得
+	bool GetLockFlag();
+	//  非同期ロード
+	void AsyncLoad();
+
+private:
 	//今のシーン
 	std::unique_ptr<BaseScene> scene_;
 	//次のシーン
@@ -53,9 +61,11 @@ private:
 	//シーンファクトリ
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 	// 非同期処理
-	std::thread t = {};
+	std::thread th_ = {};
 	// ロード状態
-	LoadType loadType;
+	LoadType loadType_;
 	// ロードしているか
-	bool loadFlag = false;
+	bool isLoaded_ = false;
+	// スレッド間で使用する共有リソースを排他制御する
+	std::mutex isLoadedMutex;
 };

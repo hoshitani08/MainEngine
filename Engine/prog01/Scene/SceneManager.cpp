@@ -25,7 +25,7 @@ void SceneManager::Initialize()
 	scene_ = std::unique_ptr<BaseScene>(nextScene_);
 	scene_->Initialize();
 
-	loadType = LoadType::LoadEnd;
+	loadType_ = LoadType::LoadEnd;
 }
 
 void SceneManager::Finalize()
@@ -41,35 +41,29 @@ void SceneManager::Update()
 {
 	if (nextScene_)
 	{
-		if (!loadFlag)
+		switch (loadType_)
 		{
-			std::thread tmp = std::thread([&] { Initialize(); });
-			t.swap(tmp);
-		}
-
-		switch (loadType)
-		{
-		case SceneManager::LoadType::NoLoad: // ロード始まってない
-			loadFlag = true;
+		case SceneManager::LoadType::NoLoad: // ロードしていない
+			th_.swap(std::thread([&] { AsyncLoad(); }));
+			SetLockFlag(false);
 			// ロード状態=ロード始まった
-			loadType = LoadType::LoadStart;
+			loadType_ = LoadType::LoadStart;
 			break;
-		case SceneManager::LoadType::LoadStart:
+		case SceneManager::LoadType::LoadStart: // ロード開始
 			break;
-		case SceneManager::LoadType::LoadEnd:
-			t.join();
+		case SceneManager::LoadType::LoadEnd: // ロード終了
+			th_.join();
 			// ロードの終了
 			nextScene_ = nullptr;
-			loadFlag = false;
 			// 画面=ロード画面
-			loadType = LoadType::NoLoad;
+			loadType_ = LoadType::NoLoad;
 			break;
 		default:
 			break;
 		}
 	}
 	
-	if (!loadFlag)
+	if (GetLockFlag())
 	{
 		scene_->Update();
 	}
@@ -81,7 +75,7 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	if (!loadFlag)
+	if (GetLockFlag())
 	{
 		scene_->Draw();
 	}
@@ -93,7 +87,7 @@ void SceneManager::Draw()
 
 void SceneManager::EffectDraw()
 {
-	if (!loadFlag)
+	if (GetLockFlag())
 	{
 		scene_->EffectDraw();
 	}
@@ -115,4 +109,29 @@ void SceneManager::SetLoadScene(const std::string& sceneName)
 {
 	loadScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
 	loadScene_->Initialize();
+}
+
+void SceneManager::SetLockFlag(bool isLoaded)
+{
+	std::lock_guard<std::mutex>  lock(isLoadedMutex);
+	isLoaded_ = isLoaded;
+}
+
+bool SceneManager::GetLockFlag()
+{
+	std::lock_guard<std::mutex>  lock(isLoadedMutex);
+	return isLoaded_;
+}
+
+void SceneManager::AsyncLoad()
+{
+	std::thread t = std::thread([&] { Initialize(); });
+
+	//ダミーで10秒待つ
+	auto sleepTime = std::chrono::seconds(2);
+	std::this_thread::sleep_for(sleepTime);
+
+	t.join();
+
+	SetLockFlag(true);
 }
