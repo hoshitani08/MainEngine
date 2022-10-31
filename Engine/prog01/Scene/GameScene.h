@@ -14,8 +14,6 @@
 #include "Camera.h"
 #include "LightGroup.h"
 #include "FbxObject3d.h"
-#include "PmxObject3d.h"
-#include "PmxModel.h"
 #include "Hunter.h"
 #include "Monster.h"
 #include "UserInterface.h"

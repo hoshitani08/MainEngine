@@ -93,18 +93,6 @@
     <ClCompile Include="3d\ParticleEmitter.cpp">
       <Filter>エンジンシステム\3d\Particle</Filter>
     </ClCompile>
-    <ClCompile Include="PmxLoader.cpp">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClCompile>
-    <ClCompile Include="PmxMesh.cpp">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClCompile>
-    <ClCompile Include="PmxModel.cpp">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClCompile>
-    <ClCompile Include="PmxObject3d.cpp">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\Audio.cpp">
       <Filter>エンジンシステム\Audio</Filter>
     </ClCompile>
@@ -179,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ゲームシステム</Filter>
-    </ClCompile>
-    <ClCompile Include="PmxMaterial.cpp">
-      <Filter>エンジンシステム\3d\PMX</Filter>
     </ClCompile>
     <ClCompile Include="PlayGame\Hunter.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
@@ -265,18 +250,6 @@
     </ClInclude>
     <ClInclude Include="3d\ParticleEmitter.h">
       <Filter>エンジンシステム\3d\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="PmxLoader.h">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClInclude>
-    <ClInclude Include="PmxMesh.h">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClInclude>
-    <ClInclude Include="PmxModel.h">
-      <Filter>エンジンシステム\3d\PMX</Filter>
-    </ClInclude>
-    <ClInclude Include="PmxObject3d.h">
-      <Filter>エンジンシステム\3d\PMX</Filter>
     </ClInclude>
     <ClInclude Include="Audio\Audio.h">
       <Filter>エンジンシステム\Audio</Filter>
@@ -370,9 +343,6 @@
     </ClInclude>
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>ゲームシステム\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="PmxMaterial.h">
-      <Filter>エンジンシステム\3d\PMX</Filter>
     </ClInclude>
     <ClInclude Include="PlayGame\Hunter.h">
       <Filter>ゲームシステム\GameObject</Filter>
@@ -479,9 +449,6 @@
     </Filter>
     <Filter Include="エンジンシステム\3d\OBJ">
       <UniqueIdentifier>{02655b71-8e46-4553-93ad-b363335fa778}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="エンジンシステム\3d\PMX">
-      <UniqueIdentifier>{5de0a931-5b5e-4920-b73b-2dd505b4ea49}</UniqueIdentifier>
     </Filter>
     <Filter Include="ゲームシステム\Base">
       <UniqueIdentifier>{6e6de445-edb1-46f5-a563-29dc560738b8}</UniqueIdentifier>

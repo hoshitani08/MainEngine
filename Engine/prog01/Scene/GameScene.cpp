@@ -45,14 +45,11 @@ void GameScene::Initialize()
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
 
-	PmxObject3d::StaticInitialize(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
-
 	//ライト生成
 	light_ = LightGroup::Create();
 	//オブジェクトにライトをセット
 	Object3d::SetLight(light_.get());
 	FbxObject3d::SetLight(light_.get());
-	PmxObject3d::SetLight(light_.get());
 	light_->SetDirLightActive(0, true);
 	light_->SetDirLightActive(1, false);
 	light_->SetDirLightActive(2, false);
