@@ -49,12 +49,10 @@ void ObjParticle::Update()
 
 void ObjParticle::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	Object3d::PreDraw(cmdList);
 	for (auto& a : objParticle_)
 	{
-		a->Draw();
+		a->Draw(cmdList);
 	}
-	Object3d::PostDraw();
 }
 
 void ObjParticle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel, XMFLOAT3 startScale, XMFLOAT3 endScale, XMFLOAT4 startColor, XMFLOAT4 endColor, Model* model)

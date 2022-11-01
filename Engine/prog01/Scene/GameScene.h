@@ -17,6 +17,7 @@
 #include "Hunter.h"
 #include "Monster.h"
 #include "UserInterface.h"
+#include "Block.h"
 
 class CollisionManager;
 class Player;
@@ -81,6 +82,8 @@ private: // ƒƒ“ƒo•Ï”
 	std::unique_ptr<Hunter> hunter_;
 	std::unique_ptr<Monster> monster_;
 	std::unique_ptr<Object3d> hitSphere_;
+
+	std::unique_ptr<Block> block_;
 
 	//ƒ‰ƒCƒg
 	std::unique_ptr<LightGroup> light_;

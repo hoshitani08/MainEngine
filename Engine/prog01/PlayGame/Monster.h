@@ -8,7 +8,7 @@
 
 #include "Collision.h"
 #include "Hunter.h"
-#include "FbxObject3d.h"
+#include "Object3d.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
 #include "Camera.h"
@@ -84,7 +84,7 @@ public: // メンバ関数
 	// 毎フレーム処理
 	void Update();
 	// 描画
-	void Draw();
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 	// 行動
 	void Activity();
 	// 向きの設定

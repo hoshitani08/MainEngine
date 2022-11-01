@@ -63,6 +63,8 @@ void GameScene::Initialize()
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
 	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
+	block_ = std::make_unique<Block>(1);
+
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
 	monster_ = Monster::Create(camera_.get());
@@ -160,6 +162,7 @@ void GameScene::Update()
 	ground_->Update();
 	hitSphere_->Update();
 	ui_->Update();
+	block_->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -180,9 +183,7 @@ void GameScene::Draw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	Object3d::PreDraw(cmdList);
 
-	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
 
@@ -218,14 +219,13 @@ void GameScene::EffectDraw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	Object3d::PreDraw(cmdList);
-	skydome_->Draw();
-	ground_->Draw();
-	Object3d::PostDraw();
+	skydome_->Draw(cmdList);
+	ground_->Draw(cmdList);
+	block_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
-	monster_->Draw();
-	hunter_->Draw();
+	monster_->Draw(cmdList);
+	hunter_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト(FBX)描画
 #pragma region パーティクル
 	// パーティクルの描画

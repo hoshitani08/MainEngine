@@ -119,11 +119,9 @@ void GameOverScene::Draw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	Object3d::PreDraw(cmdList);
-	gameoverTile_->Draw();
-	continueTile_->Draw();
-	quitTile_->Draw();
-	Object3d::PostDraw();
+	gameoverTile_->Draw(cmdList);
+	continueTile_->Draw(cmdList);
+	quitTile_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理

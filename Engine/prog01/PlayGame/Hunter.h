@@ -46,7 +46,7 @@ public: // メンバ関数
 	// 毎フレーム処理
 	void Update();
 	// 描画
-	void Draw();
+	void Draw(ID3D12GraphicsCommandList* cmdList);
 	// 行動
 	void Behavior();
 	// 移動

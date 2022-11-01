@@ -15,6 +15,7 @@ void ObjFactory::Initialize()
 	LoadModel("gameover");
 	LoadModel("sphere");
 	LoadModel("katana");
+	LoadModel("coral");
 }
 
 void ObjFactory::Finalize()

@@ -131,11 +131,9 @@ void TitleScene::Draw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	Object3d::PreDraw(cmdList);
-	titleTile_->Draw();
-	startTile_->Draw();
-	quitTile_->Draw();
-	Object3d::PostDraw();
+	titleTile_->Draw(cmdList);
+	startTile_->Draw(cmdList);
+	quitTile_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 	bubble_->Draw(cmdList);
 #pragma region 前景スプライト描画
@@ -162,9 +160,7 @@ void TitleScene::EffectDraw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	Object3d::PreDraw(cmdList);
 
-	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理

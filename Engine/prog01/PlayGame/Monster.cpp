@@ -204,40 +204,35 @@ void Monster::Update()
 	blood_->Update();
 }
 
-void Monster::Draw()
+void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	// コマンドリストの取得
-	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
-
-	Object3d::PreDraw(cmdList);
 	if (hp_ >= 1)
 	{
 		for (int i = 0; i < body_.size(); i++)
 		{
-			body_[i]->Draw();
+			body_[i]->Draw(cmdList);
 		}
 		for (int i = 0; i < rightForeFoot_.size(); i++)
 		{
-			rightForeFoot_[i]->Draw();
+			rightForeFoot_[i]->Draw(cmdList);
 		}
 		for (int i = 0; i < leftForeFoot_.size(); i++)
 		{
-			leftForeFoot_[i]->Draw();
+			leftForeFoot_[i]->Draw(cmdList);
 		}
 		for (int i = 0; i < rightHindFoot_.size(); i++)
 		{
-			rightHindFoot_[i]->Draw();
+			rightHindFoot_[i]->Draw(cmdList);
 		}
 		for (int i = 0; i < leftHindFoot_.size(); i++)
 		{
-			leftHindFoot_[i]->Draw();
+			leftHindFoot_[i]->Draw(cmdList);
 		}
 		for (int i = 0; i < tail_.size(); i++)
 		{
-			tail_[i]->Draw();
+			tail_[i]->Draw(cmdList);
 		}
 	}
-	Object3d::PostDraw();
 	blood_->Draw(cmdList);
 }
 

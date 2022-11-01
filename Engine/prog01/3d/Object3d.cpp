@@ -18,7 +18,6 @@ using namespace std;
 
 // 静的メンバ変数の実体
 ID3D12Device* Object3d::device_ = nullptr;
-ID3D12GraphicsCommandList* Object3d::cmdList_ = nullptr;
 Camera* Object3d::camera_ = nullptr;
 LightGroup* Object3d::light_ = nullptr;
 
@@ -36,28 +35,6 @@ void Object3d::StaticInitialize(ID3D12Device* device, Camera* camera)
 void Object3d::StaticFinalize()
 {
 
-}
-
-void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
-{
-	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList_ == nullptr);
-
-	// コマンドリストをセット
-	Object3d::cmdList_ = cmdList;
-
-	// パイプラインステートの設定
-	cmdList->SetPipelineState(ShaderManager::GetInstance()->GetPipelineState(L"Object"));
-	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(ShaderManager::GetInstance()->GetRootSignature(L"Object"));
-	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-void Object3d::PostDraw()
-{
-	// コマンドリストを解除
-	Object3d::cmdList_ = nullptr;
 }
 
 std::unique_ptr<Object3d> Object3d::Create(Model* model)
@@ -144,18 +121,24 @@ void Object3d::Update()
 	}
 }
 
-void Object3d::Draw()
+void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	// nullptrチェック
 	assert(device_);
-	assert(Object3d::cmdList_);
+
+	// パイプラインステートの設定
+	cmdList->SetPipelineState(ShaderManager::GetInstance()->GetPipelineState(L"Object"));
+	// ルートシグネチャの設定
+	cmdList->SetGraphicsRootSignature(ShaderManager::GetInstance()->GetRootSignature(L"Object"));
+	// プリミティブ形状を設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 定数バッファビューをセット
-	cmdList_->SetGraphicsRootConstantBufferView(0, constBuffB0_->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0_->GetGPUVirtualAddress());
 	//ライトの描画
-	light_->Draw(cmdList_, 3);
+	light_->Draw(cmdList, 3);
 	//モデル描画
-	model_->Draw(cmdList_);
+	model_->Draw(cmdList);
 }
 
 void Object3d::UpdateWorldMatrix()

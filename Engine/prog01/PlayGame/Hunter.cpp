@@ -69,16 +69,11 @@ void Hunter::Update()
 	buki_->Update();
 }
 
-void Hunter::Draw()
+void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	// コマンドリストの取得
-	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
-	
 	hunter_[animationType_]->Draw(cmdList);
 
-	Object3d::PreDraw(cmdList);
-	buki_->Draw();
-	Object3d::PostDraw();
+	buki_->Draw(cmdList);
 }
 
 void Hunter::Behavior()

@@ -43,10 +43,6 @@ public: // 静的メンバ関数
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
 	// 静的破棄
 	static void StaticFinalize();
-	// 描画前処理
-	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-	// 描画後処理
-	static void PostDraw();
 	// 3Dオブジェクト生成
 	static std::unique_ptr<Object3d> Create(Model* model = nullptr);
 	// カメラのセット
@@ -57,8 +53,6 @@ public: // 静的メンバ関数
 private: // 静的メンバ変数
 	// デバイス
 	static ID3D12Device* device_;
-	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList_;
 	// カメラ
 	static Camera* camera_;
 	//ライト
@@ -74,7 +68,7 @@ public: // メンバ関数
 	// 毎フレーム処理
 	virtual void Update();
 	// 描画
-	virtual void Draw();
+	virtual void Draw(ID3D12GraphicsCommandList* cmdList);
 	// 行列の更新
 	void UpdateWorldMatrix();
 	// 座標の取得
