@@ -195,6 +195,9 @@
     <ClCompile Include="PlayGame\Block.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="PlayGame\Stage.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -372,6 +375,9 @@
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayGame\Block.h">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\Stage.h">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClInclude>
   </ItemGroup>

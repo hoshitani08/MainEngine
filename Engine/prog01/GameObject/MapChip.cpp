@@ -3,7 +3,7 @@
 using namespace DirectX;
 
 // Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘Ì
-const std::string MapChip::baseDirectory = "Resources/";
+const std::string MapChip::baseDirectory = "Resources/csv/";
 
 MapChip::MapChip()
 {

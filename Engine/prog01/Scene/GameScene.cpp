@@ -59,11 +59,9 @@ void GameScene::Initialize()
 	light_->SetCircleShadowActive(0, true);
 
 	// 3Dオブジェクト生成
-	skydome_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("skydome"));
-	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
 	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
-	block_ = std::make_unique<Block>(1, 0, 0);
+	stage_ = std::make_unique<Stage>();
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
@@ -158,11 +156,9 @@ void GameScene::Update()
 
 	hunter_->Update();
 	monster_->Update();
-	skydome_->Update();
-	ground_->Update();
 	hitSphere_->Update();
 	ui_->Update();
-	block_->Update();
+	stage_->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -219,9 +215,7 @@ void GameScene::EffectDraw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	skydome_->Draw(cmdList);
-	ground_->Draw(cmdList);
-	block_->Draw(cmdList);
+	stage_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
 	monster_->Draw(cmdList);

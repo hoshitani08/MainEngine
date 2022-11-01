@@ -344,6 +344,7 @@
     <ClCompile Include="PlayGame\Hunter.cpp" />
     <ClCompile Include="PlayGame\ItemManager.cpp" />
     <ClCompile Include="PlayGame\Monster.cpp" />
+    <ClCompile Include="PlayGame\Stage.cpp" />
     <ClCompile Include="PlayGame\UserInterface.cpp" />
     <ClCompile Include="PostEffect\PostEffect.cpp" />
     <ClCompile Include="Scene\ClearScene.cpp" />
@@ -404,6 +405,7 @@
     <ClInclude Include="PlayGame\Hunter.h" />
     <ClInclude Include="PlayGame\ItemManager.h" />
     <ClInclude Include="PlayGame\Monster.h" />
+    <ClInclude Include="PlayGame\Stage.h" />
     <ClInclude Include="PlayGame\UserInterface.h" />
     <ClInclude Include="PostEffect\PostEffect.h" />
     <ClInclude Include="Scene\AbstractSceneFactory.h" />

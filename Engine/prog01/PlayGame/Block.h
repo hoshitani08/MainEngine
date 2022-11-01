@@ -2,6 +2,7 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include <vector>
 
 #include "Object3d.h"
 #include "ObjParticle.h"
@@ -26,6 +27,20 @@ public: // サブクラス
 		Coral,
 	};
 
+	struct CoralData
+	{
+		//
+		std::unique_ptr<Object3d> coralBlock;
+		//
+		std::unique_ptr<ParticleEmitter> bubbleEmitter;
+		//
+		std::unique_ptr<ObjParticle> bubbleParticle;
+		//
+		float bubbleTimer = 0.0f;
+		//
+		int bubbleTimerMax = 0;
+	};
+
 public: // メンバ関数
 	// コンストラクタ
 	Block(int type, float posX, float posZ);
@@ -38,20 +53,11 @@ public: // メンバ関数
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	// 座標の取得
-	const XMFLOAT3& GetPosition() { return block_->GetPosition(); }
-
 private: // メンバ変数
 	// 
-	std::unique_ptr<Object3d> block_;
-	// 
-	std::unique_ptr<ParticleEmitter> bubbleEmitter_;
+	std::unique_ptr<Object3d> rockBlock_;
 	//
-	std::unique_ptr<ObjParticle> bubbleParticle_;
-	//
-	float bubbleTimer_ = 0.0f;
-	//
-	int bubbleTimerMax_ = 0;
+	std::vector<CoralData> coralBlock_;
 	//
 	BlockType blockType_;
 };

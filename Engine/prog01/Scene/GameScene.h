@@ -18,6 +18,7 @@
 #include "Monster.h"
 #include "UserInterface.h"
 #include "Block.h"
+#include "Stage.h"
 
 class CollisionManager;
 class Player;
@@ -77,13 +78,10 @@ private: // メンバ変数
 	//パーティクル
 	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
-	std::unique_ptr<Object3d> skydome_;
-	std::unique_ptr<Object3d> ground_;
 	std::unique_ptr<Hunter> hunter_;
 	std::unique_ptr<Monster> monster_;
 	std::unique_ptr<Object3d> hitSphere_;
-
-	std::unique_ptr<Block> block_;
+	std::unique_ptr<Stage> stage_;
 
 	//ライト
 	std::unique_ptr<LightGroup> light_;
