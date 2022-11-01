@@ -29,15 +29,15 @@ public: // サブクラス
 
 	struct CoralData
 	{
-		//
+		//珊瑚
 		std::unique_ptr<Object3d> coralBlock;
-		//
+		// 泡のエミッター
 		std::unique_ptr<ParticleEmitter> bubbleEmitter;
-		//
+		// 泡のパーティクル
 		std::unique_ptr<ObjParticle> bubbleParticle;
-		//
+		// 泡のタイマー
 		float bubbleTimer = 0.0f;
-		//
+		// 泡が出て来る時間
 		int bubbleTimerMax = 0;
 	};
 
@@ -52,13 +52,15 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// ランダムの計算
+	const float RandCalculate(float a, float b);
 
 private: // メンバ変数
-	// 
+	// 岩
 	std::unique_ptr<Object3d> rockBlock_;
-	//
+	// 珊瑚のデータ
 	std::vector<CoralData> coralBlock_;
-	//
+	// ブロックのタイプ
 	BlockType blockType_;
 };
 

@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <random>
 
 Block::Block(int type, float posX, float posZ)
 {
@@ -20,29 +21,25 @@ void Block::Initialize(int type, float posX, float posZ)
 	}
 	else if (type == (int)BlockType::Coral)
 	{
-		int numCount = (rand() % 2) + 3;
+		int numCount = RandCalculate(3.0f, 5.0f);
 
 		for (int i = 0; i < numCount; i++)
 		{
-			XMFLOAT2 randCount = { (float)(rand() % 2) - 2, (float)(rand() % 2) - 2 };
-
 			CoralData tmp;
 			tmp.coralBlock = Object3d::Create(ObjFactory::GetInstance()->GetModel("coral"));
 
-			int count = (rand() % 5) + 1;
-			float size = (float)count / 10;
+			float size = RandCalculate(1.0f, 5.0f) / 10;
 			tmp.coralBlock->SetScale({ size, size, size });
-			tmp.coralBlock->SetPosition({ posX + randCount.x, size, posZ + randCount.y });
 
-			int rot = rand() % 181 * i;
-			tmp.coralBlock->SetRotation({ 0,(float)rot,0 });
+			tmp.coralBlock->SetPosition({ posX + RandCalculate(-size,size), size, posZ + RandCalculate(-size,size) });
+			tmp.coralBlock->SetRotation({ 0, +RandCalculate(0.0f,180.0f),0 });
 
 			tmp.bubbleParticle = std::make_unique<ObjParticle>();
 			tmp.bubbleEmitter = std::make_unique<ParticleEmitter>(tmp.bubbleParticle.get());
-			tmp.bubbleEmitter->SetCenter(1);
+			tmp.bubbleEmitter->SetCenter(size);
 			tmp.bubbleEmitter->SetObjScale({ size, size, size });
-			tmp.bubbleEmitter->SetStartColor({ 10,10,10,0.5f });
-			tmp.bubbleEmitter->SetEndColor({ 10,10,10,0.2f });
+			tmp.bubbleEmitter->SetStartColor({ 1,1,1,0.5f });
+			tmp.bubbleEmitter->SetEndColor({ 1,1,1,0.2f });
 
 			coralBlock_.push_back(std::move(tmp));
 		}
@@ -97,4 +94,17 @@ void Block::Draw(ID3D12GraphicsCommandList* cmdList)
 		a.coralBlock->Draw(cmdList);
 		a.bubbleEmitter->Draw(cmdList);
 	}
+}
+
+const float Block::RandCalculate(float a, float b)
+{
+	// メルセンヌ・ツイスター法による擬似乱数生成器を、
+	// ハードウェア乱数をシードにして初期化
+	std::random_device seed_gen;
+	std::mt19937 engine(seed_gen());
+	// 一様実数分布
+	// [a, b)の値の範囲で、等確率に実数を生成する
+	std::uniform_real_distribution<> dist1(a, b);
+
+	return dist1(engine);
 }
