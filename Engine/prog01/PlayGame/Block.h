@@ -28,9 +28,9 @@ public: // サブクラス
 
 public: // メンバ関数
 	// コンストラクタ
-	Block(int type);
+	Block(int type, float posX, float posZ);
 	// 初期化
-	void Initialize(int type, XMFLOAT3 position);
+	void Initialize(int type, float posX, float posZ);
 	//終了
 	void Finalize();
 	// 毎フレーム処理
@@ -49,6 +49,10 @@ private: // メンバ変数
 	//
 	std::unique_ptr<ObjParticle> bubbleParticle_;
 	//
-	float bubbleTimer = 0.0f;
+	float bubbleTimer_ = 0.0f;
+	//
+	int bubbleTimerMax_ = 0;
+	//
+	BlockType blockType_;
 };
 

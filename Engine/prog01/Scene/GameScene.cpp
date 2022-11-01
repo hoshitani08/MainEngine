@@ -63,7 +63,7 @@ void GameScene::Initialize()
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
 	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
-	block_ = std::make_unique<Block>(1);
+	block_ = std::make_unique<Block>(1, 0, 0);
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
