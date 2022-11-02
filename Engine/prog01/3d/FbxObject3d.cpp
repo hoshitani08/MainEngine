@@ -105,7 +105,7 @@ bool FbxObject3d::Initialize()
 
 void FbxObject3d::Update()
 {
-	XMMATRIX matScale, matRot, matTrans;
+	XMMATRIX matScale = {}, matRot = {}, matTrans = {};
 
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
@@ -212,7 +212,7 @@ void FbxObject3d::LoadAnimation()
 	for (int i = 0; i < sceneCount; i++)
 	{
 		//仮データ
-		Animation tempData;
+		Animation tempData = {};
 		//i番のアニメーション取得
 		tempData.animstack = fbxScene->GetSrcObject<FbxAnimStack>(i);
 		//アニメーションの名前を取得
@@ -241,7 +241,7 @@ void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 	isLoop_ = isLoop;
 }
 
-const XMMATRIX& FbxObject3d::GetBoneMatWorld(std::string name)
+const XMMATRIX FbxObject3d::GetBoneMatWorld(std::string name)
 {
 	//ボーン配列
 	std::vector<FbxModel::Bone>& bone = model_->GetBones();
@@ -256,10 +256,9 @@ const XMMATRIX& FbxObject3d::GetBoneMatWorld(std::string name)
 			//XMMATRIXに変換
 			FbxLoader::ConvertMatrixFromFbx(&mat, fbxCurrentPose);
 			//合成
-			mat = model_->GetModelTransform() * mat;
-			break;
+			return model_->GetModelTransform() * mat;
 		}
 	}
 
-	return mat;
+	return {};
 }

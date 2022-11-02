@@ -100,7 +100,7 @@ public: // メンバ関数
 	// ワールド行列の取得
 	const XMMATRIX& GetMatWorld() { return matWorld_; }
 	// ボーン行列の取得
-	const XMMATRIX& GetBoneMatWorld(std::string name);
+	const XMMATRIX GetBoneMatWorld(std::string name);
 	// アニメーションが終わったか
 	bool AnimationEnd() { return currentTime_ >= endTime_; }
 
@@ -116,23 +116,23 @@ protected: // メンバ変数
 	// ローカル座標
 	XMFLOAT3 position_ = { 0,0,0 };
 	// ローカルワールド変換行列
-	XMMATRIX matWorld_;
+	XMMATRIX matWorld_ = {};
 	// モデル
 	FbxModel* model_ = nullptr;
 	//1フレームの時間
-	FbxTime frameTime_;
+	FbxTime frameTime_ = {};
 	//アニメーション開始時間
-	FbxTime startTime_;
+	FbxTime startTime_ = {};
 	//アニメーション終了時間
-	FbxTime endTime_;
+	FbxTime endTime_ = {};
 	//現在時間(アニメーション)
-	FbxTime currentTime_;
+	FbxTime currentTime_ = {};
 	//アニメーション再生中
 	bool isPlay_ = false;
 	//ループフラグ
 	bool isLoop_ = false;
 	//アニメーションのデータ
-	std::vector<Animation> animationData_;
+	std::vector<Animation> animationData_ = {};
 	// シェーダファイル名
-	std::wstring fName_;
+	std::wstring fName_ = L"";
 };
