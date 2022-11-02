@@ -16,25 +16,24 @@ SceneManager* SceneManager::GetInstance()
 	return &instance;
 }
 
-void SceneManager::Initialize()
-{
-	if (scene_)
-	{
-		scene_->Finalize();
-	}
-	scene_ = std::unique_ptr<BaseScene>(nextScene_);
-	scene_->Initialize();
-
-	loadType_ = LoadType::LoadEnd;
-}
-
 void SceneManager::Finalize()
 {
 	scene_->Finalize();
 	scene_ = nullptr;
 
-	loadScene_->Finalize();
-	loadScene_ = nullptr;
+	if (nextScene_ != nullptr)
+	{
+		th_.detach();
+		nextScene_->Finalize();
+		nextScene_ = nullptr;
+	}
+
+	if (loadScene_ != nullptr)
+	{
+		th_.detach();
+		loadScene_->Finalize();
+		loadScene_ = nullptr;
+	}
 }
 
 void SceneManager::Update()
@@ -45,7 +44,8 @@ void SceneManager::Update()
 		{
 		case SceneManager::LoadType::NoLoad: // ロードしていない
 			th_.swap(std::thread([&] { AsyncLoad(); }));
-			SetLockFlag(false);
+			// 
+			scene_ = std::move(loadScene_);
 			// ロード状態=ロード始まった
 			loadType_ = LoadType::LoadStart;
 			break;
@@ -54,7 +54,7 @@ void SceneManager::Update()
 		case SceneManager::LoadType::LoadEnd: // ロード終了
 			th_.join();
 			// ロードの終了
-			nextScene_ = nullptr;
+			scene_ = std::move(nextScene_);
 			// 画面=ロード画面
 			loadType_ = LoadType::NoLoad;
 			break;
@@ -63,38 +63,17 @@ void SceneManager::Update()
 		}
 	}
 	
-	if (GetLockFlag())
-	{
-		scene_->Update();
-	}
-	else
-	{
-		loadScene_->Update();
-	}
+	scene_->Update();
 }
 
 void SceneManager::Draw()
 {
-	if (GetLockFlag())
-	{
-		scene_->Draw();
-	}
-	else
-	{
-		loadScene_->Draw();
-	}
+	scene_->Draw();
 }
 
 void SceneManager::EffectDraw()
 {
-	if (GetLockFlag())
-	{
-		scene_->EffectDraw();
-	}
-	else
-	{
-		loadScene_->EffectDraw();
-	}
+	scene_->EffectDraw();
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName)
@@ -102,10 +81,11 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(sceneFactory_);
 	assert(nextScene_ == nullptr);
 
-	nextScene_ = sceneFactory_->CreateScene(sceneName);
+	nextScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
+	CreateLoadScene("LoadScene");
 }
 
-void SceneManager::SetLoadScene(const std::string& sceneName)
+void SceneManager::CreateLoadScene(const std::string& sceneName)
 {
 	loadScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
 	loadScene_->Initialize();
@@ -125,7 +105,7 @@ bool SceneManager::GetLockFlag()
 
 void SceneManager::AsyncLoad()
 {
-	std::thread t = std::thread([&] { Initialize(); });
+	std::thread t = std::thread([&] { nextScene_->Initialize(); });
 
 	//ダミーで10秒待つ
 	auto sleepTime = std::chrono::seconds(2);
@@ -133,5 +113,5 @@ void SceneManager::AsyncLoad()
 
 	t.join();
 
-	SetLockFlag(true);
+	loadType_ = LoadType::LoadEnd;
 }

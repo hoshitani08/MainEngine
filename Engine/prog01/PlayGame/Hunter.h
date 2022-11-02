@@ -138,5 +138,5 @@ private: // メンバ変数
 	// アイテムの選択してるか
 	bool itemSelectionFlag_ = false;
 	// アニメーションのタイプフラグ
-	AnimationFlag falg_;
+	AnimationFlag falg_ = {};
 };

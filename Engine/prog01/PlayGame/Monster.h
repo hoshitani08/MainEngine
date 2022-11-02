@@ -28,9 +28,9 @@ private: // エイリアス
 
 private: // 定数
 	// 最小アングル
-	const float MIN_ANGLE = 2;
+	const float MIN_ANGLE = 2.0f;
 	// 最大アングル
-	const float MAX_ANGLE = 10;
+	const float MAX_ANGLE = 10.0f;
 	// 弧度法
 	const float PI = 3.14159265359f;
 	// 度数法

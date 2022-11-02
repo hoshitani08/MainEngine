@@ -21,10 +21,10 @@ public: // サブクラス
 	// アニメーション用データ構造体
 	struct MapChipData
 	{
-		string mapName;
-		std::vector<int> mapCsvNumber;
-		int mapChipMaxX;
-		int mapChipMaxY;
+		string mapName = "";
+		std::vector<int> mapCsvNumber = {};
+		int mapChipMaxX = 0;
+		int mapChipMaxY = 0;
 	};
 
 private:
@@ -47,7 +47,8 @@ public:
 	//マップナンバー指定
 	int GetChipNum(int x, int y, std::string fName, int mapChipSize = 1);
 	//大きさの最大を取得
-	const XMFLOAT2& GetMapChipMaxXY(std::string fName);
+	const int& GetMapChipMaxX(std::string fName);
+	const int& GetMapChipMaxY(std::string fName);
 
 private:
 	std::vector<MapChipData> mapData_;

@@ -71,10 +71,10 @@ int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 
 	std::vector<int> map = mapData_[count].mapCsvNumber;
 
-	return map[Y * mapData_[count].mapChipMaxX + X];
+	return map[static_cast<std::vector<int, std::allocator<int>>::size_type>(Y) * mapData_[count].mapChipMaxX + X];
 }
 
-const XMFLOAT2& MapChip::GetMapChipMaxXY(std::string fName)
+const int& MapChip::GetMapChipMaxX(std::string fName)
 {
 	int count = 0;
 
@@ -82,10 +82,26 @@ const XMFLOAT2& MapChip::GetMapChipMaxXY(std::string fName)
 	{
 		if (mapData_[i].mapName == baseDirectory + fName + ".csv")
 		{
-			return XMFLOAT2(mapData_[count].mapChipMaxX, mapData_[count].mapChipMaxY);
+			return mapData_[count].mapChipMaxX;
 		}
 		count++;
 	}
 	//ファイルがなかった場合
-	return XMFLOAT2(0,0);
+	return 0;
+}
+
+const int& MapChip::GetMapChipMaxY(std::string fName)
+{
+	int count = 0;
+
+	for (int i = 0; i < mapData_.size(); i++)
+	{
+		if (mapData_[i].mapName == baseDirectory + fName + ".csv")
+		{
+			return mapData_[count].mapChipMaxY;
+		}
+		count++;
+	}
+	//ファイルがなかった場合
+	return 0;
 }

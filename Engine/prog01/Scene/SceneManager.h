@@ -26,8 +26,6 @@ public: // シングルトン
 	static SceneManager* GetInstance();
 
 public:
-	// 初期化
-	void Initialize();
 	// 終了
 	void Finalize();
 	// 毎フレーム処理
@@ -38,12 +36,12 @@ public:
 	void EffectDraw();
 	// 次シーンの予約
 	void ChangeScene(const std::string& sceneName);
-	// ロードシーンの設定
-	void SetLoadScene(const std::string& sceneName);
 	// シーン生成の設定
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 private:
+	// ロードシーンの設定
+	void CreateLoadScene(const std::string& sceneName);
 	// ロードフラグの設定
 	void SetLockFlag(bool isLoaded);
 	// ロードフラグの取得
@@ -55,7 +53,7 @@ private:
 	//今のシーン
 	std::unique_ptr<BaseScene> scene_;
 	//次のシーン
-	BaseScene* nextScene_ = nullptr;
+	std::unique_ptr<BaseScene> nextScene_;
 	//ロードシーン
 	std::unique_ptr<BaseScene> loadScene_;
 	//シーンファクトリ
@@ -63,9 +61,9 @@ private:
 	// 非同期処理
 	std::thread th_ = {};
 	// ロード状態
-	LoadType loadType_;
+	LoadType loadType_ = LoadType::NoLoad;
 	// ロードしているか
 	bool isLoaded_ = false;
 	// スレッド間で使用する共有リソースを排他制御する
-	std::mutex isLoadedMutex;
+	std::mutex isLoadedMutex = {};
 };

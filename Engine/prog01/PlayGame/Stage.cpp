@@ -14,13 +14,13 @@ void Stage::Initialize()
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
 	ground_->SetPosition({ -11,0,0 });
 
-	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxXY("map").x; i++)
+	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxX("map"); i++)
 	{
-		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxXY("map").y; j++)
+		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxY("map"); j++)
 		{
 			std::unique_ptr<Block> block;
 
-			XMFLOAT2 size = { MapChip::GetInstance()->GetMapChipMaxXY("map").x / 2, MapChip::GetInstance()->GetMapChipMaxXY("map").y / 2 };
+			XMFLOAT2 size = { (float)MapChip::GetInstance()->GetMapChipMaxX("map") / 2, (float)MapChip::GetInstance()->GetMapChipMaxY("map") / 2 };
 			XMFLOAT2 count = { 5.5f, 6.0f };
 
 			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 1)
