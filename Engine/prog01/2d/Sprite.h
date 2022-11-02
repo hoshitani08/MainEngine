@@ -70,8 +70,12 @@ public: // メンバ関数
 	~Sprite();
 	// 初期化
 	bool Initialize();
+	// X,Y,Z軸回りの取得
+	const float& GetRotation() { return rotation_; }
 	// 角度の設定
 	void SetRotation(float rotation);
+	// 座標の取得
+	const XMFLOAT2& GetPosition() { return position_; }
 	// 座標の設定
 	void SetPosition(XMFLOAT2 position);
 	// サイズの設定

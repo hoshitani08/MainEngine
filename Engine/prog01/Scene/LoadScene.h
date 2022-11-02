@@ -3,6 +3,7 @@
 #include <memory>
 #include <array>
 #include <algorithm>
+#include <DirectXMath.h>
 
 #include "BaseScene.h"
 #include "Sprite.h"
@@ -34,6 +35,15 @@ public: // ƒƒ“ƒoŠÖ”
 	void EffectDraw() override;
 
 private: // ƒƒ“ƒo•Ï”
+	// ”wŒi
 	std::unique_ptr<Sprite> black_;
+	// 
+	std::unique_ptr<Sprite> sphere_;
+	//
+	std::unique_ptr<Sprite> loading_;
+	//
+	float angle = 0.0f;
+	//
+	int timer_ = 0;
 };
 

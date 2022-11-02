@@ -148,6 +148,14 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(101, L"Resources/effect1.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(102, L"Resources/UI/play/Loading.png"))
+	{
+		assert(0);
+	}
 }
 
 SpriteFactory* SpriteFactory::GetInstance()
