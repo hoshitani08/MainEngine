@@ -16,6 +16,7 @@ void ObjFactory::Initialize()
 	LoadModel("sphere");
 	LoadModel("katana");
 	LoadModel("coral");
+	LoadModel("Rock");
 }
 
 void ObjFactory::Finalize()

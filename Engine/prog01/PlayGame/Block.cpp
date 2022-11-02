@@ -14,8 +14,11 @@ void Block::Initialize(int type, float posX, float posZ)
 {
 	if (type == (int)BlockType::Rock)
 	{
-		rockBlock_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-		rockBlock_->SetPosition({ posX, 1.0f, posZ });
+		rockBlock_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("Rock"));
+		rockBlock_->SetPosition({ posX, 0.8f, posZ });
+		rockBlock_->SetRotation({ RandCalculate(0.0f,180.0f), 0,RandCalculate(0.0f,180.0f) });
+		float size = RandCalculate(1.0f, 3.0f);
+		rockBlock_->SetScale({ size, size, size });
 
 		blockType_ = BlockType::Rock;
 	}
@@ -32,7 +35,7 @@ void Block::Initialize(int type, float posX, float posZ)
 			tmp.coralBlock->SetScale({ size, size, size });
 
 			tmp.coralBlock->SetPosition({ posX + RandCalculate(-size,size), size, posZ + RandCalculate(-size,size) });
-			tmp.coralBlock->SetRotation({ 0, +RandCalculate(0.0f,180.0f),0 });
+			tmp.coralBlock->SetRotation({ 0, RandCalculate(0.0f,180.0f),0 });
 
 			tmp.bubbleParticle = std::make_unique<ObjParticle>();
 			tmp.bubbleEmitter = std::make_unique<ParticleEmitter>(tmp.bubbleParticle.get());
