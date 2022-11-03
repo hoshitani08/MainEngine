@@ -14,24 +14,39 @@ UserInterface::~UserInterface()
 
 void UserInterface::Initialize()
 {
+	//playerのステータス
 	lifeFrame_ =      Sprite::Create(1, { 60, 17 });
 	strengthFrame_ =  Sprite::Create(1, { 60, 35 });
 	lifeGauge_ =      Sprite::Create(2, { 62, 19 });
 	innerLifeGauge_ = Sprite::Create(3, { 62, 19 });
 	strengthGauge_ =  Sprite::Create(4, { 62, 37 });
-	clockFrame_ = Sprite::Create(10, { 0,0 });
+	attackIcon_ =     Sprite::Create(5, { 70, 55 });
+	defenseIcon_ =    Sprite::Create(6, { 90, 60 });
 
-	enemyLifeFrame_ = Sprite::Create(1, { 390, 620 });
-	enemyLifeGauge_ = Sprite::Create(3, { 392, 622 });
+	//enemyのステータス
+	enemyLifeFrame_ =      Sprite::Create(1, { 390, 620 });
+	enemyLifeGauge_ =      Sprite::Create(3, { 392, 622 });
 	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
 
+	// 時計
+	clockFrame_ =  Sprite::Create(10, { 0,0 });
+	clockNeedle_ = Sprite::Create(11, { 32, 32 }, { 1,1,1,1 }, { 0.5f,0.5f });
+
+	// ステージ
+	mapSprite_ =  Sprite::Create(12, { 50, 420 });
+	mapSprite_->SetSize({ 240,240 });
+	playerIcon_ = Sprite::Create(13, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
+	enemyIcon_ =  Sprite::Create(14, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
+
+	// アイテム
+	itemFrame_ = Sprite::Create(20, { 1020, 530 });
 	for (int i = 0; i < itemSprite_.size(); i++)
 	{
 		itemSprite_[i] = Sprite::Create(21 + i, { 1050, 550 });
 	}
 
+	// 数字
 	XMFLOAT2 size = { 16, 16 };
-
 	for (int i = 0; i < oneDigits_.size(); i++)
 	{
 		oneDigits_[i] = Sprite::Create(30 + i, { 1110, 610 });
@@ -43,26 +58,14 @@ void UserInterface::Initialize()
 		tenDigits_[i]->SetSize(size);
 	}
 
-	itemFrame_ = Sprite::Create(20, { 1020, 530 });
+	// ボタン
+	lbButtonIcon_ = Sprite::Create(40, { 970, 560 });
 
-	mapSprite_ = Sprite::Create(14, { 50, 420 });
-
-	mapSprite_->SetSize({240,240});
-
-	playerIcon_ = Sprite::Create(15, { 50, 420 }, { 1,1,1,1 }, {0.5f,0.5f});
-	enemyIcon_ = Sprite::Create(16, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
-
-	attackIcon_ = Sprite::Create(17, { 70, 55 });
-	defenseIcon_ = Sprite::Create(18, { 90, 60 });
-
-	lbButtonIcon_ = Sprite::Create(24, { 970, 560 });
-	xButtonIcon_ = Sprite::Create(26, { 1065, 640 });
+	xButtonIcon_ = Sprite::Create(41, { 1065, 640 });
 	xButtonIcon_->SetSize({ 32,32 });
 
-	bButtonIcon_ = Sprite::Create(25, { 1095, 640 });
+	bButtonIcon_ = Sprite::Create(42, { 1095, 640 });
 	bButtonIcon_->SetSize({ 32,32 });
-
-	clockNeedle_ = Sprite::Create(19, { 32, 32 }, { 1,1,1,1 }, { 0.5f,0.5f });
 
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;

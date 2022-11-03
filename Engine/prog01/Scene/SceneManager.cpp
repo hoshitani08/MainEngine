@@ -44,7 +44,7 @@ void SceneManager::Update()
 		{
 		case SceneManager::LoadType::NoLoad: // ロードしていない
 			th_.swap(std::thread([&] { AsyncLoad(); }));
-			// 
+			// 画面=ロード画面
 			scene_ = std::move(loadScene_);
 			// ロード状態=ロード始まった
 			loadType_ = LoadType::LoadStart;
@@ -53,9 +53,9 @@ void SceneManager::Update()
 			break;
 		case SceneManager::LoadType::LoadEnd: // ロード終了
 			th_.join();
-			// ロードの終了
+			// 画面=次のゲーム画面
 			scene_ = std::move(nextScene_);
-			// 画面=ロード画面
+			// ロード状態=ロードしていない
 			loadType_ = LoadType::NoLoad;
 			break;
 		default:
@@ -107,11 +107,11 @@ void SceneManager::AsyncLoad()
 {
 	std::thread t = std::thread([&] { nextScene_->Initialize(); });
 
-	//ダミーで10秒待つ
-	auto sleepTime = std::chrono::seconds(2);
+	//ダミーで1秒待つ
+	auto sleepTime = std::chrono::seconds(1);
 	std::this_thread::sleep_for(sleepTime);
 
 	t.join();
-
+	// ロード状態=ロード終了
 	loadType_ = LoadType::LoadEnd;
 }

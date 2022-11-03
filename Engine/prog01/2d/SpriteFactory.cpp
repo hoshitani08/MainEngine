@@ -11,8 +11,10 @@ void SpriteFactory::Initialize()
 	DebugText::GetInstance()->Initialize(0);
 
 	// テクスチャ読み込み
+	
 
-	//UI : Player関係
+	//UI : GamePlay関係
+	//playerのステータス
 	if (!Sprite::LoadTexture(1, L"Resources/UI/play/frame.png"))
 	{
 		assert(0);
@@ -29,45 +31,35 @@ void SpriteFactory::Initialize()
 	{
 		assert(0);
 	}
+	if (!Sprite::LoadTexture(5, L"Resources/UI/play/attackUI.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(6, L"Resources/UI/play/defenseUI.png"))
+	{
+		assert(0);
+	}
 
-	//UI : GamePlay関係
+	// 時計
 	if (!Sprite::LoadTexture(10, L"Resources/UI/play/clock.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(11, L"Resources/UI/play/map.png"))
+	if (!Sprite::LoadTexture(11, L"Resources/UI/play/clockNeedle.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(12, L"Resources/UI/play/playerIcon.png"))
+
+	// ステージ
+	if (!Sprite::LoadTexture(12, L"Resources/UI/play/map.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(13, L"Resources/UI/play/enemyIcon.png"))
+	if (!Sprite::LoadTexture(13, L"Resources/UI/play/playerIcon.png"))
 	{
 		assert(0);
 	}
-	if (!Sprite::LoadTexture(14, L"Resources/UI/play/map.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(15, L"Resources/UI/play/playerIcon.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(16, L"Resources/UI/play/enemyIcon.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(17, L"Resources/UI/play/attackUI.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(18, L"Resources/UI/play/defenseUI.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(19, L"Resources/UI/play/clockNeedle.png"))
+	if (!Sprite::LoadTexture(14, L"Resources/UI/play/enemyIcon.png"))
 	{
 		assert(0);
 	}
@@ -86,18 +78,6 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(23, L"Resources/UI/item/defenseBuff.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(24, L"Resources/UI/play/LBbutton.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(25, L"Resources/UI/play/Bbutton.png"))
-	{
-		assert(0);
-	}
-	if (!Sprite::LoadTexture(26, L"Resources/UI/play/Xbutton.png"))
 	{
 		assert(0);
 	}
@@ -140,6 +120,20 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(39, L"Resources/UI/number/9.png"))
+	{
+		assert(0);
+	}
+
+	// ボタン
+	if (!Sprite::LoadTexture(40, L"Resources/UI/play/LBbutton.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(41, L"Resources/UI/play/Bbutton.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(42, L"Resources/UI/play/Xbutton.png"))
 	{
 		assert(0);
 	}
