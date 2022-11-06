@@ -40,22 +40,6 @@ public: // 定数
 	const float MAX_HP = 500.0f;
 
 public: // サブクラス
-	enum class Phase
-	{
-		Approach,
-		Stop,
-		Attack,
-		Leave,
-		CoolTime
-	};
-
-	enum class AttackType
-	{
-		Weak,
-		Ordinary,
-		Strong
-	};
-
 	enum class AnimationType
 	{
 		Stop,
@@ -74,7 +58,7 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
-	static std::unique_ptr<Monster> Create(Camera* camera);
+	static std::unique_ptr<Monster> Create(Camera* camera, Hunter* hunter);
 
 public: // メンバ関数
 	// 初期化
@@ -85,28 +69,48 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	// 行動
-	void Activity();
 	// 向きの設定
 	void AngleAdjustment();
-	// 攻撃が当たったか
-	void AttackHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f, float damage = 0.0f);
-	// 範囲に入ったか
-	void RangeHit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
 	// 当たったか
 	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
 	// ダメージを受けたか
 	void DamageHit(Sphere hitSphere);
-	// 移動
-	void Move(float speed);
 	// 基本のアニメーション
 	void Animation(AnimationType type);
-	// 行動の終了
-	void ActEnd();
-	// 血のパーティクル
-	void ParticleDraw();
 	// 部位破壊
 	void PartsTailDestruction();
+	// ビヘイビアツリー
+	void BehaviorTree();
+	// 咆哮
+	bool Howl();
+	// 攻撃
+	bool AttackMode();
+	// 待機
+	bool WaitingMode();
+	// 死亡
+	bool Dead();
+	// 攻撃の経過時間
+	bool AttackElapsedTime();
+	// 攻撃の選択
+	bool AttackModeSelection();
+	// 攻撃の実行
+	bool AttackModeMove();
+	// 突進
+	bool AttackMode1();
+	// 待機の経過時間
+	bool WaitingElapsedTime();
+	// 待機の選択
+	bool WaitingModeSelection();
+	// 待機の実行
+	bool WaitingModeMove();
+	// 何もしない
+	bool WaitingMode1();
+	// 接近
+	bool WaitingMode2();
+	// 間合いを取る
+	bool WaitingMode3();
+	// ビヘイビアツリーのリセット
+	void TreeReset();
 
 public: // メンバ関数
 	// 座標の取得
@@ -124,6 +128,7 @@ public: // メンバ関数
 	void SetHp(float hp) { hp_ = hp; }
 
 private: // メンバ変数
+#pragma region
 	//核
 	std::unique_ptr<Object3d> nucleus_;
 	// 体
@@ -141,45 +146,51 @@ private: // メンバ変数
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
 	// 血のパーティクル
-	std::unique_ptr<ParticleManager> particleManager_;
 	std::unique_ptr<ParticleEmitter> blood_;
-
 	std::unique_ptr<ObjParticle> testBlood_;
-
-	// 進行方向の保存
-	XMFLOAT3 saveVector_ = {};
-
-	// 行動をする時間
-	float moveTimer_ = 0.0f;
-	// sin波のタイマー
-	float waveTimer_ = 0.0f;
-	//クールタイム
-	float coolTimer = 0.0f;
+#pragma endregion モデル
+#pragma region
+	// 尻尾の耐久値
+	int tailDestruction_ = 0;
 	//ヒットポイント
 	float hp_ = MAX_HP;
-
-	// 行動をする時間の最大
-	int maxTime_ = 0;
-	// 行動を決めるカウント
-	int actCount_ = 0;
-	//
-	int tailDestruction_ = 0;
-
+	// 進行方向の保存
+	XMFLOAT3 saveVector_ = {};
 	// ダメージを受けたか
 	bool damageHitFlag_ = false;
 	// 当たったか
 	bool hitFlag_ = false;
-	// 保存出来るか
-	bool saveFlag_ = false;
 	// 死んだか
 	bool isDead_ = false;
-	// 行動の終了
-	bool actEndFlag_ = false;
 	// 尻尾が切れたか
 	bool tailDestructionFlag_ = false;
-
-	// 行動の種類
-	Phase phase_ = Phase::Approach;
-	// 攻撃の種類
-	AttackType attackType_ = AttackType::Ordinary;
+#pragma endregion ステータス
+#pragma region 
+	// sin波のタイマー
+	float waveTimer_ = 0.0f;
+#pragma endregion アニメーション
+#pragma region 
+	// 行動のセレクター
+	std::vector<std::function<bool()>> activitySelector_;
+	// 攻撃のシークエンス
+	std::vector<std::function<bool()>> attackSequence_;
+	// 待機のシークエンス
+	std::vector<std::function<bool()>> waitingSequence_;
+	// 攻撃のセレクター
+	std::vector<bool> attackSelector_;
+	// 待機のセレクター
+	std::vector<bool> waitingSelector_;
+	// 攻撃の経過時間
+	int attackElapsedTimer_ = 0;
+	// 待機の経過時間
+	int waitingElapsedTimer_ = 0;
+	// 咆哮したか
+	bool howlflag_ = false;
+	// 追尾の終了
+	bool trackingEnd_ = false;
+	// 攻撃の終了
+	bool attackEnd_ = false;
+	// 待機の終了
+	bool waitingEnd_ = false;
+#pragma endregion ビヘイビアツリー
 };

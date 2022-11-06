@@ -8,7 +8,7 @@
 
 #include <math.h>
 
-std::unique_ptr<Monster> Monster::Create(Camera* camera)
+std::unique_ptr<Monster> Monster::Create(Camera* camera, Hunter* hunter)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Monster* monster = new Monster();
@@ -16,6 +16,7 @@ std::unique_ptr<Monster> Monster::Create(Camera* camera)
 	{
 		return nullptr;
 	}
+	monster->SetHunter(hunter);
 	monster->Initialize(camera);
 
 	return std::unique_ptr<Monster>(monster);
@@ -144,13 +145,29 @@ void Monster::Initialize(Camera* camera)
 		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
 	}
 
-	particleManager_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera);
 	testBlood_ = std::make_unique<ObjParticle>();
 	blood_ = std::make_unique<ParticleEmitter>(testBlood_.get());
 	blood_->SetCenter(1);
 	blood_->SetObjScale({ 0.5f, 0.5f, 0.5f });
 	blood_->SetStartColor({ 1,0,0,1 });
 	blood_->SetEndColor({ 1,0,0,1 });
+
+
+	//ビヘイビアツリーの初期化
+	activitySelector_.push_back(std::bind(&Monster::Howl, this));
+	activitySelector_.push_back(std::bind(&Monster::AttackMode, this));
+	activitySelector_.push_back(std::bind(&Monster::WaitingMode, this));
+	activitySelector_.push_back(std::bind(&Monster::Dead, this));
+
+	attackSequence_.push_back(std::bind(&Monster::AttackElapsedTime, this));
+	attackSequence_.push_back(std::bind(&Monster::AttackModeSelection, this));
+	attackSequence_.push_back(std::bind(&Monster::AttackModeMove, this));
+
+	waitingSequence_.push_back(std::bind(&Monster::WaitingElapsedTime, this));
+	waitingSequence_.push_back(std::bind(&Monster::WaitingModeSelection, this));
+	waitingSequence_.push_back(std::bind(&Monster::WaitingModeMove, this));
+
+	TreeReset();
 }
 
 void Monster::Finalize()
@@ -159,14 +176,7 @@ void Monster::Finalize()
 
 void Monster::Update()
 {
-	if (hp_ >= 1)
-	{
-		Activity();
-	}
-	else
-	{
-		isDead_ = true;
-	}
+	BehaviorTree();
 
 	if (!hunter_->GetAnimationType())
 	{
@@ -236,50 +246,6 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 	blood_->Draw(cmdList);
 }
 
-void Monster::ParticleDraw()
-{
-	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
-	
-}
-
-void Monster::Activity()
-{
-	switch (phase_)
-	{
-	case Phase::Approach:
-		Animation(AnimationType::Move);
-		AngleAdjustment();
-		Move(0.8f);
-		break;
-	case Phase::Stop:
-		Animation(AnimationType::Stop);
-		break;
-	case Phase::Attack:
-		Animation(AnimationType::Assault);
-		if (!saveFlag_)
-		{
-			AngleAdjustment();
-		}
-		Move(1.0f);
-		break;
-	case Phase::Leave:
-		Animation(AnimationType::Move);
-		AngleAdjustment();
-		Move(-1.0f);
-		break;
-	default:
-		break;
-	}
-
-	ActEnd();
-
-	/*DebugText::GetInstance()->VariablePrint(0, 0, "monster_.x", monster_->GetPosition().x, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 16, "monster_.y", monster_->GetPosition().y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 32, "monster_.z", monster_->GetPosition().z, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 48, "count", count, 1.0f);*/
-	
-}
-
 void Monster::AngleAdjustment()
 {
 	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
@@ -298,43 +264,6 @@ void Monster::AngleAdjustment()
 	enemyRot.z = atan2(result.y - 0, result.x - 0) * (ANGLE / PI);
 
 	nucleus_->SetRotation(enemyRot);
-}
-
-void Monster::AttackHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange, float damage)
-{
-	Sphere eSphere;
-	Sphere pSphere;
-
-	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
-	eSphere.radius = enemyRange;
-	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
-	pSphere.radius = playerRange;
-
-	if (Collision::CheckSphere2Sphere(eSphere, pSphere) && !hitFlag_)
-	{
-		if (hunter_->GetInvincibleTimer() >= 60)
-		{
-			hunter_->SetDamageFlag(true);
-			hunter_->SetDamage(damage);
-			hitFlag_ = true;
-		}
-	}
-}
-
-void Monster::RangeHit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
-{
-	Sphere eSphere;
-	Sphere pSphere;
-
-	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
-	eSphere.radius = enemyRange;
-	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
-	pSphere.radius = playerRange;
-
-	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
-	{
-		saveFlag_ = true;
-	}
 }
 
 bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
@@ -495,59 +424,6 @@ void Monster::DamageHit(Sphere hitSphere)
 	}
 }
 
-void Monster::Move(float speed)
-{
-	XMFLOAT3 pos = nucleus_->GetPosition();
-	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
-
-	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
-	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
-
-	switch (phase_)
-	{
-	case Phase::Approach:
-		if (!saveFlag_)
-		{
-			saveVector_ = vector;
-		}
-		RangeHit(nucleus_->GetPosition(), 1.0f, 40);
-		break;
-	case Phase::Stop:
-		saveVector_ = {};
-		break;
-	case Phase::Attack:
-		if (!saveFlag_)
-		{
-			saveVector_ = vector;
-		}
-		RangeHit(nucleus_->GetPosition(), 1.0f, 20);
-		AttackHit(nucleus_->GetPosition(), 1.0f, 1.0f, 10);
-		break;
-	case Phase::Leave:
-		if (!saveFlag_)
-		{
-			saveVector_ = vector;
-			saveFlag_ = true;
-		}
-		break;
-	case Phase::CoolTime:
-		break;
-	default:
-		break;
-	}
-
-	pos.x += saveVector_.x;
-	pos.y += saveVector_.y;
-	pos.z += saveVector_.z;
-
-	if (pos.y <= 1)
-	{
-		pos.y = 1;
-	}
-
-	nucleus_->SetPosition(pos);
-}
-
 void Monster::Animation(AnimationType type)
 {
 	// 初期姿勢
@@ -680,103 +556,6 @@ void Monster::Animation(AnimationType type)
 	}
 }
 
-void Monster::ActEnd()
-{
-	switch (phase_)
-	{
-	case Phase::Approach:
-		// タイマーの最大値
-		maxTime_ = 30;
-		if (saveFlag_)
-		{
-			// タイマーの加算
-			moveTimer_++;
-
-			if (Hit(nucleus_->GetPosition()))
-			{
-				moveTimer_ = 999;
-			}
-		}
-
-		if (moveTimer_ >= maxTime_)
-		{
-			actEndFlag_ = true;
-		}
-		break;
-	case Phase::Stop:
-		// タイマーの最大値
-		maxTime_ = 30;
-		// タイマーの加算
-		moveTimer_++;
-		if (moveTimer_ >= maxTime_)
-		{
-			actEndFlag_ = true;
-		}
-		break;
-	case Phase::Attack:
-		// タイマーの最大値
-		maxTime_ = 60;
-		if (saveFlag_)
-		{
-			// タイマーの加算
-			moveTimer_++;
-		}
-		if (body_[0]->GetRotation().x <= 0 && moveTimer_ >= maxTime_)
-		{
-			actEndFlag_ = true;
-		}
-		break;
-	case Phase::Leave:
-		// タイマーの最大値
-		maxTime_ = 30;
-		// タイマーの加算
-		moveTimer_++;
-		if (moveTimer_ >= maxTime_)
-		{
-			actEndFlag_ = true;
-		}
-
-		break;
-	case Phase::CoolTime:
-		Animation(AnimationType::Stop);
-		moveTimer_ = 0;
-		saveFlag_ = false;
-		hitFlag_ = false;
-		break;
-	default:
-		break;
-	}
-
-	if (actEndFlag_ && coolTimer < 30)
-	{
-		coolTimer++;
-		phase_ = Phase::CoolTime;
-	}
-	else if(coolTimer >= 30)
-	{
-		actCount_ = rand() % 101;
-		if (actCount_ >= 0 && actCount_ <= 49)
-		{
-			phase_ = Phase::Approach;
-		}
-		else if (actCount_ >= 50 && actCount_ <= 59)
-		{
-			phase_ = Phase::Stop;
-		}
-		else if (actCount_ >= 60 && actCount_ <= 89)
-		{
-			phase_ = Phase::Attack;
-		}
-		else if (actCount_ >= 90 && actCount_ <= 100)
-		{
-			phase_ = Phase::Leave;
-		}
-		
-		coolTimer = 0;
-		actEndFlag_ = false;
-	}
-}
-
 void Monster::PartsTailDestruction()
 {
 	if (tailDestruction_ >= 150 && !tailDestructionFlag_)
@@ -799,4 +578,313 @@ void Monster::PartsTailDestruction()
 
 		tailDestructionFlag_ = true;
 	}
+}
+
+void Monster::BehaviorTree()
+{
+	for (auto& a: activitySelector_)
+	{
+		if (a())
+		{
+			break;
+		}
+	}
+}
+
+bool Monster::Howl()
+{
+	if (howlflag_)
+	{
+		return false;
+	}
+
+	howlflag_ = true;
+
+	return true;
+}
+
+bool Monster::AttackMode()
+{
+	if (attackEnd_)
+	{
+		Animation(AnimationType::Stop);
+		hitFlag_ = false;
+		return false;
+	}
+
+	for (auto& a : attackSequence_)
+	{
+		if (!a())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Monster::WaitingMode()
+{
+	for (auto& a : waitingSequence_)
+	{
+		if (!a())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Monster::Dead()
+{
+	if (hp_ >= 1)
+	{
+		TreeReset();
+	}
+	else
+	{
+		isDead_ = true;
+	}
+
+	return true;
+}
+
+bool Monster::AttackElapsedTime()
+{
+	if (attackElapsedTimer_ >= 60 && body_[0]->GetRotation().x <= 0)
+	{
+		attackEnd_ = true;
+		return false;
+	}
+
+	if (trackingEnd_)
+	{
+		attackElapsedTimer_++;
+	}
+
+	return true;
+}
+
+bool Monster::AttackModeSelection()
+{
+	if (attackSelector_[0])
+	{
+		return true;
+	}
+
+	for (int i = 0; i < attackSelector_.size(); i++)
+	{
+		if (i == 0 && !Hit(nucleus_->GetPosition(), 1.0f, 50))
+		{
+			attackSelector_[i] = true;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Monster::AttackModeMove()
+{
+	if (attackSelector_[0])
+	{
+		return AttackMode1();
+	}
+}
+
+bool Monster::AttackMode1()
+{
+	Animation(AnimationType::Assault);
+
+	XMFLOAT3 pos = nucleus_->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
+
+	float speed = 1.0f;
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	if (!trackingEnd_)
+	{
+		AngleAdjustment();
+		saveVector_ = vector;
+	}
+
+	if (Hit(nucleus_->GetPosition(), 1.0f, 20))
+	{
+		trackingEnd_ = true;
+	}
+
+	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+	{
+		hunter_->SetDamageFlag(true);
+		hunter_->SetDamage(10);
+		hitFlag_ = true;
+	}
+
+	pos.x += saveVector_.x;
+	pos.y += saveVector_.y;
+	pos.z += saveVector_.z;
+
+	if (pos.y <= 1)
+	{
+		pos.y = 1;
+	}
+
+	nucleus_->SetPosition(pos);
+
+	return true;
+}
+
+bool Monster::WaitingElapsedTime()
+{
+	if (waitingElapsedTimer_ >= 60 || waitingEnd_)
+	{
+		return false;
+	}
+
+	waitingElapsedTimer_++;
+
+	return true;
+}
+
+bool Monster::WaitingModeSelection()
+{
+	if (waitingSelector_[0] || waitingSelector_[1] || waitingSelector_[2])
+	{
+		return true;
+	}
+
+	for (int i = 0; i < waitingSelector_.size(); i++)
+	{
+		if (i == 0 && Hit(nucleus_->GetPosition(), 1.0f, 1.0f))
+		{
+			waitingSelector_[i] = true;
+			return true;
+		}
+		if (i == 1 && !Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+		{
+			waitingSelector_[i] = true;
+			return true;
+		}
+		if (i == 2 && Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+		{
+			waitingSelector_[i] = true;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Monster::WaitingModeMove()
+{
+	if (waitingSelector_[0])
+	{
+		return WaitingMode1();
+	}
+	else if (waitingSelector_[1])
+	{
+		return WaitingMode2();
+	}
+	else if (waitingSelector_[2])
+	{
+		return WaitingMode3();
+	}
+
+	return false;
+}
+
+bool Monster::WaitingMode1()
+{
+	Animation(AnimationType::Stop);
+	return true;
+}
+
+bool Monster::WaitingMode2()
+{
+	if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+	{
+		waitingEnd_ = true;
+		return false;
+	}
+
+	Animation(AnimationType::Move);
+	AngleAdjustment();
+
+	XMFLOAT3 pos = nucleus_->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
+
+	float speed = 0.8f;
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	pos.x += vector.x;
+	pos.y += vector.y;
+	pos.z += vector.z;
+
+	if (pos.y <= 1)
+	{
+		pos.y = 1;
+	}
+
+	nucleus_->SetPosition(pos);
+
+	return true;
+}
+
+bool Monster::WaitingMode3()
+{
+	if (!Hit(body_[2]->GetWorldPosition(), 80.0f, 1.0f))
+	{
+		waitingEnd_ = true;
+		return false;
+	}
+
+	Animation(AnimationType::Move);
+	AngleAdjustment();
+
+	XMFLOAT3 pos = nucleus_->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
+
+	float speed = -1.0f;
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	pos.x += vector.x;
+	pos.y += vector.y;
+	pos.z += vector.z;
+
+	if (pos.y <= 1)
+	{
+		pos.y = 1;
+	}
+
+	nucleus_->SetPosition(pos);
+
+	return true;
+}
+
+void Monster::TreeReset()
+{
+	attackSelector_.clear();
+	for (int i = 0; i < 1; i++)
+	{
+		bool flag = false;
+		attackSelector_.push_back(flag);
+	}
+	
+	waitingSelector_.clear();
+	for (int i = 0; i < 3; i++)
+	{
+		bool flag = false;
+		waitingSelector_.push_back(flag);
+	}
+
+	attackElapsedTimer_ = 0;
+	waitingElapsedTimer_ = 0;
+
+	trackingEnd_ = false;
+	attackEnd_ = false;
+	waitingEnd_ = false;
 }
