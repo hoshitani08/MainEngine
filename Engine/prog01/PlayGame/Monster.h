@@ -45,6 +45,7 @@ public: // サブクラス
 		Stop,
 		Move,
 		Assault,
+		TailAttack,
 	};
 
 	enum class PartsDamage
@@ -97,6 +98,8 @@ public: // メンバ関数
 	bool AttackModeMove();
 	// 突進
 	bool AttackMode1();
+	// 尻尾攻撃
+	bool AttackMode2();
 	// 待機の経過時間
 	bool WaitingElapsedTime();
 	// 待機の選択

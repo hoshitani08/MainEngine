@@ -148,7 +148,7 @@ void Monster::Initialize(Camera* camera)
 	testBlood_ = std::make_unique<ObjParticle>();
 	blood_ = std::make_unique<ParticleEmitter>(testBlood_.get());
 	blood_->SetCenter(1);
-	blood_->SetObjScale({ 0.5f, 0.5f, 0.5f });
+	blood_->SetObjScale({ 0.3f, 0.3f, 0.3f });
 	blood_->SetStartColor({ 1,0,0,1 });
 	blood_->SetEndColor({ 1,0,0,1 });
 
@@ -287,8 +287,8 @@ void Monster::DamageHit(Sphere hitSphere)
 {
 	Sphere eSphere;
 
-	int count = 15;
-	int life = 120;
+	int count = 10;
+	int life = 60;
 
 	// ‘Ì
 	for (int i = 0; i < body_.size(); i++)
@@ -503,7 +503,7 @@ void Monster::Animation(AnimationType type)
 		// •‚Ì§ŒÀ
 		float restrictionAngle = 15;
 
-		rot.z  += cosf(PI * 2 / 135 * waveTimer_);
+		rot.z += cosf(PI * 2 / 135 * waveTimer_);
 		rot2.z -= cosf(PI * 2 / 135 * waveTimer_);
 
 		rightForeFoot_[0]->SetRotation(rot);
@@ -554,6 +554,20 @@ void Monster::Animation(AnimationType type)
 		leftHindFoot_[0]->SetRotation(rot);
 		rightHindFoot_[0]->SetRotation(rot);
 	}
+	else if (type == AnimationType::TailAttack)
+	{
+		XMFLOAT3 bodyRot = body_[0]->GetRotation();
+
+		bodyRot.y += MAX_ANGLE;
+
+		if (bodyRot.y >= 360)
+		{
+			bodyRot.y = 0;
+		}
+
+		body_[0]->SetRotation(bodyRot);
+	}
+
 }
 
 void Monster::PartsTailDestruction()
@@ -567,7 +581,7 @@ void Monster::PartsTailDestruction()
 
 		ppos.x += body_[4]->GetWorldPosition().x;
 		ppos.y += body_[4]->GetWorldPosition().y;
-		ppos.z += body_[4]->GetWorldPosition().z; 
+		ppos.z += body_[4]->GetWorldPosition().z;
 
 		prot.x += nucleus_->GetRotation().x;
 		prot.y += nucleus_->GetRotation().y;
@@ -582,7 +596,7 @@ void Monster::PartsTailDestruction()
 
 void Monster::BehaviorTree()
 {
-	for (auto& a: activitySelector_)
+	for (auto& a : activitySelector_)
 	{
 		if (a())
 		{
@@ -605,17 +619,12 @@ bool Monster::Howl()
 
 bool Monster::AttackMode()
 {
-	if (attackEnd_)
-	{
-		Animation(AnimationType::Stop);
-		hitFlag_ = false;
-		return false;
-	}
-
 	for (auto& a : attackSequence_)
 	{
 		if (!a())
 		{
+			Animation(AnimationType::Stop);
+			hitFlag_ = false;
 			return false;
 		}
 	}
@@ -629,6 +638,7 @@ bool Monster::WaitingMode()
 	{
 		if (!a())
 		{
+			Animation(AnimationType::Stop);
 			return false;
 		}
 	}
@@ -652,7 +662,12 @@ bool Monster::Dead()
 
 bool Monster::AttackElapsedTime()
 {
-	if (attackElapsedTimer_ >= 60 && body_[0]->GetRotation().x <= 0)
+	if (attackEnd_)
+	{
+		return false;
+	}
+
+	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelector_[0]) || body_[0]->GetRotation().y <= 0 && attackSelector_[1])
 	{
 		attackEnd_ = true;
 		return false;
@@ -668,18 +683,20 @@ bool Monster::AttackElapsedTime()
 
 bool Monster::AttackModeSelection()
 {
-	if (attackSelector_[0])
+	if (attackSelector_[0] || attackSelector_[1])
 	{
 		return true;
 	}
 
-	for (int i = 0; i < attackSelector_.size(); i++)
+	if (!Hit(nucleus_->GetPosition(), 1.0f, 50.0f))
 	{
-		if (i == 0 && !Hit(nucleus_->GetPosition(), 1.0f, 50))
-		{
-			attackSelector_[i] = true;
-			return true;
-		}
+		attackSelector_[0] = true;
+		return true;
+	}
+	else if (Hit(nucleus_->GetPosition(), 1.0f, 8.0f))
+	{
+		attackSelector_[1] = true;
+		return true;
 	}
 
 	return false;
@@ -691,6 +708,12 @@ bool Monster::AttackModeMove()
 	{
 		return AttackMode1();
 	}
+	if (attackSelector_[1])
+	{
+		return AttackMode2();
+	}
+
+	return false;
 }
 
 bool Monster::AttackMode1()
@@ -732,6 +755,32 @@ bool Monster::AttackMode1()
 	}
 
 	nucleus_->SetPosition(pos);
+
+	return true;
+}
+
+bool Monster::AttackMode2()
+{
+	Animation(AnimationType::TailAttack);
+	if (!trackingEnd_)
+	{
+		AngleAdjustment();
+		trackingEnd_ = true;
+	}
+
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		if (hitFlag_)
+		{
+			continue;
+		}
+		if (Hit(tail_[0]->GetWorldPosition(), 1.5f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamage(10);
+			hitFlag_ = true;
+		}
+	}
 
 	return true;
 }
@@ -868,12 +917,12 @@ bool Monster::WaitingMode3()
 void Monster::TreeReset()
 {
 	attackSelector_.clear();
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		bool flag = false;
 		attackSelector_.push_back(flag);
 	}
-	
+
 	waitingSelector_.clear();
 	for (int i = 0; i < 3; i++)
 	{
