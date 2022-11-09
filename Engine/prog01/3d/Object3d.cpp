@@ -1,7 +1,6 @@
 #include "Object3d.h"
 #include "BaseCollider.h"
 #include "CollisionManager.h"
-#include "ShaderManager.h"
 
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
@@ -127,9 +126,9 @@ void Object3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	assert(device_);
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(ShaderManager::GetInstance()->GetPipelineState(L"Object"));
+	cmdList->SetPipelineState(ShaderManager::GetInstance()->GetPipelineState(L"Object", type_));
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(ShaderManager::GetInstance()->GetRootSignature(L"Object"));
+	cmdList->SetGraphicsRootSignature(ShaderManager::GetInstance()->GetRootSignature(L"Object", type_));
 	// プリミティブ形状を設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

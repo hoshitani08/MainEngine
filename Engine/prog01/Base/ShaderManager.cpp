@@ -10,6 +10,7 @@ void ShaderManager::Initialize(ID3D12Device* device)
 	CreateGraphicsPipeline(device, L"Sprite", "Sprite");
 	CreateGraphicsPipeline(device, L"Particle", "Particle");
 	CreateGraphicsPipeline(device, L"Object", "OBJ");
+	CreateGraphicsPipeline(device, L"Object", "OBJ", Type::Line);
 	CreateGraphicsPipeline(device, L"BasicFBX", "FBX");
 	CreateGraphicsPipeline(device, L"NormalMapFBX", "FBX");
 	CreateGraphicsPipeline(device, L"PMX", "PMX");
@@ -26,7 +27,7 @@ void ShaderManager::Finalize()
 	}
 }
 
-void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fName, std::string typeName)
+void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fName, std::string typeName, Type type)
 {
 	HRESULT result = S_FALSE;
 
@@ -35,6 +36,7 @@ void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fN
 	ShaderData tempData;
 
 	tempData.fName = fName;
+	tempData.type = type;
 
 	//頂点シェーダのパス生成
 	std::wstring fNameVS = L"Resources/shaders/" + fName + L"VS.hlsl";
@@ -291,7 +293,10 @@ void ShaderManager::ObjPipeline(ID3D12Device* device, ShaderData tempData)
 	// ラスタライザステート
 	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	if (tempData.type == Type::Line)
+	{
+		gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	}
 	// デプスステンシルステート
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 
@@ -805,11 +810,11 @@ void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData
 	shaderData_.push_back(tempData);
 }
 
-ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName)
+ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName, Type type)
 {
 	for (int i = 0; i < shaderData_.size(); i++)
 	{
-		if (shaderData_[i].fName == fName)
+		if (shaderData_[i].fName == fName && shaderData_[i].type == type)
 		{
 			return shaderData_[i].rootsignature.Get();
 		}
@@ -818,11 +823,11 @@ ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName)
 	return nullptr;
 }
 
-ID3D12PipelineState* ShaderManager::GetPipelineState(std::wstring fName)
+ID3D12PipelineState* ShaderManager::GetPipelineState(std::wstring fName, Type type)
 {
 	for (int i = 0; i < shaderData_.size(); i++)
 	{
-		if (shaderData_[i].fName == fName)
+		if (shaderData_[i].fName == fName && shaderData_[i].type == type)
 		{
 			return shaderData_[i].pipelinestate.Get();
 		}

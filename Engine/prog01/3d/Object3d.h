@@ -12,6 +12,7 @@
 #include "LightGroup.h"
 #include "CollisionInfo.h"
 #include "FbxObject3d.h"
+#include "ShaderManager.h"
 
 class Object3d
 {
@@ -104,6 +105,8 @@ public: // メンバ関数
 	void SetParent(FbxObject3d* parent) { fbxParent_ = parent; }
 	// 取得するボーンの名前の設定
 	void SetBoneName(std::string boneName) { boneName_ = boneName; }
+	// プリミティブ形状の設定
+	void SetPrimitiveType(ShaderManager::Type type) { type_ = type; }
 
 protected: // メンバ変数
 	ComPtr<ID3D12Resource> constBuffB0_; // 定数バッファ
@@ -130,4 +133,6 @@ protected: // メンバ変数
 	BaseCollider* collider_ = nullptr;
 	// ボーンのファイル名
 	std::string boneName_;
+	//
+	ShaderManager::Type type_ = ShaderManager::Type::Triangle;
 };

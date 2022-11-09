@@ -56,7 +56,7 @@ void GameScene::Initialize()
 	light_->SetPointLightActive(0, false);
 	light_->SetPointLightActive(1, false);
 	light_->SetPointLightActive(2, false);
-	light_->SetCircleShadowActive(0, true);
+	light_->SetCircleShadowActive(0, false);
 
 	// 3Dオブジェクト生成
 	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));

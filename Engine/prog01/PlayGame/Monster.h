@@ -171,6 +171,12 @@ private: // メンバ変数
 #pragma region 
 	// sin波のタイマー
 	float waveTimer_ = 0.0f;
+	// イージング用位置
+	XMFLOAT3 endRotation_ = {0,360,0};
+	// イージングの進行度用
+	float easeTimer_ = 0.0f;
+	// イージングし終わったか
+	bool isEaseFlag_ = false;
 #pragma endregion アニメーション
 #pragma region 
 	// 行動のセレクター

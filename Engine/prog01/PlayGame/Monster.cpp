@@ -5,6 +5,7 @@
 #include "DebugText.h"
 #include "ObjFactory.h"
 #include "ItemManager.h"
+#include "Ease.h"
 
 #include <math.h>
 
@@ -48,8 +49,8 @@ void Monster::Initialize(Camera* camera)
 		rightForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			rightForeFoot_[i]->SetPosition({ -1.5f,0,-1 });
-			rightForeFoot_[i]->SetParent(body_[0].get());
+			rightForeFoot_[i]->SetPosition({ 0,0,-1 });
+			rightForeFoot_[i]->SetParent(body_[1].get());
 		}
 		else if (i == 1)
 		{
@@ -69,8 +70,8 @@ void Monster::Initialize(Camera* camera)
 		leftForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			leftForeFoot_[i]->SetPosition({ -1.5f,0,1 });
-			leftForeFoot_[i]->SetParent(body_[0].get());
+			leftForeFoot_[i]->SetPosition({ 0,0,1 });
+			leftForeFoot_[i]->SetParent(body_[1].get());
 		}
 		else if (i == 1)
 		{
@@ -556,16 +557,17 @@ void Monster::Animation(AnimationType type)
 	}
 	else if (type == AnimationType::TailAttack)
 	{
-		XMFLOAT3 bodyRot = body_[0]->GetRotation();
+		float timeRate = 0.0f;
+		int countNum = 60;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
 
-		bodyRot.y += MAX_ANGLE;
+		body_[0]->SetRotation(Ease::easeInOut({}, { 0,360,0 }, timeRate));
 
-		if (bodyRot.y >= 360)
+		if (easeTimer_ > countNum)
 		{
-			bodyRot.y = 0;
+			isEaseFlag_ = true;
 		}
-
-		body_[0]->SetRotation(bodyRot);
 	}
 
 }
@@ -667,7 +669,7 @@ bool Monster::AttackElapsedTime()
 		return false;
 	}
 
-	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelector_[0]) || body_[0]->GetRotation().y <= 0 && attackSelector_[1])
+	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelector_[0]) || attackSelector_[1] && isEaseFlag_)
 	{
 		attackEnd_ = true;
 		return false;
@@ -930,6 +932,8 @@ void Monster::TreeReset()
 		waitingSelector_.push_back(flag);
 	}
 
+	isEaseFlag_ = false;
+	easeTimer_ = 0;
 	attackElapsedTimer_ = 0;
 	waitingElapsedTimer_ = 0;
 

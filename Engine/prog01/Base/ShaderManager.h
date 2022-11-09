@@ -13,10 +13,18 @@ protected: // エイリアス
 	using string = std::string;
 
 public: // サブクラス
+	enum class Type
+	{
+		Line,
+		Triangle,
+	};
+
 	struct ShaderData
 	{
 		// シェーダファイル名
 		std::wstring fName;
+		//プリミティブ形状のタイプ
+		Type type;
 		//頂点シェーダオブジェクト
 		ComPtr<ID3DBlob> vsBlob;
 		//ピクセルシェーダオブジェクト
@@ -44,7 +52,7 @@ public:
 	// 終了
 	void Finalize();
 	// グラフィックパイプラインの生成
-	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName);
+	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName, Type type = Type::Triangle);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
 	void PmxPipeline(ID3D12Device* device, ShaderData tempData);
@@ -52,8 +60,8 @@ public:
 	void ParticlePipeline(ID3D12Device* device, ShaderData tempData);
 	void PostEffectPipeline(ID3D12Device* device, ShaderData tempData);
 
-	ID3D12RootSignature* GetRootSignature(std::wstring fName);
-	ID3D12PipelineState* GetPipelineState(std::wstring fName);
+	ID3D12RootSignature* GetRootSignature(std::wstring fName, Type type = Type::Triangle);
+	ID3D12PipelineState* GetPipelineState(std::wstring fName, Type type = Type::Triangle);
 
 	// インスタンス生成
 	static ShaderManager* GetInstance();

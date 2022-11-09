@@ -37,6 +37,13 @@ void Stage::Initialize()
 			}
 		}
 	}
+
+	field_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
+	float size = 50.0f;
+	field_->SetScale({ size ,30 ,size });
+	//field_->SetColor({ 1,0,0,1 });
+	//field_->SetPosition({ 0,10,0 });
+	field_->SetPrimitiveType(ShaderManager::Type::Line);
 }
 
 void Stage::Finalize()
@@ -47,6 +54,7 @@ void Stage::Update()
 {
 	skydome_->Update();
 	ground_->Update();
+	field_->Update();
 
 	for (auto& a : block_)
 	{
@@ -62,4 +70,5 @@ void Stage::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		a->Draw(cmdList);
 	}
+	field_->Draw(cmdList);
 }

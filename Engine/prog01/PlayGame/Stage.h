@@ -38,5 +38,7 @@ private: // ƒƒ“ƒo•Ï”
 	std::unique_ptr<Object3d> ground_;
 	//
 	std::vector<std::unique_ptr<Block>> block_;
+	//
+	std::unique_ptr<Object3d> field_;
 };
 
