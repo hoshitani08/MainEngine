@@ -31,6 +31,12 @@ public: // サブクラス
 		XMMATRIX mat; // ３Ｄ変換行列
 	};
 
+private: // 静的定数
+	// テクスチャの最大枚数
+	static const int SRV_COUNT = 512;
+	// 頂点数
+	static const int VERT_NUM = 4;
+
 public: // 静的メンバ関数
 	// 静的初期化
 	static bool StaticInitialize(ID3D12Device* device, int window_width, int window_height);
@@ -46,22 +52,18 @@ public: // 静的メンバ関数
 	static std::unique_ptr<Sprite> Create(UINT texNumber, XMFLOAT2 position, XMFLOAT4 color = { 1, 1, 1, 1 }, XMFLOAT2 anchorpoint = { 0.0f, 0.0f }, bool isFlipX = false, bool isFlipY = false);
 
 private: // 静的メンバ変数
-	// テクスチャの最大枚数
-	static const int srvCount = 512;
-	// 頂点数
-	static const int vertNum = 4;
 	// デバイス
-	static ID3D12Device* device;
+	static ID3D12Device* device_;
 	// デスクリプタサイズ
-	static UINT descriptorHandleIncrementSize;
+	static UINT descriptorHandleIncrementSize_;
 	// コマンドリスト
-	static ID3D12GraphicsCommandList* cmdList;
+	static ID3D12GraphicsCommandList* cmdList_;
 	// 射影行列
-	static XMMATRIX matProjection;
+	static XMMATRIX matProjection_;
 	// デスクリプタヒープ
-	static ComPtr<ID3D12DescriptorHeap> descHeap;
+	static ComPtr<ID3D12DescriptorHeap> descHeap_;
 	// テクスチャバッファ
-	static ComPtr<ID3D12Resource> texBuff[srvCount];
+	static ComPtr<ID3D12Resource> texBuff_[SRV_COUNT];
 
 public: // メンバ関数
 	// コンストラクタ

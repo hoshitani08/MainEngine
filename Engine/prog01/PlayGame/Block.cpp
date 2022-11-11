@@ -1,5 +1,6 @@
 #include "Block.h"
 #include "ObjFactory.h"
+#include "BaseCalculate.h"
 
 #include <sstream>
 #include <iomanip>
@@ -99,17 +100,4 @@ void Block::Draw(ID3D12GraphicsCommandList* cmdList)
 		a.coralBlock->Draw(cmdList);
 		a.bubbleEmitter->Draw(cmdList);
 	}
-}
-
-const float Block::RandCalculate(float a, float b)
-{
-	// メルセンヌ・ツイスター法による擬似乱数生成器を、
-	// ハードウェア乱数をシードにして初期化
-	std::random_device seed_gen;
-	std::mt19937 engine(seed_gen());
-	// 一様実数分布
-	// [a, b)の値の範囲で、等確率に実数を生成する
-	std::uniform_real_distribution<> dist1(a, b);
-
-	return dist1(engine);
 }

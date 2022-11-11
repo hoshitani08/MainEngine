@@ -24,7 +24,7 @@ private: // エイリアス
 
 public: // メンバ関数
 	// コンストラクタ
-	UserInterface();
+	UserInterface(Hunter* hunter, Monster* monster);
 	// デストラクタ
 	~UserInterface();
 	// 初期化
@@ -51,10 +51,6 @@ public: // メンバ関数
 	void ClockCalculate(int timer);
 
 public: // メンバ関数
-	// ハンターを設定
-	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
-	// ハンターを設定
-	void SetMonster(Monster* monster) { monster_ = monster; }
 	// 生きているかどうか
 	bool GetIsPlayerDeath() { return isPlayerDeath_; }
 

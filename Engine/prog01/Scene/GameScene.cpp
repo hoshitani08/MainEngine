@@ -37,11 +37,6 @@ void GameScene::Initialize()
 	// FBXオブジェクトにカメラをセット
 	FbxObject3d::SetCamera(camera_.get());
 
-	// 背景スプライト生成
-	sprite_ = Sprite::Create(1, { 0.0f,0.0f });
-	sprite_->SetSize({ 100.0f,100.0f });
-	sprite_->SetPosition({ 100.0f,100.0f });
-
 	// パーティクルマネージャ生成
 	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
 
@@ -68,9 +63,7 @@ void GameScene::Initialize()
 	monster_ = Monster::Create(camera_.get(), hunter_.get());
 
 	//UI
-	ui_ = std::make_unique<UserInterface>();
-	ui_->SetHunter(hunter_.get());
-	ui_->SetMonster(monster_.get());
+	ui_ = std::make_unique<UserInterface>(hunter_.get(), monster_.get());
 	ui_->Initialize();
 
 	ItemManager::GetInstance()->Initialize();

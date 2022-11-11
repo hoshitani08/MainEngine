@@ -1,5 +1,7 @@
 #include "BaseCalculate.h"
 
+#include <random>
+
 using namespace DirectX;
 
 const DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs)
@@ -216,4 +218,17 @@ const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const float rhs)
 	result.z = lhs.z / rhs;
 	result.w = lhs.w / rhs;
 	return result;
+}
+
+const float RandCalculate(float a, float b)
+{
+	// メルセンヌ・ツイスター法による擬似乱数生成器を、
+	// ハードウェア乱数をシードにして初期化
+	std::random_device seed_gen;
+	std::mt19937 engine(seed_gen());
+	// 一様実数分布
+	// [a, b)の値の範囲で、等確率に実数を生成する
+	std::uniform_real_distribution<> dist1(a, b);
+
+	return dist1(engine);
 }

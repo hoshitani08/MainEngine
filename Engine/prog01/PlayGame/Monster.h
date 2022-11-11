@@ -177,6 +177,9 @@ private: // メンバ変数
 	float easeTimer_ = 0.0f;
 	// イージングし終わったか
 	bool isEaseFlag_ = false;
+	//
+	int count = 0;
+	int maxCount = 0;
 #pragma endregion アニメーション
 #pragma region 
 	// 行動のセレクター
@@ -186,9 +189,11 @@ private: // メンバ変数
 	// 待機のシークエンス
 	std::vector<std::function<bool()>> waitingSequence_;
 	// 攻撃のセレクター
-	std::vector<bool> attackSelector_;
+	std::vector<std::function<bool()>> attackSelector_;
+	std::vector<bool> attackSelect_;
 	// 待機のセレクター
-	std::vector<bool> waitingSelector_;
+	std::vector<std::function<bool()>> waitingSelector_;
+	std::vector<bool> waitingSelect_;
 	// 攻撃の経過時間
 	int attackElapsedTimer_ = 0;
 	// 待機の経過時間

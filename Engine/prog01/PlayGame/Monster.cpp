@@ -6,6 +6,7 @@
 #include "ObjFactory.h"
 #include "ItemManager.h"
 #include "Ease.h"
+#include "BaseCalculate.h"
 
 #include <math.h>
 
@@ -149,7 +150,7 @@ void Monster::Initialize(Camera* camera)
 	testBlood_ = std::make_unique<ObjParticle>();
 	blood_ = std::make_unique<ParticleEmitter>(testBlood_.get());
 	blood_->SetCenter(1);
-	blood_->SetObjStartScale({ 0.3f, 0.3f, 0.3f });
+	blood_->SetObjStartScale({ 0.5f, 0.5f, 0.5f });
 	blood_->SetStartColor({ 1,0,0,1 });
 	blood_->SetEndColor({ 1,0,0,1 });
 
@@ -168,6 +169,13 @@ void Monster::Initialize(Camera* camera)
 	waitingSequence_.push_back(std::bind(&Monster::WaitingModeSelection, this));
 	waitingSequence_.push_back(std::bind(&Monster::WaitingModeMove, this));
 
+	attackSelector_.push_back(std::bind(&Monster::AttackMode1, this));
+	attackSelector_.push_back(std::bind(&Monster::AttackMode2, this));
+
+	waitingSelector_.push_back(std::bind(&Monster::WaitingMode1, this));
+	waitingSelector_.push_back(std::bind(&Monster::WaitingMode2, this));
+	waitingSelector_.push_back(std::bind(&Monster::WaitingMode3, this));
+
 	TreeReset();
 }
 
@@ -178,6 +186,7 @@ void Monster::Finalize()
 void Monster::Update()
 {
 	BehaviorTree();
+	//Animation(AnimationType::Move);
 
 	if (!hunter_->GetAnimationType())
 	{
@@ -309,7 +318,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 
@@ -331,7 +340,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 
@@ -353,7 +362,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 
@@ -375,7 +384,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 
@@ -397,7 +406,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 
@@ -420,7 +429,7 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			tailDestruction_ += 10;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->Add(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			blood_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 		}
 	}
 }
@@ -499,33 +508,48 @@ void Monster::Animation(AnimationType type)
 	// •às
 	else if (type == AnimationType::Move)
 	{
-		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
-		XMFLOAT3 rot2 = leftForeFoot_[0]->GetRotation();
 		// •‚Ì§ŒÀ
-		float restrictionAngle = 15;
+		float restrictionAngle = 135;
 
-		rot.z += cosf(PI * 2 / 135 * waveTimer_);
-		rot2.z -= cosf(PI * 2 / 135 * waveTimer_);
-
-		rightForeFoot_[0]->SetRotation(rot);
-		leftForeFoot_[0]->SetRotation(rot2);
-		leftHindFoot_[0]->SetRotation(rot);
-		rightHindFoot_[0]->SetRotation(rot2);
-
-
-		for (int i = 0; i < tail_.size(); i++)
+		for (auto& a : rightForeFoot_)
 		{
-			XMFLOAT3 tailRot = tail_[i]->GetRotation();
+			XMFLOAT3 rot = a->GetRotation();
+			rot.z -= cosf(PI * 2 / restrictionAngle * waveTimer_ );
+			a->SetRotation(rot);
+		}
+		for (auto& a : leftForeFoot_)
+		{
+			XMFLOAT3 rot = a->GetRotation();
+			rot.z += cosf(PI * 2 / restrictionAngle * waveTimer_);
+			a->SetRotation(rot);
+		}
 
-			tailRot.z += cosf(PI * 2 / 70 * (waveTimer_ / 2));
+		for (auto& a : rightHindFoot_)
+		{
+			XMFLOAT3 rot = a->GetRotation();
+			rot.z += cosf(PI * 2 / restrictionAngle * waveTimer_ );
+			a->SetRotation(rot);
+		}
+		for (auto& a : leftHindFoot_)
+		{
+			XMFLOAT3 rot = a->GetRotation();
+			rot.z -= cosf(PI * 2 / restrictionAngle * waveTimer_ );
+			a->SetRotation(rot);
+		}
+
+		for (auto& a : tail_)
+		{
+			XMFLOAT3 tailRot = a->GetRotation();
+
+			tailRot.z += cosf(PI * 2 / restrictionAngle * (waveTimer_ ));
 
 			if (!tailDestructionFlag_)
 			{
-				tail_[i]->SetRotation(tailRot);
+				a->SetRotation(tailRot);
 			}
 		}
 
-		waveTimer_ += 4;
+		waveTimer_++;
 	}
 	//“Ëi
 	else if (type == AnimationType::Assault)
@@ -558,7 +582,7 @@ void Monster::Animation(AnimationType type)
 	else if (type == AnimationType::TailAttack)
 	{
 		float timeRate = 0.0f;
-		int countNum = 60;
+		int countNum = 30;
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
@@ -625,8 +649,6 @@ bool Monster::AttackMode()
 	{
 		if (!a())
 		{
-			Animation(AnimationType::Stop);
-			hitFlag_ = false;
 			return false;
 		}
 	}
@@ -669,8 +691,9 @@ bool Monster::AttackElapsedTime()
 		return false;
 	}
 
-	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelector_[0]) || attackSelector_[1] && isEaseFlag_)
+	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelect_[0]) || attackSelect_[1] && isEaseFlag_)
 	{
+		hitFlag_ = false;
 		attackEnd_ = true;
 		return false;
 	}
@@ -685,19 +708,21 @@ bool Monster::AttackElapsedTime()
 
 bool Monster::AttackModeSelection()
 {
-	if (attackSelector_[0] || attackSelector_[1])
+	if (attackSelect_[0] || attackSelect_[1])
 	{
 		return true;
 	}
 
-	if (!Hit(nucleus_->GetPosition(), 1.0f, 50.0f))
+	Animation(AnimationType::Stop);
+
+	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
 	{
-		attackSelector_[0] = true;
+		attackSelect_[0] = true;
 		return true;
 	}
-	else if (Hit(nucleus_->GetPosition(), 1.0f, 8.0f))
+	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
 	{
-		attackSelector_[1] = true;
+		attackSelect_[1] = true;
 		return true;
 	}
 
@@ -706,13 +731,12 @@ bool Monster::AttackModeSelection()
 
 bool Monster::AttackModeMove()
 {
-	if (attackSelector_[0])
+	for (int i = 0; i < attackSelector_.size(); i++)
 	{
-		return AttackMode1();
-	}
-	if (attackSelector_[1])
-	{
-		return AttackMode2();
+		if (attackSelect_[i])
+		{
+			return attackSelector_[i]();
+		}
 	}
 
 	return false;
@@ -798,7 +822,7 @@ bool Monster::AttackMode2()
 		{
 			continue;
 		}
-		if (Hit(tail_[0]->GetWorldPosition(), 1.5f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+		if (Hit(tail_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
 		{
 			hunter_->SetDamageFlag(true);
 			hunter_->SetDamage(10);
@@ -813,6 +837,11 @@ bool Monster::WaitingElapsedTime()
 {
 	if (waitingElapsedTimer_ >= 60 || waitingEnd_)
 	{
+		if (count >= maxCount)
+		{
+			count = 0;
+			maxCount = RandCalculate(1.0f, 4.0f);
+		}
 		return false;
 	}
 
@@ -823,28 +852,27 @@ bool Monster::WaitingElapsedTime()
 
 bool Monster::WaitingModeSelection()
 {
-	if (waitingSelector_[0] || waitingSelector_[1] || waitingSelector_[2])
+	if (waitingSelect_[0] || waitingSelect_[1] || waitingSelect_[2])
 	{
 		return true;
 	}
 
-	for (int i = 0; i < waitingSelector_.size(); i++)
+	Animation(AnimationType::Stop);
+
+	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count >= maxCount)
 	{
-		if (i == 0 && Hit(nucleus_->GetPosition(), 1.0f, 1.0f))
-		{
-			waitingSelector_[i] = true;
-			return true;
-		}
-		if (i == 1 && !Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
-		{
-			waitingSelector_[i] = true;
-			return true;
-		}
-		if (i == 2 && Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
-		{
-			waitingSelector_[i] = true;
-			return true;
-		}
+		waitingSelect_[0] = true;
+		return true;
+	}
+	else if (!Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+	{
+		waitingSelect_[1] = true;
+		return true;
+	}
+	else if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+	{
+		waitingSelect_[2] = true;
+		return true;
 	}
 
 	return false;
@@ -852,17 +880,12 @@ bool Monster::WaitingModeSelection()
 
 bool Monster::WaitingModeMove()
 {
-	if (waitingSelector_[0])
+	for (int i = 0; i < waitingSelector_.size(); i++)
 	{
-		return WaitingMode1();
-	}
-	else if (waitingSelector_[1])
-	{
-		return WaitingMode2();
-	}
-	else if (waitingSelector_[2])
-	{
-		return WaitingMode3();
+		if (waitingSelect_[i])
+		{
+			return waitingSelector_[i]();
+		}
 	}
 
 	return false;
@@ -984,18 +1007,18 @@ bool Monster::WaitingMode3()
 
 void Monster::TreeReset()
 {
-	attackSelector_.clear();
-	for (int i = 0; i < 2; i++)
+	attackSelect_.clear();
+	for (int i = 0; i < attackSelector_.size(); i++)
 	{
 		bool flag = false;
-		attackSelector_.push_back(flag);
+		attackSelect_.push_back(flag);
 	}
 
-	waitingSelector_.clear();
-	for (int i = 0; i < 3; i++)
+	waitingSelect_.clear();
+	for (int i = 0; i < waitingSelector_.size(); i++)
 	{
 		bool flag = false;
-		waitingSelector_.push_back(flag);
+		waitingSelect_.push_back(flag);
 	}
 
 	isEaseFlag_ = false;
@@ -1006,4 +1029,6 @@ void Monster::TreeReset()
 	trackingEnd_ = false;
 	attackEnd_ = false;
 	waitingEnd_ = false;
+
+	count++;
 }

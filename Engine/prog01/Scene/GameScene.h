@@ -71,8 +71,6 @@ public: // メンバ関数
 private: // メンバ変数
 	//カメラ
 	std::unique_ptr<Camera> camera_;
-	//スプライト
-	std::unique_ptr<Sprite> sprite_;
 	//UI
 	std::unique_ptr<UserInterface> ui_;
 	//パーティクル

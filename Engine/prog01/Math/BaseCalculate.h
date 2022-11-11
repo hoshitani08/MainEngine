@@ -30,3 +30,10 @@ const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const DirectX::X
 const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const float rhs);
 const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs);
 const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const float rhs);
+
+/// <summary>
+/// ランダムの計算
+/// </summary>
+/// <param name="a">最小値</param>
+/// <param name="b">最大値</param>
+const float RandCalculate(float a, float b);

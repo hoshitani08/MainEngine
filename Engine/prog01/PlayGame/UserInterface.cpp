@@ -4,8 +4,10 @@
 #include "Ease.h"
 #include "ItemManager.h"
 
-UserInterface::UserInterface()
+UserInterface::UserInterface(Hunter* hunter, Monster* monster)
 {
+	hunter_ = hunter;
+	monster_ = monster;
 }
 
 UserInterface::~UserInterface()

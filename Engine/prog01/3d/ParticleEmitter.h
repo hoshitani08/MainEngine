@@ -25,6 +25,7 @@ public: // ƒƒ“ƒoŠÖ”
 
 	// ’Ç‰Á
 	void BubbleAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	void BloodAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
 	void Add(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
 	// –ˆƒtƒŒ[ƒ€ˆ—
 	void Update();

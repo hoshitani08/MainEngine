@@ -52,8 +52,6 @@ public: // メンバ関数
 	void Update();
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	// ランダムの計算
-	const float RandCalculate(float a, float b);
 
 private: // メンバ変数
 	// 岩
