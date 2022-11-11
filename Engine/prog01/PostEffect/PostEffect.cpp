@@ -284,7 +284,7 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//レンダーターゲットビュー用デスクリプタヒープのハンドルを取得
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[2];
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHs[2] = {};
 	for (int i = 0; i < 2; i++)
 	{
 		rtvHs[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE
@@ -300,8 +300,8 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	//レンダーターゲットをセット
 	cmdList->OMSetRenderTargets(2, rtvHs, false, &dsvH);
 
-	CD3DX12_VIEWPORT viewports[2];
-	CD3DX12_RECT scissorRects[2];
+	CD3DX12_VIEWPORT viewports[2] = {};
+	CD3DX12_RECT scissorRects[2] = {};
 	for (int i = 0; i < 2; i++)
 	{
 		viewports[i] = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);

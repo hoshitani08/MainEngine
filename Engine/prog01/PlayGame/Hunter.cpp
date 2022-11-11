@@ -67,6 +67,10 @@ void Hunter::Update()
 		hunter_[i]->Update();
 	}
 	buki_->Update();
+
+	DebugText::GetInstance()->VariablePrint(0, 200, "pos.x", hunter_[0]->GetPosition().x, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 216, "pos.y", hunter_[0]->GetPosition().y, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 232, "pos.z", hunter_[0]->GetPosition().z, 1.0f);
 }
 
 void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -104,9 +108,31 @@ void Hunter::BaseMove()
 		position.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
 		position.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
 
+		if (position.x <= -48)
+		{
+			position.x = -48;
+		}
+		else if (position.x >= 48)
+		{
+			position.x = 48;
+		}
+
 		if (position.y <= 1)
 		{
 			position.y = 1;
+		}
+		else if (position.y >= 58)
+		{
+			position.y = 58;
+		}
+
+		if (position.z <= -48)
+		{
+			position.z = -48;
+		}
+		else if (position.z >= 48)
+		{
+			position.z = 48;
 		}
 
 		rotation.y = angle.x + 90;

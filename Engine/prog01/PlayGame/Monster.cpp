@@ -751,9 +751,31 @@ bool Monster::AttackMode1()
 	pos.y += saveVector_.y;
 	pos.z += saveVector_.z;
 
+	if (pos.x <= -48)
+	{
+		pos.x = -48;
+	}
+	else if (pos.x >= 48)
+	{
+		pos.x = 48;
+	}
+
 	if (pos.y <= 1)
 	{
 		pos.y = 1;
+	}
+	else if (pos.y >= 58)
+	{
+		pos.y = 58;
+	}
+
+	if (pos.z <= -48)
+	{
+		pos.z = -48;
+	}
+	else if (pos.z >= 48)
+	{
+		pos.z = 48;
 	}
 
 	nucleus_->SetPosition(pos);
@@ -874,9 +896,31 @@ bool Monster::WaitingMode2()
 	pos.y += vector.y;
 	pos.z += vector.z;
 
+	if (pos.x <= -48)
+	{
+		pos.x = -48;
+	}
+	else if (pos.x >= 48)
+	{
+		pos.x = 48;
+	}
+
 	if (pos.y <= 1)
 	{
 		pos.y = 1;
+	}
+	else if (pos.y >= 58)
+	{
+		pos.y = 58;
+	}
+
+	if (pos.z <= -48)
+	{
+		pos.z = -48;
+	}
+	else if (pos.z >= 48)
+	{
+		pos.z = 48;
 	}
 
 	nucleus_->SetPosition(pos);
@@ -906,9 +950,31 @@ bool Monster::WaitingMode3()
 	pos.y += vector.y;
 	pos.z += vector.z;
 
+	if (pos.x <= -48)
+	{
+		pos.x = -48;
+	}
+	else if (pos.x >= 48)
+	{
+		pos.x = 48;
+	}
+
 	if (pos.y <= 1)
 	{
 		pos.y = 1;
+	}
+	else if (pos.y >= 58)
+	{
+		pos.y = 58;
+	}
+
+	if (pos.z <= -48)
+	{
+		pos.z = -48;
+	}
+	else if (pos.z >= 48)
+	{
+		pos.z = 48;
 	}
 
 	nucleus_->SetPosition(pos);
