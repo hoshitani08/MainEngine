@@ -6,7 +6,7 @@
 #include <dinput.h>
 #include <xinput.h>
 
-//#define DIRECTINPUT_VERSION 0x0800
+#define DIRECTINPUT_VERSION 0x0800
 
 #pragma comment (lib, "xinput.lib")
 

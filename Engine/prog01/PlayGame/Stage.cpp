@@ -10,8 +10,11 @@ Stage::Stage()
 
 void Stage::Initialize()
 {
-	skydome_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("skydome"));
+	skydome_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("watersurface"));
+	skydome_->SetPosition({ 0,100,0 });
+	skydome_->SetScale({ 2,2,2 });
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
+	ground_->SetScale({ 2,2,2 });
 	ground_->SetPosition({ -11,0,0 });
 
 	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxX("map"); i++)
@@ -41,7 +44,6 @@ void Stage::Initialize()
 	field_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
 	float size = 50.0f;
 	field_->SetScale({ size ,30 ,size });
-	field_->SetColor({ 0,0,0,1 });
 	field_->SetPrimitiveType(ShaderManager::Type::Line);
 }
 

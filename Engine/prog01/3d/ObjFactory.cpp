@@ -5,7 +5,7 @@ const std::string ObjFactory::BASE_DIRECTORY = "Resources/";
 
 void ObjFactory::Initialize()
 {
-	LoadModel("skydome");
+	LoadModel("watersurface");
 	LoadModel("ground");
 	LoadModel("title");
 	LoadModel("quit");
