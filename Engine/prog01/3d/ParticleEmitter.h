@@ -37,9 +37,12 @@ public: // メンバ関数
 	void SetVelocity(float mdVel) { mdVel_ = mdVel; }
 	// 加速度の設定
 	void SetAccel(float mdAcc) { mdAcc_ = mdAcc; }
-	// スケールの設定
-	void SetObjScale(XMFLOAT3 objStartScale) { objStartScale_ = objStartScale; }
-
+	// スケールの初期値の設定
+	void SetStartScale(float startScale) { startScale_ = startScale; }
+	void SetObjStartScale(XMFLOAT3 objStartScale) { objStartScale_ = objStartScale; }
+	// スケールの初期値の設定
+	void SetEndScale(float endScale) { endScale_ = endScale; }
+	void SetObjEndScale(XMFLOAT3 objEndScale) { objEndScale_ = objEndScale; }
 	//色(RGBA)初期値の設定
 	void SetStartColor(XMFLOAT4 s_color) { startColor_ = s_color; }
 	//色(RGBA)最終値の設定

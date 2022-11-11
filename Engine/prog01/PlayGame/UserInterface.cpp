@@ -34,7 +34,7 @@ void UserInterface::Initialize()
 
 	// ステージ
 	mapSprite_ =  Sprite::Create(12, { 50, 420 });
-	mapSprite_->SetSize({ 240,240 });
+	mapSprite_->SetSize({ 200,200 });
 	playerIcon_ = Sprite::Create(13, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
 	enemyIcon_ =  Sprite::Create(14, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
 

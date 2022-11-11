@@ -39,8 +39,10 @@ void Block::Initialize(int type, float posX, float posZ)
 
 			tmp.bubbleParticle = std::make_unique<ObjParticle>();
 			tmp.bubbleEmitter = std::make_unique<ParticleEmitter>(tmp.bubbleParticle.get());
+			float scale = 0.1f;
 			tmp.bubbleEmitter->SetCenter(size);
-			tmp.bubbleEmitter->SetObjScale({ size, size, size });
+			tmp.bubbleEmitter->SetObjStartScale({ scale, scale, scale });
+			tmp.bubbleEmitter->SetObjEndScale({ scale, scale, scale });
 			tmp.bubbleEmitter->SetStartColor({ 1,1,1,0.5f });
 			tmp.bubbleEmitter->SetEndColor({ 1,1,1,0.2f });
 
@@ -69,7 +71,7 @@ void Block::Update()
 
 			if (a.bubbleTimerMax <= a.bubbleTimer)
 			{
-				a.bubbleEmitter->BubbleAdd(4, 120, a.coralBlock->GetPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+				a.bubbleEmitter->BubbleAdd(4, 600, a.coralBlock->GetPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
 				a.bubbleTimer = 0;
 			}
 		}

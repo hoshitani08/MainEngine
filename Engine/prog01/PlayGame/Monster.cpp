@@ -149,7 +149,7 @@ void Monster::Initialize(Camera* camera)
 	testBlood_ = std::make_unique<ObjParticle>();
 	blood_ = std::make_unique<ParticleEmitter>(testBlood_.get());
 	blood_->SetCenter(1);
-	blood_->SetObjScale({ 0.3f, 0.3f, 0.3f });
+	blood_->SetObjStartScale({ 0.3f, 0.3f, 0.3f });
 	blood_->SetStartColor({ 1,0,0,1 });
 	blood_->SetEndColor({ 1,0,0,1 });
 
