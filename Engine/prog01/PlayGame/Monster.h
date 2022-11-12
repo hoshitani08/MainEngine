@@ -178,6 +178,8 @@ private: // メンバ変数
 	// イージングし終わったか
 	bool isEaseFlag_ = false;
 	//
+	float addAngle = 5.0f;
+	//
 	int count = 0;
 	int maxCount = 0;
 #pragma endregion アニメーション

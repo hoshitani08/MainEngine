@@ -67,10 +67,6 @@ void Hunter::Update()
 		hunter_[i]->Update();
 	}
 	buki_->Update();
-
-	DebugText::GetInstance()->VariablePrint(0, 200, "pos.x", hunter_[0]->GetPosition().x, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 216, "pos.y", hunter_[0]->GetPosition().y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 232, "pos.z", hunter_[0]->GetPosition().z, 1.0f);
 }
 
 void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)

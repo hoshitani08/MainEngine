@@ -261,7 +261,7 @@ void Monster::AngleAdjustment()
 	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
 	XMFLOAT3 enemyRot = nucleus_->GetRotation();
 
-	enemyRot.y = -atan2(vector.z - 0, vector.x - 0) * (ANGLE / PI);
+	enemyRot.y = -atan2(vector.z - 0.0f, vector.x - 0.0f) * (ANGLE / PI);
 	XMMATRIX  rotM = XMMatrixIdentity();
 	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
 	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
@@ -271,7 +271,7 @@ void Monster::AngleAdjustment()
 		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
 		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
 	};
-	enemyRot.z = atan2(result.y - 0, result.x - 0) * (ANGLE / PI);
+	enemyRot.z = atan2(result.y - 0.0f, result.x - 0.0f) * (ANGLE / PI);
 
 	nucleus_->SetRotation(enemyRot);
 }
@@ -281,9 +281,9 @@ bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
 	Sphere eSphere;
 	Sphere pSphere;
 
-	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1 };
+	eSphere.center = { partsPosition.x, partsPosition.y, partsPosition.z, 1.0f };
 	eSphere.radius = enemyRange;
-	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1 };
+	pSphere.center = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z, 1.0f };
 	pSphere.radius = playerRange;
 
 	if (Collision::CheckSphere2Sphere(eSphere, pSphere))
@@ -509,39 +509,32 @@ void Monster::Animation(AnimationType type)
 	else if (type == AnimationType::Move)
 	{
 		// •‚Ì§ŒÀ
-		float restrictionAngle = 135;
+		float restrictionAngle = 135.0f;
 
-		for (auto& a : rightForeFoot_)
-		{
-			XMFLOAT3 rot = a->GetRotation();
-			rot.z -= cosf(PI * 2 / restrictionAngle * waveTimer_ );
-			a->SetRotation(rot);
-		}
-		for (auto& a : leftForeFoot_)
-		{
-			XMFLOAT3 rot = a->GetRotation();
-			rot.z += cosf(PI * 2 / restrictionAngle * waveTimer_);
-			a->SetRotation(rot);
-		}
+		XMFLOAT3 rotA = rightForeFoot_[0]->GetRotation();
+		rotA.z -= addAngle;
+		rightForeFoot_[0]->SetRotation(rotA);
+		leftHindFoot_[0]->SetRotation(rotA);
 
-		for (auto& a : rightHindFoot_)
+		XMFLOAT3 rotB = leftForeFoot_[0]->GetRotation();
+		rotB.z += addAngle;
+		leftForeFoot_[0]->SetRotation(rotB);
+		rightHindFoot_[0]->SetRotation(rotB);
+
+		if (rotB.z > 45.0f)
 		{
-			XMFLOAT3 rot = a->GetRotation();
-			rot.z += cosf(PI * 2 / restrictionAngle * waveTimer_ );
-			a->SetRotation(rot);
+			addAngle = -5.0f;
 		}
-		for (auto& a : leftHindFoot_)
+		else if (rotB.z < -45.0f)
 		{
-			XMFLOAT3 rot = a->GetRotation();
-			rot.z -= cosf(PI * 2 / restrictionAngle * waveTimer_ );
-			a->SetRotation(rot);
+			addAngle = 5.0f;
 		}
 
 		for (auto& a : tail_)
 		{
 			XMFLOAT3 tailRot = a->GetRotation();
 
-			tailRot.z += cosf(PI * 2 / restrictionAngle * (waveTimer_ ));
+			tailRot.z += cosf(PI * 2.0f / restrictionAngle * (waveTimer_ ));
 
 			if (!tailDestructionFlag_)
 			{
@@ -558,20 +551,20 @@ void Monster::Animation(AnimationType type)
 
 		bodyRot.x += MAX_ANGLE;
 
-		if (bodyRot.x >= 360)
+		if (bodyRot.x >= 360.0f)
 		{
-			bodyRot.x = 0;
+			bodyRot.x = 0.0f;
 		}
 
 		body_[0]->SetRotation(bodyRot);
 
 		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
 
-		rot.z -= 10;
+		rot.z -= 10.0f;
 
-		if (rot.z <= -90)
+		if (rot.z <= -90.0f)
 		{
-			rot.z = -90;
+			rot.z = -90.0f;
 		}
 
 		rightForeFoot_[0]->SetRotation(rot);
@@ -579,6 +572,7 @@ void Monster::Animation(AnimationType type)
 		leftHindFoot_[0]->SetRotation(rot);
 		rightHindFoot_[0]->SetRotation(rot);
 	}
+	//K”öUŒ‚
 	else if (type == AnimationType::TailAttack)
 	{
 		float timeRate = 0.0f;
@@ -586,14 +580,13 @@ void Monster::Animation(AnimationType type)
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
-		body_[0]->SetRotation(Ease::easeInOut({}, { 0,360,0 }, timeRate));
+		body_[0]->SetRotation(Ease::easeInOut({}, { 0.0f,360.0f,0.0f }, timeRate));
 
 		if (easeTimer_ > countNum)
 		{
 			isEaseFlag_ = true;
 		}
 	}
-
 }
 
 void Monster::PartsTailDestruction()
@@ -662,7 +655,6 @@ bool Monster::WaitingMode()
 	{
 		if (!a())
 		{
-			Animation(AnimationType::Stop);
 			return false;
 		}
 	}
@@ -672,7 +664,7 @@ bool Monster::WaitingMode()
 
 bool Monster::Dead()
 {
-	if (hp_ >= 1)
+	if (hp_ >= 1.0f)
 	{
 		TreeReset();
 	}
@@ -691,7 +683,7 @@ bool Monster::AttackElapsedTime()
 		return false;
 	}
 
-	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0 && attackSelect_[0]) || attackSelect_[1] && isEaseFlag_)
+	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) || attackSelect_[1] && isEaseFlag_)
 	{
 		hitFlag_ = false;
 		attackEnd_ = true;
@@ -713,15 +705,15 @@ bool Monster::AttackModeSelection()
 		return true;
 	}
 
-	Animation(AnimationType::Stop);
-
 	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
 	{
+		Animation(AnimationType::Stop);
 		attackSelect_[0] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
 	{
+		Animation(AnimationType::Stop);
 		attackSelect_[1] = true;
 		return true;
 	}
@@ -759,7 +751,7 @@ bool Monster::AttackMode1()
 		saveVector_ = vector;
 	}
 
-	if (Hit(nucleus_->GetPosition(), 1.0f, 20))
+	if (Hit(nucleus_->GetPosition(), 1.0f, 20.0f))
 	{
 		trackingEnd_ = true;
 	}
@@ -767,7 +759,7 @@ bool Monster::AttackMode1()
 	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
 	{
 		hunter_->SetDamageFlag(true);
-		hunter_->SetDamage(10);
+		hunter_->SetDamage(10.0f);
 		hitFlag_ = true;
 	}
 
@@ -775,31 +767,31 @@ bool Monster::AttackMode1()
 	pos.y += saveVector_.y;
 	pos.z += saveVector_.z;
 
-	if (pos.x <= -48)
+	if (pos.x <= -48.0f)
 	{
-		pos.x = -48;
+		pos.x = -48.0f;
 	}
-	else if (pos.x >= 48)
+	else if (pos.x >= 48.0f)
 	{
-		pos.x = 48;
-	}
-
-	if (pos.y <= 1)
-	{
-		pos.y = 1;
-	}
-	else if (pos.y >= 58)
-	{
-		pos.y = 58;
+		pos.x = 48.0f;
 	}
 
-	if (pos.z <= -48)
+	if (pos.y <= 1.0f)
 	{
-		pos.z = -48;
+		pos.y = 1.0f;
 	}
-	else if (pos.z >= 48)
+	else if (pos.y >= 58.0f)
 	{
-		pos.z = 48;
+		pos.y = 58.0f;
+	}
+
+	if (pos.z <= -48.0f)
+	{
+		pos.z = -48.0f;
+	}
+	else if (pos.z >= 48.0f)
+	{
+		pos.z = 48.0f;
 	}
 
 	nucleus_->SetPosition(pos);
@@ -857,20 +849,21 @@ bool Monster::WaitingModeSelection()
 		return true;
 	}
 
-	Animation(AnimationType::Stop);
-
 	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count >= maxCount)
 	{
+		Animation(AnimationType::Stop);
 		waitingSelect_[0] = true;
 		return true;
 	}
 	else if (!Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
+		Animation(AnimationType::Stop);
 		waitingSelect_[1] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
+		Animation(AnimationType::Stop);
 		waitingSelect_[2] = true;
 		return true;
 	}
@@ -919,31 +912,31 @@ bool Monster::WaitingMode2()
 	pos.y += vector.y;
 	pos.z += vector.z;
 
-	if (pos.x <= -48)
+	if (pos.x <= -48.0f)
 	{
-		pos.x = -48;
+		pos.x = -48.0f;
 	}
-	else if (pos.x >= 48)
+	else if (pos.x >= 48.0f)
 	{
-		pos.x = 48;
-	}
-
-	if (pos.y <= 1)
-	{
-		pos.y = 1;
-	}
-	else if (pos.y >= 58)
-	{
-		pos.y = 58;
+		pos.x = 48.0f;
 	}
 
-	if (pos.z <= -48)
+	if (pos.y <= 1.0f)
 	{
-		pos.z = -48;
+		pos.y = 1.0f;
 	}
-	else if (pos.z >= 48)
+	else if (pos.y >= 58.0f)
 	{
-		pos.z = 48;
+		pos.y = 58.0f;
+	}
+
+	if (pos.z <= -48.0f)
+	{
+		pos.z = -48.0f;
+	}
+	else if (pos.z >= 48.0f)
+	{
+		pos.z = 48.0f;
 	}
 
 	nucleus_->SetPosition(pos);
@@ -973,31 +966,31 @@ bool Monster::WaitingMode3()
 	pos.y += vector.y;
 	pos.z += vector.z;
 
-	if (pos.x <= -48)
+	if (pos.x <= -48.0f)
 	{
-		pos.x = -48;
+		pos.x = -48.0f;
 	}
-	else if (pos.x >= 48)
+	else if (pos.x >= 48.0f)
 	{
-		pos.x = 48;
-	}
-
-	if (pos.y <= 1)
-	{
-		pos.y = 1;
-	}
-	else if (pos.y >= 58)
-	{
-		pos.y = 58;
+		pos.x = 48.0f;
 	}
 
-	if (pos.z <= -48)
+	if (pos.y <= 1.0f)
 	{
-		pos.z = -48;
+		pos.y = 1.0f;
 	}
-	else if (pos.z >= 48)
+	else if (pos.y >= 58.0f)
 	{
-		pos.z = 48;
+		pos.y = 58.0f;
+	}
+
+	if (pos.z <= -48.0f)
+	{
+		pos.z = -48.0f;
+	}
+	else if (pos.z >= 48.0f)
+	{
+		pos.z = 48.0f;
 	}
 
 	nucleus_->SetPosition(pos);
@@ -1022,7 +1015,7 @@ void Monster::TreeReset()
 	}
 
 	isEaseFlag_ = false;
-	easeTimer_ = 0;
+	easeTimer_ = 0.0f;
 	attackElapsedTimer_ = 0;
 	waitingElapsedTimer_ = 0;
 
