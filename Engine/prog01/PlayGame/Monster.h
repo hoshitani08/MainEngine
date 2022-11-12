@@ -27,10 +27,6 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 private: // 定数
-	// 最小アングル
-	const float MIN_ANGLE = 2.0f;
-	// 最大アングル
-	const float MAX_ANGLE = 10.0f;
 	// 弧度法
 	const float PI = 3.14159265359f;
 	// 度数法
@@ -42,10 +38,12 @@ public: // 定数
 public: // サブクラス
 	enum class AnimationType
 	{
-		Stop,
+		InitialPosture,
 		Move,
 		Assault,
 		TailAttack,
+		Punch,
+		Waiting,
 	};
 
 	enum class PartsDamage
@@ -180,6 +178,8 @@ private: // メンバ変数
 	//
 	float addAngle = 5.0f;
 	//
+	XMFLOAT3 savePos = {};
+	//
 	int count = 0;
 	int maxCount = 0;
 #pragma endregion アニメーション
@@ -209,4 +209,8 @@ private: // メンバ変数
 	// 待機の終了
 	bool waitingEnd_ = false;
 #pragma endregion ビヘイビアツリー
+#pragma region 
+	//
+	bool debugFlag = false;
+#pragma endregion デバック
 };

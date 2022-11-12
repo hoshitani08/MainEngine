@@ -27,7 +27,7 @@ std::unique_ptr<Monster> Monster::Create(Camera* camera, Hunter* hunter)
 void Monster::Initialize(Camera* camera)
 {
 	nucleus_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-	nucleus_->SetPosition({ 0,10,50 });
+	nucleus_->SetPosition({ 0,10,20 });
 
 	for (int i = 0; i < body_.size(); i++)
 	{
@@ -185,8 +185,17 @@ void Monster::Finalize()
 
 void Monster::Update()
 {
-	BehaviorTree();
-	//Animation(AnimationType::Move);
+	//BehaviorTree();
+
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+	{
+		debugFlag = true;
+	}
+
+	if (debugFlag)
+	{
+		Animation(AnimationType::Punch);
+	}
 
 	if (!hunter_->GetAnimationType())
 	{
@@ -437,7 +446,7 @@ void Monster::DamageHit(Sphere hitSphere)
 void Monster::Animation(AnimationType type)
 {
 	// ‰ŠúŽp¨
-	if (type == AnimationType::Stop)
+	if (type == AnimationType::InitialPosture)
 	{
 		XMFLOAT3 rot = {};
 
@@ -504,6 +513,47 @@ void Monster::Animation(AnimationType type)
 				tail_[i]->SetRotation(rot);
 			}
 		}
+
+		for (int i = 0; i < body_.size(); i++)
+		{
+			if (i == 0)
+			{
+				body_[i]->SetPosition({});
+			}
+			else
+			{
+				body_[i]->SetPosition({ -1.5f,0,0 });
+			}
+
+			body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
+		}
+		rightForeFoot_[0]->SetPosition({ 0,0,-1 });
+		rightForeFoot_[1]->SetPosition({ 0,-1.0f,-1 });
+		rightForeFoot_[2]->SetPosition({ 1,-1.0f,0 });
+
+		leftForeFoot_[0]->SetPosition({ 0,0,1 });
+		leftForeFoot_[1]->SetPosition({ 0,-1.0f,1 });
+		leftForeFoot_[2]->SetPosition({ 1,-1.0f,0 });
+
+		rightHindFoot_[0]->SetPosition({ -5.5f,0,-1 });
+		rightHindFoot_[1]->SetPosition({ 0,-1.0f,-1 });
+		rightHindFoot_[2]->SetPosition({ -1,-1.0f,0 });
+
+		leftHindFoot_[0]->SetPosition({ -5.5f,0,1 });
+		leftHindFoot_[1]->SetPosition({ 0,-1.0f,1 });
+		leftHindFoot_[2]->SetPosition({ -1,-1.0f,0 });
+
+		for (int i = 0; i < tail_.size(); i++)
+		{
+			if (i == 0 && !tailDestructionFlag_)
+			{
+				tail_[i]->SetPosition({ -1.5f,0,0 });
+			}
+			else if (i == 0 && !tailDestructionFlag_)
+			{
+				tail_[i]->SetPosition({ -1.5f,0,0 });
+			}
+		}
 	}
 	// •às
 	else if (type == AnimationType::Move)
@@ -534,7 +584,7 @@ void Monster::Animation(AnimationType type)
 		{
 			XMFLOAT3 tailRot = a->GetRotation();
 
-			tailRot.z += cosf(PI * 2.0f / restrictionAngle * (waveTimer_ ));
+			tailRot.z += cosf(PI * 2.0f / restrictionAngle * (waveTimer_));
 
 			if (!tailDestructionFlag_)
 			{
@@ -548,8 +598,9 @@ void Monster::Animation(AnimationType type)
 	else if (type == AnimationType::Assault)
 	{
 		XMFLOAT3 bodyRot = body_[0]->GetRotation();
+		float addAngle = 10.0f;
 
-		bodyRot.x += MAX_ANGLE;
+		bodyRot.x += addAngle;
 
 		if (bodyRot.x >= 360.0f)
 		{
@@ -560,7 +611,7 @@ void Monster::Animation(AnimationType type)
 
 		XMFLOAT3 rot = rightForeFoot_[0]->GetRotation();
 
-		rot.z -= 10.0f;
+		rot.z -= addAngle;
 
 		if (rot.z <= -90.0f)
 		{
@@ -585,6 +636,85 @@ void Monster::Animation(AnimationType type)
 		if (easeTimer_ > countNum)
 		{
 			isEaseFlag_ = true;
+		}
+	}
+	//ƒpƒ“ƒ`UŒ‚
+	else if (type == AnimationType::Punch)
+	{
+		float timeRate = 0.0f;
+
+		if (!isEaseFlag_)
+		{
+			int countNum = 20;
+			timeRate = easeTimer_ / countNum;
+			easeTimer_++;
+
+			rightForeFoot_[0]->SetRotation(Ease::easeIn({}, { 0.0f, 45.0f, 100.0f }, timeRate));
+
+			if (easeTimer_ > countNum)
+			{
+				easeTimer_ = 0.0f;
+				isEaseFlag_ = true;
+			}
+		}
+		else if (isEaseFlag_)
+		{
+			int countNum = 10;
+			timeRate = easeTimer_ / countNum;
+			easeTimer_++;
+
+			rightForeFoot_[0]->SetRotation(Ease::easeOut({ 0.0f, 45.0f, 100.0f }, { 0.0f,-90.0f,0.0f }, timeRate));
+
+			if (easeTimer_ > countNum)
+			{
+				easeTimer_ = 0.0f;
+				isEaseFlag_ = false;
+			}
+		}
+	}
+	// ‘Ò‹@
+	else if (type == AnimationType::Waiting)
+	{
+		if (easeTimer_ <= 0.0f)
+		{
+			savePos = body_[0]->GetPosition();
+		}
+		float timeRate = 0.0f;
+		int countNum = 30;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
+
+		float range = 0.5f;
+
+		if (!isEaseFlag_)
+		{
+			body_[0]->SetPosition(Ease::easeInOut(savePos, { savePos.x, savePos.y - range, savePos.z }, timeRate));
+
+			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0,0,-1 }, { 0, range, -1 }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::easeInOut( { 0,0,1 }, { 0, range, 1 }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,0,1 }, { -5.5f,range,1 }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,0,-1 }, { -5.5f,range,-1 }, timeRate));
+
+			if (easeTimer_ > countNum)
+			{
+				easeTimer_ = 0.0f;
+				isEaseFlag_ = true;
+			}
+		}
+		else if (isEaseFlag_)
+		{
+			body_[0]->SetPosition(Ease::easeInOut(savePos, { savePos.x, savePos.y + range, savePos.z }, timeRate));
+
+			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0, range, -1 }, { 0, 0, -1 }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0, range, 1 }, { 0, 0, 1 }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,range,1 }, { -5.5f,0,1 }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,range,-1 }, { -5.5f,0,-1 }, timeRate));
+
+			if (easeTimer_ > countNum)
+			{
+				easeTimer_ = 0.0f;
+				isEaseFlag_ = false;
+			}
 		}
 	}
 }
@@ -707,13 +837,13 @@ bool Monster::AttackModeSelection()
 
 	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
 	{
-		Animation(AnimationType::Stop);
+		Animation(AnimationType::InitialPosture);
 		attackSelect_[0] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
 	{
-		Animation(AnimationType::Stop);
+		Animation(AnimationType::InitialPosture);
 		attackSelect_[1] = true;
 		return true;
 	}
@@ -851,19 +981,19 @@ bool Monster::WaitingModeSelection()
 
 	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count >= maxCount)
 	{
-		Animation(AnimationType::Stop);
+		Animation(AnimationType::InitialPosture);
 		waitingSelect_[0] = true;
 		return true;
 	}
 	else if (!Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
-		Animation(AnimationType::Stop);
+		Animation(AnimationType::InitialPosture);
 		waitingSelect_[1] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
-		Animation(AnimationType::Stop);
+		Animation(AnimationType::InitialPosture);
 		waitingSelect_[2] = true;
 		return true;
 	}
@@ -886,7 +1016,7 @@ bool Monster::WaitingModeMove()
 
 bool Monster::WaitingMode1()
 {
-	Animation(AnimationType::Stop);
+	Animation(AnimationType::Waiting);
 	return true;
 }
 
