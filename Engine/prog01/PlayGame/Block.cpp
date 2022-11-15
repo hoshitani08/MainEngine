@@ -66,7 +66,7 @@ void Block::Update()
 		{
 			if (a.bubbleTimer <= 0)
 			{
-				a.bubbleTimerMax = (rand() % 500) + 180;
+				a.bubbleTimerMax = (rand() % 60) + 180;
 			}
 			a.bubbleTimer++;
 

@@ -188,15 +188,38 @@ void Monster::Update()
 {
 	BehaviorTree();
 
-	/*if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+	if (!damageHitFlag_)
 	{
-		debugFlag = true;
-	}
+		for (int i = 0; i < body_.size(); i++)
+		{
+			body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
+		}
 
-	if (debugFlag)
-	{
-		Animation(AnimationType::Punch);
-	}*/
+		for (int i = 0; i < rightForeFoot_.size(); i++)
+		{
+			rightForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+		}
+
+		for (int i = 0; i < leftForeFoot_.size(); i++)
+		{
+			leftForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+		}
+
+		for (int i = 0; i < rightHindFoot_.size(); i++)
+		{
+			rightHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+		}
+
+		for (int i = 0; i < leftHindFoot_.size(); i++)
+		{
+			leftHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+		}
+
+		for (int i = 0; i < tail_.size(); i++)
+		{
+			tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
+		}
+	}
 
 	if (!hunter_->GetAnimationType())
 	{
@@ -309,6 +332,7 @@ void Monster::DamageHit(Sphere hitSphere)
 
 	int count = 10;
 	int life = 60;
+	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	// ‘Ì
 	for (int i = 0; i < body_.size(); i++)
@@ -329,6 +353,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < body_.size(); i++)
+			{
+				body_[i]->SetColor(color);
+			}
 		}
 	}
 
@@ -351,6 +380,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < rightForeFoot_.size(); i++)
+			{
+				rightForeFoot_[i]->SetColor(color);
+			}
 		}
 	}
 
@@ -373,6 +407,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < leftForeFoot_.size(); i++)
+			{
+				leftForeFoot_[i]->SetColor(color);
+			}
 		}
 	}
 
@@ -395,6 +434,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < rightHindFoot_.size(); i++)
+			{
+				rightHindFoot_[i]->SetColor(color);
+			}
 		}
 	}
 
@@ -417,6 +461,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < leftHindFoot_.size(); i++)
+			{
+				leftHindFoot_[i]->SetColor(color);
+			}
 		}
 	}
 
@@ -440,6 +489,11 @@ void Monster::DamageHit(Sphere hitSphere)
 			tailDestruction_ += 10;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
 			blood_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+
+			for (int i = 0; i < tail_.size(); i++)
+			{
+				tail_[i]->SetColor(color);
+			}
 		}
 	}
 }

@@ -177,9 +177,9 @@ private: // メンバ変数
 	float easeTimer_ = 0.0f;
 	// イージングし終わったか
 	bool isEaseFlag_ = false;
-	//
+	// 足すアングル
 	float addAngle = 5.0f;
-	//
+	// パンチし終わったか
 	bool isPunch = false;
 	//
 	int count = 0;

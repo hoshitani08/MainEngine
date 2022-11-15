@@ -63,10 +63,10 @@ void UserInterface::Initialize()
 	// ƒ{ƒ^ƒ“
 	lbButtonIcon_ = Sprite::Create(40, { 970, 560 });
 
-	xButtonIcon_ = Sprite::Create(41, { 1065, 640 });
+	xButtonIcon_ = Sprite::Create(42, { 1065, 640 });
 	xButtonIcon_->SetSize({ 32,32 });
 
-	bButtonIcon_ = Sprite::Create(42, { 1095, 640 });
+	bButtonIcon_ = Sprite::Create(41, { 1095, 640 });
 	bButtonIcon_->SetSize({ 32,32 });
 
 	monsterHp_ = monster_->MAX_HP;
