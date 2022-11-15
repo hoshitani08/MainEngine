@@ -98,6 +98,8 @@ public: // メンバ関数
 	bool AttackMode1();
 	// 尻尾攻撃
 	bool AttackMode2();
+	// パンチ攻撃
+	bool AttackMode3();
 	// 待機の経過時間
 	bool WaitingElapsedTime();
 	// 待機の選択
@@ -178,7 +180,7 @@ private: // メンバ変数
 	//
 	float addAngle = 5.0f;
 	//
-	XMFLOAT3 savePos = {};
+	bool isPunch = false;
 	//
 	int count = 0;
 	int maxCount = 0;

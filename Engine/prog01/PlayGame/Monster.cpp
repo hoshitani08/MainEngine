@@ -171,6 +171,7 @@ void Monster::Initialize(Camera* camera)
 
 	attackSelector_.push_back(std::bind(&Monster::AttackMode1, this));
 	attackSelector_.push_back(std::bind(&Monster::AttackMode2, this));
+	attackSelector_.push_back(std::bind(&Monster::AttackMode3, this));
 
 	waitingSelector_.push_back(std::bind(&Monster::WaitingMode1, this));
 	waitingSelector_.push_back(std::bind(&Monster::WaitingMode2, this));
@@ -185,9 +186,9 @@ void Monster::Finalize()
 
 void Monster::Update()
 {
-	//BehaviorTree();
+	BehaviorTree();
 
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE))
+	/*if (Input::GetInstance()->TriggerKey(DIK_SPACE))
 	{
 		debugFlag = true;
 	}
@@ -195,7 +196,7 @@ void Monster::Update()
 	if (debugFlag)
 	{
 		Animation(AnimationType::Punch);
-	}
+	}*/
 
 	if (!hunter_->GetAnimationType())
 	{
@@ -452,62 +453,26 @@ void Monster::Animation(AnimationType type)
 
 		for (int i = 0; i < body_.size(); i++)
 		{
-			if (rot.x == body_[i]->GetRotation().x,
-				rot.y == body_[i]->GetRotation().y,
-				rot.z == body_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			body_[i]->SetRotation(rot);
 		}
 		for (int i = 0; i < rightForeFoot_.size(); i++)
 		{
-			if (rot.x == rightForeFoot_[i]->GetRotation().x,
-				rot.y == rightForeFoot_[i]->GetRotation().y,
-				rot.z == rightForeFoot_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			rightForeFoot_[i]->SetRotation(rot);
 		}
 		for (int i = 0; i < leftForeFoot_.size(); i++)
 		{
-			if (rot.x == leftForeFoot_[i]->GetRotation().x,
-				rot.y == leftForeFoot_[i]->GetRotation().y,
-				rot.z == leftForeFoot_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			leftForeFoot_[i]->SetRotation(rot);
 		}
 		for (int i = 0; i < rightHindFoot_.size(); i++)
 		{
-			if (rot.x == rightHindFoot_[i]->GetRotation().x,
-				rot.y == rightHindFoot_[i]->GetRotation().y,
-				rot.z == rightHindFoot_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			rightHindFoot_[i]->SetRotation(rot);
 		}
 		for (int i = 0; i < leftHindFoot_.size(); i++)
 		{
-			if (rot.x == leftHindFoot_[i]->GetRotation().x,
-				rot.y == leftHindFoot_[i]->GetRotation().y,
-				rot.z == leftHindFoot_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			leftHindFoot_[i]->SetRotation(rot);
 		}
 		for (int i = 0; i < tail_.size(); i++)
 		{
-			if (rot.x == tail_[i]->GetRotation().x,
-				rot.y == tail_[i]->GetRotation().y,
-				rot.z == tail_[i]->GetRotation().z)
-			{
-				continue;
-			}
 			if (!tailDestructionFlag_)
 			{
 				tail_[i]->SetRotation(rot);
@@ -524,8 +489,6 @@ void Monster::Animation(AnimationType type)
 			{
 				body_[i]->SetPosition({ -1.5f,0,0 });
 			}
-
-			body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
 		}
 		rightForeFoot_[0]->SetPosition({ 0,0,-1 });
 		rightForeFoot_[1]->SetPosition({ 0,-1.0f,-1 });
@@ -545,11 +508,7 @@ void Monster::Animation(AnimationType type)
 
 		for (int i = 0; i < tail_.size(); i++)
 		{
-			if (i == 0 && !tailDestructionFlag_)
-			{
-				tail_[i]->SetPosition({ -1.5f,0,0 });
-			}
-			else if (i == 0 && !tailDestructionFlag_)
+			if (!tailDestructionFlag_)
 			{
 				tail_[i]->SetPosition({ -1.5f,0,0 });
 			}
@@ -643,7 +602,7 @@ void Monster::Animation(AnimationType type)
 	{
 		float timeRate = 0.0f;
 
-		if (!isEaseFlag_)
+		if (!isPunch)
 		{
 			int countNum = 20;
 			timeRate = easeTimer_ / countNum;
@@ -654,10 +613,10 @@ void Monster::Animation(AnimationType type)
 			if (easeTimer_ > countNum)
 			{
 				easeTimer_ = 0.0f;
-				isEaseFlag_ = true;
+				isPunch = true;
 			}
 		}
-		else if (isEaseFlag_)
+		else if (isPunch)
 		{
 			int countNum = 10;
 			timeRate = easeTimer_ / countNum;
@@ -668,27 +627,24 @@ void Monster::Animation(AnimationType type)
 			if (easeTimer_ > countNum)
 			{
 				easeTimer_ = 0.0f;
-				isEaseFlag_ = false;
+				isPunch = false;
+				isEaseFlag_ = true;
 			}
 		}
 	}
 	// ‘Ò‹@
 	else if (type == AnimationType::Waiting)
 	{
-		if (easeTimer_ <= 0.0f)
-		{
-			savePos = body_[0]->GetPosition();
-		}
 		float timeRate = 0.0f;
 		int countNum = 30;
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
-		float range = 0.5f;
+		float range = 0.3f;
 
 		if (!isEaseFlag_)
 		{
-			body_[0]->SetPosition(Ease::easeInOut(savePos, { savePos.x, savePos.y - range, savePos.z }, timeRate));
+			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f + range, 0.0f }, { 0.0f, 0.0f - range, 0.0f }, timeRate));
 
 			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0,0,-1 }, { 0, range, -1 }, timeRate));
 			leftForeFoot_ [0]->SetPosition(Ease::easeInOut( { 0,0,1 }, { 0, range, 1 }, timeRate));
@@ -703,7 +659,7 @@ void Monster::Animation(AnimationType type)
 		}
 		else if (isEaseFlag_)
 		{
-			body_[0]->SetPosition(Ease::easeInOut(savePos, { savePos.x, savePos.y + range, savePos.z }, timeRate));
+			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f - range, 0.0f }, { 0.0f, 0.0f + range, 0.0f }, timeRate));
 
 			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0, range, -1 }, { 0, 0, -1 }, timeRate));
 			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0, range, 1 }, { 0, 0, 1 }, timeRate));
@@ -813,8 +769,10 @@ bool Monster::AttackElapsedTime()
 		return false;
 	}
 
-	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) || attackSelect_[1] && isEaseFlag_)
+	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) ||
+		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_)
 	{
+		Animation(AnimationType::InitialPosture);
 		hitFlag_ = false;
 		attackEnd_ = true;
 		return false;
@@ -830,7 +788,7 @@ bool Monster::AttackElapsedTime()
 
 bool Monster::AttackModeSelection()
 {
-	if (attackSelect_[0] || attackSelect_[1])
+	if (attackSelect_[0] || attackSelect_[1] || attackSelect_[2])
 	{
 		return true;
 	}
@@ -845,6 +803,12 @@ bool Monster::AttackModeSelection()
 	{
 		Animation(AnimationType::InitialPosture);
 		attackSelect_[1] = true;
+		return true;
+	}
+	else if (Hit(body_[2]->GetWorldPosition(), 4.5f, 1.0f))
+	{
+		Animation(AnimationType::InitialPosture);
+		attackSelect_[2] = true;
 		return true;
 	}
 
@@ -955,6 +919,32 @@ bool Monster::AttackMode2()
 	return true;
 }
 
+bool Monster::AttackMode3()
+{
+	Animation(AnimationType::Punch);
+	if (!trackingEnd_)
+	{
+		AngleAdjustment();
+		trackingEnd_ = true;
+	}
+
+	for (int i = 0; i < rightForeFoot_.size(); i++)
+	{
+		if (hitFlag_)
+		{
+			continue;
+		}
+		if (Hit(rightForeFoot_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamage(10);
+			hitFlag_ = true;
+		}
+	}
+
+	return true;
+}
+
 bool Monster::WaitingElapsedTime()
 {
 	if (waitingElapsedTimer_ >= 60 || waitingEnd_)
@@ -964,6 +954,7 @@ bool Monster::WaitingElapsedTime()
 			count = 0;
 			maxCount = RandCalculate(1.0f, 4.0f);
 		}
+		Animation(AnimationType::InitialPosture);
 		return false;
 	}
 

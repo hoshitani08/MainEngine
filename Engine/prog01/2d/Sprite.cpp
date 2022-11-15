@@ -56,7 +56,6 @@ bool Sprite::StaticInitialize(ID3D12Device* device, int window_width, int window
 
 void Sprite::StaticFinalize()
 {
-	device_->Release();
 	descHeap_.Reset();
 	for (auto& a : texBuff_)
 	{
