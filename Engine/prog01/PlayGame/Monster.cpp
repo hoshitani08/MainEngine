@@ -147,13 +147,22 @@ void Monster::Initialize(Camera* camera)
 		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
 	}
 
-	testBlood_ = std::make_unique<ObjParticle>();
-	blood_ = std::make_unique<ParticleEmitter>(testBlood_.get());
-	blood_->SetCenter(1);
-	blood_->SetObjStartScale({ 0.5f, 0.5f, 0.5f });
-	blood_->SetStartColor({ 1,0,0,1 });
-	blood_->SetEndColor({ 1,0,0,1 });
+	bloodParticle_ = std::make_unique<ObjParticle>();
+	bloodEmitter_ = std::make_unique<ParticleEmitter>(bloodParticle_.get());
+	bloodEmitter_->SetCenter(1);
+	float scale = 0.4f;
+	bloodEmitter_->SetObjStartScale({ scale, scale, scale });
+	bloodEmitter_->SetStartColor({ 1,0,0,1 });
+	bloodEmitter_->SetEndColor({ 1,0,0,1 });
 
+	bubbleParticle_ = std::make_unique<ObjParticle>();
+	bubbleEmitter_ = std::make_unique<ParticleEmitter>(bubbleParticle_.get());
+	scale = 0.1f;
+	bubbleEmitter_->SetCenter(1);
+	bubbleEmitter_->SetObjStartScale({ scale, scale, scale });
+	bubbleEmitter_->SetObjEndScale({ scale, scale, scale });
+	bubbleEmitter_->SetStartColor({ 1,1,1,1.0f });
+	bubbleEmitter_->SetEndColor({ 1,1,1,0.0f });
 
 	//ƒrƒwƒCƒrƒAƒcƒŠ[‚Ì‰Šú‰»
 	activitySelector_.push_back(std::bind(&Monster::Howl, this));
@@ -254,7 +263,8 @@ void Monster::Update()
 	}
 
 	PartsTailDestruction();
-	blood_->Update();
+	bloodEmitter_->Update();
+	bubbleEmitter_->Update();
 }
 
 void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -286,7 +296,8 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 			tail_[i]->Draw(cmdList);
 		}
 	}
-	blood_->Draw(cmdList);
+	bloodEmitter_->Draw(cmdList);
+	bubbleEmitter_->Draw(cmdList);
 }
 
 void Monster::AngleAdjustment()
@@ -340,7 +351,7 @@ void Monster::DamageHit(Sphere hitSphere)
 {
 	Sphere eSphere;
 
-	int count = 10;
+	int count = 15;
 	int life = 60;
 	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -362,7 +373,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < body_.size(); i++)
 			{
@@ -389,7 +400,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < rightForeFoot_.size(); i++)
 			{
@@ -416,7 +427,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < leftForeFoot_.size(); i++)
 			{
@@ -443,7 +454,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < rightHindFoot_.size(); i++)
 			{
@@ -470,7 +481,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < leftHindFoot_.size(); i++)
 			{
@@ -498,7 +509,7 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			tailDestruction_ += 10;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
-			blood_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("sphere"));
+			bloodEmitter_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < tail_.size(); i++)
 			{
@@ -510,6 +521,9 @@ void Monster::DamageHit(Sphere hitSphere)
 
 void Monster::Animation(AnimationType type)
 {
+	int count = 10;
+	int life = 60;
+
 	// ‰ŠúŽp¨
 	if (type == AnimationType::InitialPosture)
 	{
@@ -645,6 +659,12 @@ void Monster::Animation(AnimationType type)
 		leftForeFoot_[0]->SetRotation(rot);
 		leftHindFoot_[0]->SetRotation(rot);
 		rightHindFoot_[0]->SetRotation(rot);
+		bubbleEmitter_->SetCenter(5);
+		
+		bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+		bubbleEmitter_->BubbleAdd(count, life, leftForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+		bubbleEmitter_->BubbleAdd(count, life, leftHindFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+		bubbleEmitter_->BubbleAdd(count, life, rightHindFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 	}
 	//K”öUŒ‚
 	else if (type == AnimationType::TailAttack)
@@ -659,6 +679,12 @@ void Monster::Animation(AnimationType type)
 		if (easeTimer_ > countNum)
 		{
 			isEaseFlag_ = true;
+		}
+
+		bubbleEmitter_->SetCenter(1);
+		for (auto& a : tail_)
+		{
+			bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		}
 	}
 	//ƒpƒ“ƒ`UŒ‚
@@ -694,6 +720,8 @@ void Monster::Animation(AnimationType type)
 				isPunch = false;
 				isEaseFlag_ = true;
 			}
+			bubbleEmitter_->SetCenter(1);
+			bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		}
 	}
 	// ‘Ò‹@

@@ -18,6 +18,8 @@ void ObjFactory::Initialize()
 	LoadModel("coral");
 	LoadModel("Rock");
 	LoadModel("cube");
+	LoadModel("bubble", true);
+	LoadModel("blood", true);
 }
 
 void ObjFactory::Finalize()

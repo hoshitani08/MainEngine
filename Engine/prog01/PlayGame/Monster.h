@@ -150,8 +150,11 @@ private: // メンバ変数
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
 	// 血のパーティクル
-	std::unique_ptr<ParticleEmitter> blood_;
-	std::unique_ptr<ObjParticle> testBlood_;
+	std::unique_ptr<ParticleEmitter> bloodEmitter_;
+	std::unique_ptr<ObjParticle> bloodParticle_;
+	// 泡のパーティクル
+	std::unique_ptr<ParticleEmitter> bubbleEmitter_;
+	std::unique_ptr<ObjParticle> bubbleParticle_;
 #pragma endregion モデル
 #pragma region
 	// 尻尾の耐久値
@@ -183,8 +186,6 @@ private: // メンバ変数
 	float addAngle = 5.0f;
 	// パンチし終わったか
 	bool isPunch = false;
-	//
-	XMFLOAT3 saveAngle_ = {};
 	//
 	int count = 0;
 	int maxCount = 0;
