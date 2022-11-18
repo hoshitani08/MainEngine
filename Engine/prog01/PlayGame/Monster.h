@@ -13,6 +13,7 @@
 #include "ParticleEmitter.h"
 #include "Camera.h"
 #include "ObjParticle.h"
+#include "Vector.h"
 
 class Monster
 {
@@ -175,12 +176,15 @@ private: // メンバ変数
 	XMFLOAT3 endRotation_ = {0,360,0};
 	// イージングの進行度用
 	float easeTimer_ = 0.0f;
+	float angleEaseTimer_ = 0.0f;
 	// イージングし終わったか
 	bool isEaseFlag_ = false;
 	// 足すアングル
 	float addAngle = 5.0f;
 	// パンチし終わったか
 	bool isPunch = false;
+	//
+	XMFLOAT3 saveAngle_ = {};
 	//
 	int count = 0;
 	int maxCount = 0;

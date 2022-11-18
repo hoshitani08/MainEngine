@@ -306,7 +306,17 @@ void Monster::AngleAdjustment()
 	};
 	enemyRot.z = atan2(result.y - 0.0f, result.x - 0.0f) * (ANGLE / PI);
 
-	nucleus_->SetRotation(enemyRot);
+	float timeRate = 0.0f;
+	int countNum = 30;
+	timeRate = angleEaseTimer_ / countNum;
+	angleEaseTimer_++;
+
+	nucleus_->SetRotation(Ease::easeInOut(nucleus_->GetRotation(), enemyRot, timeRate));
+
+	if (angleEaseTimer_ > countNum)
+	{
+		nucleus_->SetRotation(enemyRot);
+	}
 }
 
 bool Monster::Hit(XMFLOAT3 partsPosition, float enemyRange, float playerRange)
@@ -827,6 +837,7 @@ bool Monster::AttackElapsedTime()
 		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_)
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		hitFlag_ = false;
 		attackEnd_ = true;
 		return false;
@@ -850,18 +861,21 @@ bool Monster::AttackModeSelection()
 	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		attackSelect_[0] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		attackSelect_[1] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 4.5f, 1.0f))
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		attackSelect_[2] = true;
 		return true;
 	}
@@ -1009,6 +1023,7 @@ bool Monster::WaitingElapsedTime()
 			maxCount = RandCalculate(1.0f, 4.0f);
 		}
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		return false;
 	}
 
@@ -1027,18 +1042,21 @@ bool Monster::WaitingModeSelection()
 	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count >= maxCount)
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		waitingSelect_[0] = true;
 		return true;
 	}
 	else if (!Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		waitingSelect_[1] = true;
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
 		Animation(AnimationType::InitialPosture);
+		angleEaseTimer_ = 0.0f;
 		waitingSelect_[2] = true;
 		return true;
 	}
@@ -1067,14 +1085,20 @@ bool Monster::WaitingMode1()
 
 bool Monster::WaitingMode2()
 {
-	if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+	Animation(AnimationType::Move);
+	AngleAdjustment();
+
+	int countNum = 30;
+	if (angleEaseTimer_ > countNum)
 	{
 		waitingEnd_ = true;
 		return false;
 	}
 
-	Animation(AnimationType::Move);
-	AngleAdjustment();
+	if (Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
+	{
+		return true;
+	}
 
 	XMFLOAT3 pos = nucleus_->GetPosition();
 	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
