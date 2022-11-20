@@ -43,9 +43,9 @@ public: // サブクラス
 
 public: // メンバ関数
 	// コンストラクタ
-	Block(int type, float posX, float posZ);
+	Block(int type, XMFLOAT3 pos);
 	// 初期化
-	void Initialize(int type, float posX, float posZ);
+	void Initialize(int type, XMFLOAT3 pos);
 	//終了
 	void Finalize();
 	// 毎フレーム処理

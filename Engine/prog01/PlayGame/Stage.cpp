@@ -4,7 +4,6 @@
 
 Stage::Stage()
 {
-	MapChip::GetInstance()->CsvLoad(26, 26, "map");
 	Initialize();
 }
 
@@ -24,17 +23,18 @@ void Stage::Initialize()
 			std::unique_ptr<Block> block;
 
 			XMFLOAT2 size = { (float)MapChip::GetInstance()->GetMapChipMaxX("map") / 2, (float)MapChip::GetInstance()->GetMapChipMaxY("map") / 2 };
-			XMFLOAT2 count = { 5.5f, 6.0f };
+			float count = 6.0f;
+			XMFLOAT3 pos = { (i - size.x) * count, 0, (j - size.y) * count };
 
 			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 1)
 			{
-				block = std::make_unique<Block>(0, (i - size.x) * count.x, (j - size.y) * count.y);
+				block = std::make_unique<Block>(0, pos);
 
 				block_.push_back(std::move(block));
 			}
 			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
 			{
-				block = std::make_unique<Block>(1, (i - size.x) * count.x, (j - size.y) * count.y);
+				block = std::make_unique<Block>(1, pos);
 
 				block_.push_back(std::move(block));
 			}

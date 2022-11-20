@@ -6,17 +6,17 @@
 #include <iomanip>
 #include <random>
 
-Block::Block(int type, float posX, float posZ)
+Block::Block(int type, XMFLOAT3 pos)
 {
-	Initialize(type, posX, posZ);
+	Initialize(type, pos);
 }
 
-void Block::Initialize(int type, float posX, float posZ)
+void Block::Initialize(int type, XMFLOAT3 pos)
 {
 	if (type == (int)BlockType::Rock)
 	{
 		rockBlock_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("Rock"));
-		rockBlock_->SetPosition({ posX, 0.8f, posZ });
+		rockBlock_->SetPosition({ pos.x, 0.8f + pos.y, pos.z });
 		rockBlock_->SetRotation({ RandCalculate(0.0f,180.0f), 0,RandCalculate(0.0f,180.0f) });
 		float size = RandCalculate(1.0f, 3.0f);
 		rockBlock_->SetScale({ size, size, size });
@@ -35,7 +35,7 @@ void Block::Initialize(int type, float posX, float posZ)
 			float size = RandCalculate(1.0f, 5.0f) / 10;
 			tmp.coralBlock->SetScale({ size, size, size });
 
-			tmp.coralBlock->SetPosition({ posX + RandCalculate(-size,size), size, posZ + RandCalculate(-size,size) });
+			tmp.coralBlock->SetPosition({ pos.x + RandCalculate(-size,size), size + pos.y, pos.z + RandCalculate(-size,size) });
 			tmp.coralBlock->SetRotation({ 0, RandCalculate(0.0f,180.0f),0 });
 
 			tmp.bubbleParticle = std::make_unique<ObjParticle>();

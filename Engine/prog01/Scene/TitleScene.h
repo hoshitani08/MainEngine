@@ -12,6 +12,8 @@
 #include "DebugText.h"
 #include "Object3d.h"
 #include "ParticleEmitter.h"
+#include "MapChip.h"
+#include "Block.h"
 
 class TitleScene : public BaseScene
 {
@@ -50,13 +52,12 @@ private: // メンバ変数
 	std::unique_ptr<Camera> camera_;
 	//ライト
 	std::unique_ptr<LightGroup> light_;
-	//パーティクル
-	std::unique_ptr<ParticleManager> particleMan_;
-	std::unique_ptr<ParticleEmitter> bubble_;
 	//オブジェクト
 	std::unique_ptr<Object3d> titleTile_;
 	std::unique_ptr<Object3d> startTile_;
 	std::unique_ptr<Object3d> quitTile_;
+	std::unique_ptr<Object3d> ground_;
+	std::vector<std::unique_ptr<Block>> block_;
 	// 決定フラグ
 	bool determinationFlag_ = true;
 	// シェイクしているか
@@ -67,8 +68,6 @@ private: // メンバ変数
 	int attenuation_ = 0;
 	// シェイク前の位置
 	XMFLOAT3 savePos_ = {};
-	// 泡の量の調整用タイマー
-	int bubbleTimer_ = 100;
 	// イージング用位置
 	std::array<XMFLOAT3, 3> startPosition_ = {};
 	std::array<XMFLOAT3, 3> endPosition_ = {};

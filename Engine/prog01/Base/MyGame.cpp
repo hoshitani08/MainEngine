@@ -13,7 +13,7 @@ void MyGame::Initialize()
 	BaseGame::Initialize();
 
 	//ゲームで必要なマップデータのロード
-	//MapChip::GetInstance()->CsvLoad();
+	MapChip::GetInstance()->CsvLoad(26, 26, "map");
 	//ゲームで必要な画像のロード
 	std::thread t = std::thread([&] { SpriteFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なモデル(.fbx)のロード
@@ -31,7 +31,7 @@ void MyGame::Initialize()
 	t2.join();
 	t3.join();
 	//シーンマネージャーに最初のシーンをセット
-	SceneManager::GetInstance()->ChangeScene("GameScene");
+	SceneManager::GetInstance()->ChangeScene("TitleScene");
 }
 
 void MyGame::Finalize()

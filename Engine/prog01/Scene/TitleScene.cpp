@@ -28,11 +28,6 @@ void TitleScene::Initialize()
 	light_->SetPointLightActive(2, false);
 	light_->SetCircleShadowActive(0, true);
 
-	// パーティクルマネージャ生成
-	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get(), L"bubble");
-	bubble_ = std::make_unique<ParticleEmitter>(particleMan_.get());
-	bubble_->SetCenter(100);
-
 	// 3Dオブジェクト生成
 	titleTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("title"));
 	titleTile_->SetRotation({ -90,-20,0 });
@@ -57,6 +52,35 @@ void TitleScene::Initialize()
 	endPosition_[0] = { startPosition_[0].x, startPosition_[0].y, 0 };
 	endPosition_[1] = { startPosition_[1].x, startPosition_[1].y, 0 };
 	endPosition_[2] = { startPosition_[2].x, startPosition_[2].y, 0 };
+
+	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
+	ground_->SetScale({ 2,2,2 });
+	ground_->SetPosition({ 0,-4,0 });
+
+	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxX("map"); i++)
+	{
+		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxY("map"); j++)
+		{
+			std::unique_ptr<Block> block;
+
+			XMFLOAT2 size = { (float)MapChip::GetInstance()->GetMapChipMaxX("map") / 2, (float)MapChip::GetInstance()->GetMapChipMaxY("map") / 2 };
+			float count = 2.5f;
+			XMFLOAT3 pos = { (i - size.x) * count, -4, (j - size.y) * count };
+
+			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 1)
+			{
+				block = std::make_unique<Block>(0, pos);
+
+				block_.push_back(std::move(block));
+			}
+			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
+			{
+				block = std::make_unique<Block>(1, pos);
+
+				block_.push_back(std::move(block));
+			}
+		}
+	}
 
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
@@ -99,13 +123,6 @@ void TitleScene::Update()
 			isShake_ = true;
 		}
 	}
-	
-	bubbleTimer_++;
-	if (bubbleTimer_ >= 20)
-	{
-		bubble_->BubbleAdd(1, 900, { 0,-50,-10 });
-		bubbleTimer_ = 0;
-	}
 
 	Select();
 	EaseMove();
@@ -113,7 +130,11 @@ void TitleScene::Update()
 	titleTile_->Update();
 	startTile_->Update();
 	quitTile_->Update();
-	bubble_->Update();
+	ground_->Update();
+	for (auto& a : block_)
+	{
+		a->Update();
+	}
 }
 
 void TitleScene::Draw()
@@ -135,7 +156,6 @@ void TitleScene::Draw()
 	startTile_->Draw(cmdList);
 	quitTile_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
-	bubble_->Draw(cmdList);
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
@@ -160,7 +180,11 @@ void TitleScene::EffectDraw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-
+	for (auto& a : block_)
+	{
+		a->Draw(cmdList);
+	}
+	ground_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
