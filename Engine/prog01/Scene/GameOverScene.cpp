@@ -56,6 +56,8 @@ void GameOverScene::Initialize()
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
 	camera_->SetEye({ 0,1,-15 });
+
+	sceneChange = std::make_unique<SceneChange>();
 }
 
 void GameOverScene::Finalize()
@@ -66,7 +68,7 @@ void GameOverScene::Update()
 {
 	Input* input = Input::GetInstance();
 
-	if (isEaseFlag_)
+	if (isEaseFlag_ && sceneChange->GetinEndFlag())
 	{
 		if (input->TriggerPadKey(BUTTON_A))
 		{
@@ -101,6 +103,7 @@ void GameOverScene::Update()
 	gameoverTile_->Update();
 	continueTile_->Update();
 	quitTile_->Update();
+	sceneChange->Update();
 }
 
 void GameOverScene::Draw()
@@ -126,7 +129,7 @@ void GameOverScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
+	sceneChange->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

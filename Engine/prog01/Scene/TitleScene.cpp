@@ -3,6 +3,7 @@
 #include "DirectXCommon.h"
 #include "ObjFactory.h"
 #include "Ease.h"
+#include "BaseCalculate.h"
 
 TitleScene::~TitleScene()
 {
@@ -29,15 +30,19 @@ void TitleScene::Initialize()
 	light_->SetCircleShadowActive(0, true);
 
 	// 3Dオブジェクト生成
+	XMFLOAT4 startColor = { 1, 1, 1, 0 };
+
 	titleTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("title"));
 	titleTile_->SetRotation({ -90,-20,0 });
 	titleTile_->SetScale({ 50, 1, 16.6f });
 	titleTile_->SetPosition({-10,10,50});
+	titleTile_->SetColor(startColor);
 
 	startTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("start"));
 	startTile_->SetRotation({ -90,20,0 });
 	startTile_->SetScale({ 30, 1, 10 });
 	startTile_->SetPosition({ 30,-5,50 });
+	startTile_->SetColor({ 1.0f, 0.5f, 0.5f, 0.0f });
 
 	quitTile_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("quit"));
 	quitTile_->SetRotation({ -90,20,0 });
@@ -85,6 +90,8 @@ void TitleScene::Initialize()
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
 	camera_->SetEye({ 0,1,-15 });
+
+	sceneChange_ = std::make_unique<SceneChange>();
 }
 
 void TitleScene::Finalize()
@@ -95,13 +102,13 @@ void TitleScene::Update()
 {
 	Input* input = Input::GetInstance();
 
-	if (isEaseFlag_)
+	if (isEaseFlag_ && sceneChange_->GetinEndFlag())
 	{
 		if (input->TriggerPadKey(BUTTON_A))
 		{
 			if (determinationFlag_)
 			{
-				SceneManager::GetInstance()->ChangeScene("GameScene");
+				sceneChange_->SceneChangeStart("GameScene");
 			}
 			else if (!determinationFlag_)
 			{
@@ -135,6 +142,7 @@ void TitleScene::Update()
 	{
 		a->Update();
 	}
+	sceneChange_->Update();
 }
 
 void TitleScene::Draw()
@@ -159,7 +167,7 @@ void TitleScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
+	sceneChange_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

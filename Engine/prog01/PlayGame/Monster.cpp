@@ -187,6 +187,23 @@ void Monster::Initialize(Camera* camera)
 	waitingSelector_.push_back(std::bind(&Monster::WaitingMode3, this));
 
 	TreeReset();
+
+	XMFLOAT3 vector = { hunter_->GetPosition().x - nucleus_->GetPosition().x, hunter_->GetPosition().y - nucleus_->GetPosition().y, hunter_->GetPosition().z - nucleus_->GetPosition().z };
+	XMFLOAT3 enemyRot = nucleus_->GetRotation();
+
+	enemyRot.y = -atan2(vector.z - 0.0f, vector.x - 0.0f) * (ANGLE / PI);
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
+	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
+	XMFLOAT3 result
+	{
+		(vector.x * rotM.r[0].m128_f32[0] + vector.y * rotM.r[1].m128_f32[0] + vector.z * rotM.r[2].m128_f32[0] + rotM.r[3].m128_f32[0]) / w,
+		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
+		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
+	};
+	enemyRot.z = atan2(result.y - 0.0f, result.x - 0.0f) * (ANGLE / PI);
+
+	nucleus_->SetRotation(enemyRot);
 }
 
 void Monster::Finalize()
@@ -194,6 +211,72 @@ void Monster::Finalize()
 }
 
 void Monster::Update()
+{
+	//更新
+	nucleus_->Update();
+	for (int i = 0; i < body_.size(); i++)
+	{
+		body_[i]->Update();
+	}
+	for (int i = 0; i < rightForeFoot_.size(); i++)
+	{
+		rightForeFoot_[i]->Update();
+	}
+	for (int i = 0; i < leftForeFoot_.size(); i++)
+	{
+		leftForeFoot_[i]->Update();
+	}
+	for (int i = 0; i < rightHindFoot_.size(); i++)
+	{
+		rightHindFoot_[i]->Update();
+	}
+	for (int i = 0; i < leftHindFoot_.size(); i++)
+	{
+		leftHindFoot_[i]->Update();
+	}
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		tail_[i]->Update();
+	}
+
+	bloodEmitter_->Update();
+	bubbleEmitter_->Update();
+}
+
+void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
+{
+	if (hp_ >= 1)
+	{
+		for (int i = 0; i < body_.size(); i++)
+		{
+			body_[i]->Draw(cmdList);
+		}
+		for (int i = 0; i < rightForeFoot_.size(); i++)
+		{
+			rightForeFoot_[i]->Draw(cmdList);
+		}
+		for (int i = 0; i < leftForeFoot_.size(); i++)
+		{
+			leftForeFoot_[i]->Draw(cmdList);
+		}
+		for (int i = 0; i < rightHindFoot_.size(); i++)
+		{
+			rightHindFoot_[i]->Draw(cmdList);
+		}
+		for (int i = 0; i < leftHindFoot_.size(); i++)
+		{
+			leftHindFoot_[i]->Draw(cmdList);
+		}
+		for (int i = 0; i < tail_.size(); i++)
+		{
+			tail_[i]->Draw(cmdList);
+		}
+	}
+	bloodEmitter_->Draw(cmdList);
+	bubbleEmitter_->Draw(cmdList);
+}
+
+void Monster::AllMove()
 {
 	BehaviorTree();
 
@@ -235,69 +318,7 @@ void Monster::Update()
 		damageHitFlag_ = false;
 	}
 
-	//更新
-	nucleus_->Update();
-	for (int i = 0; i < body_.size(); i++)
-	{
-		body_[i]->Update();
-	}
-	for (int i = 0; i < rightForeFoot_.size(); i++)
-	{
-		rightForeFoot_[i]->Update();
-	}
-	for (int i = 0; i < leftForeFoot_.size(); i++)
-	{
-		leftForeFoot_[i]->Update();
-	}
-	for (int i = 0; i < rightHindFoot_.size(); i++)
-	{
-		rightHindFoot_[i]->Update();
-	}
-	for (int i = 0; i < leftHindFoot_.size(); i++)
-	{
-		leftHindFoot_[i]->Update();
-	}
-	for (int i = 0; i < tail_.size(); i++)
-	{
-		tail_[i]->Update();
-	}
-
 	PartsTailDestruction();
-	bloodEmitter_->Update();
-	bubbleEmitter_->Update();
-}
-
-void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
-{
-	if (hp_ >= 1)
-	{
-		for (int i = 0; i < body_.size(); i++)
-		{
-			body_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < rightForeFoot_.size(); i++)
-		{
-			rightForeFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < leftForeFoot_.size(); i++)
-		{
-			leftForeFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < rightHindFoot_.size(); i++)
-		{
-			rightHindFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < leftHindFoot_.size(); i++)
-		{
-			leftHindFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < tail_.size(); i++)
-		{
-			tail_[i]->Draw(cmdList);
-		}
-	}
-	bloodEmitter_->Draw(cmdList);
-	bubbleEmitter_->Draw(cmdList);
 }
 
 void Monster::AngleAdjustment()

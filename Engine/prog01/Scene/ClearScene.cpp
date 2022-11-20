@@ -56,6 +56,8 @@ void ClearScene::Initialize()
 	// カメラ注視点をセット
 	camera_->SetTarget({ 0, 0, 0 });
 	camera_->SetEye({ 0,1,-15 });
+
+	sceneChange_ = std::make_unique<SceneChange>();
 }
 
 void ClearScene::Finalize()
@@ -66,7 +68,7 @@ void ClearScene::Update()
 {
 	Input* input = Input::GetInstance();
 
-	if (isEaseFlag_)
+	if (isEaseFlag_ && sceneChange_->GetinEndFlag())
 	{
 		if (input->TriggerPadKey(BUTTON_A))
 		{
@@ -101,6 +103,7 @@ void ClearScene::Update()
 	clearTile_->Update();
 	continueTile_->Update();
 	quitTile_->Update();
+	sceneChange_->Update();
 }
 
 void ClearScene::Draw()
@@ -125,7 +128,7 @@ void ClearScene::Draw()
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(cmdList);
-
+	sceneChange_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

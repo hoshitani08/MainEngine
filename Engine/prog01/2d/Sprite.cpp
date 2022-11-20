@@ -203,6 +203,7 @@ Sprite::Sprite(UINT texNumber, XMFLOAT2 position, XMFLOAT2 size, XMFLOAT4 color,
 {
 	position_ = position;
 	size_ = size;
+	defSize_ = size;
 	anchorPoint_ = anchorpoint;
 	matWorld_ = XMMatrixIdentity();
 	color_ = color;
@@ -297,6 +298,17 @@ void Sprite::SetPosition(XMFLOAT2 position)
 void Sprite::SetSize(XMFLOAT2 size)
 {
 	size_ = size;
+	defSize_ = size;
+
+	// 頂点バッファへのデータ転送
+	TransferVertices();
+}
+
+void Sprite::SetScale(float scale)
+{
+	scale_ = scale;
+	size_ = { defSize_.x * scale_, defSize_.y * scale_ };
+
 
 	// 頂点バッファへのデータ転送
 	TransferVertices();

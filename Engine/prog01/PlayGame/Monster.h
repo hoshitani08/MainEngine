@@ -69,6 +69,8 @@ public: // ƒƒ“ƒoŠÖ”
 	void Update();
 	// •`‰æ
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	// ‘S‚Ä‚Ì“®‚«
+	void AllMove();
 	// Œü‚«‚Ìİ’è
 	void AngleAdjustment();
 	// “–‚½‚Á‚½‚©

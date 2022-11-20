@@ -67,6 +67,10 @@ void GameScene::Initialize()
 	ui_->Initialize();
 
 	ItemManager::GetInstance()->Initialize();
+
+	sceneChange_ = std::make_unique<SceneChange>();
+
+	CameraMove();
 }
 
 void GameScene::Finalize()
@@ -76,63 +80,68 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
-	quest_.timer++;
-	if (quest_.timer >= 60)
-	{
-		quest_.second++;
-		quest_.timer = 0;
-	}
-	if (quest_.second >= 60)
-	{
-		quest_.minute++;
-		quest_.second = 0;
-	}
-
 	Input* input = Input::GetInstance();
 	input->SetVibration(false);
 	light_->Update();
 	particleMan_->Update();
 
-	if (input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f)
+	if (sceneChange_->GetinEndFlag())
 	{
-		XMFLOAT2 speed = { input->PadRightStickGradient().x * 5.5f, input->PadRightStickGradient().y * 5.5f };
-
-		if (speed.x < 0)
+		quest_.timer++;
+		if (quest_.timer >= 60)
 		{
-			speed.x *= -1;
+			quest_.second++;
+			quest_.timer = 0;
 		}
-		if (speed.y < 0)
+		if (quest_.second >= 60)
 		{
-			speed.y *= -1;
-		}
-
-		angle_.x += input->PadRightStickGradient().x * speed.x;
-		angle_.y += input->PadRightStickGradient().y * speed.y;
-
-		if (angle_.x >= RESTRICTION_ANGLE.x)
-		{
-			angle_.x = 0.0f;
-		}
-		else if (angle_.x <= -RESTRICTION_ANGLE.x)
-		{
-			angle_.x = 0.0f;
+			quest_.minute++;
+			quest_.second = 0;
 		}
 
-		if (angle_.y >= RESTRICTION_ANGLE.y)
+		if (input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f)
 		{
-			angle_.y = 80.0f;
+			XMFLOAT2 speed = { input->PadRightStickGradient().x * 5.5f, input->PadRightStickGradient().y * 5.5f };
+
+			if (speed.x < 0)
+			{
+				speed.x *= -1;
+			}
+			if (speed.y < 0)
+			{
+				speed.y *= -1;
+			}
+
+			angle_.x += input->PadRightStickGradient().x * speed.x;
+			angle_.y += input->PadRightStickGradient().y * speed.y;
+
+			if (angle_.x >= RESTRICTION_ANGLE.x)
+			{
+				angle_.x = 0.0f;
+			}
+			else if (angle_.x <= -RESTRICTION_ANGLE.x)
+			{
+				angle_.x = 0.0f;
+			}
+
+			if (angle_.y >= RESTRICTION_ANGLE.y)
+			{
+				angle_.y = 80.0f;
+			}
+			else if (angle_.y <= -RESTRICTION_ANGLE.y)
+			{
+				angle_.y = -80.0f;
+			}
 		}
-		else if (angle_.y <= -RESTRICTION_ANGLE.y)
-		{
-			angle_.y = -80.0f;
-		}
+
+		hunter_->SetAngle(angle_);
+		hunter_->Behavior();
+
+		CameraMove();
+		PlayerAttack();
+
+		monster_->AllMove();
 	}
-
-	hunter_->SetAngle(angle_);
-	hunter_->Behavior();
-
-	CameraMove();
-	PlayerAttack();
 
 	if (monster_->GetIsDead())
 	{
@@ -150,6 +159,7 @@ void GameScene::Update()
 	hitSphere_->Update();
 	ui_->Update();
 	stage_->Update();
+	sceneChange_->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -184,6 +194,7 @@ void GameScene::Draw()
 	// デバッグテキストの描画
 	DebugText::GetInstance()->DrawAll(cmdList);
 	ui_->NearDraw();
+	sceneChange_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
 #pragma endregion 前景スプライト描画

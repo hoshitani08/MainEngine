@@ -84,6 +84,10 @@ public: // メンバ関数
 	void SetSize(XMFLOAT2 size);
 	// サイズの取得
 	const XMFLOAT2& GetSize() { return size_; }
+	// 倍率の設定
+	void SetScale(float scale);
+	// 倍率の取得
+	float GetScale() { return scale_; }
 	// アンカーポイントの設定
 	void SetAnchorPoint(XMFLOAT2 anchorpoint);
 	// 左右反転の設定
@@ -110,6 +114,7 @@ private: // メンバ変数
 	XMFLOAT2 position_ = {};
 	// スプライト幅、高さ
 	XMFLOAT2 size_ = { 100.0f, 100.0f };
+	XMFLOAT2 defSize_ = { 100.0f, 100.0f };
 	// アンカーポイント
 	XMFLOAT2 anchorPoint_ = { 0, 0 };
 	// ワールド行列
@@ -124,6 +129,8 @@ private: // メンバ変数
 	XMFLOAT2 texBase_ = { 0, 0 };
 	// テクスチャ幅、高さ
 	XMFLOAT2 texSize_ = { 100.0f, 100.0f };
+	//スケール
+	float scale_ = 1.0f;
 
 private: // メンバ関数
 	// 頂点データ転送

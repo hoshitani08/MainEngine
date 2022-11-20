@@ -19,6 +19,7 @@
 #include "UserInterface.h"
 #include "Block.h"
 #include "Stage.h"
+#include "SceneChange.h"
 
 class CollisionManager;
 class Player;
@@ -80,7 +81,8 @@ private: // メンバ変数
 	std::unique_ptr<Monster> monster_;
 	std::unique_ptr<Object3d> hitSphere_;
 	std::unique_ptr<Stage> stage_;
-
+	// シーンチェンジ
+	std::unique_ptr<SceneChange> sceneChange_;
 	//ライト
 	std::unique_ptr<LightGroup> light_;
 	//光線方向初期値
@@ -89,7 +91,7 @@ private: // メンバ変数
 	float circleShadowAtten_[3] = { 0.5f,0.6f,0.0f };
 	float circleShadowFactorAngle_[2] = { 0.0f, 0.5f };
 
-	float fighterPos[3] = { 1, 0.0f, 0 };
+	float fighterPos_[3] = { 1, 0.0f, 0 };
 	//当たり判定
 	CollisionManager* collisionManager_ = nullptr;
 	// 角度
