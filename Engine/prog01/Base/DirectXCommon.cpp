@@ -21,7 +21,6 @@ DirectXCommon::~DirectXCommon()
 	commandList_.Reset();
 	commandAllocator_.Reset();
 	commandQueue_.Reset();
-
 	for (auto& a : backBuffers_)
 	{
 		a.Reset();
@@ -31,14 +30,6 @@ DirectXCommon::~DirectXCommon()
 	rtvHeaps_.Reset();
 	dsvHeap_.Reset();
 	fence_.Reset();
-
-	ID3D12DebugDevice* debugInterface;
-	if (SUCCEEDED(device_.Get()->QueryInterface(&debugInterface)))
-	{
-		debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
-		debugInterface->Release();
-	}
-
 	device_.Reset();
 }
 
