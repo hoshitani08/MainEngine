@@ -145,11 +145,11 @@ void GameScene::Update()
 
 	if (monster_->GetIsDead())
 	{
-		SceneManager::GetInstance()->ChangeScene("ClearScene");
+		sceneChange_->SceneChangeStart("ClearScene");
 	}
-	else if (ui_->GetIsPlayerDeath() || quest_.minute >= 15)
+	else if (ui_->GetIsPlayerDeath() && hunter_->GetIsDeath() || quest_.minute >= 15)
 	{
-		SceneManager::GetInstance()->ChangeScene("GameOverScene");
+		sceneChange_->SceneChangeStart("GameOverScene");
 	}
 
 	ui_->ClockCalculate(quest_.minute);

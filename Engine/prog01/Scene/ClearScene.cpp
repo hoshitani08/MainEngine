@@ -74,7 +74,7 @@ void ClearScene::Update()
 		{
 			if (determinationFlag_)
 			{
-				SceneManager::GetInstance()->ChangeScene("TitleScene");
+				sceneChange_->SceneChangeStart("TitleScene");
 			}
 			else if (!determinationFlag_)
 			{

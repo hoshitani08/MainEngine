@@ -60,8 +60,12 @@ void Hunter::Finalize()
 
 void Hunter::Update()
 {
-	ItemUse();
-	DamageHit();
+	if (!falg_.death)
+	{
+		ItemUse();
+		DamageHit();
+	}
+
 	for (int i = 0; i < hunter_.size(); i++)
 	{
 		hunter_[i]->Update();
@@ -78,14 +82,38 @@ void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Hunter::Behavior()
 {
-	// ƒXƒs[ƒhŒvŽZ
-	SpeedCalculate();
-	// ˆÚ“®
-	BaseMove();
-	// ‰ñ”ð
-	AvoidMove();
-	// UŒ‚
-	AttackMove();
+	if (hp_ >= 1.0f)
+	{
+		// ƒXƒs[ƒhŒvŽZ
+		SpeedCalculate();
+		// ˆÚ“®
+		BaseMove();
+		// ‰ñ”ð
+		AvoidMove();
+		// UŒ‚
+		AttackMove();
+	}
+	else
+	{
+		if (!falg_.death)
+		{
+			falg_.halt = false;
+			falg_.move = false;
+			falg_.damage = false;
+			falg_.attack = false;
+			falg_.death = true;
+			animationType_ = 4;
+			hunter_[animationType_]->PlayAnimation(0, false);
+			// Ž€–S
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0,0,2.3f });
+			buki_->SetRotation({ -100,0,90 });
+		}
+		if (falg_.death && hunter_[4]->AnimationEnd())
+		{
+			isDeath_ = true;
+		}
+	}
 }
 
 void Hunter::BaseMove()
@@ -95,7 +123,7 @@ void Hunter::BaseMove()
 	XMFLOAT3 position = hunter_[animationType_]->GetPosition();
 	XMFLOAT3 rotation = hunter_[animationType_]->GetRotation();
 
-	if ((input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f) && !isAttackFlag_)
+	if ((input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f) && !isAttackFlag_ && !falg_.damage)
 	{
 		float a = cameraAngle_.x + input->PadStickAngle();
 		XMFLOAT2 angle = { a, cameraAngle_.y };
@@ -149,7 +177,7 @@ void Hunter::BaseMove()
 			buki_->SetRotation({ -60,90,45 });
 		}
 	}
-	else if (!isAttackFlag_)
+	else if (!isAttackFlag_ && !falg_.damage)
 	{
 		if (!falg_.halt)
 		{
@@ -179,7 +207,7 @@ void Hunter::AvoidMove()
 	Input* input = Input::GetInstance();
 
 	// ‰ñ”ð
-	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_)
+	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_ && !falg_.damage)
 	{
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
@@ -191,7 +219,7 @@ void Hunter::AttackMove()
 	Input* input = Input::GetInstance();
 
 	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10 && !itemSelectionFlag_)
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
 	{
 		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
@@ -338,15 +366,36 @@ void Hunter::AttackHit(bool isAttackFlag)
 
 void Hunter::DamageHit()
 {
-	if (damageFlag_ && invincibleTimer_ >= 60)
+	if (damageFlag_ && invincibleTimer_ >= 60 && !falg_.damage)
 	{
 		invincibleTimer_ = 0;
 		damageFlag_ = false;
 		hp_ -= damage_ / ItemManager::GetInstance()->DefenseBuffMagnification();
 		damage_ = 0.0f;
+		isAttackFlag_ = false;
+		attackCoolTimer_ = 0;
+
+		if (!falg_.damage)
+		{
+			falg_.halt = false;
+			falg_.move = false;
+			falg_.damage = true;
+			falg_.attack = false;
+			falg_.death = false;
+			animationType_ = 2;
+			hunter_[animationType_]->PlayAnimation();
+			// ƒ_ƒ[ƒW
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0,0,2.3f });
+			buki_->SetRotation({ 0,90,0 });
+		}
 	}
 	else
 	{
+		if (falg_.damage && hunter_[2]->AnimationEnd())
+		{
+			falg_.damage = false;
+		}
 		damageFlag_ = false;
 		invincibleTimer_++;
 		damage_ = 0.0f;

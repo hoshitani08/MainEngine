@@ -56,7 +56,7 @@ private: // メンバ変数
 	std::unique_ptr<Object3d> continueTile_;
 	std::unique_ptr<Object3d> quitTile_;
 	// シーンチェンジ
-	std::unique_ptr<SceneChange> sceneChange;
+	std::unique_ptr<SceneChange> sceneChange_;
 	// 決定フラグ
 	bool determinationFlag_ = true;
 	// シェイクしているか

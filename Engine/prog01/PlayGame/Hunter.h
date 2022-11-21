@@ -85,6 +85,8 @@ public: // メンバ関数
 	bool GetAnimationType() { return falg_.attack; }
 	// アイテムを選択しているか
 	bool GetItemSelectionFlag() { return itemSelectionFlag_; }
+	// 生きているかどうか
+	bool GetIsDeath() { return isDeath_; }
 
 	// アングルの設定
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
@@ -137,6 +139,8 @@ private: // メンバ変数
 	bool isAttackFlag_ = false;
 	// アイテムの選択してるか
 	bool itemSelectionFlag_ = false;
+	// 生きているかどうか
+	bool isDeath_ = false;
 	// アニメーションのタイプフラグ
 	AnimationFlag falg_ = {};
 };
