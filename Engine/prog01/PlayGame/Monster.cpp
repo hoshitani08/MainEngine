@@ -374,7 +374,7 @@ void Monster::DamageHit(Sphere hitSphere)
 
 	int count = 15;
 	int life = 60;
-	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	XMFLOAT4 color = { 7.0f, 6.0f, 0.0f, 1.0f };
 
 	// ‘Ì
 	for (int i = 0; i < body_.size(); i++)

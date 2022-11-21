@@ -195,6 +195,11 @@ void UserInterface::DamageCalculate()
 
 		hpGaugeSize.x = (508 * saveCount) / 100;
 
+		if (hpGaugeSize.x <= 0.0f)
+		{
+			hpGaugeSize.x = 0.0f;
+		}
+
 		lifeGauge_->SetSize(hpGaugeSize);
 		hunterHp_ = hunter_->GetHp();
 	}
@@ -213,6 +218,11 @@ void UserInterface::DamageCalculate()
 		float saveCount = monster_->GetHp() / monster_->MAX_HP * 100;
 
 		hpGaugeSize.x = (508 * saveCount) / 100;
+
+		if (hpGaugeSize.x <= 0.0f)
+		{
+			hpGaugeSize.x = 0.0f;
+		}
 
 		enemyLifeGauge_->SetSize(hpGaugeSize);
 		monsterHp_ = monster_->GetHp();
