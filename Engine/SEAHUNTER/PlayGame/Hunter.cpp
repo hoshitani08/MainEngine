@@ -125,11 +125,16 @@ void Hunter::BaseMove()
 
 	if ((input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f) && !isAttackFlag_ && !falg_.damage)
 	{
-		float a = cameraAngle_.x + input->PadStickAngle();
-		XMFLOAT2 angle = { a, cameraAngle_.y };
+		XMFLOAT2 angle = { cameraAngle_.x + (float)input->PadStickAngle(), cameraAngle_.y };
+
+		float speed = speed_;
+		if (input->PadStickGradient().y < 0.0f)
+		{
+			speed *= -1;
+		}
 
 		position.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
-		position.y += -sinf((angle.y * 3.14) / 180.0f) * speed_;
+		position.y +=  sinf((angle.y * 3.14) / 180.0f) * speed;
 		position.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
 
 		if (position.x <= -48)
@@ -159,8 +164,15 @@ void Hunter::BaseMove()
 			position.z = 48;
 		}
 
+
+		if (input->PadStickGradient().y > 0.0f)
+		{
+			angle.y = -angle.y;
+		}
+
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
+		//rotation.z = angle.y * speed;
 
 		if (!falg_.move)
 		{
