@@ -27,7 +27,7 @@ std::unique_ptr<Monster> Monster::Create(Camera* camera, Hunter* hunter)
 void Monster::Initialize(Camera* camera)
 {
 	nucleus_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
-	nucleus_->SetPosition({ 0,10,20 });
+	nucleus_->SetPosition({ 0.0f, 10.0f, 20.0f });
 
 	for (int i = 0; i < body_.size(); i++)
 	{
@@ -38,11 +38,11 @@ void Monster::Initialize(Camera* camera)
 		}
 		else
 		{
-			body_[i]->SetPosition({ -1.5f,0,0 });
+			body_[i]->SetPosition({ -1.5f, 0.0f, 0.0f });
 			body_[i]->SetParent(body_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 5Ui64>::size_type>(i) - 1].get());
 		}
 
-		body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
+		body_[i]->SetColor({ 0.4f, 0.8f, 0.4f, 1.0f });
 	}
 
 	for (int i = 0; i < rightForeFoot_.size(); i++)
@@ -50,20 +50,20 @@ void Monster::Initialize(Camera* camera)
 		rightForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			rightForeFoot_[i]->SetPosition({ 0,0,-1 });
+			rightForeFoot_[i]->SetPosition({ 0.0f, 0.0f, -1.0f });
 			rightForeFoot_[i]->SetParent(body_[1].get());
 		}
 		else if (i == 1)
 		{
-			rightForeFoot_[i]->SetPosition({ 0,-1.0f,-1 });
+			rightForeFoot_[i]->SetPosition({ 0.0f, -1.0f, -1.0f });
 			rightForeFoot_[i]->SetParent(rightForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
-			rightForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
+			rightForeFoot_[i]->SetPosition({ 1.0f, -1.0f, 0.0f });
 			rightForeFoot_[i]->SetParent(rightForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
-		rightForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+		rightForeFoot_[i]->SetColor({ 1.0f, 0.5f, 0.25f, 1.0f });
 	}
 
 	for (int i = 0; i < leftForeFoot_.size(); i++)
@@ -71,20 +71,20 @@ void Monster::Initialize(Camera* camera)
 		leftForeFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			leftForeFoot_[i]->SetPosition({ 0,0,1 });
+			leftForeFoot_[i]->SetPosition({ 0.0f, 0.0f, 1.0f });
 			leftForeFoot_[i]->SetParent(body_[1].get());
 		}
 		else if (i == 1)
 		{
-			leftForeFoot_[i]->SetPosition({ 0,-1.0f,1 });
+			leftForeFoot_[i]->SetPosition({ 0.0f, -1.0f, 1.0f });
 			leftForeFoot_[i]->SetParent(leftForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
-			leftForeFoot_[i]->SetPosition({ 1,-1.0f,0 });
+			leftForeFoot_[i]->SetPosition({ 1.0f, -1.0f, 0.0f });
 			leftForeFoot_[i]->SetParent(leftForeFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
-		leftForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+		leftForeFoot_[i]->SetColor({ 1.0f, 0.5f, 0.25f, 1.0f });
 	}
 
 	for (int i = 0; i < rightHindFoot_.size(); i++)
@@ -92,20 +92,20 @@ void Monster::Initialize(Camera* camera)
 		rightHindFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			rightHindFoot_[i]->SetPosition({ -5.5f,0,-1 });
+			rightHindFoot_[i]->SetPosition({ -5.5f, 0.0f, -1.0f });
 			rightHindFoot_[i]->SetParent(body_[0].get());
 		}
 		else if (i == 1)
 		{
-			rightHindFoot_[i]->SetPosition({ 0,-1.0f,-1 });
+			rightHindFoot_[i]->SetPosition({ 0.0f, -1.0f, -1.0f });
 			rightHindFoot_[i]->SetParent(rightHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
-			rightHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
+			rightHindFoot_[i]->SetPosition({ -1.0f, -1.0f, 0.0f });
 			rightHindFoot_[i]->SetParent(rightHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
-		rightHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+		rightHindFoot_[i]->SetColor({ 0.0f, 0.5f, 0.5f, 1.0f });
 	}
 
 	for (int i = 0; i < leftHindFoot_.size(); i++)
@@ -113,21 +113,21 @@ void Monster::Initialize(Camera* camera)
 		leftHindFoot_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			leftHindFoot_[i]->SetPosition({ -5.5f,0,1 });
+			leftHindFoot_[i]->SetPosition({ -5.5f, 0.0f, 1.0f });
 			leftHindFoot_[i]->SetParent(body_[0].get());
 		}
 		else if (i == 1)
 		{
-			leftHindFoot_[i]->SetPosition({ 0,-1.0f,1 });
+			leftHindFoot_[i]->SetPosition({ 0.0f, -1.0f, 1.0f });
 			leftHindFoot_[i]->SetParent(leftHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 		else
 		{
-			leftHindFoot_[i]->SetPosition({ -1,-1.0f,0 });
+			leftHindFoot_[i]->SetPosition({ -1.0f, -1.0f, 0.0f });
 			leftHindFoot_[i]->SetParent(leftHindFoot_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 3Ui64>::size_type>(i) - 1].get());
 		}
 
-		leftHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+		leftHindFoot_[i]->SetColor({ 0.0f, 0.5f, 0.5f, 1.0f });
 	}
 
 	for (int i = 0; i < tail_.size(); i++)
@@ -135,16 +135,16 @@ void Monster::Initialize(Camera* camera)
 		tail_[i] = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 		if (i == 0)
 		{
-			tail_[i]->SetPosition({ -1.5f,0,0 });
+			tail_[i]->SetPosition({ -1.5f, 0.0f, 0.0f });
 			tail_[i]->SetParent(body_[4].get());
 		}
 		else
 		{
-			tail_[i]->SetPosition({ -1.5f,0,0 });
+			tail_[i]->SetPosition({ -1.5f, 0.0f, 0.0f });
 			tail_[i]->SetParent(tail_[static_cast<std::array<std::unique_ptr<Object3d, std::default_delete<Object3d>>, 4Ui64>::size_type>(i) - 1].get());
 		}
 
-		tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
+		tail_[i]->SetColor({ 0.5f, 0.5f, 0.0f, 1.0f });
 	}
 
 	bloodParticle_ = std::make_unique<ObjParticle>();
@@ -152,8 +152,8 @@ void Monster::Initialize(Camera* camera)
 	bloodEmitter_->SetCenter(1);
 	float scale = 0.4f;
 	bloodEmitter_->SetObjStartScale({ scale, scale, scale });
-	bloodEmitter_->SetStartColor({ 1,0,0,1 });
-	bloodEmitter_->SetEndColor({ 1,0,0,1 });
+	bloodEmitter_->SetStartColor({ 1.0f, 0.0f, 0.0f, 1.0f });
+	bloodEmitter_->SetEndColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 
 	bubbleParticle_ = std::make_unique<ObjParticle>();
 	bubbleEmitter_ = std::make_unique<ParticleEmitter>(bubbleParticle_.get());
@@ -161,8 +161,8 @@ void Monster::Initialize(Camera* camera)
 	bubbleEmitter_->SetCenter(1);
 	bubbleEmitter_->SetObjStartScale({ scale, scale, scale });
 	bubbleEmitter_->SetObjEndScale({ scale, scale, scale });
-	bubbleEmitter_->SetStartColor({ 1,1,1,1.0f });
-	bubbleEmitter_->SetEndColor({ 1,1,1,0.0f });
+	bubbleEmitter_->SetStartColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+	bubbleEmitter_->SetEndColor({ 1.0f, 1.0f, 1.0f, 0.0f });
 
 	//ビヘイビアツリーの初期化
 	activitySelector_.push_back(std::bind(&Monster::Howl, this));
@@ -245,7 +245,7 @@ void Monster::Update()
 
 void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (hp_ >= 1)
+	if (hp_ >= 1.0f)
 	{
 		for (int i = 0; i < body_.size(); i++)
 		{
@@ -284,32 +284,32 @@ void Monster::AllMove()
 	{
 		for (int i = 0; i < body_.size(); i++)
 		{
-			body_[i]->SetColor({ 0.4f,0.8f,0.4f,1 });
+			body_[i]->SetColor({ 0.4f, 0.8f, 0.4f, 1.0f });
 		}
 
 		for (int i = 0; i < rightForeFoot_.size(); i++)
 		{
-			rightForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+			rightForeFoot_[i]->SetColor({ 1.0f, 0.5f, 0.25f, 1.0f });
 		}
 
 		for (int i = 0; i < leftForeFoot_.size(); i++)
 		{
-			leftForeFoot_[i]->SetColor({ 1,0.5f,0.25f,1 });
+			leftForeFoot_[i]->SetColor({ 1.0f, 0.5f, 0.25f, 1.0f });
 		}
 
 		for (int i = 0; i < rightHindFoot_.size(); i++)
 		{
-			rightHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+			rightHindFoot_[i]->SetColor({ 0.0f, 0.5f, 0.5f, 1.0f });
 		}
 
 		for (int i = 0; i < leftHindFoot_.size(); i++)
 		{
-			leftHindFoot_[i]->SetColor({ 0,0.5f,0.5f,1 });
+			leftHindFoot_[i]->SetColor({ 0.0f, 0.5f, 0.5f, 1.0f });
 		}
 
 		for (int i = 0; i < tail_.size(); i++)
 		{
-			tail_[i]->SetColor({ 0.5f,0.5f,0,1 });
+			tail_[i]->SetColor({ 0.5f, 0.5f, 0.0f, 1.0f });
 		}
 	}
 
@@ -387,7 +387,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			body_[i]->GetWorldPosition().x,
 			body_[i]->GetWorldPosition().y,
-			body_[i]->GetWorldPosition().z, 1
+			body_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -414,7 +414,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			rightForeFoot_[i]->GetWorldPosition().x,
 			rightForeFoot_[i]->GetWorldPosition().y,
-			rightForeFoot_[i]->GetWorldPosition().z, 1
+			rightForeFoot_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -441,7 +441,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			leftForeFoot_[i]->GetWorldPosition().x,
 			leftForeFoot_[i]->GetWorldPosition().y,
-			leftForeFoot_[i]->GetWorldPosition().z, 1
+			leftForeFoot_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -468,7 +468,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			rightHindFoot_[i]->GetWorldPosition().x,
 			rightHindFoot_[i]->GetWorldPosition().y,
-			rightHindFoot_[i]->GetWorldPosition().z, 1
+			rightHindFoot_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -495,7 +495,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			leftHindFoot_[i]->GetWorldPosition().x,
 			leftHindFoot_[i]->GetWorldPosition().y,
-			leftHindFoot_[i]->GetWorldPosition().z, 1
+			leftHindFoot_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -522,7 +522,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			tail_[i]->GetWorldPosition().x,
 			tail_[i]->GetWorldPosition().y,
-			tail_[i]->GetWorldPosition().z, 1
+			tail_[i]->GetWorldPosition().z, 1.0f
 		};
 
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
@@ -586,30 +586,30 @@ void Monster::Animation(AnimationType type)
 			}
 			else
 			{
-				body_[i]->SetPosition({ -1.5f,0,0 });
+				body_[i]->SetPosition({ -1.5f, 0.0f, 0.0f });
 			}
 		}
-		rightForeFoot_[0]->SetPosition({ 0,0,-1 });
-		rightForeFoot_[1]->SetPosition({ 0,-1.0f,-1 });
-		rightForeFoot_[2]->SetPosition({ 1,-1.0f,0 });
+		rightForeFoot_[0]->SetPosition({ 0.0f, 0.0f, -1.0f });
+		rightForeFoot_[1]->SetPosition({ 0.0f, -1.0f, -1.0f });
+		rightForeFoot_[2]->SetPosition({ 1.0f, -1.0f, 0.0f });
 
-		leftForeFoot_[0]->SetPosition({ 0,0,1 });
-		leftForeFoot_[1]->SetPosition({ 0,-1.0f,1 });
-		leftForeFoot_[2]->SetPosition({ 1,-1.0f,0 });
+		leftForeFoot_[0]->SetPosition({ 0.0f, 0.0f, 1.0f });
+		leftForeFoot_[1]->SetPosition({ 0.0f, -1.0f, 1.0f });
+		leftForeFoot_[2]->SetPosition({ 1.0f, -1.0f, 0.0f });
 
-		rightHindFoot_[0]->SetPosition({ -5.5f,0,-1 });
-		rightHindFoot_[1]->SetPosition({ 0,-1.0f,-1 });
-		rightHindFoot_[2]->SetPosition({ -1,-1.0f,0 });
+		rightHindFoot_[0]->SetPosition({ -5.5f, 0.0f, -1.0f });
+		rightHindFoot_[1]->SetPosition({ 0.0f, -1.0f, -1.0f });
+		rightHindFoot_[2]->SetPosition({ -1.0f, -1.0f, 0.0f });
 
-		leftHindFoot_[0]->SetPosition({ -5.5f,0,1 });
-		leftHindFoot_[1]->SetPosition({ 0,-1.0f,1 });
-		leftHindFoot_[2]->SetPosition({ -1,-1.0f,0 });
+		leftHindFoot_[0]->SetPosition({ -5.5f, 0.0f, 1.0f });
+		leftHindFoot_[1]->SetPosition({ 0.0f, -1.0f, 1.0f });
+		leftHindFoot_[2]->SetPosition({ -1.0f, -1.0f, 0.0f });
 
 		for (int i = 0; i < tail_.size(); i++)
 		{
 			if (!tailDestructionFlag_)
 			{
-				tail_[i]->SetPosition({ -1.5f,0,0 });
+				tail_[i]->SetPosition({ -1.5f, 0.0f, 0.0f });
 			}
 		}
 	}
@@ -680,7 +680,7 @@ void Monster::Animation(AnimationType type)
 		leftForeFoot_[0]->SetRotation(rot);
 		leftHindFoot_[0]->SetRotation(rot);
 		rightHindFoot_[0]->SetRotation(rot);
-		bubbleEmitter_->SetCenter(5);
+		bubbleEmitter_->SetCenter(5.0f);
 		
 		bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		bubbleEmitter_->BubbleAdd(count, life, leftForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
@@ -702,7 +702,7 @@ void Monster::Animation(AnimationType type)
 			isEaseFlag_ = true;
 		}
 
-		bubbleEmitter_->SetCenter(1);
+		bubbleEmitter_->SetCenter(1.0f);
 		for (auto& a : tail_)
 		{
 			bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
@@ -733,7 +733,7 @@ void Monster::Animation(AnimationType type)
 			timeRate = easeTimer_ / countNum;
 			easeTimer_++;
 
-			rightForeFoot_[0]->SetRotation(Ease::easeOut({ 0.0f, 45.0f, 100.0f }, { 0.0f,-90.0f,0.0f }, timeRate));
+			rightForeFoot_[0]->SetRotation(Ease::easeOut({ 0.0f, 45.0f, 100.0f }, { 0.0f, -90.0f, 0.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -741,7 +741,7 @@ void Monster::Animation(AnimationType type)
 				isPunch = false;
 				isEaseFlag_ = true;
 			}
-			bubbleEmitter_->SetCenter(1);
+			bubbleEmitter_->SetCenter(1.0f);
 			bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		}
 	}
@@ -759,10 +759,10 @@ void Monster::Animation(AnimationType type)
 		{
 			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f + range, 0.0f }, { 0.0f, 0.0f - range, 0.0f }, timeRate));
 
-			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0,0,-1 }, { 0, range, -1 }, timeRate));
-			leftForeFoot_ [0]->SetPosition(Ease::easeInOut( { 0,0,1 }, { 0, range, 1 }, timeRate));
-			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,0,1 }, { -5.5f,range,1 }, timeRate));
-			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,0,-1 }, { -5.5f,range,-1 }, timeRate));
+			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f, -1.0f }, { 0.0f, range, -1.0f }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f, 1.0f }, { 0.0f, range, 1.0f }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f, 0.0f, 1.0f }, { -5.5f,range,1.0f }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f, 0.0f, -1.0f }, { -5.5f,range,-1.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -774,10 +774,10 @@ void Monster::Animation(AnimationType type)
 		{
 			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f - range, 0.0f }, { 0.0f, 0.0f + range, 0.0f }, timeRate));
 
-			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0, range, -1 }, { 0, 0, -1 }, timeRate));
-			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0, range, 1 }, { 0, 0, 1 }, timeRate));
-			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,range,1 }, { -5.5f,0,1 }, timeRate));
-			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,range,-1 }, { -5.5f,0,-1 }, timeRate));
+			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0.0f, range, -1.0f }, { 0.0f, 0.0f, -1.0f }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0.0f, range, 1.0f }, { 0.0f, 0.0f, 1.0f }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,range,1.0f }, { -5.5f,0.0f,1.0f }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,range,-1.0f }, { -5.5f,0.0f,-1.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -1028,7 +1028,7 @@ bool Monster::AttackMode2()
 		if (Hit(tail_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
 		{
 			hunter_->SetDamageFlag(true);
-			hunter_->SetDamage(10);
+			hunter_->SetDamage(10.0f);
 			hitFlag_ = true;
 		}
 	}
@@ -1054,7 +1054,7 @@ bool Monster::AttackMode3()
 		if (Hit(rightForeFoot_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
 		{
 			hunter_->SetDamageFlag(true);
-			hunter_->SetDamage(10);
+			hunter_->SetDamage(10.0f);
 			hitFlag_ = true;
 		}
 	}
@@ -1069,7 +1069,7 @@ bool Monster::WaitingElapsedTime()
 		if (count >= maxCount)
 		{
 			count = 0;
-			maxCount = RandCalculate(1.0f, 4.0f);
+			maxCount = (int)RandCalculate(1.0f, 4.0f);
 		}
 		Animation(AnimationType::InitialPosture);
 		angleEaseTimer_ = 0.0f;

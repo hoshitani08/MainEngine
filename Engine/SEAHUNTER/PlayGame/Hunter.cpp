@@ -33,20 +33,13 @@ void Hunter::Initialize()
 	for (int i = 0; i < hunter_.size(); i++)
 	{
 		hunter_[i]->SetScale({ size, size, size });
-		hunter_[i]->SetRotation({ 0,0,0 });
-		hunter_[i]->SetPosition({ 0, 10, -30 });
+		hunter_[i]->SetRotation({ 0.0f,0.0f,0.0f });
+		hunter_[i]->SetPosition({ 0.0f, 10.0f, -30.0f });
 	}
 
 	buki_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
 	float s = 0.05f;
 	buki_->SetScale({ s,s,s });
-	// ƒ_ƒ[ƒW
-	//buki_->SetParent(hunter_[animationType_].get());
-	//buki_->SetPosition({ 0,0,2.3f });
-	//buki_->SetRotation({ 0,90,0 });
-	// Ž€–S
-	//buki_->SetPosition({ 0,0,2.3f });
-	//buki_->SetRotation({ -100,0,90 });
 
 	buki_->SetBoneName("mixamorig:LeftHandThumb4");
 	
@@ -106,8 +99,8 @@ void Hunter::Behavior()
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// Ž€–S
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0,0,2.3f });
-			buki_->SetRotation({ -100,0,90 });
+			buki_->SetPosition({ 0.0f, 0.0f, 2.3f });
+			buki_->SetRotation({ -100.0f, 0.0f, 90.0f });
 		}
 		if (falg_.death && hunter_[4]->AnimationEnd())
 		{
@@ -130,38 +123,38 @@ void Hunter::BaseMove()
 		float speed = speed_;
 		if (input->PadStickGradient().y < 0.0f)
 		{
-			speed *= -1;
+			speed *= -1.0f;
 		}
 
-		position.x +=  cosf((angle.x * 3.14) / 180.0f) * speed_;
-		position.y +=  sinf((angle.y * 3.14) / 180.0f) * speed;
-		position.z += -sinf((angle.x * 3.14) / 180.0f) * speed_;
+		position.x +=  cosf((angle.x * 3.14f) / 180.0f) * speed_;
+		position.y +=  sinf((angle.y * 3.14f) / 180.0f) * speed;
+		position.z += -sinf((angle.x * 3.14f) / 180.0f) * speed_;
 
-		if (position.x <= -48)
+		if (position.x <= -48.0f)
 		{
-			position.x = -48;
+			position.x = -48.0f;
 		}
-		else if (position.x >= 48)
+		else if (position.x >= 48.0f)
 		{
-			position.x = 48;
-		}
-
-		if (position.y <= 1)
-		{
-			position.y = 1;
-		}
-		else if (position.y >= 58)
-		{
-			position.y = 58;
+			position.x = 48.0f;
 		}
 
-		if (position.z <= -48)
+		if (position.y <= 1.0f)
 		{
-			position.z = -48;
+			position.y = 1.0f;
 		}
-		else if (position.z >= 48)
+		else if (position.y >= 58.0f)
 		{
-			position.z = 48;
+			position.y = 58.0f;
+		}
+
+		if (position.z <= -48.0f)
+		{
+			position.z = -48.0f;
+		}
+		else if (position.z >= 48.0f)
+		{
+			position.z = 48.0f;
 		}
 
 
@@ -185,8 +178,8 @@ void Hunter::BaseMove()
 			hunter_[animationType_]->PlayAnimation();
 			// ˆÚ“®
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0,0,2.3f });
-			buki_->SetRotation({ -60,90,45 });
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -60.0f,90.0f,45.0f });
 		}
 	}
 	else if (!isAttackFlag_ && !falg_.damage)
@@ -202,8 +195,8 @@ void Hunter::BaseMove()
 			hunter_[animationType_]->PlayAnimation();
 			// ’âŽ~
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0,0,2.3f });
-			buki_->SetRotation({ -60,90,45 });
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -60.0f,90.0f,45.0f });
 		}
 	}
 
@@ -246,8 +239,8 @@ void Hunter::AttackMove()
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// UŒ‚
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0,0,1.7f });
-			buki_->SetRotation({ 0,180,0 });
+			buki_->SetPosition({ 0.0f,0.0f,1.7f });
+			buki_->SetRotation({ 0.0f,180.0f,0.0f });
 		}
 	}
 
@@ -270,7 +263,7 @@ void Hunter::SpeedCalculate()
 	{
 		if (avoidTimer_ <= 0)
 		{
-			stamina_ -= 10;
+			stamina_ -= 10.0f;
 		}
 
 		avoidTimer_++;
@@ -300,7 +293,7 @@ void Hunter::SpeedCalculate()
 		stamina_ = 0.0f;
 		isStamina_ = false;
 	}
-	else if (!isStamina_ && stamina_ >= 50)
+	else if (!isStamina_ && stamina_ >= 50.0f)
 	{
 		isStamina_ = true;
 	}
@@ -347,7 +340,7 @@ void Hunter::ItemUse()
 		if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
 		{
 			count--;
-			hp_ += 10;
+			hp_ += 10.0f;
 			if (hp_ >= MAX_HP)
 			{
 				hp_ = MAX_HP;
@@ -398,8 +391,8 @@ void Hunter::DamageHit()
 			hunter_[animationType_]->PlayAnimation();
 			// ƒ_ƒ[ƒW
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0,0,2.3f });
-			buki_->SetRotation({ 0,90,0 });
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ 0.0f,90.0f,0.0f });
 		}
 	}
 	else

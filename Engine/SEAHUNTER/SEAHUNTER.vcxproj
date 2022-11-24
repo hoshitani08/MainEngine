@@ -78,13 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\;$(ProjectDir)lib\DirectXTex\include\</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug\;$(ProjectDir)lib\DirectXTex\lib\Debug\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\;$(ProjectDir)lib\DirectXTex\include\</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release\;$(ProjectDir)lib\DirectXTex\lib\Release\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -125,11 +125,12 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -147,22 +148,18 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
-      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli" />
     <None Include="Resources\shaders\Particle.hlsli" />
