@@ -3,10 +3,9 @@
 #include <Windows.h>
 #include <wrl.h>
 #include <DirectXMath.h>
-#include <dinput.h>
 #include <xinput.h>
-
 #define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
 
 #pragma comment (lib, "xinput.lib")
 
@@ -48,60 +47,145 @@ public: // サブクラス
 	};
 
 public: //メンバ関数
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="hInstance"></param>
+	/// <param name="hwnd"></param>
+	/// <returns></returns>
 	bool Initialize(HINSTANCE hInstance, HWND hwnd);
-	//更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
-	// キーの押下をチェック
+	/// <summary>
+	/// キーの押下をチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
+	/// <returns>押されているか</returns>
 	bool PushKey(BYTE keyNumber);
-	// キーのトリガーをチェック
+	/// <summary>
+	/// キーのトリガーをチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
+	/// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
-
-	static BOOL CALLBACK DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef);
-
-	//スティックの傾き
+	/// <summary>
+	/// 左スティックの傾き
+	/// </summary>
+	/// <returns></returns>
 	XMFLOAT2& PadStickGradient();
+	/// <summary>
+	/// 右スティックの傾き
+	/// </summary>
+	/// <returns></returns>
 	XMFLOAT2& PadRightStickGradient();
-	//スティックの角度
+	/// <summary>
+	/// 左スティックの角度
+	/// </summary>
+	/// <returns></returns>
 	double PadStickAngle();
+	/// <summary>
+	/// 右スティックの角度
+	/// </summary>
+	/// <returns></returns>
 	double PadRightStickAngle();
-	//振動のフラグ設定
+	/// <summary>
+	/// 振動のフラグ設定
+	/// </summary>
+	/// <param name="_vibration">振動させるか</param>
 	void SetVibration(bool _vibration) { vibrationFlag_ = _vibration; }
+	/// <summary>
+	/// 振動の強さの設定
+	/// </summary>
+	/// <param name="_vibrationPower">振動の強さ</param>
 	void SetVibrationPower(int _vibrationPower) { vibrationPower_ = _vibrationPower; }
-	// キーの左ボタントリガーをチェック
+	/// <summary>
+	/// キーの左ボタントリガーをチェック
+	/// </summary>
+	/// <returns></returns>
 	bool TriggerPadLeft();
-	// キーの右ボタントリガーをチェック
+	/// <summary>
+	/// キーの右ボタントリガーをチェック
+	/// </summary>
+	/// <returns></returns>
 	bool TriggerPadRight();
-	//ゲームパッドのキーの押下をチェック
+	/// <summary>
+	/// ゲームパッドのキーの押下をチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
+	/// <returns>押されているか</returns>
 	bool PushPadKey(PadKey keyNumber);
-	// キーのトリガーをチェック
+	/// <summary>
+	/// キーのトリガーをチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
+	/// <returns>トリガーか</returns>
 	bool TriggerPadKey(PadKey keyNumber);
-
-	// キーの左ボタン押下をチェック
+	/// <summary>
+	/// キーの左ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
 	bool PushMouseLeft();
-	// キーの中ボタン押下をチェック
+	/// <summary>
+	/// キーの中ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
 	bool PushMouseMiddle();
-	// キーの右ボタン押下をチェック
+	/// <summary>
+	/// キーの右ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
 	bool PushMouseRight();
-	// キーの左ボタントリガーをチェック
+	/// <summary>
+	/// キーの左ボタントリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
 	bool TriggerMouseLeft();
-	// キーの中ボタントリガーをチェック
+	/// <summary>
+	/// キーの中ボタントリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
 	bool TriggerMouseMiddle();
-	// キーの右ボタントリガーをチェック
+	/// <summary>
+	/// キーの右ボタントリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
 	bool TriggerMouseRight();
-	// マウス移動量を取得
+	/// <summary>
+	/// マウス移動量を取得
+	/// </summary>
+	/// <returns></returns>
 	MouseMove GetMouseMove();
 
 private:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Input();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Input();
-
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="ipddi"></param>
+	/// <param name="pvRef"></param>
+	/// <returns></returns>
+	static BOOL CALLBACK DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef);
+	/// <summary>
+	/// 振動
+	/// </summary>
 	void Vibration();
 
 public:
 	Input(const Input& input) = delete;
 	Input& operator=(const Input& input) = delete;
-
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static Input* GetInstance();
 
 private: //メンバ変数

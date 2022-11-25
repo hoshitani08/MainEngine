@@ -300,29 +300,29 @@ bool Collision::CheckSphere2Capsule(const Sphere& sphere, const Capsule& capsule
 	Vector3 vStartToEnd = capsule.endPosition - capsule.startPosition;
 
 	Vector3 n = vStartToEnd;
-	n.normalize();
+	n.Normalize();
 
 	Vector3 sPos = { sphere.center.m128_f32[0], sphere.center.m128_f32[1], sphere.center.m128_f32[2] };
 
-	float t = n.dot(Vector3(sPos - capsule.startPosition));
+	float t = n.Dot(Vector3(sPos - capsule.startPosition));
 
 	Vector3 vPsPn = n * t;
 	Vector3 posPn = capsule.startPosition + vPsPn;
 
-	float lengthRate = t / vStartToEnd.length();
+	float lengthRate = t / vStartToEnd.Length();
 
 	float distance;
 	if (lengthRate < 0.0f)
 	{
-		distance = (sPos + capsule.startPosition).length() - capsule.radius;
+		distance = (sPos + capsule.startPosition).Length() - capsule.radius;
 	}
 	else if (lengthRate <= 1.0f)
 	{
-		distance = (posPn - sPos).length() - capsule.radius;
+		distance = (posPn - sPos).Length() - capsule.radius;
 	}
 	else
 	{
-		distance = (sPos + capsule.endPosition).length() - capsule.radius;
+		distance = (sPos + capsule.endPosition).Length() - capsule.radius;
 	}
 
 	return distance < sphere.radius;
@@ -371,17 +371,17 @@ bool Collision::CheckCapsule2Box(const Capsule& capsule, const Box& box)
 	Vector3 vStartToEnd = capsule.endPosition - capsule.startPosition;
 
 	Vector3 n = vStartToEnd;
-	n.normalize();
+	n.Normalize();
 
 	Vector3 boxMinPos = { box.center.m128_f32[0] - box.scale.x, box.center.m128_f32[1] - box.scale.y, box.center.m128_f32[2] - box.scale.z };
 	Vector3 boxMaxPos = { box.center.m128_f32[0] + box.scale.x, box.center.m128_f32[1] + box.scale.y, box.center.m128_f32[2] + box.scale.z };
 
-	float t = n.dot(Vector3(boxMaxPos - capsule.startPosition));
+	float t = n.Dot(Vector3(boxMaxPos - capsule.startPosition));
 
 	Vector3 vPsPn = n * t;
 	Vector3 posPn = capsule.startPosition + vPsPn;
 
-	float lengthRate = t / vStartToEnd.length();
+	float lengthRate = t / vStartToEnd.Length();
 
 	float sqDistance = 0.0f;
 	float pos;
