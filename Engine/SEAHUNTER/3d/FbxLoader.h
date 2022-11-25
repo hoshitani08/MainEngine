@@ -20,17 +20,29 @@ public: // 定数
 	// テクスチャがない場合の標準テクスチャファイル名
 	static const string DEFAULT_TEXTURE_FILE_NAME;
 public:
-	// シングルトンインスタンスの取得
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static FbxLoader* GetInstance();
 	//FBXの行列をXMMatrixに変換
 	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
 
 public:
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	void Initialize(ID3D12Device* device);
-	// 後始末
+	/// <summary>
+	/// 後始末
+	/// </summary>
 	void Finalize();
-	// ファイルからFBXモデル読込
+	/// <summary>
+	/// ファイルからFBXモデル読込
+	/// </summary>
+	/// <param name="modelName">モデル名</param>
+	/// <returns></returns>
 	std::unique_ptr<FbxModel> LoadModelFromFile(const string& modelName);
 
 private:
@@ -52,21 +64,53 @@ private:
 	FbxLoader(const FbxLoader& obj) = delete;
 	// コピー代入演算子を禁止（シングルトンパターン）
 	void operator=(const FbxLoader& obj) = delete;
-	// 再帰的にノード構成を解析
+	/// <summary>
+	/// 再帰的にノード構成を解析
+	/// </summary>
+	/// <param name="model">読み込み先モデルオブジェクト</param>
+	/// <param name="fbxNode">解析対象のノード</param>
+	/// <param name="parent">親ノード</param>
 	void ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent = nullptr);
-	// メッシュ読み取り
+	/// <summary>
+	/// メッシュ読み取り
+	/// </summary>
+	/// <param name="model">読み込み先モデルオブジェクト</param>
+	/// <param name="fbxNode">解析対象のノード</param>
 	void ParseMesh(FbxModel* model, FbxNode* fbxNode);
-	// 頂点座標読み取り、面情報読み取り
+	/// <summary>
+	/// 頂点座標読み取り、面情報読み取り
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="fbxMesh"></param>
 	void ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh);
-	// マテリアル読み取り
+	/// <summary>
+	/// マテリアル読み取り
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="fbxNode"></param>
 	void ParseMaterial(FbxModel* model, FbxNode* fbxNode);
-	// テクスチャ読み込み
+	/// <summary>
+	/// テクスチャ読み込み
+	/// </summary>
+	/// <param name="texData"></param>
+	/// <param name="fullpath"></param>
 	void LoadTexture(TextureData* texData, const std::string& fullpath);
-	//スキニング情報の読み取り
+	/// <summary>
+	/// スキニング情報の読み取り
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="fbxMesh"></param>
 	void ParseSkin(FbxModel* model, FbxMesh* fbxMesh);
-	// ディレクトリを含んだファイルパスからファイル名を抽出する
+	/// <summary>
+	/// ディレクトリを含んだファイルパスからファイル名を抽出する
+	/// </summary>
+	/// <param name="path"></param>
+	/// <returns></returns>
 	std::string ExtractFileName(const std::string& path);
-	//3頂点からローカル座標とUV座標からU軸(angent)とV軸(Binormal)を求める
+	/// <summary>
+	/// 3頂点からローカル座標とUV座標からU軸(angent)とV軸(Binormal)を求める
+	/// </summary>
+	/// <param name="model"></param>
 	void BuildTangentAndBiNormalImp(FbxModel* model);
 
 	const XMFLOAT3& Add(XMFLOAT3 m, XMFLOAT3 k);

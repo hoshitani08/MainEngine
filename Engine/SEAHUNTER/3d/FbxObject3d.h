@@ -50,15 +50,38 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
-	// 静的初期化
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="camera">カメラ</param>
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
-	// 静的破棄
+	/// <summary>
+	/// 静的破棄
+	/// </summary>
 	static void StaticFinalize();
-	// 3Dオブジェクト生成
+	/// <summary>
+	/// 3Dオブジェクト生成
+	/// </summary>
+	/// <param name="model">モデル</param>
+	/// <param name="HLSLfName">HLSL名</param>
+	/// <param name="isAnimation">アニメーションフラグ</param>
+	/// <returns></returns>
 	static std::unique_ptr<FbxObject3d> Create(FbxModel* model = nullptr, std::wstring HLSLfName = L"BasicFBX", bool isAnimation = false);
-	// setter
+	/// <summary>
+	/// デバイスの設定
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	static void SetDevice(ID3D12Device* device) { FbxObject3d::device_ = device; }
+	/// <summary>
+	/// カメラの設定
+	/// </summary>
+	/// <param name="camera">カメラ</param>
 	static void SetCamera(Camera* camera) { FbxObject3d::camera_ = camera; }
+	/// <summary>
+	/// ライトの設定
+	/// </summary>
+	/// <param name="light">ライト</param>
 	static void SetLight(LightGroup* light) { FbxObject3d::light_ = light; }
 
 private: // 静的メンバ変数
@@ -70,38 +93,84 @@ private: // 静的メンバ変数
 	static LightGroup* light_;
 
 public: // メンバ関数
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~FbxObject3d();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns></returns>
 	bool Initialize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//モデルを設定
+	/// <summary>
+	/// モデルを設定
+	/// </summary>
+	/// <param name="model">モデル</param>
 	void SetModel(FbxModel* model) { model_ = model; }
-	//アニメーションのロード
+	/// <summary>
+	/// アニメーションのロード
+	/// </summary>
 	void LoadAnimation();
-	//アニメーション開始
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	/// <param name="animationNumber">アニメーションハンドル</param>
+	/// <param name="isLoop">ループさせるか</param>
 	void PlayAnimation(int animationNumber = 0, bool isLoop = true);
-
-	// 座標の取得
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	const XMFLOAT3& GetPosition() { return position_; }
-	// 座標の設定
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT3 position) { position_ = position; }
-	// X,Y,Z軸回りの取得
+	/// <summary>
+	/// X,Y,Z軸回りの取得
+	/// </summary>
+	/// <returns>X,Y,Z軸回りの角度</returns>
 	const XMFLOAT3& GetRotation() { return rotation_; }
-	// X,Y,Z軸回りの設定
+	/// <summary>
+	/// X,Y,Z軸回りの設定
+	/// </summary>
+	/// <param name="rotation">X,Y,Z軸回り角度</param>
 	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
-	// スケールの取得
+	/// <summary>
+	/// スケールの取得
+	/// </summary>
+	/// <returns>スケール</returns>
 	const XMFLOAT3& GetScale() { return scale_; }
-	// スケールの設定
+	/// <summary>
+	/// スケールの設定
+	/// </summary>
+	/// <param name="scale">スケール</param>
 	void SetScale(XMFLOAT3 scale) { scale_ = scale; }
-	// ワールド行列の取得
+	/// <summary>
+	/// ワールド行列の取得
+	/// </summary>
+	/// <returns>ワールド行列</returns>
 	const XMMATRIX& GetMatWorld() { return matWorld_; }
-	// ボーン行列の取得
+	/// <summary>
+	/// ボーン行列の取得
+	/// </summary>
+	/// <param name="name">ボーン名</param>
+	/// <returns>ボーン行列</returns>
 	const XMMATRIX GetBoneMatWorld(std::string name);
-	// アニメーションが終わったか
+	/// <summary>
+	/// アニメーションが終わったか
+	/// </summary>
+	/// <returns></returns>
 	bool AnimationEnd() { return currentTime_ >= endTime_; }
 
 protected: // メンバ変数

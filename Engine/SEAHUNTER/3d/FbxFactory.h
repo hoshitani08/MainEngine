@@ -12,8 +12,8 @@ class FbxFactory final
 public: // サブクラス
 	struct ModelData
 	{
-		std::string fName;
-		std::unique_ptr<FbxModel> fbxModel;
+		std::string fName; // ファイル名
+		std::unique_ptr<FbxModel> fbxModel; // FBXモデル
 	};
 
 public:
@@ -28,17 +28,32 @@ public:
 	FbxFactory(const FbxFactory & fbxFactory) = delete;
 	FbxFactory& operator=(const FbxFactory & fbxFactory) = delete;
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	// 終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// モデルのロード
+	/// <summary>
+	/// モデルのロード
+	/// </summary>
+	/// <param name="fName">ファイル名</param>
 	void LoadModel(std::string fName);
-	// モデルの取得
+	/// <summary>
+	/// モデルの取得
+	/// </summary>
+	/// <param name="fName">ファイル名</param>
+	/// <returns>検索したモデル</returns>
 	FbxModel* GetModel(std::string fName);
-	// インスタンス生成
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static FbxFactory* GetInstance();
 
 private:
+	// モデルデータ
 	std::vector<ModelData> modelData_;
 };

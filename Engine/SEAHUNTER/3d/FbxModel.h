@@ -10,6 +10,7 @@
 #include <d3dx12.h>
 #include <fbxsdk.h>
 
+// ノード
 struct Node
 {
 	//名前
@@ -97,19 +98,41 @@ public: // サブクラス
 	};
 
 public:
-	//バッファ生成
+	/// <summary>
+	/// バッファ生成
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	void CreateBuffers(ID3D12Device* device);
-	//描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//モデルの変形行列取得
+	/// <summary>
+	/// モデルの変形行列取得
+	/// </summary>
+	/// <returns>変形行列</returns>
 	const XMMATRIX& GetModelTransform() { return meshNode_->globalTransform; }
-	//テクスチャバッファ生成
+	/// <summary>
+	/// テクスチャバッファ生成
+	/// </summary>
+	/// <param name="texture"></param>
+	/// <param name="device">デバイス</param>
+	/// <param name="srvIndex"></param>
 	void CreateTexture(TextureData& texture, ID3D12Device* device, int srvIndex);
-	//getrer
+	/// <summary>
+	/// ボーンの取得
+	/// </summary>
+	/// <returns>ボーン</returns>
 	std::vector<Bone>& GetBones() { return bones_; }
+	/// <summary>
+	/// FBXシーンの取得デストラクタ
+	/// </summary>
+	/// <returns>FBXシーン</returns>
 	FbxScene* GetFbxScene() { return fbxScene_; }
-
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~FbxModel();
 
 private:
