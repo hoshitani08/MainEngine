@@ -5,16 +5,28 @@ class SceneManager;
 class BaseScene
 {
 public: // メンバ関数
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~BaseScene() = default;
-
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	virtual void Initialize() = 0;
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	virtual void Finalize() = 0;
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	virtual void Update() = 0;
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	virtual void Draw() = 0;
-	// 描画
+	/// <summary>
+	/// エフェクトあり描画
+	/// </summary>
 	virtual void EffectDraw() = 0;
 };

@@ -82,12 +82,12 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(nextScene_ == nullptr);
 
 	nextScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
-	CreateLoadScene("LoadScene");
+	CreateLoadScene();
 }
 
-void SceneManager::CreateLoadScene(const std::string& sceneName)
+void SceneManager::CreateLoadScene()
 {
-	loadScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
+	loadScene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene("LoadScene"));
 	loadScene_->Initialize();
 }
 

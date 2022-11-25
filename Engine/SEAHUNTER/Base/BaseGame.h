@@ -13,15 +13,25 @@
 class BaseGame
 {
 public:
-	//実行
+	/// <summary>
+	/// 実行
+	/// </summary>
 	void Run();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	virtual void Initialize();
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	virtual void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	virtual void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	virtual void Draw();
 
 protected:

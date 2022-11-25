@@ -23,30 +23,58 @@ private: // シングルトン
 public: // シングルトン
 	SceneManager(const SceneManager& sceneManager) = delete;
 	SceneManager& operator=(const SceneManager& sceneManager) = delete;
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static SceneManager* GetInstance();
 
 public:
-	// 終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
-	// エフェクト描画
+	/// <summary>
+	/// エフェクトあり描画
+	/// </summary>
 	void EffectDraw();
-	// 次シーンの予約
+	/// <summary>
+	/// 次シーンの予約
+	/// </summary>
+	/// <param name="sceneName">シーン名</param>
 	void ChangeScene(const std::string& sceneName);
-	// シーン生成の設定
+	/// <summary>
+	/// シーン生成の設定
+	/// </summary>
+	/// <param name="sceneFactory">シーン生成</param>
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory) { sceneFactory_ = sceneFactory; }
 
 private:
-	// ロードシーンの設定
-	void CreateLoadScene(const std::string& sceneName);
-	// ロードフラグの設定
+	/// <summary>
+	/// ロードシーンの設定
+	/// </summary>
+	void CreateLoadScene();
+	/// <summary>
+	/// ロードフラグの設定
+	/// </summary>
+	/// <param name="isLoaded"></param>
 	void SetLockFlag(bool isLoaded);
-	// ロードフラグの取得
+	/// <summary>
+	/// ロードフラグの取得
+	/// </summary>
+	/// <returns></returns>
 	bool GetLockFlag();
-	//  非同期ロード
+	/// <summary>
+	/// 非同期ロード
+	/// </summary>
 	void AsyncLoad();
 
 private:
