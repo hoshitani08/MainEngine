@@ -77,26 +77,59 @@ private: // 定数
 	static const int VERTEX_COUNT = 65536; // 頂点数
 
 public: // 静的メンバ関数
-	// 3Dオブジェクト生成
+	/// <summary>
+	/// 3Dオブジェクト生成
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="camera">カメラ</param>
+	/// <param name="fName">ファイル名</param>
+	/// <returns></returns>
 	static std::unique_ptr<ParticleManager> Create(ID3D12Device* device, Camera* camera, std::wstring fName = L"effect1");
 
 public: // メンバ関数
-	//デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ParticleManager();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="fName">ファイル名</param>
 	void Initialize(std::wstring fName);
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//パーティクルの追加
+	/// <summary>
+	/// パーティクルの追加
+	/// </summary>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="velocity">速度</param>
+	/// <param name="accel">加速度</param>
+	/// <param name="startScale">初期値の倍率</param>
+	/// <param name="endScale">最終値の倍率</param>
+	/// <param name="startColor">色(RGBA)初期値</param>
+	/// <param name="endColor">色(RGBA)最終値</param>
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
 		float startScale, float endScale, XMFLOAT4 startColor, XMFLOAT4 endColor);
-	// デスクリプタヒープの初期化
+	/// <summary>
+	/// デスクリプタヒープの初期化
+	/// </summary>
 	void InitializeDescriptorHeap();
-	// テクスチャ読み込み
+	/// <summary>
+	/// テクスチャ読み込み
+	/// </summary>
+	/// <param name="fName"></param>
 	void LoadTexture(std::wstring fName);
-	// モデル作成
+	/// <summary>
+	/// モデル作成
+	/// </summary>
 	void CreateModel();
 
 private: // 静的メンバ変数
@@ -124,5 +157,10 @@ private: // 静的メンバ変数
 	Camera* camera_ = nullptr;
 
 private:
-		ParticleManager(ID3D12Device* device, Camera* camera);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="camera">カメラ</param>
+	ParticleManager(ID3D12Device* device, Camera* camera);
 };

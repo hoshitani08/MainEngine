@@ -52,14 +52,35 @@ private: // エイリアス
 	};
 
 public: // メンバ関数
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	ObjParticle();
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//パーティクルの追加
+	/// <summary>
+	/// パーティクルの追加
+	/// </summary>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="velocity">速度</param>
+	/// <param name="accel">加速度</param>
+	/// <param name="startScale">初期値の倍率</param>
+	/// <param name="endScale">最終値の倍率</param>
+	/// <param name="startColor">色(RGBA)初期値</param>
+	/// <param name="endColor">色(RGBA)最終値</param>
+	/// <param name="model">モデル</param>
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
 		XMFLOAT3 startScale, XMFLOAT3 endScale, XMFLOAT4 startColor, XMFLOAT4 endColor, Model* model);
 

@@ -23,33 +23,94 @@ public: // メンバ関数
 	ParticleEmitter(ParticleManager* particleMan);
 	ParticleEmitter(ObjParticle* objParticle);
 
-	// 追加
+	/// <summary>
+	/// 追加(泡)
+	/// </summary>
+	/// <param name="count">数</param>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="model">モデル</param>
 	void BubbleAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	/// <summary>
+	/// 追加(血用)
+	/// </summary>
+	/// <param name="count">数</param>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="model">モデル</param>
 	void BloodAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	/// <summary>
+	/// 追加
+	/// </summary>
+	/// <param name="count">数</param>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="model">モデル</param>
 	void Add(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	// 座標の設定
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="mdPos">座標</param>
 	void SetCenter(const float mdPos) { mdPos_ = mdPos; }
-	// 速度の設定
+	/// <summary>
+	/// 速度の設定
+	/// </summary>
+	/// <param name="mdVel">速度</param>
 	void SetVelocity(float mdVel) { mdVel_ = mdVel; }
-	// 加速度の設定
+	/// <summary>
+	/// 加速度の設定
+	/// </summary>
+	/// <param name="mdAcc">加速度</param>
 	void SetAccel(float mdAcc) { mdAcc_ = mdAcc; }
-	// スケールの初期値の設定
+	/// <summary>
+	/// スケールの初期値の設定
+	/// </summary>
+	/// <param name="startScale">スケールの初期値</param>
 	void SetStartScale(float startScale) { startScale_ = startScale; }
+	/// <summary>
+	/// スケールの初期値の設定
+	/// </summary>
+	/// <param name="startScale">スケールの初期値</param>
 	void SetObjStartScale(XMFLOAT3 objStartScale) { objStartScale_ = objStartScale; }
-	// スケールの初期値の設定
+	/// <summary>
+	/// スケールの初期値の設定
+	/// </summary>
+	/// <param name="endScale">スケールの初期値</param>
 	void SetEndScale(float endScale) { endScale_ = endScale; }
+	/// <summary>
+	/// スケールの初期値の設定
+	/// </summary>
+	/// <param name="endScale">スケールの初期値</param>
 	void SetObjEndScale(XMFLOAT3 objEndScale) { objEndScale_ = objEndScale; }
-	//色(RGBA)初期値の設定
+	/// <summary>
+	/// 色(RGBA)初期値の設定
+	/// </summary>
+	/// <param name="s_color">色(RGBA)初期値</param>
 	void SetStartColor(XMFLOAT4 s_color) { startColor_ = s_color; }
-	//色(RGBA)最終値の設定
+	/// <summary>
+	/// 色(RGBA)最終値の設定
+	/// </summary>
+	/// <param name="e_color">色(RGBA)最終値</param>
 	void SetEndColor(XMFLOAT4 e_color) { endColor_ = e_color; }
-	// マネージャーの設定
+	/// <summary>
+	/// マネージャーの設定
+	/// </summary>
+	/// <param name="particleMan">マネージャー</param>
 	void SetParticleManager(ParticleManager* particleMan) { particleMan_ = particleMan; }
+	/// <summary>
+	/// マネージャーの設定
+	/// </summary>
+	/// <param name="particleMan">マネージャー</param>
 	void SetObjParticle(ObjParticle* objParticle) { objParticle_ = objParticle; }
 
 private: // メンバ変数

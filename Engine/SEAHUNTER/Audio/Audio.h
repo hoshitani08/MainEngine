@@ -69,13 +69,30 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns></returns>
 	bool Initialize();
-	// サウンドファイルの読み込み
+	/// <summary>
+	/// サウンドファイルの読み込み
+	/// </summary>
+	/// <param name="soundNumber">サウンド番号</param>
+	/// <param name="filename">ファイル名</param>
 	void LoadWave(int soundNumber, const char* filename);
-	// サウンドファイルの再生
+	/// <summary>
+	/// サウンドファイルの再生
+	/// </summary>
+	/// <param name="soundNumber">サウンド番号</param>
 	void PlayWave(int soundNumber);
+	/// <summary>
+	/// サウンドファイルのループ再生
+	/// </summary>
+	/// <param name="soundNumber">サウンド番号</param>
 	void LoopPlayWave(int soundNumber);
+	/// <summary>
+	/// サウンドファイルの停止
+	/// </summary>
 	void LoopStopWave();
 
 private:
@@ -85,12 +102,17 @@ private:
 public:
 	Audio(const Audio& audio) = delete;
 	Audio& operator=(const Audio& audio) = delete;
-
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static Audio* GetInstance();
 
 private: // メンバ変数
+	// XAudio2のインスタンス
 	ComPtr<IXAudio2> xAudio2_;
 	IXAudio2MasteringVoice* masterVoice_;
+	// オーディオコールバック
 	XAudio2VoiceCallback voiceCallback_;
 
 	map<int, SoundData> soundDatas_;
