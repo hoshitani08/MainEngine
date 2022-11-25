@@ -16,19 +16,36 @@ private: // エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public: // メンバ関数
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="win"></param>
 	void Initialize(WinApp* win);
-	// 描画前処理
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
 	void PreDraw();
-	// 描画後処理
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
 	void PostDraw();
-	// レンダーターゲットのクリア
+	/// <summary>
+	/// レンダーターゲットのクリア
+	/// </summary>
 	void ClearRenderTarget();
-	// 深度バッファのクリア
+	/// <summary>
+	/// 深度バッファのクリア
+	/// </summary>
 	void ClearDepthBuffer();
-	// デバイスの取得
+	/// <summary>
+	/// デバイスの取得
+	/// </summary>
+	/// <returns>デバイス</returns>
 	ID3D12Device* GetDevice() { return device_.Get(); }
-	// 描画コマンドリストの取得
+	/// <summary>
+	/// 描画コマンドリストの取得
+	/// </summary>
+	/// <returns>描画コマンドリスト</returns>
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_.Get(); }
 
 private:
@@ -38,7 +55,10 @@ private:
 public:
 	DirectXCommon(const DirectXCommon& directXCommon) = delete;
 	DirectXCommon& operator=(const DirectXCommon& directXCommon) = delete;
-
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static DirectXCommon* GetInstance();
 
 private: // メンバ変数
@@ -60,16 +80,34 @@ private: // メンバ変数
 	UINT64 fenceVal_ = 0;
 
 private: // メンバ関数
-	// DXGIデバイス初期化
+	/// <summary>
+	/// DXGIデバイス初期化
+	/// </summary>
+	/// <returns></returns>
 	bool InitializeDXGIDevice();
-	// スワップチェーンの生成
+	/// <summary>
+	/// スワップチェーンの生成
+	/// </summary>
+	/// <returns></returns>
 	bool CreateSwapChain();
-	// コマンド関連初期化
+	/// <summary>
+	/// コマンド関連初期化
+	/// </summary>
+	/// <returns></returns>
 	bool InitializeCommand();
-	// レンダーターゲット生成
+	/// <summary>
+	/// レンダーターゲット生成
+	/// </summary>
+	/// <returns></returns>
 	bool CreateFinalRenderTargets();
-	// 深度バッファ生成
+	/// <summary>
+	/// 深度バッファ生成
+	/// </summary>
+	/// <returns></returns>
 	bool CreateDepthBuffer();
-	// フェンス生成
+	/// <summary>
+	/// フェンス生成
+	/// </summary>
+	/// <returns></returns>
 	bool CreateFence();
 };

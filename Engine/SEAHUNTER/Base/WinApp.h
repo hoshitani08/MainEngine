@@ -11,19 +11,39 @@ public: // 静的メンバ変数
 	static const wchar_t WINDOW_CLASS_NAME[];
 
 public: // 静的メンバ関数
-	// ウィンドウプロシージャ
+	/// <summary>
+	/// ウィンドウプロシージャ
+	/// </summary>
+	/// <param name="hwnd">ウィンドウハンドル</param>
+	/// <param name="msg">メッセージ番号</param>
+	/// <param name="wparam">メッセージ情報1</param>
+	/// <param name="lparam">メッセージ情報2</param>
+	/// <returns></returns>
 	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 public: // メンバ関数
-	// ゲームウィンドウの作成
+	/// <summary>
+	/// ゲームウィンドウの作成
+	/// </summary>
 	void CreateGameWindow();
-	// ゲームウィンドウの破棄
+	/// <summary>
+	/// ゲームウィンドウの破棄
+	/// </summary>
 	void TerminateGameWindow();
-	// メッセージの処理
+	/// <summary>
+	/// メッセージの処理
+	/// </summary>
+	/// <returns></returns>
 	bool ProcessMessage();
-	// ウィンドウハンドルの取得
+	/// <summary>
+	/// ウィンドウハンドルの取得
+	/// </summary>
+	/// <returns></returns>
 	HWND GetHwnd() { return hwnd_; }
-
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	HINSTANCE GetInstance() { return wndClass_.hInstance; }
 
 private: // メンバ変数

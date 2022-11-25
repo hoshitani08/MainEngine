@@ -47,11 +47,22 @@ public:
 	ShaderManager(const ShaderManager & r) = delete;
 	ShaderManager& operator=(const ShaderManager & r) = delete;
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	void Initialize(ID3D12Device * device);
-	// 終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// グラフィックパイプラインの生成
+	/// <summary>
+	/// グラフィックパイプラインの生成
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="fName">シェーダファイル名</param>
+	/// <param name="typeName">タイプ</param>
+	/// <param name="type">プリミティブ形状のタイプ</param>
 	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName, Type type = Type::Triangle);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
@@ -59,11 +70,24 @@ public:
 	void SpritePipeline(ID3D12Device* device, ShaderData tempData);
 	void ParticlePipeline(ID3D12Device* device, ShaderData tempData);
 	void PostEffectPipeline(ID3D12Device* device, ShaderData tempData);
-
+	/// <summary>
+	/// ルートシグネチャの取得
+	/// </summary>
+	/// <param name="fName">シェーダファイル名</param>
+	/// <param name="type">プリミティブ形状のタイプ</param>
+	/// <returns>ルートシグネチャ</returns>
 	ID3D12RootSignature* GetRootSignature(std::wstring fName, Type type = Type::Triangle);
+	/// <summary>
+	/// パイプラインステートオブジェクトの取得
+	/// </summary>
+	/// <param name="fName">シェーダファイル名</param>
+	/// <param name="type">プリミティブ形状のタイプ</param>
+	/// <returns>パイプラインステートオブジェクト</returns>
 	ID3D12PipelineState* GetPipelineState(std::wstring fName, Type type = Type::Triangle);
-
-	// インスタンス生成
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static ShaderManager* GetInstance();
 
 private:

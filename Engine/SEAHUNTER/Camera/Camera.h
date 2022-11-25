@@ -13,39 +13,92 @@ protected: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // 静的メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="window_width">表示座標X</param>
+	/// <param name="window_height">表示座標Y</param>
 	Camera(int window_width, int window_height);
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Camera() = default;
-	// 毎フレーム更新
+	/// <summary>
+	/// 毎フレーム更新
+	/// </summary>
 	void Update();
-	// ビュー行列を更新
+	/// <summary>
+	/// ビュー行列を更新
+	/// </summary>
 	void UpdateViewMatrix();
-	// 射影行列を更新
+	/// <summary>
+	/// 射影行列を更新
+	/// </summary>
 	void UpdateProjectionMatrix();
-	// ビュー行列の取得
+	/// <summary>
+	/// ビュー行列の取得
+	/// </summary>
+	/// <returns>ビュー行列</returns>
 	const XMMATRIX& GetViewMatrix() { return matView_; }
-	// 射影行列の取得
+	/// <summary>
+	/// 射影行列の取得
+	/// </summary>
+	/// <returns>射影行列</returns>
 	const XMMATRIX& GetProjectionMatrix() { return matProjection_; }
-	// ビュー射影行列の取得
+	/// <summary>
+	/// ビュー射影行列の取得
+	/// </summary>
+	/// <returns>ビュー射影行列</returns>
 	const XMMATRIX& GetViewProjectionMatrix() { return matViewProjection_; }
-	// ビルボード行列の取得
+	/// <summary>
+	/// ビルボード行列の取得
+	/// </summary>
+	/// <returns>ビルボード行列</returns>
 	const XMMATRIX& GetBillboardMatrix() { return matBillboard_; }
-	// 視点座標の取得
+	/// <summary>
+	/// 視点座標の取得
+	/// </summary>
+	/// <returns>視点座標</returns>
 	const XMFLOAT3& GetEye() { return eye_; }
-	// 視点座標の設定
+	/// <summary>
+	/// 視点座標の設定
+	/// </summary>
+	/// <param name="eye">視点座標</param>
 	void SetEye(XMFLOAT3 eye) { eye_ = eye; viewDirty_ = true; }
-	// 注視点座標の取得
+	/// <summary>
+	/// 注視点座標の取得
+	/// </summary>
+	/// <returns>注視点座標</returns>
 	const XMFLOAT3& GetTarget() { return target_; }
-	// 注視点座標の設定
+	/// <summary>
+	/// 注視点座標の設定
+	/// </summary>
+	/// <param name="target">注視点座標</param>
 	void SetTarget(XMFLOAT3 target) { target_ = target; viewDirty_ = true; }
-	// ベクトルの取得
+	/// <summary>
+	/// ベクトルの取得
+	/// </summary>
+	/// <returns>ベクトル</returns>
 	const XMFLOAT3& GetUp() { return up_; }
-	// ベクトルの設定
+	/// <summary>
+	/// ベクトルの設定
+	/// </summary>
+	/// <param name="up">ベクトル</param>
 	void SetUp(XMFLOAT3 up) { up_ = up; viewDirty_ = true; }
-	// ベクトルによる移動
+	/// <summary>
+	/// ベクトルによる移動
+	/// </summary>
+	/// <param name="move">ベクトル</param>
 	void CameraMoveVector(const XMFLOAT3& move);
+	/// <summary>
+	/// ベクトルによる移動(Eyeのみ)
+	/// </summary>
+	/// <param name="move">ベクトル</param>
 	void CameraMoveEyeVector(const XMFLOAT3& move);
+	/// <summary>
+	/// ベクトルによる移動(Targetのみ)
+	/// </summary>
+	/// <param name="move">ベクトル</param>
 	void CameraMoveTargetVector(const XMFLOAT3& move);
 
 protected: // メンバ変数
