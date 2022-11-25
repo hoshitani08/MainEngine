@@ -11,8 +11,8 @@ class ObjFactory final
 public: // サブクラス
 	struct ModelData
 	{
-		std::string fName;
-		std::unique_ptr<Model> model;
+		std::string fName; // ファイル名
+		std::unique_ptr<Model> model; // OBJモデル
 	};
 
 public:
@@ -27,17 +27,33 @@ public:
 	ObjFactory(const ObjFactory& objFactory) = delete;
 	ObjFactory& operator=(const ObjFactory& objFactory) = delete;
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	// 終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// モデルのロード
+	/// <summary>
+	/// モデルのロード
+	/// </summary>
+	/// <param name="fName">ファイル名</param>
+	/// <param name="smoothing">エッジ平滑化フラグ</param>
 	void LoadModel(std::string fName, bool smoothing = false);
-	// モデルの取得
+	/// <summary>
+	/// モデルの取得
+	/// </summary>
+	/// <param name="fName">ファイル名</param>
+	/// <returns>検索したモデル</returns>
 	Model* GetModel(std::string fName);
-	// インスタンス生成
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static ObjFactory* GetInstance();
 
 private:
+	// モデルデータ
 	std::vector<ModelData> modelData_;
 };

@@ -18,9 +18,17 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // 静的メンバ関数
-	// 静的初期化
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	static void StaticInitialize(ID3D12Device* device);
-
+	/// <summary>
+	/// OBJファイルからメッシュ生成
+	/// </summary>
+	/// <param name="modelname">モデル名</param>
+	/// <param name="modelname">エッジ平滑化フラグ</param>
+	/// <returns>生成されたモデル</returns>
 	static std::unique_ptr<Model> CreateFromObject(const std::string& text, bool smoothing = false);
 
 private: // 静的メンバ変数
@@ -30,23 +38,47 @@ private: // 静的メンバ変数
 	static UINT descriptorHandleIncrementSize_;
 
 private:// 静的メンバ関数
-	//マテリアル読み込み
+	/// <summary>
+	/// マテリアル読み込み
+	/// </summary>
+	/// <param name="directoryPath">読み込みディレクトリパス</param>
+	/// <param name="filename">ファイル名</param>
 	void LoadMaterial(const std::string& directoryPath, const std::string& filename);
-	// マテリアル登録
+	/// <summary>
+	/// マテリアル登録
+	/// </summary>
+	/// <param name="material">マテリアル</param>
 	void AddMaterial(Material* material);
-	// デスクリプタヒープの初期化
+	/// <summary>
+	/// デスクリプタヒープの初期化
+	/// </summary>
 	void CreateDescriptorHeap();
-	// テクスチャ読み込み
+	/// <summary>
+	/// テクスチャ読み込み
+	/// </summary>
 	void LoadTexture();
 
 public: // メンバ関数
-	//初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="text">モデル名</param>
+	/// <param name="smoothing">エッジ平滑化フラグ</param>
 	void Initialize(const std::string& text, bool smoothing);
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//アルファ値を設定
+	/// <summary>
+	/// アルファ値を設定
+	/// </summary>
+	/// <param name="alpha">アルファ値</param>
 	void SetAlpha(float alpha);
-	// メッシュコンテナを取得
+	/// <summary>
+	/// メッシュコンテナを取得
+	/// </summary>
+	/// <returns>メッシュコンテナ</returns>
 	inline const std::vector<std::unique_ptr<Mesh>>& GetMeshes() { return meshes_; }
 
 private: // メンバ変数

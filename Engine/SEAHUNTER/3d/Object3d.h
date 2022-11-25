@@ -40,15 +40,31 @@ public: // サブクラス
 private: // 定数
 
 public: // 静的メンバ関数
-	// 静的初期化
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="camera">カメラ</param>
 	static void StaticInitialize(ID3D12Device* device, Camera* camera = nullptr);
-	// 静的破棄
+	/// <summary>
+	/// 静的破棄
+	/// </summary>
 	static void StaticFinalize();
-	// 3Dオブジェクト生成
+	/// <summary>
+	/// 3Dオブジェクト生成
+	/// </summary>
+	/// <param name="model">モデル</param>
+	/// <returns>生成されたオブジェクト</returns>
 	static std::unique_ptr<Object3d> Create(Model* model = nullptr);
-	// カメラのセット
+	/// <summary>
+	/// カメラの設定
+	/// </summary>
+	/// <param name="camera">カメラ</param>
 	static void SetCamera(Camera* camera) { Object3d::camera_ = camera; }
-	//ライトのセット
+	/// <summary>
+	/// ライトの設定
+	/// </summary>
+	/// <param name="light">ライト</param>
 	static void SetLight(LightGroup* light) { Object3d::light_ = light; }
 
 private: // 静的メンバ変数
@@ -60,52 +76,117 @@ private: // 静的メンバ変数
 	static LightGroup* light_;
 
 public: // メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Object3d() = default;
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~Object3d();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns></returns>
 	virtual bool Initialize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	virtual void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	virtual void Draw(ID3D12GraphicsCommandList* cmdList);
-	// 行列の更新
+	/// <summary>
+	/// 行列の更新
+	/// </summary>
 	void UpdateWorldMatrix();
-	// 座標の取得
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	const XMFLOAT3& GetPosition() { return position_; }
-	// 座標の設定
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT3 position) { position_ = position; }
-	// X,Y,Z軸回りの取得
+	/// <summary>
+	/// X,Y,Z軸回りの取得
+	/// </summary>
+	/// <returns>X,Y,Z軸回りの回転</returns>
 	const XMFLOAT3& GetRotation() { return rotation_; }
-	// X,Y,Z軸回りの設定
+	/// <summary>
+	/// X,Y,Z軸回りの設定
+	/// </summary>
+	/// <param name="rotation">X,Y,Z軸回りの回転</param>
 	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
-	// スケールの取得
+	/// <summary>
+	/// スケールの取得
+	/// </summary>
+	/// <returns>スケール</returns>
 	const XMFLOAT3& GetScale() { return scale_; }
-	// スケールの設定
+	/// <summary>
+	/// スケールの設定
+	/// </summary>
+	/// <param name="scale">スケール</param>
 	void SetScale(XMFLOAT3 scale) { scale_ = scale; }
-	// モデルの設定
+	/// <summary>
+	/// モデルの設定
+	/// </summary>
+	/// <param name="model">モデル</param>
 	void SetModel(Model* model) { model_ = model; };
-	// ビルボードの設定
+	/// <summary>
+	/// ビルボードの設定
+	/// </summary>
+	/// <param name="isBillboard">ビルボードさせるか</param>
 	void SetBillboard(bool isBillboard) { isBillboard_ = isBillboard; }
-	// ワールド行列の取得
+	/// <summary>
+	/// ワールド行列の取得
+	/// </summary>
+	/// <returns>ワールド行列</returns>
 	const XMMATRIX& GetMatWorld() { return matWorld_; }
-	// コライダーのセット
+	/// <summary>
+	/// コライダーの設定
+	/// </summary>
+	/// <param name="collider">衝突判定</param>
 	void SetCollider(BaseCollider* collider);
-	// 衝突時コールバック関数
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	/// <param name="info">衝突情報</param>
 	virtual void OnCollision(const CollisionInfo& info) {}
-	// ワールド座標を取得
+	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns>ワールド座標</returns>
 	XMFLOAT3 GetWorldPosition();
-	// モデルを取得
+	/// <summary>
+	/// モデルを取得
+	/// </summary>
+	/// <returns>モデル</returns>
 	inline Model* GetModel() { return model_; }
-	// 色の設定
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="_color">色</param>
 	void SetColor(XMFLOAT4 _color) { color_ = _color; }
-	// 親オブジェクトの設定
+	/// <summary>
+	/// 親オブジェクトの設定
+	/// </summary>
+	/// <param name="parent">親オブジェクト</param>
 	void SetParent(Object3d* parent) { parent_ = parent; }
 	void SetParent(FbxObject3d* parent) { fbxParent_ = parent; }
-	// 取得するボーンの名前の設定
+	/// <summary>
+	/// 取得するボーンの名前の設定
+	/// </summary>
+	/// <param name="boneName">ボーン名</param>
 	void SetBoneName(std::string boneName) { boneName_ = boneName; }
-	// プリミティブ形状の設定
+	/// <summary>
+	/// プリミティブ形状の設定
+	/// </summary>
+	/// <param name="type"></param>
 	void SetPrimitiveType(ShaderManager::Type type) { type_ = type; }
 
 protected: // メンバ変数

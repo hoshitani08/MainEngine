@@ -66,7 +66,7 @@ public: // 静的メンバ関数
 	/// <param name="model">モデル</param>
 	/// <param name="HLSLfName">HLSL名</param>
 	/// <param name="isAnimation">アニメーションフラグ</param>
-	/// <returns></returns>
+	/// <returns>生成されたオブジェクト</returns>
 	static std::unique_ptr<FbxObject3d> Create(FbxModel* model = nullptr, std::wstring HLSLfName = L"BasicFBX", bool isAnimation = false);
 	/// <summary>
 	/// デバイスの設定
@@ -139,12 +139,12 @@ public: // メンバ関数
 	/// <summary>
 	/// X,Y,Z軸回りの取得
 	/// </summary>
-	/// <returns>X,Y,Z軸回りの角度</returns>
+	/// <returns>X,Y,Z軸回りの回転</returns>
 	const XMFLOAT3& GetRotation() { return rotation_; }
 	/// <summary>
 	/// X,Y,Z軸回りの設定
 	/// </summary>
-	/// <param name="rotation">X,Y,Z軸回り角度</param>
+	/// <param name="rotation">X,Y,Z軸回り回転</param>
 	void SetRotation(XMFLOAT3 rotation) { rotation_ = rotation; }
 	/// <summary>
 	/// スケールの取得

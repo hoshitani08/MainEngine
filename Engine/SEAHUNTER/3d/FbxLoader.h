@@ -42,7 +42,7 @@ public:
 	/// ファイルからFBXモデル読込
 	/// </summary>
 	/// <param name="modelName">モデル名</param>
-	/// <returns></returns>
+	/// <returns>生成されたモデル</returns>
 	std::unique_ptr<FbxModel> LoadModelFromFile(const string& modelName);
 
 private:

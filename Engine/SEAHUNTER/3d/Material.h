@@ -30,9 +30,15 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
-	// 静的初期化
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	static void StaticInitialize(ID3D12Device* device);
-	//マテリアル生成
+	/// <summary>
+	/// マテリアル生成
+	/// </summary>
+	/// <returns>生成されたマテリアル</returns>
 	static Material* Create();
 
 private: // 静的メンバ変数
@@ -48,20 +54,41 @@ private: // 静的メンバ変数
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV_;
 
 public: // メンバ関数
-
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Material();
-	// 定数バッファの取得
+	/// <summary>
+	/// 定数バッファの取得
+	/// </summary>
+	/// <returns></returns>
 	ID3D12Resource* GetConstantBuffer() { return constBuff_.Get(); }
-	// テクスチャ読み込み
+	/// <summary>
+	/// テクスチャ読み込み
+	/// </summary>
+	/// <param name="directoryPath">読み込みディレクトリパス</param>
+	/// <param name="cpuHandle"></param>
+	/// <param name="gpuHandle"></param>
 	void LoadTexture(const std::string& directoryPath, CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle);
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
-
+	/// <summary>
+	/// シェーダリソースビューのハンドル(CPU)の取得
+	/// </summary>
+	/// <returns>シェーダリソースビューのハンドル(CPU)</returns>
 	const CD3DX12_CPU_DESCRIPTOR_HANDLE& GetCpuHandle() { return cpuDescHandleSRV_; }
+	/// <summary>
+	/// シェーダリソースビューのハンドル(GPU)の取得
+	/// </summary>
+	/// <returns>シェーダリソースビューのハンドル(GPU)</returns>
 	const CD3DX12_GPU_DESCRIPTOR_HANDLE& GetGpuHandle() { return gpuDescHandleSRV_; }
 
 private: // メンバ関数
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Material()
 	{
 		ambient_ = { 0.3f, 0.3f, 0.3f };
@@ -69,9 +96,13 @@ private: // メンバ関数
 		specular_ = { 0.0f, 0.0f, 0.0f };
 		alpha_ = 1.0f;
 	}
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	// 定数バッファの生成
+	/// <summary>
+	/// 定数バッファの生成
+	/// </summary>
 	void CreateConstantBuffer();
 
 public: //メンバ変数
