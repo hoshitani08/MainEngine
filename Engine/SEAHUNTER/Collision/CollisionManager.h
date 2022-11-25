@@ -12,32 +12,59 @@ class BaseCollider;
 class CollisionManager
 {
 public:// 静的メンバ関数
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static CollisionManager* GetInstance();
 
 public:// メンバ関数
-	// コライダーの追加
+	/// <summary>
+	/// コライダーの追加
+	/// </summary>
+	/// <param name="collider">コライダー</param>
 	inline void AddCollider(BaseCollider* collider)
 	{
 		colliders_.push_front(collider);
 	}
 
-	// コライダーの削除
+	/// <summary>
+	/// コライダーの削除
+	/// </summary>
+	/// <param name="collider">コライダー</param>
 	inline void RemoveCollider(BaseCollider* collider)
 	{
 		colliders_.remove(collider);
 	}
 
-	// 全ての衝突チェック
+	/// <summary>
+	/// 全ての衝突チェック
+	/// </summary>
 	void CheckAllCollisions();
-	// レイキャスト
+	/// <summary>
+	/// レイキャスト
+	/// </summary>
+	/// <param name="ray">レイ</param>
+	/// <param name="hitInfo">衝突情報</param>
+	/// <param name="maxDistance">最大距離</param>
+	/// <returns>レイが任意のコライダーと交わる場合はtrue、それ以外はfalse</returns>
 	bool Raycast(const Ray& ray, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
-
-	bool Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr,
-		float maxDistance = D3D12_FLOAT32_MAX);
-
-	// 球による衝突全検索
-	void QuerySphere(const Sphere& sphere, QueryCallback* callback,
-		unsigned short attribute = (unsigned short)0xffffffff);
+	/// <summary>
+	/// レイキャスト
+	/// </summary>
+	/// <param name="ray">レイ</param>
+	/// <param name="attribute">対象の衝突属性</param>
+	/// <param name="hitInfo">衝突情報</param>
+	/// <param name="maxDistance">最大距離</param>
+	/// <returns>レイが任意のコライダーと交わる場合はtrue、それ以外はfalse</returns>
+	bool Raycast(const Ray& ray, unsigned short attribute, RaycastHit* hitInfo = nullptr, float maxDistance = D3D12_FLOAT32_MAX);
+	/// <summary>
+	/// 球による衝突全検索
+	/// </summary>
+	/// <param name="sphere">球</param>
+	/// <param name="callback">衝突時コールバック</param>
+	/// <param name="attribute">衝突属性</param>
+	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xffffffff);
 
 private:
 	CollisionManager() = default;

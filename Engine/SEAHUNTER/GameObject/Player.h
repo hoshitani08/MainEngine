@@ -7,15 +7,27 @@
 class Player : public Object3d
 {
 public:
-	// 3Dオブジェクト生成
+	/// <summary>
+	/// 3Dオブジェクト生成
+	/// </summary>
+	/// <param name="model">モデル</param>
+	/// <returns>インスタンス</returns>
 	static Player* Create(Model* model = nullptr);
 
 public:
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns>成否</returns>
 	bool Initialize() override;
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update() override;
-	// 衝突時コールバック関数
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	/// <param name="info">衝突情報</param>
 	void OnCollision(const CollisionInfo& info) override;
 	// マネージャーの設定
 	void SetParticleManager(ParticleManager* particleMan) { particleMan_ = particleMan; }

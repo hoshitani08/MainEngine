@@ -8,6 +8,9 @@ class BaseCollider;
 struct CollisionInfo // 衝突情報
 {
 public:
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	CollisionInfo(Object3d* object, BaseCollider* collider, const DirectX::XMVECTOR& inter)
 	{
 		object_ = object;

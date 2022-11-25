@@ -23,6 +23,10 @@ public:
 	QueryCallback() = default;
 	virtual ~QueryCallback() = default;
 
-	// 交差時コールバック
+	/// <summary>
+	/// 交差時コールバック
+	/// </summary>
+	/// <param name="info">交差情報</param>
+	/// <returns>クエリーを続けるならtrue、打ち切るならfalseを返す</returns>
 	virtual bool OnQueryHit(const QueryHit& info) = 0;
 };

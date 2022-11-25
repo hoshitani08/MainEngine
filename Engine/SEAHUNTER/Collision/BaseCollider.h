@@ -16,43 +16,67 @@ class BaseCollider
 {
 public:
 	friend class CollisionManager;
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	BaseCollider() = default;
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~BaseCollider() = default;
-
+	/// <summary>
+	/// オブジェクトを設定
+	/// </summary>
+	/// <param name="object">オブジェクト(OBJ)</param>
 	inline void SetObject(Object3d * object)
 	{
 		object3d_ = object;
 	}
-
+	/// <summary>
+	/// オブジェクトの取得
+	/// </summary>
+	/// <returns>オブジェクト</returns>
 	inline Object3d* GetObject3d()
 	{
 		return object3d_;
 	}
-
-	//更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	virtual void Update() = 0;
-	//形状タイプ取得
+	/// <summary>
+	/// 形状タイプ取得
+	/// </summary>
+	/// <returns></returns>
 	inline CollisionShapeType GetShapeType() { return shapeType_; }
-
-	//衝突時コールバック関数
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	/// <param name="info">衝突情報</param>
 	inline void OnCollision(const CollisionInfo& info)
 	{
 		object3d_->OnCollision(info);
 	}
-
-	// 当たり判定属性をセット
+	/// <summary>
+	/// 当たり判定属性をセット
+	/// </summary>
+	/// <param name="attribute"></param>
 	inline void SetAttribute(unsigned short attribute)
 	{
 		attribute_ = attribute;
 	}
-
-	// 当たり判定属性を追加
+	/// <summary>
+	/// 当たり判定属性を追加
+	/// </summary>
+	/// <param name="attribute"></param>
 	inline void AddAttribute(unsigned short attribute)
 	{
 		attribute_ |= attribute;
 	}
-
-	// 当たり判定属性を削除
+	/// <summary>
+	/// 当たり判定属性を削除
+	/// </summary>
+	/// <param name="attribute"></param>
 	inline void RemoveAttribute(unsigned short attribute)
 	{
 		attribute_ &= !attribute;

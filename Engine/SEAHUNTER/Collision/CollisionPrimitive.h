@@ -31,7 +31,9 @@ public:
 	DirectX::XMVECTOR normal;
 
 public:
-	//法線の計算
+	/// <summary>
+	/// 法線の計算
+	/// </summary>
 	void ComputeNormal();
 };
 
