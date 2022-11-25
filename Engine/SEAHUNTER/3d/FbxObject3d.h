@@ -123,7 +123,7 @@ public: // メンバ関数
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
-	/// <param name="animationNumber">アニメーションハンドル</param>
+	/// <param name="animationNumber">アニメーション番号</param>
 	/// <param name="isLoop">ループさせるか</param>
 	void PlayAnimation(int animationNumber = 0, bool isLoop = true);
 	/// <summary>

@@ -27,33 +27,69 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	// 方向をセット
+	/// <summary>
+	/// 方向を設定
+	/// </summary>
+	/// <param name="dir"></param>
 	inline void SetDir(const XMVECTOR& dir) { dir_ = DirectX::XMVector3Normalize(dir); }
-	// ライト方向を取得
+	/// <summary>
+	/// ライト方向を取得
+	/// </summary>
+	/// <returns>ライト方向</returns>
 	inline const XMVECTOR& GetDir() { return dir_; }
-	// キャスター座標をセット
+	/// <summary>
+	/// キャスター座標を設定
+	/// </summary>
+	/// <param name="casterPos">キャスター座標</param>
 	inline void SetCasterPos(const XMFLOAT3& casterPos) { casterPos_ = casterPos; }
-	// キャスター座標を取得
+	/// <summary>
+	/// キャスター座標を取得
+	/// </summary>
+	/// <returns>キャスター座標</returns>
 	inline const XMFLOAT3& GetCasterPos() { return casterPos_; }
-	// キャスターとライトの距離をセット
+	/// <summary>
+	/// キャスターとライトの距離を設定
+	/// </summary>
+	/// <param name="distanceCasterLight">キャスターとライトの距離</param>
 	inline void SetDistanceCasterLight(float distanceCasterLight) { distanceCasterLight_ = distanceCasterLight; }
-	// キャスターとライトの距離を取得
+	/// <summary>
+	/// キャスターとライトの距離を取得
+	/// </summary>
+	/// <returns>キャスターとライトの距離</returns>
 	inline float GetDistanceCasterLight() { return distanceCasterLight_; }
-	// 距離減衰係数をセット
+	/// <summary>
+	/// 距離減衰係数を設定
+	/// </summary>
+	/// <param name="atten">距離減衰係数</param>
 	inline void SetAtten(const XMFLOAT3& atten) { atten_ = atten; }
-	// 距離減衰係数を取得
+	/// <summary>
+	/// 距離減衰係数を取得
+	/// </summary>
+	/// <returns>距離減衰係数</returns>
 	inline const XMFLOAT3& GetAtten() { return atten_; }
-	// 減衰角度をセット
+	/// <summary>
+	/// 減衰角度を設定
+	/// </summary>
+	/// <param name="factorAngle">x:減衰開始角度 y:減衰終了角度[radian]</param>
 	inline void SetFactorAngle(const XMFLOAT2& factorAngle)
 	{
 		factorAngleCos_.x = cosf(DirectX::XMConvertToRadians(factorAngle.x));
 		factorAngleCos_.y = cosf(DirectX::XMConvertToRadians(factorAngle.y));
 	}
-	// 減衰角度を取得
+	/// <summary>
+	/// 減衰角度を取得
+	/// </summary>
+	/// <returns>距離減衰係数</returns>
 	inline const XMFLOAT2& GetFactorAngleCos() { return factorAngleCos_; }
-	// 有効フラグをセット
+	/// <summary>
+	/// 有効フラグを設定
+	/// </summary>
+	/// <param name="active">有効フラグ</param>
 	inline void SetActive(bool active) { active_ = active; }
-	// 有効チェック
+	/// <summary>
+	/// 有効チェック
+	/// </summary>
+	/// <returns>有効フラグ</returns>
 	inline bool IsActive() { return active_; }
 
 private: // メンバ変数

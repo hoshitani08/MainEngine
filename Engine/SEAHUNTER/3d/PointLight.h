@@ -25,21 +25,45 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	//ライト座標をセット
+	/// <summary>
+	/// ライト座標を設定
+	/// </summary>
+	/// <param name="lightpos">ライト座標</param>
 	inline void SetLightPos(const XMFLOAT3& lightpos) { lightPos_ = lightpos; }
-	//ライト座標を取得
+	/// <summary>
+	/// ライト座標を取得
+	/// </summary>
+	/// <returns>ライト座標</returns>
 	inline const XMFLOAT3& GetLightPos() { return lightPos_; }
-	//ライト色をセット
+	/// <summary>
+	/// ライト色を設定
+	/// </summary>
+	/// <param name="lightcolor">ライト色</param>
 	inline void SetLightColor(const XMFLOAT3& lightcolor) { lightColor_ = lightcolor; }
-	//ライト色を取得
+	/// <summary>
+	/// ライト色を取得
+	/// </summary>
+	/// <returns>ライト色</returns>
 	inline const XMFLOAT3& GetLightColor() { return lightColor_; }
-	//ライト距離減衰係数をセット
+	/// <summary>
+	/// ライト距離減衰係数を設定
+	/// </summary>
+	/// <param name="lightAtten">ライト距離減衰係数</param>
 	inline void SetLightAtten(const XMFLOAT3& lightAtten) { lightAtten_ = lightAtten; }
-	//ライト距離減衰係数を取得
+	/// <summary>
+	/// ライト距離減衰係数を取得
+	/// </summary>
+	/// <returns>ライト距離減衰係数</returns>
 	inline const XMFLOAT3& GetLightAtten() { return lightAtten_; }
-	//有効フラグをセット
+	/// <summary>
+	/// 有効フラグを設定
+	/// </summary>
+	/// <param name="active">有効フラグ</param>
 	inline void SetActive(bool active) { active_ = active; }
-	//有効チェック
+	/// <summary>
+	/// 有効チェック
+	/// </summary>
+	/// <returns>有効フラグ</returns>
 	inline bool IsActive() { return active_; }
 
 private: // メンバ変数

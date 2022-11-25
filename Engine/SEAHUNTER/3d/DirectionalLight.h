@@ -23,17 +23,35 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	//ライト方向をセット
+	/// <summary>
+	/// ライト方向を設定
+	/// </summary>
+	/// <param name="lightdir">ライト方向</param>
 	void SetLightDir(const XMVECTOR& lightdir) { lightDir_ = DirectX::XMVector3Normalize(lightdir); }
-	//ライト方向を取得
+	/// <summary>
+	/// ライト方向を取得
+	/// </summary>
+	/// <returns>ライト方向</returns>
 	inline const XMVECTOR& GetLightDir() { return lightDir_; }
-	//ライト色をセット
+	/// <summary>
+	/// ライト色を設定
+	/// </summary>
+	/// <param name="lightcolor">ライト色</param>
 	void SetLightColor(const XMFLOAT3& lightcolor) { lightColor_ = lightcolor; }
-	//ライト色を取得
+	/// <summary>
+	/// ライト色を取得
+	/// </summary>
+	/// <returns>ライト色</returns>
 	inline const XMFLOAT3& GetLightColor() { return lightColor_; }
-	//有効フラグをセット
+	/// <summary>
+	/// 有効フラグを設定
+	/// </summary>
+	/// <param name="active">有効フラグ</param>
 	inline void SetActive(bool active) { active_ = active; }
-	//有効チェック
+	/// <summary>
+	/// 有効チェック
+	/// </summary>
+	/// <returns>有効フラグ</returns>
 	inline bool IsActive() { return active_; }
 
 private: // メンバ変数
