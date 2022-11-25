@@ -27,23 +27,41 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // メンバ関数
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameOverScene();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize() override;
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize() override;
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update() override;
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override;
-	// エフェクト描画
+	/// <summary>
+	/// エフェクトあり描画
+	/// </summary>
 	void EffectDraw() override;
-
-	// ボタン関係
+	/// <summary>
+	/// ボタン関係
+	/// </summary>
 	void Select();
+	/// <summary>
+	/// シェイク
+	/// </summary>
 	void Shake();
-	// イージング
+	/// <summary>
+	/// イージング
+	/// </summary>
 	void EaseMove();
 
 private: // メンバ変数

@@ -52,21 +52,37 @@ private: // 定数
 	const XMFLOAT2 RESTRICTION_ANGLE = { 360.0f, 80.0f };
 
 public: // メンバ関数
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameScene();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize() override;
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize() override;
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update() override;
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override;
-	// エフェクト描画
+	/// <summary>
+	/// エフェクトあり描画
+	/// </summary>
 	void EffectDraw() override;
-	// カメラの動き
+	/// <summary>
+	/// カメラの動き
+	/// </summary>
 	void CameraMove();
-	// プレイヤーの攻撃判定
+	/// <summary>
+	/// プレイヤーの攻撃判定
+	/// </summary>
 	void PlayerAttack();
 
 private: // メンバ変数

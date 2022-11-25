@@ -20,10 +20,22 @@ namespace
 class BlackBox
 {
 public: // メンバ関数
+	/// <summary>
+	/// 動作
+	/// </summary>
+	/// <param name="type">フェードタイプ</param>
 	void Spin(TYPE type);
+	/// <summary>
+	/// オフセットタイマーの設定
+	/// </summary>
+	/// <param name="num"></param>
 	void AddOffsetTimer(int num) { offsetTimer_ += num; }
 
 public: // メンバ関数
+	/// <summary>
+	/// オフセットタイマーの取得
+	/// </summary>
+	/// <returns>オフセットタイマー</returns>
 	int GetOffsetTimer() { return offsetTimer_; }
 
 public: // メンバ変数
@@ -47,12 +59,29 @@ public: // サブクラス
 	
 
 public: // メンバ関数
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	SceneChange();
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
+	/// <summary>
+	/// シーンチェンジ開始
+	/// </summary>
+	/// <param name="sceneName">シーン名</param>
 	void SceneChangeStart(const std::string& sceneName);
 
 public: // メンバ関数
+	/// <summary>
+	/// シーンイン終了フラグの取得
+	/// </summary>
+	/// <returns>シーンイン終了フラグ</returns>
 	bool GetinEndFlag() { return inEndFlag_; }
 
 private: // メンバ変数
