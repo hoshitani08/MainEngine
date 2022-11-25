@@ -6,6 +6,7 @@
 #include <wrl.h>
 #include <d3dx12.h>
 #include <cstdlib>
+#include <chrono>
 
 #include "WinApp.h"
 
@@ -71,13 +72,15 @@ private: // ƒƒ“ƒo•Ï”
 	ComPtr<ID3D12GraphicsCommandList> commandList_;
 	ComPtr<ID3D12CommandAllocator> commandAllocator_;
 	ComPtr<ID3D12CommandQueue> commandQueue_;
-	ComPtr<IDXGISwapChain4> swapchain_;
+	ComPtr<IDXGISwapChain4> swapChain_;
 	std::vector<ComPtr<ID3D12Resource>> backBuffers_;
 	ComPtr<ID3D12Resource> depthBuffer_;
 	ComPtr<ID3D12DescriptorHeap> rtvHeaps_;
 	ComPtr<ID3D12DescriptorHeap> dsvHeap_;
 	ComPtr<ID3D12Fence> fence_;
 	UINT64 fenceVal_ = 0;
+	HANDLE frameLatencyWaitableObject_;
+	std::chrono::steady_clock::time_point reference_;
 
 private: // ƒƒ“ƒoŠÖ”
 	/// <summary>

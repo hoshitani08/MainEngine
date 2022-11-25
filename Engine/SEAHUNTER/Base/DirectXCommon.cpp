@@ -1,5 +1,8 @@
 #include "DirectXCommon.h"
 
+#include <algorithm>
+#include <thread>
+#include <timeapi.h>
 #include <vector>
 #include <cassert>
 
@@ -25,7 +28,7 @@ DirectXCommon::~DirectXCommon()
 	{
 		a.Reset();
 	}
-	swapchain_.Reset();
+	swapChain_.Reset();
 	depthBuffer_.Reset();
 	rtvHeaps_.Reset();
 	dsvHeap_.Reset();
@@ -38,7 +41,9 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	// nullptrチェック
 	assert(winApp);
 
-	this->winApp_ = winApp;
+	winApp_ = winApp;
+
+	reference_ = std::chrono::steady_clock::now();
 
 	// DXGIデバイス初期化
 	if (!InitializeDXGIDevice())
@@ -80,7 +85,7 @@ void DirectXCommon::Initialize(WinApp* winApp)
 void DirectXCommon::PreDraw()
 {
 	// バックバッファの番号を取得（2つなので0番か1番）
-	UINT bbIndex = swapchain_->GetCurrentBackBufferIndex();
+	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
 
 	// リソースバリアを変更（表示状態→描画対象）
 	commandList_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(backBuffers_[bbIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
@@ -106,7 +111,7 @@ void DirectXCommon::PreDraw()
 void DirectXCommon::PostDraw()
 {
 	// リソースバリアを変更（描画対象→表示状態）
-	UINT bbIndex = swapchain_->GetCurrentBackBufferIndex();
+	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
 	commandList_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(backBuffers_[bbIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
 	// 命令のクローズ
@@ -117,7 +122,7 @@ void DirectXCommon::PostDraw()
 	commandQueue_->ExecuteCommandLists(1, cmdLists);
 
 	// バッファをフリップ
-	swapchain_->Present(1, 0);
+	swapChain_->Present(1, 0);
 
 	// コマンドリストの実行完了を待つ
 	commandQueue_->Signal(fence_.Get(), ++fenceVal_);
@@ -129,13 +134,41 @@ void DirectXCommon::PostDraw()
 		CloseHandle(event);
 	}
 
+	// ウィンドウ閉じるとframeLatencyWaitableObject_をインクリメントする対象がいなくなって0のままになるからInfiniteにしない
+	// 初期化時にframeLatencyWaitableObject_のカウンタを無理やり0にしたのでこの対応がいる。
+	WaitForSingleObject(frameLatencyWaitableObject_, 1000);
+
+	// max 60fps 固定
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
+
+	// 60ギリギリだとちょっとばかし高いリフレッシュレートのモニタで逆にかくついてしまうので少しバッファを取る
+	static const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 62.0f));
+	// 実際にwaitするのは60基準
+	static const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+	std::chrono::microseconds check = kMinCheckTime - elapsed;
+	if (std::chrono::microseconds(0) < check)
+	{
+		std::chrono::microseconds waitTime = kMinTime - elapsed;
+
+		// sleepは信用ならないので1uでポーリング
+		std::chrono::steady_clock::time_point waitStart = std::chrono::steady_clock::now();
+		do
+		{
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
+		} while (std::chrono::steady_clock::now() - waitStart < waitTime);
+	}
+
+	elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - reference_);
+	reference_ = std::chrono::steady_clock::now();
+
 	commandAllocator_->Reset(); // キューをクリア
 	commandList_->Reset(commandAllocator_.Get(), nullptr); // 再びコマンドリストを貯める準備
 }
 
 void DirectXCommon::ClearRenderTarget()
 {
-	UINT bbIndex = swapchain_->GetCurrentBackBufferIndex();
+	UINT bbIndex = swapChain_->GetCurrentBackBufferIndex();
 
 	// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvH = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeaps_->GetCPUDescriptorHandleForHeapStart(), bbIndex, device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
@@ -293,7 +326,12 @@ bool DirectXCommon::CreateSwapChain()
 		assert(0);
 		return result;
 	}
-	swapchain1.As(&swapchain_);
+	swapchain1.As(&swapChain_);
+
+	// 実際のflip用イベントを取得
+	frameLatencyWaitableObject_ = swapChain_->GetFrameLatencyWaitableObject();
+	// 取得直後のカウンタが1になっているので、レイテンシ1にしても実際はバッファが1ある状態になるので、強制的に0にして即時flipを稼働させる。
+	WaitForSingleObject(frameLatencyWaitableObject_, INFINITE);
 
 	return true;
 }
@@ -335,7 +373,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	HRESULT result = S_FALSE;
 
 	DXGI_SWAP_CHAIN_DESC swcDesc = {};
-	result = swapchain_->GetDesc(&swcDesc);
+	result = swapChain_->GetDesc(&swcDesc);
 	if (FAILED(result))
 	{
 		assert(0);
@@ -358,7 +396,7 @@ bool DirectXCommon::CreateFinalRenderTargets()
 	for (int i = 0; i < backBuffers_.size(); i++)
 	{
 		// スワップチェーンからバッファを取得
-		result = swapchain_->GetBuffer(i, IID_PPV_ARGS(&backBuffers_[i]));
+		result = swapChain_->GetBuffer(i, IID_PPV_ARGS(&backBuffers_[i]));
 		if (FAILED(result))
 		{
 			assert(0);
