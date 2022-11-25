@@ -13,8 +13,13 @@ public:
 	SpriteFactory(const SpriteFactory& spriteFactory) = delete;
 	SpriteFactory& operator=(const SpriteFactory& spriteFactory) = delete;
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-
+	/// <summary>
+	/// シングルトンインスタンスの取得
+	/// </summary>
+	/// <returns>シングルトンインスタンス</returns>
 	static SpriteFactory* GetInstance();
 };

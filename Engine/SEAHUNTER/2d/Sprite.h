@@ -38,17 +38,44 @@ private: // 静的定数
 	static const int VERT_NUM = 4;
 
 public: // 静的メンバ関数
-	// 静的初期化
+	/// <summary>
+	/// 静的初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="window_width">画面幅</param>
+	/// <param name="window_height">画面高さ</param>
+	/// <returns></returns>
 	static bool StaticInitialize(ID3D12Device* device, int window_width, int window_height);
-	// 静的破棄
+	/// <summary>
+	/// 静的破棄
+	/// </summary>
 	static void StaticFinalize();
-	// テクスチャ読み込み
+	/// <summary>
+	/// テクスチャ読み込み
+	/// </summary>
+	/// <param name="texnumber">テクスチャハンドル</param>
+	/// <param name="filename">ルートパス</param>
+	/// <returns></returns>
 	static bool LoadTexture(UINT texnumber, const wchar_t* filename);
-	// 描画前処理
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	static void PreDraw(ID3D12GraphicsCommandList* cmdList);
-	// 描画後処理
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
 	static void PostDraw();
-	// スプライト生成
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="texNumber">テクスチャハンドル</param>
+	/// <param name="position">座標</param>
+	/// <param name="color">色</param>
+	/// <param name="anchorpoint">アンカーポイント</param>
+	/// <param name="isFlipX">左右反転</param>
+	/// <param name="isFlipY">上下反転</param>
+	/// <returns>生成されたスプライト</returns>
 	static std::unique_ptr<Sprite> Create(UINT texNumber, XMFLOAT2 position, XMFLOAT4 color = { 1, 1, 1, 1 }, XMFLOAT2 anchorpoint = { 0.0f, 0.0f }, bool isFlipX = false, bool isFlipY = false);
 
 private: // 静的メンバ変数
@@ -66,37 +93,90 @@ private: // 静的メンバ変数
 	static ComPtr<ID3D12Resource> texBuff_[SRV_COUNT];
 
 public: // メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="texNumber">テクスチャハンドル</param>
+	/// <param name="position">座標</param>
+	/// <param name="size">サイズ</param>
+	/// <param name="color">色</param>
+	/// <param name="anchorpoint">アンカーポイント</param>
+	/// <param name="isFlipX">左右反転</param>
+	/// <param name="isFlipY">上下反転</param>
 	Sprite(UINT texNumber, XMFLOAT2 position, XMFLOAT2 size, XMFLOAT4 color, XMFLOAT2 anchorpoint, bool isFlipX, bool isFlipY);
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Sprite();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns></returns>
 	bool Initialize();
-	// X,Y,Z軸回りの取得
+	/// <summary>
+	/// 角度の取得
+	/// </summary>
+	/// <returns>角度</returns>
 	const float& GetRotation() { return rotation_; }
-	// 角度の設定
+	/// <summary>
+	/// 角度の設定
+	/// </summary>
+	/// <param name="rotation">角度</param>
 	void SetRotation(float rotation);
-	// 座標の取得
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	const XMFLOAT2& GetPosition() { return position_; }
-	// 座標の設定
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT2 position);
-	// サイズの設定
+	/// <summary>
+	/// サイズの設定
+	/// </summary>
+	/// <param name="size">サイズ</param>
 	void SetSize(XMFLOAT2 size);
-	// サイズの取得
+	/// <summary>
+	/// サイズの取得
+	/// </summary>
+	/// <returns>サイズ</returns>
 	const XMFLOAT2& GetSize() { return size_; }
-	// 倍率の設定
+	/// <summary>
+	/// 倍率の設定
+	/// </summary>
+	/// <param name="scale">倍率</param>
 	void SetScale(float scale);
-	// 倍率の取得
+	/// <summary>
+	/// 倍率の取得
+	/// </summary>
+	/// <returns>倍率</returns>
 	float GetScale() { return scale_; }
-	// アンカーポイントの設定
+	/// <summary>
+	/// アンカーポイントの設定
+	/// </summary>
+	/// <param name="anchorpoint">アンカーポイント</param>
 	void SetAnchorPoint(XMFLOAT2 anchorpoint);
-	// 左右反転の設定
+	/// <summary>
+	/// 左右反転の設定
+	/// </summary>
+	/// <param name="isFlipX">左右反転</param>
 	void SetIsFlipX(bool isFlipX);
-	// 上下反転の設定
+	/// <summary>
+	/// 上下反転の設定
+	/// </summary>
+	/// <param name="isFlipY">上下反転</param>
 	void SetIsFlipY(bool isFlipY);
-	// テクスチャ範囲設定
+	/// <summary>
+	/// テクスチャ範囲設定
+	/// </summary>
+	/// <param name="texBase">テクスチャ左上座標</param>
+	/// <param name="texSize">テクスチャサイズ</param>
 	void SetTextureRect(XMFLOAT2 texBase, XMFLOAT2 texSize);
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 private: // メンバ変数
@@ -133,6 +213,8 @@ private: // メンバ変数
 	float scale_ = 1.0f;
 
 private: // メンバ関数
-	// 頂点データ転送
+	/// <summary>
+	/// 頂点データ転送
+	/// </summary>
 	void TransferVertices();
 };
