@@ -20,15 +20,26 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Stage();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private: // メンバ変数

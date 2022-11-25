@@ -58,79 +58,182 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
+	/// <summary>
+	/// オブジェクト生成
+	/// </summary>
+	/// <param name="camera">カメラ</param>
+	/// <param name="hunter">プレイヤー</param>
+	/// <returns>生成されたオブジェクト</returns>
 	static std::unique_ptr<Monster> Create(Camera* camera, Hunter* hunter);
 
 public: // メンバ関数
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="camera">カメラ</param>
 	void Initialize(Camera* camera);
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	// 全ての動き
+	/// <summary>
+	/// 全ての動き
+	/// </summary>
 	void AllMove();
-	// 向きの設定
+	/// <summary>
+	/// 向きの設定
+	/// </summary>
 	void AngleAdjustment();
-	// 当たったか
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
+	/// <param name="partsPosition">座標</param>
+	/// <param name="enemyRange">半径</param>
+	/// <param name="playerRange">半径</param>
+	/// <returns></returns>
 	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
-	// ダメージを受けたか
+	/// <summary>
+	/// ダメージ判定
+	/// </summary>
+	/// <param name="hitSphere">球</param>
 	void DamageHit(Sphere hitSphere);
-	// 基本のアニメーション
+	/// <summary>
+	/// 基本のアニメーション
+	/// </summary>
+	/// <param name="type">アニメーションタイプ</param>
 	void Animation(AnimationType type);
-	// 部位破壊
+	/// <summary>
+	/// 部位破壊
+	/// </summary>
 	void PartsTailDestruction();
-	// ビヘイビアツリー
+	/// <summary>
+	/// ビヘイビアツリー
+	/// </summary>
 	void BehaviorTree();
-	// 咆哮
+	/// <summary>
+	/// 咆哮
+	/// </summary>
+	/// <returns></returns>
 	bool Howl();
-	// 攻撃
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	/// <returns></returns>
 	bool AttackMode();
-	// 待機
+	/// <summary>
+	/// 待機
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingMode();
-	// 死亡
+	/// <summary>
+	/// 死亡
+	/// </summary>
+	/// <returns></returns>
 	bool Dead();
-	// 攻撃の経過時間
+	/// <summary>
+	/// 攻撃の経過時間
+	/// </summary>
+	/// <returns></returns>
 	bool AttackElapsedTime();
-	// 攻撃の選択
+	/// <summary>
+	/// 攻撃の選択
+	/// </summary>
+	/// <returns></returns>
 	bool AttackModeSelection();
-	// 攻撃の実行
+	/// <summary>
+	/// 攻撃の実行
+	/// </summary>
+	/// <returns></returns>
 	bool AttackModeMove();
-	// 突進
+	/// <summary>
+	/// 突進
+	/// </summary>
+	/// <returns></returns>
 	bool AttackMode1();
-	// 尻尾攻撃
+	/// <summary>
+	/// 尻尾攻撃
+	/// </summary>
+	/// <returns></returns>
 	bool AttackMode2();
-	// パンチ攻撃
+	/// <summary>
+	/// パンチ攻撃
+	/// </summary>
+	/// <returns></returns>
 	bool AttackMode3();
-	// 待機の経過時間
+	/// <summary>
+	/// 待機の経過時間
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingElapsedTime();
-	// 待機の選択
+	/// <summary>
+	/// 待機の選択
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingModeSelection();
-	// 待機の実行
+	/// <summary>
+	/// 待機の実行
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingModeMove();
-	// 何もしない
+	/// <summary>
+	/// 何もしない
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingMode1();
-	// 接近
+	/// <summary>
+	/// 接近
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingMode2();
-	// 間合いを取る
+	/// <summary>
+	/// 間合いを取る
+	/// </summary>
+	/// <returns></returns>
 	bool WaitingMode3();
-	// ビヘイビアツリーのリセット
+	/// <summary>
+	/// ビヘイビアツリーのリセット
+	/// </summary>
 	void TreeReset();
 
 public: // メンバ関数
-	// 座標の取得
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	const XMFLOAT3& GetPosition() { return nucleus_->GetPosition(); }
-	// X,Y,Z軸回りの取得
+	/// <summary>
+	/// X,Y,Z軸回りの取得
+	/// </summary>
+	/// <returns>X,Y,Z軸回りの回転</returns>
 	const XMFLOAT3& GetRotation() { return nucleus_->GetRotation(); }
-	// HPの取得
+	/// <summary>
+	/// HPの取得
+	/// </summary>
+	/// <returns>HP</returns>
 	float GetHp() { return hp_; }
-	// 死んだかの取得
+	/// <summary>
+	/// 死亡フラグの取得
+	/// </summary>
+	/// <returns>死亡フラグ</returns>
 	bool GetIsDead() { return isDead_; }
-
-	// プレイヤーの設定
+	/// <summary>
+	/// プレイヤーの設定
+	/// </summary>
+	/// <param name="hunter">プレイヤー</param>
 	void SetHunter(Hunter* hunter) { hunter_ = hunter; }
-	// HPの設定
+	/// <summary>
+	/// HPの設定
+	/// </summary>
+	/// <param name="hp">HP</param>
 	void SetHp(float hp) { hp_ = hp; }
 
 private: // メンバ変数

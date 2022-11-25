@@ -36,15 +36,29 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	//コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	PostEffect() = default;
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="device">デバイス</param>
 	void Initialize(ID3D12Device* device);
-	//描画コマンドの発行
+	/// <summary>
+	/// 描画コマンドの発行
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	//シーン描画前処理
+	/// <summary>
+	/// シーン描画前処理
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void PreDrawScene(ID3D12GraphicsCommandList* cmdList);
-	//シーン描画後処理
+	/// <summary>
+	/// シーン描画後処理
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void PostDrawScene(ID3D12GraphicsCommandList* cmdList);
 
 private: // メンバ変数

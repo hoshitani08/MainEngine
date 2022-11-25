@@ -39,66 +39,142 @@ public: // 静的メンバ関数
 	static std::unique_ptr<Hunter> Create();
 
 public: // メンバ関数
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
-	// 行動
+	/// <summary>
+	/// 行動
+	/// </summary>
 	void Behavior();
-	// 移動
+	/// <summary>
+	/// 移動
+	/// </summary>
 	void BaseMove();
-	// 回避
+	/// <summary>
+	/// 回避
+	/// </summary>
 	void AvoidMove();
-	// 攻撃
+	/// <summary>
+	/// 攻撃
+	/// </summary>
 	void AttackMove();
-	// スピード計算
+	/// <summary>
+	/// スピード計算
+	/// </summary>
 	void SpeedCalculate();
-	// アイテムの仕様
+	/// <summary>
+	/// アイテムの仕様
+	/// </summary>
 	void ItemUse();
-	// ダメージの計算
+	/// <summary>
+	/// ダメージの計算
+	/// </summary>
 	void DamageHit();
 
 public: // メンバ関数
-	// 座標の取得
+	/// <summary>
+	/// 座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
 	const XMFLOAT3& GetPosition() { return hunter_[0]->GetPosition(); }
-	// X,Y,Z軸回りの取得
+	/// <summary>
+	/// X,Y,Z軸回りの取得
+	/// </summary>
+	/// <returns>X,Y,Z軸回りの回転</returns>
 	const XMFLOAT3& GetRotation() { return hunter_[0]->GetRotation(); }
-	// 無敵時間を取得
+	/// <summary>
+	/// 無敵時間を取得
+	/// </summary>
+	/// <returns>無敵時間</returns>
 	int GetInvincibleTimer() { return invincibleTimer_; }
-	// アイテムタイプの取得
+	/// <summary>
+	/// アイテムタイプの取得
+	/// </summary>
+	/// <returns>アイテムタイプ</returns>
 	int GetItemType() { return itemType_; }
-	// HPの取得
+	/// <summary>
+	/// HPの取得
+	/// </summary>
+	/// <returns>HP</returns>
 	float GetHp() { return hp_; }
-	// スタミナの取得
+	/// <summary>
+	/// スタミナの取得
+	/// </summary>
+	/// <returns>スタミナ</returns>
 	float GetStamina() { return stamina_; }
-	// 攻撃をしたか
+	/// <summary>
+	/// 攻撃フラグの取得
+	/// </summary>
+	/// <returns>攻撃フラグ</returns>
 	bool IsAttackFlag() { return isAttackFlag_; }
-	// 回避フラグ
+	/// <summary>
+	/// 回避フラグの取得
+	/// </summary>
+	/// <returns>回避フラグ</returns>
 	bool GetAvoidFlag() { return avoidFlag_; }
-	// ダメージのフラグを取得
+	/// <summary>
+	/// ダメージフラグを取得
+	/// </summary>
+	/// <returns>ダメージフラグ</returns>
 	bool GetDamageFlag() { return damageFlag_; }
-	// 攻撃アニメーションが動いているか
+	/// <summary>
+	/// 攻撃アニメーションが動いているか
+	/// </summary>
+	/// <returns>攻撃フラグ</returns>
 	bool GetAnimationType() { return falg_.attack; }
-	// アイテムを選択しているか
+	/// <summary>
+	/// アイテムを選択しているか
+	/// </summary>
+	/// <returns>選択フラグ</returns>
 	bool GetItemSelectionFlag() { return itemSelectionFlag_; }
-	// 生きているかどうか
+	/// <summary>
+	/// 生存フラグの取得
+	/// </summary>
+	/// <returns>生存フラグ</returns>
 	bool GetIsDeath() { return isDeath_; }
-
-	// アングルの設定
+	/// <summary>
+	/// アングルの設定
+	/// </summary>
+	/// <param name="angle">アングル</param>
 	void SetAngle(XMFLOAT2 angle) { cameraAngle_ = angle; }
-	// ダメージのパーセントを設定
+	/// <summary>
+	/// ダメージのパーセントを設定
+	/// </summary>
+	/// <param name="damage">ダメージ</param>
 	void SetDamage(float damage) { damage_ = damage; }
-	// HPの設定
+	/// <summary>
+	/// HPの設定
+	/// </summary>
+	/// <param name="hp">HP</param>
 	void SetHp(float hp) { hp_ = hp; }
-	// スタミナの設定
+	/// <summary>
+	/// スタミナの設定
+	/// </summary>
+	/// <param name="stamina">スタミナ</param>
 	void SetStamina(float stamina) { stamina_ = stamina; }
-	// ダメージのフラグを設定
+	/// <summary>
+	/// ダメージフラグを設定
+	/// </summary>
+	/// <param name="damageFlag">ダメージフラグ</param>
 	void SetDamageFlag(bool damageFlag) { damageFlag_ = damageFlag; }
-	// 攻撃フラグの設定
+	/// <summary>
+	/// 攻撃フラグの設定
+	/// </summary>
+	/// <param name="isAttackFlag">攻撃フラグ</param>
 	void AttackHit(bool isAttackFlag);
 
 private: // メンバ変数

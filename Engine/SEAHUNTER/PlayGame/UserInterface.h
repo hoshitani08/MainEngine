@@ -23,35 +23,65 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	UserInterface(Hunter* hunter, Monster* monster);
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~UserInterface();
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Initialize();
-	// 終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 奥の描画
+	/// <summary>
+	/// 奥の描画
+	/// </summary>
 	void BackDraw();
-	// 手前の描画
+	/// <summary>
+	/// 手前の描画
+	/// </summary>
 	void NearDraw();
-	// HP減少時のイージング
+	/// <summary>
+	/// HP減少時のイージング
+	/// </summary>
 	void HpEase();
-	// ダメージを計算
+	/// <summary>
+	/// ダメージを計算
+	/// </summary>
 	void DamageCalculate();
-	// スタミナ計算
+	/// <summary>
+	/// スタミナ計算
+	/// </summary>
 	void StrengthCalculate();
-	// アイテム関連
+	/// <summary>
+	/// アイテム関連
+	/// </summary>
 	void ItemSelection();
-	// マップ関係
+	/// <summary>
+	/// マップ関係
+	/// </summary>
 	void Map();
-	// 時計の計算
+	/// <summary>
+	/// 時計の計算
+	/// </summary>
+	/// <param name="timer">秒</param>
 	void ClockCalculate(int timer);
 
 public: // メンバ関数
-	// 生きているかどうか
+	/// <summary>
+	/// 生存フラグの取得
+	/// </summary>
+	/// <returns>生存フラグ</returns>
 	bool GetIsPlayerDeath() { return isPlayerDeath_; }
 
 private: // メンバ変数

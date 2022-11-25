@@ -305,7 +305,6 @@ void UserInterface::Map()
 
 void UserInterface::ClockCalculate(int timer)
 {
-
 	float count = (float)timer / 15.0f * 100;
 	float count2 = (90 * count) / 100;
 	clockNeedle_->SetRotation(count2);

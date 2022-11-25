@@ -42,15 +42,28 @@ public: // サブクラス
 	};
 
 public: // メンバ関数
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Block(int type, XMFLOAT3 pos);
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="type">ブロックのタイプ</param>
+	/// <param name="pos">座標</param>
 	void Initialize(int type, XMFLOAT3 pos);
-	//終了
+	/// <summary>
+	/// 終了
+	/// </summary>
 	void Finalize();
-	// 毎フレーム処理
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
 	void Update();
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private: // メンバ変数
