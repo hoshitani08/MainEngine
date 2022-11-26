@@ -134,10 +134,6 @@ void DirectXCommon::PostDraw()
 		CloseHandle(event);
 	}
 
-	// ウィンドウ閉じるとframeLatencyWaitableObject_をインクリメントする対象がいなくなって0のままになるからInfiniteにしない
-	// 初期化時にframeLatencyWaitableObject_のカウンタを無理やり0にしたのでこの対応がいる。
-	WaitForSingleObject(frameLatencyWaitableObject_, 1000);
-
 	// max 60fps 固定
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
@@ -327,11 +323,6 @@ bool DirectXCommon::CreateSwapChain()
 		return result;
 	}
 	swapchain1.As(&swapChain_);
-
-	// 実際のflip用イベントを取得
-	frameLatencyWaitableObject_ = swapChain_->GetFrameLatencyWaitableObject();
-	// 取得直後のカウンタが1になっているので、レイテンシ1にしても実際はバッファが1ある状態になるので、強制的に0にして即時flipを稼働させる。
-	WaitForSingleObject(frameLatencyWaitableObject_, INFINITE);
 
 	return true;
 }

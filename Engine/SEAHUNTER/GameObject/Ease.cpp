@@ -6,222 +6,120 @@
 using namespace DirectX;
 
 const float Ease::PI = 3.14159265359f;
-std::array<std::function<double(double)>, 12> Ease::funcPtr_ = { Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back, SoftBack, Elastic, Bounce, Linear };
+std::array<std::function<float(float)>, 12> Ease::funcPtr_ = { Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back, SoftBack, Elastic, Bounce, Linear };
 
-const float Ease::easeIn(const float& start, const float& end, const float t)
+const float Ease::Action(EaseType easeType, EaseFunctionType easeFunctionType, const float& start, const float& end, const float t)
 {
-	return start * (1.0f - t * t) + end * (t * t);
+	if (easeType == EaseType::In)
+	{
+		return (end - start) * funcPtr_[(int)easeFunctionType](t) + start;
+	}
+	else if (easeType == EaseType::Out)
+	{
+		return (end - start) * (1.0f - funcPtr_[(int)easeFunctionType](1.0f - t)) + start;
+	}
+	else if (easeType == EaseType::InOut)
+	{
+		if (t < 0.5f)
+		{
+			return (end - start) * (funcPtr_[(int)easeFunctionType](t * 2.0f) / 2.0f) + start;
+		}
+
+		return (end - start) * (1.0f - funcPtr_[(int)easeFunctionType](2.0f - 2.0f * t) / 2.0f) + start;
+	}
+
+	return 0.0f;
 }
 
-const XMFLOAT2 Ease::easeIn(const XMFLOAT2& start, const XMFLOAT2& end, const float t)
+const XMFLOAT2 Ease::Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT2& start, const XMFLOAT2& end, const float t)
 {
-	float x, y, z = 0;
-
-	x = start.x * (1.0f - t * t) + end.x * (t * t);
-	y = start.y * (1.0f - t * t) + end.y * (t * t);
-
-	return XMFLOAT2({ x, y });
+	XMFLOAT2 result = {};
+	result.x = Action(easeType, easeFunctionType, start.x, end.x, t);
+	result.y = Action(easeType, easeFunctionType, start.y, end.y, t);
+	return result;
 }
 
-const XMFLOAT3 Ease::easeIn(const XMFLOAT3& start, const XMFLOAT3& end, const float t)
+const XMFLOAT3 Ease::Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT3& start, const XMFLOAT3& end, const float t)
 {
-	float x, y, z = 0;
-
-	x = start.x * (1.0f - t * t) + end.x * (t * t);
-	y = start.y * (1.0f - t * t) + end.y * (t * t);
-	z = start.z * (1.0f - t * t) + end.z * (t * t);
-
-	return XMFLOAT3({ x, y, z });
+	XMFLOAT3 result = {};
+	result.x = Action(easeType, easeFunctionType, start.x, end.x, t);
+	result.y = Action(easeType, easeFunctionType, start.y, end.y, t);
+	result.z = Action(easeType, easeFunctionType, start.z, end.z, t);
+	return result;
 }
 
-const XMFLOAT4 Ease::easeIn(const XMFLOAT4& start, const XMFLOAT4& end, const float t)
+const XMFLOAT4 Ease::Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT4& start, const XMFLOAT4& end, const float t)
 {
-	float x, y, z, w = 0;
-
-	x = start.x * (1.0f - t * t) + end.x * (t * t);
-	y = start.y * (1.0f - t * t) + end.y * (t * t);
-	z = start.z * (1.0f - t * t) + end.z * (t * t);
-	w = start.w * (1.0f - t * t) + end.w * (t * t);
-
-	return XMFLOAT4({x, y, z, w});
+	XMFLOAT4 result = {};
+	result.x = Action(easeType, easeFunctionType, start.x, end.x, t);
+	result.y = Action(easeType, easeFunctionType, start.y, end.y, t);
+	result.z = Action(easeType, easeFunctionType, start.z, end.z, t);
+	result.w = Action(easeType, easeFunctionType, start.w, end.w, t);
+	return result;
 }
 
-const float Ease::easeOut(const float& start, const float& end, const float t)
-{
-	return start * (1.0f - (t * (2 - t))) + end * (t * (2 - t));
-}
-
-const XMFLOAT2 Ease::easeOut(const XMFLOAT2& start, const XMFLOAT2& end, const float t)
-{
-	float x, y = 0;
-
-	x = start.x * (1.0f - (t * (2 - t))) + end.x * (t * (2 - t));
-	y = start.y * (1.0f - (t * (2 - t))) + end.y * (t * (2 - t));
-
-	return XMFLOAT2({ x, y });
-}
-
-const XMFLOAT3 Ease::easeOut(const XMFLOAT3& start, const XMFLOAT3& end, const float t)
-{
-	float x, y, z = 0;
-
-	x = start.x * (1.0f - (t * (2 - t))) + end.x * (t * (2 - t));
-	y = start.y * (1.0f - (t * (2 - t))) + end.y * (t * (2 - t));
-	z = start.z * (1.0f - (t * (2 - t))) + end.z * (t * (2 - t));
-
-	return XMFLOAT3({ x, y, z});
-}
-
-const XMFLOAT4 Ease::easeOut(const XMFLOAT4& start, const XMFLOAT4& end, const float t)
-{
-	float x, y, z, w = 0;
-
-	x = start.x * (1.0f - (t * (2 - t))) + end.x * (t * (2 - t));
-	y = start.y * (1.0f - (t * (2 - t))) + end.y * (t * (2 - t));
-	z = start.z * (1.0f - (t * (2 - t))) + end.z * (t * (2 - t));
-	w = start.w * (1.0f - (t * (2 - t))) + end.w * (t * (2 - t));
-
-	return XMFLOAT4({ x, y, z, w});
-}
-
-const float Ease::easeInOut(const float& start, const float& end, const float t)
-{
-	return start * (1.0f - (t * t) * (3 - (2 * t))) + end * (t * t) * (3 - (2 * t));
-}
-
-const XMFLOAT2 Ease::easeInOut(const XMFLOAT2& start, const XMFLOAT2& end, const float t)
-{
-	float x, y = 0;
-
-	x = start.x * (1.0f - (t * t) * (3 - (2 * t))) + end.x * (t * t) * (3 - (2 * t));
-	y = start.y * (1.0f - (t * t) * (3 - (2 * t))) + end.y * (t * t) * (3 - (2 * t));
-
-	return XMFLOAT2({ x, y });
-}
-
-const XMFLOAT3 Ease::easeInOut(const XMFLOAT3& start, const XMFLOAT3& end, const float t)
-{
-	float x, y, z = 0;
-
-	x = start.x * (1.0f - (t * t) * (3 - (2 * t))) + end.x * (t * t) * (3 - (2 * t));
-	y = start.y * (1.0f - (t * t) * (3 - (2 * t))) + end.y * (t * t) * (3 - (2 * t));
-	z = start.z * (1.0f - (t * t) * (3 - (2 * t))) + end.z * (t * t) * (3 - (2 * t));
-
-	return XMFLOAT3({ x, y, z });
-}
-
-const XMFLOAT4 Ease::easeInOut(const XMFLOAT4& start, const XMFLOAT4& end, const float t)
-{
-	float x, y, z, w = 0;
-
-	x = start.x * (1.0f - (t * t) * (3 - (2 * t))) + end.x * (t * t) * (3 - (2 * t));
-	y = start.y * (1.0f - (t * t) * (3 - (2 * t))) + end.y * (t * t) * (3 - (2 * t));
-	z = start.z * (1.0f - (t * t) * (3 - (2 * t))) + end.z * (t * t) * (3 - (2 * t));
-	w = start.w * (1.0f - (t * t) * (3 - (2 * t))) + end.w * (t * t) * (3 - (2 * t));
-
-	return XMFLOAT4({ x, y, z, w });
-}
-
-const float Ease::lerp(const float& start, const float& end, const float t)
-{
-	return start * (1.0f - t) + end * t;
-}
-
-const XMFLOAT2 Ease::lerp(const XMFLOAT2& start, const XMFLOAT2& end, const float t)
-{
-	float x, y = 0;
-
-	x = start.x * (1.0f - t) + end.x * t;
-	y = start.y * (1.0f - t) + end.y * t;
-
-	return XMFLOAT2({ x, y });
-}
-
-const XMFLOAT3 Ease::lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t)
-{
-	float x, y, z = 0;
-
-	x = start.x * (1.0f - t) + end.x * t;
-	y = start.y * (1.0f - t) + end.y * t;
-	z = start.z * (1.0f - t) + end.z * t;
-
-	return XMFLOAT3({ x, y, z });
-}
-
-const XMFLOAT4 Ease::lerp(const XMFLOAT4& start, const XMFLOAT4& end, const float t)
-{
-	float x, y, z, w = 0;
-
-	x = start.x * (1.0f - t) + end.x * t;
-	y = start.y * (1.0f - t) + end.y * t;
-	z = start.z * (1.0f - t) + end.z * t;
-	w = start.w * (1.0f - t) + end.w * t;
-
-	return XMFLOAT4({ x, y, z, w });
-}
-
-double Ease::Quad(double t)
+float Ease::Quad(float t)
 {
 	return t * t;
 }
 
-double Ease::Cubic(double t)
+float Ease::Cubic(float t)
 {
 	return t * t * t;
 }
 
-double Ease::Quart(double t)
+float Ease::Quart(float t)
 {
 	return t * t * t * t;
 }
 
-double Ease::Quint(double t)
+float Ease::Quint(float t)
 {
 	return t * t * t * t * t;
 }
 
-double Ease::Sine(double t)
+float Ease::Sine(float t)
 {
-	return 1 - cos(t * PI / 2);
+	return 1 - cosf(t * PI / 2.0f);
 }
 
-double Ease::Expo(double t)
+float Ease::Expo(float t)
 {
-	return pow(2, -(1 - t) * 10);
+	return pow(2.0f, -(1.0f - t) * 10.0f);
 }
 
-double Ease::Circ(double t)
+float Ease::Circ(float t)
 {
-	return 1 - sqrt((0 > 1 - t * t) ? 0 : 1 - t * t);
+	return 1.0f - sqrtf((0.0f > 1.0f - t * t) ? 0.0f : 1.0f - t * t);
 }
 
-double Ease::Back(double t)
+float Ease::Back(float t)
 {
-	double c1 = 1.70158;
-	double c3 = c1 + 1;
+	float c1 = 1.70158f;
+	float c3 = c1 + 1.0f;
 
 	return t * t * (c3 * t - c1);
 }
 
-double Ease::SoftBack(double t)
+float Ease::SoftBack(float t)
 {
-	return t * t * (2 * t - 1);
+	return t * t * (2.0f * t - 1.0f);
 }
 
-double Ease::Elastic(double t)
+float Ease::Elastic(float t)
 {
-	return 56 * t * t * t * t * t - 105 * t * t * t * t + 60 * t * t * t - 10 * t * t;
+	return 56.0f * t * t * t * t * t - 105.0f * t * t * t * t + 60.0f * t * t * t - 10.0f * t * t;
 }
 
-double Ease::Bounce(double t)
+float Ease::Bounce(float t)
 {
-	double pow2;
-	int bounce = 4;
-	while (t < ((pow2 = pow(2, --bounce)) - 1) / 11) {}
-	return 1 / pow(4, 3 - bounce) - 7.5625 * pow((pow2 * 3 - 2) / 22 - t, 2);
+	float pow2 = 0.0f;
+	float bounce = 4.0f;
+	while (t < ((pow2 = powf(2.0f, --bounce)) - 1.0f) / 11.0f) {}
+	return 1 / powf(4.0f, 3.0f - bounce) - 7.5625f * powf((pow2 * 3.0f - 2.0f) / 22.0f - t, 2.0f);
 }
 
-double Ease::Linear(double t)
+float Ease::Linear(float t)
 {
 	return t;
 }

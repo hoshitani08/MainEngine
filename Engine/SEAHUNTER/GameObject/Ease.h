@@ -41,25 +41,10 @@ public: // 定数
 	static const float PI;
 
 public:
-	static const float easeIn(const float& start, const float& end, const float t);
-	static const XMFLOAT2 easeIn(const XMFLOAT2& start, const XMFLOAT2& end, const float t);
-	static const XMFLOAT3 easeIn(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
-	static const XMFLOAT4 easeIn(const XMFLOAT4& start, const XMFLOAT4& end, const float t);
-
-	static const float easeOut(const float& start, const float& end, const float t);
-	static const XMFLOAT2 easeOut(const XMFLOAT2& start, const XMFLOAT2& end, const float t);
-	static const XMFLOAT3 easeOut(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
-	static const XMFLOAT4 easeOut(const XMFLOAT4& start, const XMFLOAT4& end, const float t);
-
-	static const float easeInOut(const float& start, const float& end, const float t);
-	static const XMFLOAT2 easeInOut(const XMFLOAT2& start, const XMFLOAT2& end, const float t);
-	static const XMFLOAT3 easeInOut(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
-	static const XMFLOAT4 easeInOut(const XMFLOAT4& start, const XMFLOAT4& end, const float t);
-
-	static const float lerp(const float& start, const float& end, const float t);
-	static const XMFLOAT2 lerp(const XMFLOAT2& start, const XMFLOAT2& end, const float t);
-	static const XMFLOAT3 lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
-	static const XMFLOAT4 lerp(const XMFLOAT4& start, const XMFLOAT4& end, const float t);
+	static const float Action(EaseType easeType, EaseFunctionType easeFunctionType, const float& start, const float& end, const float t);
+	static const XMFLOAT2 Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT2& start, const XMFLOAT2& end, const float t);
+	static const XMFLOAT3 Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+	static const XMFLOAT4 Action(EaseType easeType, EaseFunctionType easeFunctionType, const XMFLOAT4& start, const XMFLOAT4& end, const float t);
 
 private:
 	/// <summary>
@@ -67,74 +52,74 @@ private:
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Quad(double t);
+	static float Quad(float t);
 	/// <summary>
 	/// キュービック
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Cubic(double t);
+	static float Cubic(float t);
 	/// <summary>
 	/// クォート
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Quart(double t);
+	static float Quart(float t);
 	/// <summary>
 	/// クイント
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Quint(double t);
+	static float Quint(float t);
 	/// <summary>
 	/// サイン
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Sine(double t);
+	static float Sine(float t);
 	/// <summary>
 	/// エキスポ
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Expo(double t);
+	static float Expo(float t);
 	/// <summary>
 	/// サークル
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Circ(double t);
+	static float Circ(float t);
 	/// <summary>
 	/// バック
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Back(double t);
+	static float Back(float t);
 	/// <summary>
 	/// ソフトバック
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double SoftBack(double t);
+	static float SoftBack(float t);
 	/// <summary>
 	/// エラスティック
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Elastic(double t);
+	static float Elastic(float t);
 	/// <summary>
 	/// バウンド
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Bounce(double t);
+	static float Bounce(float t);
 	/// <summary>
 	/// リニア
 	/// </summary>
 	/// <param name="t">時間</param>
 	/// <returns></returns>
-	static double Linear(double t);
+	static float Linear(float t);
 
 private:
-	static std::array<std::function<double(double)>, 12> funcPtr_;
+	static std::array<std::function<float(float)>, 12> funcPtr_;
 };

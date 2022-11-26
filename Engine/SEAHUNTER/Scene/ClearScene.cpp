@@ -232,13 +232,13 @@ void ClearScene::EaseMove()
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
-		clearTile_->SetPosition(Ease::easeOut(startPosition_[0], endPosition_[0], timeRate));
-		continueTile_->SetPosition(Ease::easeOut(startPosition_[1], endPosition_[1], timeRate));
-		quitTile_->SetPosition(Ease::easeOut(startPosition_[2], endPosition_[2], timeRate));
+		clearTile_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, startPosition_[0], endPosition_[0], timeRate));
+		continueTile_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, startPosition_[1], endPosition_[1], timeRate));
+		quitTile_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, startPosition_[2], endPosition_[2], timeRate));
 
-		clearTile_->SetColor(Ease::easeOut(startColor, endColor, timeRate));
-		continueTile_->SetColor(Ease::easeOut({ 1.0f, 0.5f, 0.5f, 0.0f }, { 1.0f, 0.5f, 0.5f, 1.0f }, timeRate));
-		quitTile_->SetColor(Ease::easeOut(startColor, endColor, timeRate));
+		clearTile_->SetColor(Ease::Action(EaseType::Out, EaseFunctionType::Quad, startColor, endColor, timeRate));
+		continueTile_->SetColor(Ease::Action(EaseType::Out, EaseFunctionType::Quad, { 1.0f, 0.5f, 0.5f, 0.0f }, { 1.0f, 0.5f, 0.5f, 1.0f }, timeRate));
+		quitTile_->SetColor(Ease::Action(EaseType::Out, EaseFunctionType::Quad, startColor, endColor, timeRate));
 
 		if (easeTimer_ > countNum)
 		{

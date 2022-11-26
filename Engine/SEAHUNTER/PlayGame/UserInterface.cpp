@@ -161,7 +161,7 @@ void UserInterface::HpEase()
 		float timeRate = hunterEaseTimer_ / countNum;
 		hunterEaseTimer_++;
 
-		innerLifeGauge_->SetSize(Ease::easeIn(innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), timeRate));
+		innerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), timeRate));
 
 		if (hunterEaseTimer_ > countNum)
 		{
@@ -174,7 +174,7 @@ void UserInterface::HpEase()
 		float timeRate = monsterEaseTimer_ / countNum;
 		monsterEaseTimer_++;
 
-		enemyInnerLifeGauge_->SetSize(Ease::easeIn(enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), timeRate));
+		enemyInnerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), timeRate));
 
 		if (monsterEaseTimer_ > countNum)
 		{

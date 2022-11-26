@@ -343,7 +343,7 @@ void Monster::AngleAdjustment()
 	timeRate = angleEaseTimer_ / countNum;
 	angleEaseTimer_++;
 
-	nucleus_->SetRotation(Ease::easeInOut(nucleus_->GetRotation(), enemyRot, timeRate));
+	nucleus_->SetRotation(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, nucleus_->GetRotation(), enemyRot, timeRate));
 
 	if (angleEaseTimer_ > countNum)
 	{
@@ -695,7 +695,7 @@ void Monster::Animation(AnimationType type)
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
-		body_[0]->SetRotation(Ease::easeInOut({}, { 0.0f,360.0f,0.0f }, timeRate));
+		body_[0]->SetRotation(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, {}, { 0.0f,360.0f,0.0f }, timeRate));
 
 		if (easeTimer_ > countNum)
 		{
@@ -719,7 +719,7 @@ void Monster::Animation(AnimationType type)
 			timeRate = easeTimer_ / countNum;
 			easeTimer_++;
 
-			rightForeFoot_[0]->SetRotation(Ease::easeIn({}, { 0.0f, 45.0f, 100.0f }, timeRate));
+			rightForeFoot_[0]->SetRotation(Ease::Action(EaseType::In, EaseFunctionType::Quad, {}, { 0.0f, 45.0f, 100.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -733,7 +733,7 @@ void Monster::Animation(AnimationType type)
 			timeRate = easeTimer_ / countNum;
 			easeTimer_++;
 
-			rightForeFoot_[0]->SetRotation(Ease::easeOut({ 0.0f, 45.0f, 100.0f }, { 0.0f, -90.0f, 0.0f }, timeRate));
+			rightForeFoot_[0]->SetRotation(Ease::Action(EaseType::Out, EaseFunctionType::Quad, { 0.0f, 45.0f, 100.0f }, { 0.0f, -90.0f, 0.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -757,12 +757,12 @@ void Monster::Animation(AnimationType type)
 
 		if (!isEaseFlag_)
 		{
-			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f + range, 0.0f }, { 0.0f, 0.0f - range, 0.0f }, timeRate));
+			body_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, 0.0f + range, 0.0f }, { 0.0f, 0.0f - range, 0.0f }, timeRate));
 
-			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f, -1.0f }, { 0.0f, range, -1.0f }, timeRate));
-			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f, 1.0f }, { 0.0f, range, 1.0f }, timeRate));
-			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f, 0.0f, 1.0f }, { -5.5f,range,1.0f }, timeRate));
-			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f, 0.0f, -1.0f }, { -5.5f,range,-1.0f }, timeRate));
+			rightForeFoot_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, 0.0f, -1.0f }, { 0.0f, range, -1.0f }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, 0.0f,  1.0f }, { 0.0f, range,  1.0f }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { -5.5f, 0.0f,  1.0f }, { -5.5f, range,  1.0f }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { -5.5f, 0.0f, -1.0f }, { -5.5f, range, -1.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
@@ -772,12 +772,12 @@ void Monster::Animation(AnimationType type)
 		}
 		else if (isEaseFlag_)
 		{
-			body_[0]->SetPosition(Ease::easeInOut({ 0.0f, 0.0f - range, 0.0f }, { 0.0f, 0.0f + range, 0.0f }, timeRate));
+			body_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, 0.0f - range, 0.0f }, { 0.0f, 0.0f + range, 0.0f }, timeRate));
 
-			rightForeFoot_[0]->SetPosition(Ease::easeInOut({ 0.0f, range, -1.0f }, { 0.0f, 0.0f, -1.0f }, timeRate));
-			leftForeFoot_ [0]->SetPosition(Ease::easeInOut({ 0.0f, range, 1.0f }, { 0.0f, 0.0f, 1.0f }, timeRate));
-			leftHindFoot_ [0]->SetPosition(Ease::easeInOut({ -5.5f,range,1.0f }, { -5.5f,0.0f,1.0f }, timeRate));
-			rightHindFoot_[0]->SetPosition(Ease::easeInOut({ -5.5f,range,-1.0f }, { -5.5f,0.0f,-1.0f }, timeRate));
+			rightForeFoot_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, range, -1.0f }, { 0.0f, 0.0f, -1.0f }, timeRate));
+			leftForeFoot_ [0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { 0.0f, range,  1.0f }, { 0.0f, 0.0f,  1.0f }, timeRate));
+			leftHindFoot_ [0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { -5.5f, range,  1.0f }, { -5.5f, 0.0f,  1.0f }, timeRate));
+			rightHindFoot_[0]->SetPosition(Ease::Action(EaseType::InOut, EaseFunctionType::Quad, { -5.5f, range, -1.0f }, { -5.5f, 0.0f, -1.0f }, timeRate));
 
 			if (easeTimer_ > countNum)
 			{
