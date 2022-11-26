@@ -1,6 +1,12 @@
 #include "Ease.h"
+#include "BaseCalculate.h"
+
+#include<math.h>
 
 using namespace DirectX;
+
+const float Ease::PI = 3.14159265359f;
+std::array<std::function<double(double)>, 12> Ease::funcPtr_ = { Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back, SoftBack, Elastic, Bounce, Linear };
 
 const float Ease::easeIn(const float& start, const float& end, const float t)
 {
@@ -152,4 +158,70 @@ const XMFLOAT4 Ease::lerp(const XMFLOAT4& start, const XMFLOAT4& end, const floa
 	w = start.w * (1.0f - t) + end.w * t;
 
 	return XMFLOAT4({ x, y, z, w });
+}
+
+double Ease::Quad(double t)
+{
+	return t * t;
+}
+
+double Ease::Cubic(double t)
+{
+	return t * t * t;
+}
+
+double Ease::Quart(double t)
+{
+	return t * t * t * t;
+}
+
+double Ease::Quint(double t)
+{
+	return t * t * t * t * t;
+}
+
+double Ease::Sine(double t)
+{
+	return 1 - cos(t * PI / 2);
+}
+
+double Ease::Expo(double t)
+{
+	return pow(2, -(1 - t) * 10);
+}
+
+double Ease::Circ(double t)
+{
+	return 1 - sqrt((0 > 1 - t * t) ? 0 : 1 - t * t);
+}
+
+double Ease::Back(double t)
+{
+	double c1 = 1.70158;
+	double c3 = c1 + 1;
+
+	return t * t * (c3 * t - c1);
+}
+
+double Ease::SoftBack(double t)
+{
+	return t * t * (2 * t - 1);
+}
+
+double Ease::Elastic(double t)
+{
+	return 56 * t * t * t * t * t - 105 * t * t * t * t + 60 * t * t * t - 10 * t * t;
+}
+
+double Ease::Bounce(double t)
+{
+	double pow2;
+	int bounce = 4;
+	while (t < ((pow2 = pow(2, --bounce)) - 1) / 11) {}
+	return 1 / pow(4, 3 - bounce) - 7.5625 * pow((pow2 * 3 - 2) / 22 - t, 2);
+}
+
+double Ease::Linear(double t)
+{
+	return t;
 }
