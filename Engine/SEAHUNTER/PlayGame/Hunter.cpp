@@ -59,10 +59,7 @@ void Hunter::Update()
 		DamageHit();
 	}
 
-	for (int i = 0; i < hunter_.size(); i++)
-	{
-		hunter_[i]->Update();
-	}
+	hunter_[animationType_]->Update();
 	buki_->Update();
 }
 
