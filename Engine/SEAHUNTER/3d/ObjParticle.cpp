@@ -70,6 +70,10 @@ void ObjParticle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 a
 	std::unique_ptr<Object3d> a = Object3d::Create(model);
 	a->SetBillboard(true);
 	a->SetPosition(position);
+	if (parent_ != nullptr)
+	{
+		a->SetParent(parent_);
+	}
 	objParticle_.push_back(std::move(a));
 
 	particleData_.push_back(p);

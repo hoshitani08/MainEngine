@@ -40,6 +40,14 @@ public: // メンバ関数
 	/// <param name="model">モデル</param>
 	void BloodAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
 	/// <summary>
+	/// 追加(アイテム用)
+	/// </summary>
+	/// <param name="count">数</param>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="model">モデル</param>
+	void ItemAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	/// <summary>
 	/// 追加
 	/// </summary>
 	/// <param name="count">数</param>
@@ -62,6 +70,11 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="mdPos">座標</param>
 	void SetCenter(const float mdPos) { mdPos_ = mdPos; }
+	/// <summary>
+	/// 座標の設定
+	/// </summary>
+	/// <param name="mdPos">座標</param>
+	void SetCenter(const XMFLOAT3 objMdPos) { objMdPos_ = objMdPos; }
 	/// <summary>
 	/// 速度の設定
 	/// </summary>
@@ -132,6 +145,7 @@ private: // メンバ変数
 	XMFLOAT4 endColor_ = {};
 	//X,Y,Z全て[-5.0,+5.0]でランダムに分布
 	float mdPos_ = 10.0f;
+	XMFLOAT3 objMdPos_ = { 10.0f, 10.0f, 10.0f };
 	//X,Y,Z全て[-0.05,+0.05]でランダムに分布
 	float mdVel_ = 0.1f;
 	//重力に見立ててYのみ[-0.001f,0]でランダムに分布

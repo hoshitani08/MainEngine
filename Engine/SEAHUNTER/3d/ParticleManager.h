@@ -132,7 +132,7 @@ public: // メンバ関数
 	/// </summary>
 	void CreateModel();
 
-private: // 静的メンバ変数
+private: // メンバ変数
 	// デバイス
 	ID3D12Device* device_ = nullptr;
 	// デスクリプタサイズ

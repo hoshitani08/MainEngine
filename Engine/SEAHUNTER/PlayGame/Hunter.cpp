@@ -36,15 +36,20 @@ void Hunter::Initialize()
 		hunter_[i]->SetRotation({ 0.0f,0.0f,0.0f });
 		hunter_[i]->SetPosition({ 0.0f, 10.0f, -30.0f });
 	}
+	hunter_[animationType_]->PlayAnimation();
 
 	buki_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
 	float s = 0.05f;
 	buki_->SetScale({ s,s,s });
-
 	buki_->SetBoneName("mixamorig:LeftHandThumb4");
-	
 
-	hunter_[animationType_]->PlayAnimation();
+	itemParticle_ = std::make_unique<ObjParticle>();
+	itemParticle_->SetParent(hunter_[animationType_].get());
+	itemEmitter_ = std::make_unique<ParticleEmitter>(itemParticle_.get());
+	itemEmitter_->SetCenter({ 150.0f, 350.0f, 150.0f });
+	itemEmitter_->SetVelocity(5.0f);
+	float scale = 10.0f;
+	itemEmitter_->SetObjStartScale({ scale, scale, scale });
 }
 
 void Hunter::Finalize()
@@ -61,6 +66,7 @@ void Hunter::Update()
 
 	hunter_[animationType_]->Update();
 	buki_->Update();
+	itemEmitter_->Update();
 }
 
 void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -68,6 +74,7 @@ void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
 	hunter_[animationType_]->Draw(cmdList);
 
 	buki_->Draw(cmdList);
+	itemEmitter_->Draw(cmdList);
 }
 
 void Hunter::Behavior()
@@ -162,7 +169,6 @@ void Hunter::BaseMove()
 
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
-		//rotation.z = angle.y * speed;
 
 		if (!falg_.move)
 		{
@@ -342,6 +348,9 @@ void Hunter::ItemUse()
 			{
 				hp_ = MAX_HP;
 			}
+			itemParticle_->SetParent(hunter_[animationType_].get());
+			itemParticle_->Update();
+			itemEmitter_->ItemAdd(10, 60, hunter_[animationType_]->GetPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		}
 		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::AttackBuff && count > 0)
 		{

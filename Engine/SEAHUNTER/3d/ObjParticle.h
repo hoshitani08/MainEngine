@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <vector>
 
+#include "FbxObject3d.h"
 #include "Object3d.h"
 
 class ObjParticle
@@ -83,9 +84,16 @@ public: // メンバ関数
 	/// <param name="model">モデル</param>
 	void Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 accel,
 		XMFLOAT3 startScale, XMFLOAT3 endScale, XMFLOAT4 startColor, XMFLOAT4 endColor, Model* model);
+	/// <summary>
+	/// 親オブジェクトの設定
+	/// </summary>
+	/// <param name="parent">親オブジェクト</param>
+	void SetParent(FbxObject3d* parent) { parent_ = parent; }
 
 private: // メンバ変数
 	std::vector<std::unique_ptr<Object3d>> objParticle_;
 	std::vector<ObjectParticle> particleData_;
+	FbxObject3d* parent_ = nullptr;
+
 };
 

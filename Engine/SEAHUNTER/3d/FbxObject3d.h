@@ -162,6 +162,11 @@ public: // メンバ関数
 	/// <returns>ワールド行列</returns>
 	const XMMATRIX& GetMatWorld() { return matWorld_; }
 	/// <summary>
+	/// ワールド座標を取得
+	/// </summary>
+	/// <returns>ワールド座標</returns>
+	XMFLOAT3 GetWorldPosition();
+	/// <summary>
 	/// ボーン行列の取得
 	/// </summary>
 	/// <param name="name">ボーン名</param>

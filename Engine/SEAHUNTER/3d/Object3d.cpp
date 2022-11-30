@@ -182,7 +182,14 @@ void Object3d::UpdateWorldMatrix()
 	if (fbxParent_ != nullptr)
 	{
 		// 親オブジェクトのワールド行列を掛ける
-		matWorld_ *= fbxParent_->GetBoneMatWorld(boneName_) * fbxParent_->GetMatWorld();
+		if (boneName_ != "")
+		{
+			matWorld_ *= fbxParent_->GetBoneMatWorld(boneName_) * fbxParent_->GetMatWorld();
+		}
+		else
+		{
+			matWorld_ *= fbxParent_->GetMatWorld();
+		}
 	}
 }
 

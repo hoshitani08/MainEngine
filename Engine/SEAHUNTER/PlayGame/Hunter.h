@@ -8,6 +8,8 @@
 
 #include "FbxObject3d.h"
 #include "Object3d.h"
+#include "ParticleEmitter.h"
+#include "ObjParticle.h"
 
 class Hunter
 {
@@ -181,6 +183,9 @@ private: // メンバ変数
 	//　モデル
 	std::array<std::unique_ptr<FbxObject3d>, 5> hunter_;
 	std::unique_ptr<Object3d> buki_;
+	// アイテム用パーティクル
+	std::unique_ptr<ParticleEmitter> itemEmitter_;
+	std::unique_ptr<ObjParticle> itemParticle_;
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};

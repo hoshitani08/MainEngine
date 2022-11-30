@@ -96,9 +96,7 @@ void ParticleManager::Update()
 		//スケールの線形補間
 		it->scale = it->startScale + (it->endScale - it->startScale) / f;
 		// カラーの線形補間
-		it->color.x = it->startColor.x + (it->endColor.x - it->startColor.x) / f;
-		it->color.y = it->startColor.y + (it->endColor.y - it->startColor.y) / f;
-		it->color.z = it->startColor.z + (it->endColor.z - it->startColor.z) / f;
+		it->color = it->startColor + (it->endColor - it->startColor) / f;
 	}
 
 	//頂点バッファへデータ転送

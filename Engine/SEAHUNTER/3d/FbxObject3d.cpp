@@ -241,6 +241,16 @@ void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 	isLoop_ = isLoop;
 }
 
+XMFLOAT3 FbxObject3d::GetWorldPosition()
+{
+	XMFLOAT3 worldpos = {};
+	worldpos.x = matWorld_.r[3].m128_f32[0];
+	worldpos.y = matWorld_.r[3].m128_f32[1];
+	worldpos.z = matWorld_.r[3].m128_f32[2];
+
+	return worldpos;
+}
+
 const XMMATRIX FbxObject3d::GetBoneMatWorld(std::string name)
 {
 	//É{Å[ÉìîzóÒ
