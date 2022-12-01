@@ -34,7 +34,16 @@ void ObjParticle::Update()
 		//速度に加速度を加算
 		particleData_[i].velocity = particleData_[i].velocity + particleData_[i].accel;
 		//速度による移動
-		objParticle_[i]->SetPosition(objParticle_[i]->GetPosition() + particleData_[i].velocity);
+		if (parent_ != nullptr)
+		{
+			particleData_[i].position = particleData_[i].position + particleData_[i].velocity;
+			objParticle_[i]->SetPosition(particleData_[i].position + parent_->GetWorldPosition());
+		}
+		else
+		{
+			particleData_[i].position = particleData_[i].position + particleData_[i].velocity;
+			objParticle_[i]->SetPosition(particleData_[i].position);
+		}
 		//スケールの線形補間
 		objParticle_[i]->SetScale(particleData_[i].startScale + (particleData_[i].endScale - particleData_[i].startScale) / f);
 		// カラーの線形補間
@@ -59,6 +68,7 @@ void ObjParticle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 a
 {
 	ObjectParticle p;
 	//値のセット
+	p.position = position;
 	p.velocity = velocity;
 	p.accel = accel;
 	p.numFrame = life;
@@ -69,11 +79,6 @@ void ObjParticle::Add(int life, XMFLOAT3 position, XMFLOAT3 velocity, XMFLOAT3 a
 
 	std::unique_ptr<Object3d> a = Object3d::Create(model);
 	a->SetBillboard(true);
-	a->SetPosition(position);
-	if (parent_ != nullptr)
-	{
-		a->SetParent(parent_);
-	}
 	objParticle_.push_back(std::move(a));
 
 	particleData_.push_back(p);

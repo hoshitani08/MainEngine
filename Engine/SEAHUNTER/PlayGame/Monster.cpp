@@ -245,32 +245,29 @@ void Monster::Update()
 
 void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	if (hp_ >= 1.0f)
+	for (int i = 0; i < body_.size(); i++)
 	{
-		for (int i = 0; i < body_.size(); i++)
-		{
-			body_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < rightForeFoot_.size(); i++)
-		{
-			rightForeFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < leftForeFoot_.size(); i++)
-		{
-			leftForeFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < rightHindFoot_.size(); i++)
-		{
-			rightHindFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < leftHindFoot_.size(); i++)
-		{
-			leftHindFoot_[i]->Draw(cmdList);
-		}
-		for (int i = 0; i < tail_.size(); i++)
-		{
-			tail_[i]->Draw(cmdList);
-		}
+		body_[i]->Draw(cmdList);
+	}
+	for (int i = 0; i < rightForeFoot_.size(); i++)
+	{
+		rightForeFoot_[i]->Draw(cmdList);
+	}
+	for (int i = 0; i < leftForeFoot_.size(); i++)
+	{
+		leftForeFoot_[i]->Draw(cmdList);
+	}
+	for (int i = 0; i < rightHindFoot_.size(); i++)
+	{
+		rightHindFoot_[i]->Draw(cmdList);
+	}
+	for (int i = 0; i < leftHindFoot_.size(); i++)
+	{
+		leftHindFoot_[i]->Draw(cmdList);
+	}
+	for (int i = 0; i < tail_.size(); i++)
+	{
+		tail_[i]->Draw(cmdList);
 	}
 	bloodEmitter_->Draw(cmdList);
 	bubbleEmitter_->Draw(cmdList);
@@ -680,7 +677,7 @@ void Monster::Animation(AnimationType type)
 		leftForeFoot_[0]->SetRotation(rot);
 		leftHindFoot_[0]->SetRotation(rot);
 		rightHindFoot_[0]->SetRotation(rot);
-		bubbleEmitter_->SetCenter(5.0f);
+		bubbleEmitter_->SetCenter(4.0f);
 		
 		bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 		bubbleEmitter_->BubbleAdd(count, life, leftForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));

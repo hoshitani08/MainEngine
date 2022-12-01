@@ -20,6 +20,8 @@ void ObjFactory::Initialize()
 	LoadModel("cube");
 	LoadModel("bubble", true);
 	LoadModel("blood", true);
+	LoadModel("heal");
+	LoadModel("itemEffect");
 }
 
 void ObjFactory::Finalize()

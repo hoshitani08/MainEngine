@@ -37,6 +37,12 @@ public: // サブクラス
 		bool death = false;
 	};
 
+	struct TimeData
+	{
+		int count = 0;
+		int timer = 0;
+	};
+
 public: // 静的メンバ関数
 	static std::unique_ptr<Hunter> Create();
 
@@ -186,6 +192,8 @@ private: // メンバ変数
 	// アイテム用パーティクル
 	std::unique_ptr<ParticleEmitter> itemEmitter_;
 	std::unique_ptr<ObjParticle> itemParticle_;
+	std::unique_ptr<ParticleEmitter> healEmitter_;
+	std::unique_ptr<ObjParticle> healParticle_;
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
@@ -200,6 +208,10 @@ private: // メンバ変数
 	int itemType_ = 0;
 	// アニメーションのタイプ
 	int animationType_ = 0;
+	// 攻撃の効果の時間
+	TimeData attack;
+	// 攻撃の効果の時間
+	TimeData defense;
 
 	// 移動倍率
 	float speed_ = 0.0f;

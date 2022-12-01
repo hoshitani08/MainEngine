@@ -46,10 +46,17 @@ void Hunter::Initialize()
 	itemParticle_ = std::make_unique<ObjParticle>();
 	itemParticle_->SetParent(hunter_[animationType_].get());
 	itemEmitter_ = std::make_unique<ParticleEmitter>(itemParticle_.get());
-	itemEmitter_->SetCenter({ 150.0f, 350.0f, 150.0f });
-	itemEmitter_->SetVelocity(5.0f);
-	float scale = 10.0f;
+	itemEmitter_->SetCenter({ 2.0f, 1.0f, 2.0f });
+	float scale = 0.1f;
 	itemEmitter_->SetObjStartScale({ scale, scale, scale });
+
+	healParticle_ = std::make_unique<ObjParticle>();
+	healParticle_->SetParent(hunter_[animationType_].get());
+	healEmitter_ = std::make_unique<ParticleEmitter>(healParticle_.get());
+	healEmitter_->SetCenter({ 2.0f, 1.0f, 2.0f });
+	healEmitter_->SetObjStartScale({ scale, scale, scale });
+	healEmitter_->SetStartColor({ 0.2f, 1.0f, 0.0f, 1.0f });
+	healEmitter_->SetEndColor({ 0.2f, 1.0f, 0.0f, 1.0f });
 }
 
 void Hunter::Finalize()
@@ -67,6 +74,7 @@ void Hunter::Update()
 	hunter_[animationType_]->Update();
 	buki_->Update();
 	itemEmitter_->Update();
+	healEmitter_->Update();
 }
 
 void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -75,6 +83,7 @@ void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	buki_->Draw(cmdList);
 	itemEmitter_->Draw(cmdList);
+	healEmitter_->Draw(cmdList);
 }
 
 void Hunter::Behavior()
@@ -335,12 +344,14 @@ void Hunter::ItemUse()
 	}
 
 	// アイテムの使用
+	itemParticle_->SetParent(hunter_[animationType_].get());
+	healParticle_->SetParent(hunter_[animationType_].get());
 	if (input->TriggerPadKey(BUTTON_X) && !itemSelectionFlag_)
 	{
 		int count = ItemManager::GetInstance()->GetItemQuantity(itemType_);
 		
 
-		if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0)
+		if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0 && hp_ < MAX_HP)
 		{
 			count--;
 			hp_ += 10.0f;
@@ -348,9 +359,16 @@ void Hunter::ItemUse()
 			{
 				hp_ = MAX_HP;
 			}
-			itemParticle_->SetParent(hunter_[animationType_].get());
-			itemParticle_->Update();
-			itemEmitter_->ItemAdd(10, 60, hunter_[animationType_]->GetPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+			if (animationType_ != 1)
+			{
+				healEmitter_->HealAdd(3, 30, {}, ObjFactory::GetInstance()->GetModel("heal"), 0.1f);
+				healEmitter_->HealAdd(7, 30, {}, ObjFactory::GetInstance()->GetModel("itemEffect"));
+			}
+			else
+			{
+				healEmitter_->HealAdd(3, 30, { 0.0f, -0.5f, 0.0f }, ObjFactory::GetInstance()->GetModel("heal"), 0.3f);
+				healEmitter_->HealAdd(7, 30, { 0.0f, -0.5f, 0.0f }, ObjFactory::GetInstance()->GetModel("itemEffect"));
+			}
 		}
 		else if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::AttackBuff && count > 0)
 		{
@@ -364,6 +382,49 @@ void Hunter::ItemUse()
 		}
 
 		ItemManager::GetInstance()->SetItemQuantity(itemType_, count);
+	}
+
+	int count = 4;
+
+	if (ItemManager::GetInstance()->IsAttackBuff() && ItemManager::GetInstance()->IsDefenseBuff())
+	{
+		count = 2;
+	}
+
+	if (ItemManager::GetInstance()->IsAttackBuff())
+	{
+		attack.timer++;
+
+		if (attack.timer > attack.count * 20)
+		{
+			itemEmitter_->SetStartColor({ 1.0f, 0.2f, 0.0f, 1.0f });
+			itemEmitter_->SetEndColor({ 1.0f, 0.2f, 0.0f, 1.0f });
+			itemEmitter_->ItemAdd(count, 30, { 0.0f, -1.2f, 0.0f }, ObjFactory::GetInstance()->GetModel("itemEffect"));
+			attack.count++;
+		}
+	}
+	else
+	{
+		attack.timer = 0;
+		attack.count = 0;
+	}
+
+	if (ItemManager::GetInstance()->IsDefenseBuff())
+	{
+		defense.timer++;
+
+		if (defense.timer > defense.count * 20)
+		{
+			itemEmitter_->SetStartColor({ 1.0f, 0.6f, 0.0f, 1.0f });
+			itemEmitter_->SetEndColor({ 1.0f, 0.6f, 0.0f, 1.0f });
+			itemEmitter_->ItemAdd(count, 30, { 0.0f, -1.2f, 0.0f }, ObjFactory::GetInstance()->GetModel("itemEffect"));
+			defense.count++;
+		}
+	}
+	else
+	{
+		defense.timer = 0;
+		defense.count = 0;
 	}
 
 	ItemManager::GetInstance()->BuffUpdate();

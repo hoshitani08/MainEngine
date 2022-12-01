@@ -34,6 +34,8 @@ private: // エイリアス
 		using XMMATRIX = DirectX::XMMATRIX;
 
 	public:
+		//座標
+		XMFLOAT3 position = {};
 		//速度
 		XMFLOAT3 velocity = {};
 		//加速度
