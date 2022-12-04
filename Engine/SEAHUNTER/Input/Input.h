@@ -71,6 +71,11 @@ public: //メンバ関数
 	/// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
 	/// <summary>
+	/// 左スティックのY軸のトリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
+	bool PadStickTriggerY();
+	/// <summary>
 	/// 左スティックの傾き
 	/// </summary>
 	/// <returns></returns>

@@ -84,6 +84,8 @@ void ItemManager::Initialize()
 void ItemManager::Finalize()
 {
 	itemData_.clear();
+	defense_ = {};
+	attack_ = {};
 }
 
 void ItemManager::Update()

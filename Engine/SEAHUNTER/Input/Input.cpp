@@ -255,6 +255,20 @@ bool Input::TriggerKey(BYTE keyNumber)
 	return false;
 }
 
+bool Input::PadStickTriggerY()
+{
+	float y = padData_.lY / 1000.0f;
+	float oldY = padDataPre_.lY / 1000.0f;
+
+	if ((fabsf(y) > 0.2f && fabsf(oldY) < 0.2f) || (fabsf(y) < -0.2f && fabsf(oldY) > -0.2f))
+	{
+		return true;
+	}
+
+	// ÉgÉäÉKÅ[Ç≈Ç»Ç¢
+	return false;
+}
+
 BOOL CALLBACK Input::DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 {
 	return DIENUM_CONTINUE;

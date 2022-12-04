@@ -115,7 +115,7 @@ void TitleScene::Update()
 				exit(1);
 			}
 		}
-		if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || input->PadStickGradient().y != 0)
+		if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || (input->PadStickGradient().y != 0 && input->PadStickTriggerY()))
 		{
 			if (!determinationFlag_)
 			{
