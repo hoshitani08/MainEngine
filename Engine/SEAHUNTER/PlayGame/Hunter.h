@@ -35,6 +35,8 @@ public: // サブクラス
 		bool damage = false;
 		bool attack = false;
 		bool death = false;
+		bool dash = false;
+		bool dodge = false;
 	};
 
 	struct TimeData
@@ -187,7 +189,7 @@ public: // メンバ関数
 
 private: // メンバ変数
 	//　モデル
-	std::array<std::unique_ptr<FbxObject3d>, 5> hunter_;
+	std::array<std::unique_ptr<FbxObject3d>, 7> hunter_;
 	std::unique_ptr<Object3d> buki_;
 	// アイテム用パーティクル
 	std::unique_ptr<ParticleEmitter> itemEmitter_;
@@ -234,6 +236,8 @@ private: // メンバ変数
 	bool itemSelectionFlag_ = false;
 	// 生きているかどうか
 	bool isDeath_ = false;
+	//
+	bool isDash = false;
 	// アニメーションのタイプフラグ
 	AnimationFlag falg_ = {};
 };

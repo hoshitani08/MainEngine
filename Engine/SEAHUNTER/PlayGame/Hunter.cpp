@@ -29,6 +29,8 @@ void Hunter::Initialize()
 	hunter_[2] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("damage"), L"BasicFBX", true);
 	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("attack"), L"BasicFBX", true);
 	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"), L"BasicFBX", true);
+	hunter_[5] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dash"), L"BasicFBX", true);
+	hunter_[6] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dodge"), L"BasicFBX", true);
 
 	for (int i = 0; i < hunter_.size(); i++)
 	{
@@ -179,13 +181,23 @@ void Hunter::BaseMove()
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
 
-		if (!falg_.move)
+		if (isDash && !falg_.dash && !falg_.dodge)
 		{
-			falg_.halt = false;
+			AnimationFlag temp = {};
+			falg_ = temp;
+			falg_.dash = true;
+			animationType_ = 5;
+			hunter_[animationType_]->PlayAnimation();
+			// à⁄ìÆ
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+		}
+		else if (!falg_.move && !isDash && !falg_.dodge)
+		{
+			AnimationFlag temp = {};
+			falg_ = temp;
 			falg_.move = true;
-			falg_.damage = false;
-			falg_.attack = false;
-			falg_.death = false;
 			animationType_ = 1;
 			hunter_[animationType_]->PlayAnimation();
 			// à⁄ìÆ
@@ -194,15 +206,13 @@ void Hunter::BaseMove()
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
 		}
 	}
-	else if (!isAttackFlag_ && !falg_.damage)
+	else if (!isAttackFlag_ && !falg_.damage && !isDash && !falg_.dodge)
 	{
 		if (!falg_.halt)
 		{
+			AnimationFlag temp = {};
+			falg_ = temp;
 			falg_.halt = true;
-			falg_.move = false;
-			falg_.damage = false;
-			falg_.attack = false;
-			falg_.death = false;
 			animationType_ = 0;
 			hunter_[animationType_]->PlayAnimation();
 			// í‚é~
@@ -228,6 +238,24 @@ void Hunter::AvoidMove()
 	{
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
+
+		if (!falg_.dodge)
+		{
+			AnimationFlag temp = {};
+			falg_ = temp;
+			falg_.dodge = true;
+			animationType_ = 6;
+			hunter_[animationType_]->PlayAnimation();
+			// í‚é~
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+		}
+	}
+
+	if (hunter_[animationType_]->AnimationEnd())
+	{
+		falg_.dodge = false;
 	}
 }
 
@@ -242,11 +270,9 @@ void Hunter::AttackMove()
 		attackCoolTimer_ = 0;
 		if (!falg_.attack)
 		{
-			falg_.halt = false;
-			falg_.move = false;
-			falg_.damage = false;
+			AnimationFlag temp = {};
+			falg_ = temp;
 			falg_.attack = true;
-			falg_.death = false;
 			animationType_ = 3;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// çUåÇ
@@ -271,7 +297,7 @@ void Hunter::SpeedCalculate()
 {
 	Input* input = Input::GetInstance();
 
-	if (avoidFlag_)
+	if (avoidFlag_ || falg_.dodge)
 	{
 		if (avoidTimer_ <= 0)
 		{
@@ -282,22 +308,25 @@ void Hunter::SpeedCalculate()
 
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f;
 
-		if (avoidTimer_ >= 10)
+		if (avoidTimer_ >= 10 && !falg_.dodge)
 		{
 			avoidTimer_ = 0;
 			avoidFlag_ = false;
 		}
+		isDash = false;
 	}
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
 		stamina_ -= 0.5f;
 		avoidTimer_++;
+		isDash = true;
 	}
 	else
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
 		avoidTimer_++;
+		isDash = false;
 	}
 
 	if (isStamina_ && stamina_ <= 0.0f)
@@ -449,11 +478,9 @@ void Hunter::DamageHit()
 
 		if (!falg_.damage)
 		{
-			falg_.halt = false;
-			falg_.move = false;
+			AnimationFlag temp = {};
+			falg_ = temp;
 			falg_.damage = true;
-			falg_.attack = false;
-			falg_.death = false;
 			animationType_ = 2;
 			hunter_[animationType_]->PlayAnimation();
 			// É_ÉÅÅ[ÉW

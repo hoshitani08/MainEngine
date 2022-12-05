@@ -17,6 +17,10 @@ void FbxFactory::Initialize()
 	LoadModel("death");
 	// í‚é~
 	LoadModel("halt");
+	//
+	LoadModel("dash");
+	//
+	LoadModel("dodge");
 }
 
 void FbxFactory::Finalize()
