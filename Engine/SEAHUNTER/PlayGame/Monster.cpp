@@ -277,7 +277,7 @@ void Monster::AllMove()
 {
 	BehaviorTree();
 
-	if (!damageHitFlag_)
+	if (colorTimer_ >= 30)
 	{
 		for (int i = 0; i < body_.size(); i++)
 		{
@@ -310,9 +310,16 @@ void Monster::AllMove()
 		}
 	}
 
-	if (!hunter_->GetAnimationType())
+	if (damageHitFlag_)
 	{
+		colorTimer_++;
+	}
+
+	if (hunter_->GetActFlag())
+	{
+		colorTimer_ = 0;
 		damageHitFlag_ = false;
+		hunter_->SetActFalg(false);
 	}
 
 	PartsTailDestruction();
@@ -617,22 +624,22 @@ void Monster::Animation(AnimationType type)
 		float restrictionAngle = 135.0f;
 
 		XMFLOAT3 rotA = rightForeFoot_[0]->GetRotation();
-		rotA.z -= addAngle;
+		rotA.z -= addAngle_;
 		rightForeFoot_[0]->SetRotation(rotA);
 		leftHindFoot_[0]->SetRotation(rotA);
 
 		XMFLOAT3 rotB = leftForeFoot_[0]->GetRotation();
-		rotB.z += addAngle;
+		rotB.z += addAngle_;
 		leftForeFoot_[0]->SetRotation(rotB);
 		rightHindFoot_[0]->SetRotation(rotB);
 
 		if (rotB.z > 45.0f)
 		{
-			addAngle = -5.0f;
+			addAngle_ = -5.0f;
 		}
 		else if (rotB.z < -45.0f)
 		{
-			addAngle = 5.0f;
+			addAngle_ = 5.0f;
 		}
 
 		for (auto& a : tail_)
@@ -710,7 +717,7 @@ void Monster::Animation(AnimationType type)
 	{
 		float timeRate = 0.0f;
 
-		if (!isPunch)
+		if (!isPunch_)
 		{
 			int countNum = 20;
 			timeRate = easeTimer_ / countNum;
@@ -721,10 +728,10 @@ void Monster::Animation(AnimationType type)
 			if (easeTimer_ > countNum)
 			{
 				easeTimer_ = 0.0f;
-				isPunch = true;
+				isPunch_ = true;
 			}
 		}
-		else if (isPunch)
+		else if (isPunch_)
 		{
 			int countNum = 10;
 			timeRate = easeTimer_ / countNum;
@@ -735,7 +742,7 @@ void Monster::Animation(AnimationType type)
 			if (easeTimer_ > countNum)
 			{
 				easeTimer_ = 0.0f;
-				isPunch = false;
+				isPunch_ = false;
 				isEaseFlag_ = true;
 			}
 			bubbleEmitter_->SetCenter(1.0f);
@@ -1063,10 +1070,10 @@ bool Monster::WaitingElapsedTime()
 {
 	if (waitingElapsedTimer_ >= 60 || waitingEnd_)
 	{
-		if (count >= maxCount)
+		if (count_ >= maxCount_)
 		{
-			count = 0;
-			maxCount = (int)RandCalculate(1.0f, 4.0f);
+			count_ = 0;
+			maxCount_ = (int)RandCalculate(1.0f, 4.0f);
 		}
 		Animation(AnimationType::InitialPosture);
 		angleEaseTimer_ = 0.0f;
@@ -1085,7 +1092,7 @@ bool Monster::WaitingModeSelection()
 		return true;
 	}
 
-	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count >= maxCount)
+	if (Hit(nucleus_->GetPosition(), 1.0f, 1.0f) || count_ >= maxCount_)
 	{
 		Animation(AnimationType::InitialPosture);
 		angleEaseTimer_ = 0.0f;
@@ -1268,5 +1275,5 @@ void Monster::TreeReset()
 	attackEnd_ = false;
 	waitingEnd_ = false;
 
-	count++;
+	count_++;
 }

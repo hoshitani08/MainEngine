@@ -6,21 +6,24 @@ const std::string FbxFactory::BASE_DIRECTORY = "Resources/";
 
 void FbxFactory::Initialize()
 {
-	LoadModel("player");
 	// ƒ_ƒ[ƒW‚ğó‚¯‚½
 	LoadModel("damage");
 	// ˆÚ“®
 	LoadModel("move");
-	// UŒ‚
-	LoadModel("attack");
 	// €‚ñ‚¾
 	LoadModel("death");
 	// ’â~
 	LoadModel("halt");
-	//
+	// ƒ_ƒbƒVƒ…
 	LoadModel("dash");
-	//
+	// ‰ñ”ğ
 	LoadModel("dodge");
+	// UŒ‚
+	LoadModel("combo1");
+	// UŒ‚
+	LoadModel("combo2");
+	// UŒ‚
+	LoadModel("combo3");
 }
 
 void FbxFactory::Finalize()

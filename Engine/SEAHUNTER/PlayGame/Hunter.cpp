@@ -27,10 +27,12 @@ void Hunter::Initialize()
 	hunter_[0] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("halt"), L"BasicFBX", true);
 	hunter_[1] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("move"), L"BasicFBX", true);
 	hunter_[2] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("damage"), L"BasicFBX", true);
-	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("attack"), L"BasicFBX", true);
-	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"), L"BasicFBX", true);
-	hunter_[5] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dash"), L"BasicFBX", true);
-	hunter_[6] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dodge"), L"BasicFBX", true);
+	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"), L"BasicFBX", true);
+	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dash"), L"BasicFBX", true);
+	hunter_[5] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dodge"), L"BasicFBX", true);
+	hunter_[6] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo1"), L"BasicFBX", true);
+	hunter_[7] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo2"), L"BasicFBX", true);
+	hunter_[8] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo3"), L"BasicFBX", true);
 
 	for (int i = 0; i < hunter_.size(); i++)
 	{
@@ -105,12 +107,10 @@ void Hunter::Behavior()
 	{
 		if (!falg_.death)
 		{
-			falg_.halt = false;
-			falg_.move = false;
-			falg_.damage = false;
-			falg_.attack = false;
+			AnimationFlag temp = {};
+			falg_ = temp;
 			falg_.death = true;
-			animationType_ = 4;
+			animationType_ = 3;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// Ž€–S
 			buki_->SetParent(hunter_[animationType_].get());
@@ -181,19 +181,19 @@ void Hunter::BaseMove()
 		rotation.y = angle.x + 90;
 		rotation.x = angle.y;
 
-		if (isDash && !falg_.dash && !falg_.dodge)
+		if (isDash_ && !falg_.dash && !falg_.dodge)
 		{
 			AnimationFlag temp = {};
 			falg_ = temp;
 			falg_.dash = true;
-			animationType_ = 5;
+			animationType_ = 4;
 			hunter_[animationType_]->PlayAnimation();
 			// ˆÚ“®
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
 		}
-		else if (!falg_.move && !isDash && !falg_.dodge)
+		else if (!falg_.move && !isDash_ && !falg_.dodge)
 		{
 			AnimationFlag temp = {};
 			falg_ = temp;
@@ -206,7 +206,7 @@ void Hunter::BaseMove()
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
 		}
 	}
-	else if (!isAttackFlag_ && !falg_.damage && !isDash && !falg_.dodge)
+	else if (!isAttackFlag_ && !falg_.damage && !isDash_ && !falg_.dodge)
 	{
 		if (!falg_.halt)
 		{
@@ -244,7 +244,7 @@ void Hunter::AvoidMove()
 			AnimationFlag temp = {};
 			falg_ = temp;
 			falg_.dodge = true;
-			animationType_ = 6;
+			animationType_ = 5;
 			hunter_[animationType_]->PlayAnimation();
 			// ’âŽ~
 			buki_->SetParent(hunter_[animationType_].get());
@@ -264,27 +264,67 @@ void Hunter::AttackMove()
 	Input* input = Input::GetInstance();
 
 	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ && !isAttackFlag_ && attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
+	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ &&  attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
 	{
 		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
-		if (!falg_.attack)
+		comboFlag_ = true;
+	}
+
+	if (comboFlag_)
+	{
+		isAttackFlag_ = true;
+		attackCoolTimer_ = 0;
+		if (falg_.attack1 && falg_.attack2 && !falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
 			AnimationFlag temp = {};
 			falg_ = temp;
-			falg_.attack = true;
-			animationType_ = 3;
+			falg_.attack1 = true;
+			falg_.attack2 = true;
+			falg_.attack3 = true;
+			animationType_ = 8;
+			actFlag_ = true;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// UŒ‚
 			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,1.7f });
-			buki_->SetRotation({ 0.0f,180.0f,0.0f });
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			comboFlag_ = false;
+		}
+		else if (falg_.attack1 && !falg_.attack2 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
+		{
+			AnimationFlag temp = {};
+			falg_ = temp;
+			falg_.attack1 = true;
+			falg_.attack2 = true;
+			animationType_ = 7;
+			actFlag_ = true;
+			hunter_[animationType_]->PlayAnimation(0, false);
+			// UŒ‚
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			comboFlag_ = false;
+		}
+		else if (!falg_.attack1 || falg_.attack1 && falg_.attack2 && falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
+		{
+			AnimationFlag temp = {};
+			falg_ = temp;
+			falg_.attack1 = true;
+			animationType_ = 6;
+			actFlag_ = true;
+			hunter_[animationType_]->PlayAnimation(0, false);
+			// UŒ‚
+			buki_->SetParent(hunter_[animationType_].get());
+			buki_->SetPosition({ 0.0f,0.0f,2.3f });
+			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			comboFlag_ = false;
 		}
 	}
 
 	if (isAttackFlag_)
 	{
-		if (attackCoolTimer_ >= 10 && hunter_[animationType_]->AnimationEnd())
+		if (attackCoolTimer_ >= 10 && hunter_[animationType_]->AnimationEnd() && !comboFlag_)
 		{
 			isAttackFlag_ = false;
 			attackCoolTimer_ = 0;
@@ -313,20 +353,20 @@ void Hunter::SpeedCalculate()
 			avoidTimer_ = 0;
 			avoidFlag_ = false;
 		}
-		isDash = false;
+		isDash_ = false;
 	}
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
 		stamina_ -= 0.5f;
 		avoidTimer_++;
-		isDash = true;
+		isDash_ = true;
 	}
 	else
 	{
 		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
 		avoidTimer_++;
-		isDash = false;
+		isDash_ = false;
 	}
 
 	if (isStamina_ && stamina_ <= 0.0f)
@@ -475,6 +515,7 @@ void Hunter::DamageHit()
 		damage_ = 0.0f;
 		isAttackFlag_ = false;
 		attackCoolTimer_ = 0;
+		comboFlag_ = false;
 
 		if (!falg_.damage)
 		{

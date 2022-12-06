@@ -288,12 +288,14 @@ private: // メンバ変数
 	// イージングし終わったか
 	bool isEaseFlag_ = false;
 	// 足すアングル
-	float addAngle = 5.0f;
+	float addAngle_ = 5.0f;
 	// パンチし終わったか
-	bool isPunch = false;
+	bool isPunch_ = false;
 	//
-	int count = 0;
-	int maxCount = 0;
+	int count_ = 0;
+	int maxCount_ = 0;
+	//
+	int colorTimer_ = 0;
 #pragma endregion アニメーション
 #pragma region 
 	// 行動のセレクター

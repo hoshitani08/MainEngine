@@ -33,7 +33,9 @@ public: // サブクラス
 		bool halt = false;
 		bool move = false;
 		bool damage = false;
-		bool attack = false;
+		bool attack1 = false;
+		bool attack2 = false;
+		bool attack3 = false;
 		bool death = false;
 		bool dash = false;
 		bool dodge = false;
@@ -145,7 +147,7 @@ public: // メンバ関数
 	/// 攻撃アニメーションが動いているか
 	/// </summary>
 	/// <returns>攻撃フラグ</returns>
-	bool GetAnimationType() { return falg_.attack; }
+	bool GetActFlag() { return actFlag_; }
 	/// <summary>
 	/// アイテムを選択しているか
 	/// </summary>
@@ -186,10 +188,15 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="isAttackFlag">攻撃フラグ</param>
 	void AttackHit(bool isAttackFlag);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="f"></param>
+	void SetActFalg(bool f) { actFlag_ = f; }
 
 private: // メンバ変数
 	//　モデル
-	std::array<std::unique_ptr<FbxObject3d>, 7> hunter_;
+	std::array<std::unique_ptr<FbxObject3d>, 9> hunter_;
 	std::unique_ptr<Object3d> buki_;
 	// アイテム用パーティクル
 	std::unique_ptr<ParticleEmitter> itemEmitter_;
@@ -237,7 +244,11 @@ private: // メンバ変数
 	// 生きているかどうか
 	bool isDeath_ = false;
 	//
-	bool isDash = false;
+	bool isDash_ = false;
+	//
+	bool comboFlag_ = false;
+	//
+	bool actFlag_ = false;
 	// アニメーションのタイプフラグ
 	AnimationFlag falg_ = {};
 };
