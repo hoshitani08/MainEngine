@@ -84,8 +84,14 @@ public: // メンバ関数
 	/// プレイヤーの攻撃判定
 	/// </summary>
 	void PlayerAttack();
-
+	/// <summary>
+	/// 開始時のカメラ演出
+	/// </summary>
 	void StratCameraMove();
+	/// <summary>
+	/// 終了時のカメラ演出
+	/// </summary>
+	void EndCameraMove();
 
 private: // メンバ変数
 	//カメラ
@@ -117,7 +123,9 @@ private: // メンバ変数
 	// タイマー
 	Quest quest_;
 	// 
-	bool stratFlag = false;
+	bool stratFlag_ = false;
+	//
+	bool endFlag_ = false;
 	// イージングの進行度用
 	float easeTimer_ = 0.0f;
 };

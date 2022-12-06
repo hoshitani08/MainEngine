@@ -87,7 +87,7 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
-	if (!stratFlag)
+	if (!stratFlag_)
 	{
 		StratCameraMove();
 	}
@@ -143,7 +143,11 @@ void GameScene::Update()
 		hunter_->SetAngle(angle_);
 		hunter_->Behavior();
 
-		CameraMove();
+		if (!endFlag_)
+		{
+			CameraMove();
+		}
+		
 		PlayerAttack();
 
 		monster_->AllMove();
@@ -153,10 +157,7 @@ void GameScene::Update()
 	{
 		sceneChange_->SceneChangeStart("ClearScene");
 	}
-	else if (ui_->GetIsPlayerDeath() && hunter_->GetIsDeath() || quest_.minute >= 15)
-	{
-		sceneChange_->SceneChangeStart("GameOverScene");
-	}
+	EndCameraMove();
 
 	ui_->ClockCalculate(quest_.minute);
 
@@ -288,16 +289,16 @@ void GameScene::StratCameraMove()
 {
 	float timeRate = 0.0f;
 
-	if (!stratFlag)
+	if (!stratFlag_)
 	{
 		int countNum = 120;
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 
-		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -10, timeRate), 0 };
+		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3.0f, -10.0f, timeRate), 0 };
 		XMMATRIX  rotM = XMMatrixIdentity();
-		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0, timeRate)));
-		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0, timeRate)));
+		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0.0f, timeRate)));
+		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0.0f, timeRate)));
 		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
 		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
 		XMVECTOR v3 = bossTarget + v;
@@ -311,8 +312,46 @@ void GameScene::StratCameraMove()
 
 		if (easeTimer_ > countNum)
 		{
-			stratFlag = true;
+			stratFlag_ = true;
 			easeTimer_ = 0;
+		}
+	}
+}
+
+void GameScene::EndCameraMove()
+{
+	if ((ui_->GetIsPlayerDeath() && hunter_->GetIsDeath() || quest_.minute >= 15) && !endFlag_)
+	{
+		float timeRate = 0.0f;
+
+		int countNum = 200;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
+
+		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -20, timeRate), 0 };
+		XMMATRIX  rotM = XMMatrixIdentity();
+		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 0.0f, 50, timeRate)));
+		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -180.0f, 150.0f, timeRate)));
+		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+		XMVECTOR v3 = bossTarget + v;
+		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+		XMFLOAT3 pos = f;
+
+		camera_->SetTarget(center);
+		camera_->SetEye(pos);
+		camera_->Update();
+
+		if (easeTimer_ > countNum)
+		{
+			endFlag_ = true;
+			easeTimer_ = 0;
+		}
+
+		if (endFlag_)
+		{
+			sceneChange_->SceneChangeStart("GameOverScene");
 		}
 	}
 }
