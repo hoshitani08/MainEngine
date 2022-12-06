@@ -40,6 +40,7 @@ void Hunter::Initialize()
 		hunter_[i]->SetRotation({ 0.0f,0.0f,0.0f });
 		hunter_[i]->SetPosition({ 0.0f, 10.0f, -30.0f });
 	}
+	falg_.halt = true;
 	hunter_[animationType_]->PlayAnimation();
 
 	buki_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));

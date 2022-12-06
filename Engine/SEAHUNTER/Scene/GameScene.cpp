@@ -13,6 +13,8 @@
 #include "Audio.h"
 #include "Input.h"
 #include "ItemManager.h"
+#include "Ease.h"
+#include "BaseCalculate.h"
 
 #include <cassert>
 #include <sstream>
@@ -70,7 +72,7 @@ void GameScene::Initialize()
 
 	sceneChange_ = std::make_unique<SceneChange>();
 
-	CameraMove();
+	//CameraMove();
 }
 
 void GameScene::Finalize()
@@ -85,7 +87,11 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
-	if (sceneChange_->GetinEndFlag())
+	if (!stratFlag)
+	{
+		StratCameraMove();
+	}
+	else if (sceneChange_->GetinEndFlag())
 	{
 		quest_.timer++;
 		if (quest_.timer >= 60)
@@ -275,5 +281,38 @@ void GameScene::PlayerAttack()
 
 		monster_->DamageHit(hitSphere);
 		hitSphere_->SetPosition(pos);
+	}
+}
+
+void GameScene::StratCameraMove()
+{
+	float timeRate = 0.0f;
+
+	if (!stratFlag)
+	{
+		int countNum = 120;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
+
+		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -10, timeRate), 0 };
+		XMMATRIX  rotM = XMMatrixIdentity();
+		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0, timeRate)));
+		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0, timeRate)));
+		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+		XMVECTOR v3 = bossTarget + v;
+		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+		XMFLOAT3 pos = f;
+
+		camera_->SetTarget(center);
+		camera_->SetEye(pos);
+		camera_->Update();
+
+		if (easeTimer_ > countNum)
+		{
+			stratFlag = true;
+			easeTimer_ = 0;
+		}
 	}
 }

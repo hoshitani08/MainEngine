@@ -85,6 +85,8 @@ public: // メンバ関数
 	/// </summary>
 	void PlayerAttack();
 
+	void StratCameraMove();
+
 private: // メンバ変数
 	//カメラ
 	std::unique_ptr<Camera> camera_;
@@ -112,7 +114,10 @@ private: // メンバ変数
 	CollisionManager* collisionManager_ = nullptr;
 	// 角度
 	XMFLOAT2 angle_ = { 0.0f, 0.0f};
-
 	// タイマー
 	Quest quest_;
+	// 
+	bool stratFlag = false;
+	// イージングの進行度用
+	float easeTimer_ = 0.0f;
 };
