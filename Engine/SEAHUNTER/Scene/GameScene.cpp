@@ -324,7 +324,7 @@ void GameScene::EndCameraMove()
 	{
 		float timeRate = 0.0f;
 
-		int countNum = 200;
+		int countNum = 250;
 		timeRate = easeTimer_ / countNum;
 		easeTimer_++;
 

@@ -47,6 +47,9 @@ void Hunter::Initialize()
 	float s = 0.05f;
 	buki_->SetScale({ s,s,s });
 	buki_->SetBoneName("mixamorig:LeftHandThumb4");
+	buki_->SetParent(hunter_[animationType_].get());
+	buki_->SetPosition({ 0.0f,0.0f,2.3f });
+	buki_->SetRotation({ -60.0f,90.0f,45.0f });
 
 	itemParticle_ = std::make_unique<ObjParticle>();
 	itemParticle_->SetParent(hunter_[animationType_].get());

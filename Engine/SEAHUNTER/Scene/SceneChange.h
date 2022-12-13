@@ -41,6 +41,8 @@ public: // メンバ関数
 public: // メンバ変数
 	std::unique_ptr<Sprite> sprite_;
 	int offsetTimer_ = 0;
+	// イージングの進行度用
+	float easeTimer_ = 0.0f;
 	bool inEnd_ = false;
 	bool outEnd_ = false;
 };

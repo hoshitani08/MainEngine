@@ -1,5 +1,6 @@
 #include "SceneChange.h"
 #include "SceneManager.h"
+#include "Ease.h"
 
 SceneChange::SceneChange()
 {
@@ -13,7 +14,7 @@ SceneChange::SceneChange()
 			std::unique_ptr<BlackBox> tempY = std::make_unique<BlackBox>();
 
 			tempY->sprite_ = Sprite::Create(103, { (float)(20 + x * 40),(float)(20 + y * 40) }, { 1,1,1,1 }, { 0.5f,0.5f });
-			tempY->offsetTimer_ = (31 - x + y);
+			tempY->offsetTimer_ = y;
 
 			tempX.push_back(std::move(tempY));
 		}
@@ -84,7 +85,7 @@ void SceneChange::SceneChangeStart(const std::string& sceneName)
 			{
 				blackBox_[x][y]->sprite_->SetRotation(0.0f);
 				blackBox_[x][y]->sprite_->SetScale(0.0f);
-				blackBox_[x][y]->offsetTimer_ = (31 - x + y);
+				blackBox_[x][y]->offsetTimer_ = 17 - y;
 			}
 		}
 	}
@@ -101,23 +102,33 @@ void BlackBox::Spin(TYPE type)
 		return;
 	}
 
-	//âÒì]
-	float rotate = sprite_->GetRotation();
-	rotate += 3;
-	sprite_->SetRotation(rotate);
+	float timeRate = 0.0f;
+	int countNum = 60;
+	timeRate = easeTimer_ / countNum;
+	easeTimer_++;
 
 	//èkè¨
-	float scale = sprite_->GetScale();
-	scale -= 0.05f * (int)type;
+	float scale = 0.0f;
+	if (type == TYPE::FadeIn)
+	{
+		scale = Ease::Action(EaseType::InOut, EaseFunctionType::Quart, 1.0f, 0.0f, timeRate);
+	}
+	else if (type == TYPE::FadeOut)
+	{
+		scale = Ease::Action(EaseType::InOut, EaseFunctionType::Quart, 0.0f, 1.0f, timeRate);
+	}
+
 	//å©Ç¶Ç»Ç≠Ç»Ç¡ÇΩÇÁèIóπ
-	if (type == TYPE::FadeIn && scale <= 0.0f)
+	if (type == TYPE::FadeIn && easeTimer_ > countNum)
 	{
 		scale = 0.0f;
+		easeTimer_ = 0.0f;
 		inEnd_ = true;
 	}
-	else if (type == TYPE::FadeOut && scale >= 1.0f && (int)rotate % 90 == 0)
+	else if (type == TYPE::FadeOut && easeTimer_ > countNum)
 	{
 		scale = 1.0f;
+		easeTimer_ = 0.0f;
 		outEnd_ = true;
 	}
 
