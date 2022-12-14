@@ -65,6 +65,14 @@ void Hunter::Initialize()
 	healEmitter_->SetObjStartScale({ scale, scale, scale });
 	healEmitter_->SetStartColor({ 0.2f, 1.0f, 0.0f, 1.0f });
 	healEmitter_->SetEndColor({ 0.2f, 1.0f, 0.0f, 1.0f });
+
+	data_ = std::make_unique<EaseData>(40);
+	data_->SetActFlag(false);
+
+	for (int i = 0; i < hunter_.size(); i++)
+	{
+		hunter_[i]->SetEaseData(data_.get());
+	}
 }
 
 void Hunter::Finalize()
@@ -196,6 +204,7 @@ void Hunter::BaseMove()
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			data_->SetActFlag(false);
 		}
 		else if (!falg_.move && !isDash_ && !falg_.dodge)
 		{
@@ -208,6 +217,7 @@ void Hunter::BaseMove()
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			data_->SetActFlag(false);
 		}
 	}
 	else if (!isAttackFlag_ && !falg_.damage && !isDash_ && !falg_.dodge)
@@ -223,6 +233,7 @@ void Hunter::BaseMove()
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			data_->SetActFlag(false);
 		}
 	}
 
@@ -250,10 +261,11 @@ void Hunter::AvoidMove()
 			falg_.dodge = true;
 			animationType_ = 5;
 			hunter_[animationType_]->PlayAnimation();
-			// ’âŽ~
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			data_->SetCount(20);
+			data_->SetActFlag(true);
 		}
 	}
 
@@ -294,6 +306,8 @@ void Hunter::AttackMove()
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
+			data_->SetCount(60);
+			data_->SetActFlag(true);
 		}
 		else if (falg_.attack1 && !falg_.attack2 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
@@ -309,6 +323,8 @@ void Hunter::AttackMove()
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
+			data_->SetCount(40);
+			data_->SetActFlag(true);
 		}
 		else if (!falg_.attack1 || falg_.attack1 && falg_.attack2 && falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
@@ -323,6 +339,8 @@ void Hunter::AttackMove()
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
+			data_->SetCount(40);
+			data_->SetActFlag(true);
 		}
 	}
 
@@ -532,6 +550,8 @@ void Hunter::DamageHit()
 			buki_->SetParent(hunter_[animationType_].get());
 			buki_->SetPosition({ 0.0f,0.0f,2.3f });
 			buki_->SetRotation({ 0.0f,90.0f,0.0f });
+			data_->SetCount(30);
+			data_->SetActFlag(true);
 		}
 	}
 	else

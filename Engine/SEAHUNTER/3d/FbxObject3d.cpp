@@ -146,8 +146,16 @@ void FbxObject3d::Update()
 	//アニメーション
 	if (isPlay_)
 	{
-		//1フレーム進める
-		currentTime_ += frameTime_;
+		if (animationEaseData_ != nullptr && animationEaseData_->GetActFlag())
+		{
+			animationEaseData_->Update();
+			currentTime_.SetFrame(Ease::Action(EaseType::In, EaseFunctionType::Linear, startTime_.GetFrameCount(), endTime_.GetFrameCount(), animationEaseData_->GetTimeRate()));
+		}
+		else
+		{
+			//1フレーム進める
+			currentTime_ += frameTime_;
+		}
 
 		//最後まで再生したら先頭に戻す
 		if (currentTime_ > endTime_ && isLoop_)
@@ -239,6 +247,11 @@ void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 	isPlay_ = true;
 	//ループさせるか
 	isLoop_ = isLoop;
+
+	if (animationEaseData_ != nullptr)
+	{
+		animationEaseData_->Reset();
+	}
 }
 
 XMFLOAT3 FbxObject3d::GetWorldPosition()

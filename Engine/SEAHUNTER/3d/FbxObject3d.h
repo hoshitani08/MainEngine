@@ -11,6 +11,7 @@
 #include "FbxLoader.h"
 #include "Camera.h"
 #include "LightGroup.h"
+#include "Ease.h"
 
 class FbxObject3d
 {
@@ -178,6 +179,8 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool AnimationEnd() { return currentTime_ >= endTime_; }
 
+	void SetEaseData(EaseData* data) { animationEaseData_ = data; }
+
 protected: // メンバ変数
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuffTransform_;
@@ -209,4 +212,6 @@ protected: // メンバ変数
 	std::vector<Animation> animationData_ = {};
 	// シェーダファイル名
 	std::wstring fName_ = L"";
+	// アニメーションイージング
+	EaseData* animationEaseData_ = nullptr;
 };

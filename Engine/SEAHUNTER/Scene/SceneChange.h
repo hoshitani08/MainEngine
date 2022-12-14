@@ -15,37 +15,37 @@ namespace
 		Not = 0,
 		FadeIn = 1,
 	};
+
+	class BlackBox
+	{
+	public: // メンバ関数
+		/// <summary>
+		/// 動作
+		/// </summary>
+		/// <param name="type">フェードタイプ</param>
+		void Spin(TYPE type);
+		/// <summary>
+		/// オフセットタイマーの設定
+		/// </summary>
+		/// <param name="num"></param>
+		void AddOffsetTimer(int num) { offsetTimer_ += num; }
+
+	public: // メンバ関数
+		/// <summary>
+		/// オフセットタイマーの取得
+		/// </summary>
+		/// <returns>オフセットタイマー</returns>
+		int GetOffsetTimer() { return offsetTimer_; }
+
+	public: // メンバ変数
+		std::unique_ptr<Sprite> sprite_;
+		int offsetTimer_ = 0;
+		// イージングの進行度用
+		float easeTimer_ = 0.0f;
+		bool inEnd_ = false;
+		bool outEnd_ = false;
+	};
 }
-
-class BlackBox
-{
-public: // メンバ関数
-	/// <summary>
-	/// 動作
-	/// </summary>
-	/// <param name="type">フェードタイプ</param>
-	void Spin(TYPE type);
-	/// <summary>
-	/// オフセットタイマーの設定
-	/// </summary>
-	/// <param name="num"></param>
-	void AddOffsetTimer(int num) { offsetTimer_ += num; }
-
-public: // メンバ関数
-	/// <summary>
-	/// オフセットタイマーの取得
-	/// </summary>
-	/// <returns>オフセットタイマー</returns>
-	int GetOffsetTimer() { return offsetTimer_; }
-
-public: // メンバ変数
-	std::unique_ptr<Sprite> sprite_;
-	int offsetTimer_ = 0;
-	// イージングの進行度用
-	float easeTimer_ = 0.0f;
-	bool inEnd_ = false;
-	bool outEnd_ = false;
-};
 
 class SceneChange
 {

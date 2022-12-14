@@ -10,6 +10,7 @@
 #include "Object3d.h"
 #include "ParticleEmitter.h"
 #include "ObjParticle.h"
+#include "Ease.h"
 
 class Hunter
 {
@@ -102,12 +103,12 @@ public: // ƒƒ“ƒoŠÖ”
 	/// À•W‚Ìæ“¾
 	/// </summary>
 	/// <returns>À•W</returns>
-	const XMFLOAT3& GetPosition() { return hunter_[0]->GetPosition(); }
+	const XMFLOAT3& GetPosition() { return hunter_[animationType_]->GetPosition(); }
 	/// <summary>
 	/// X,Y,Z²‰ñ‚è‚Ìæ“¾
 	/// </summary>
 	/// <returns>X,Y,Z²‰ñ‚è‚Ì‰ñ“]</returns>
-	const XMFLOAT3& GetRotation() { return hunter_[0]->GetRotation(); }
+	const XMFLOAT3& GetRotation() { return hunter_[animationType_]->GetRotation(); }
 	/// <summary>
 	/// –³“GŠÔ‚ğæ“¾
 	/// </summary>
@@ -221,6 +222,8 @@ private: // ƒƒ“ƒo•Ï”
 	TimeData attack;
 	// UŒ‚‚ÌŒø‰Ê‚ÌŠÔ
 	TimeData defense;
+	//
+	std::unique_ptr<EaseData> data_;
 
 	// ˆÚ“®”{—¦
 	float speed_ = 0.0f;

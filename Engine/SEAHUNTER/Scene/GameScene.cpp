@@ -143,7 +143,57 @@ void GameScene::Update()
 		hunter_->SetAngle(angle_);
 		hunter_->Behavior();
 
-		if (!endFlag_)
+		if (input->TriggerPadRight())
+		{
+			XMFLOAT3 vector = { monster_->GetPosition().x - hunter_->GetPosition().x, monster_->GetPosition().y - hunter_->GetPosition().y, monster_->GetPosition().z - hunter_->GetPosition().z };
+			XMFLOAT3 enemyRot = {};
+
+			enemyRot.y = -atan2(vector.z - 0.0f, vector.x - 0.0f) * (180.0f / 3.14159265359f);
+			XMMATRIX  rotM = XMMatrixIdentity();
+			rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
+			float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
+			XMFLOAT3 result
+			{
+				(vector.x * rotM.r[0].m128_f32[0] + vector.y * rotM.r[1].m128_f32[0] + vector.z * rotM.r[2].m128_f32[0] + rotM.r[3].m128_f32[0]) / w,
+				(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
+				(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
+			};
+			enemyRot.z = atan2(result.y - 0.0f, result.x - 0.0f) * (180.0f / 3.14159265359f);
+
+			XMVECTOR v0 = { 0, 0, -10, 0 };
+			rotM = XMMatrixIdentity();
+			rotM *= XMMatrixRotationZ(XMConvertToRadians(enemyRot.z));
+			rotM *= XMMatrixRotationY(XMConvertToRadians(enemyRot.y));
+			XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+			XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+			XMVECTOR v3 = bossTarget + v;
+			XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+			XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+			XMFLOAT3 pos = f;
+
+			camera_->SetTarget(center);
+			camera_->SetEye(enemyRot);
+			camera_->Update();
+		}
+		else if (input->TriggerPadLeft())
+		{
+			angle_ = { hunter_->GetRotation().y, hunter_->GetRotation().x };
+			XMVECTOR v0 = { 0, 0, -10, 0 };
+			XMMATRIX rotM = XMMatrixIdentity();
+			rotM *= XMMatrixRotationX(XMConvertToRadians(angle_.y));
+			rotM *= XMMatrixRotationY(XMConvertToRadians(angle_.x));
+			XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+			XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+			XMVECTOR v3 = bossTarget + v;
+			XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+			XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+			XMFLOAT3 pos = f;
+
+			camera_->SetTarget(center);
+			camera_->SetEye(pos);
+			camera_->Update();
+		}
+		else if (!endFlag_)
 		{
 			CameraMove();
 		}
@@ -160,6 +210,12 @@ void GameScene::Update()
 	EndCameraMove();
 
 	ui_->ClockCalculate(quest_.minute);
+
+	DebugText::GetInstance()->VariablePrint(0, 0, "angle.x", angle_.x, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 16, "angle.y", angle_.y, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 32, "playerAngle.x", hunter_->GetRotation().x, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 48, "playerAngle.y", hunter_->GetRotation().y, 1.0f);
+	DebugText::GetInstance()->VariablePrint(0, 64, "playerAngle.z", hunter_->GetRotation().z, 1.0f);
 
 	hunter_->Update();
 	monster_->Update();
@@ -200,7 +256,7 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 	// デバッグテキストの描画
 	DebugText::GetInstance()->DrawAll(cmdList);
-	ui_->NearDraw();
+	//ui_->NearDraw();
 	sceneChange_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
