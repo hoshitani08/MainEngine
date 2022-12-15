@@ -20,6 +20,7 @@
 #include "Block.h"
 #include "Stage.h"
 #include "SceneChange.h"
+#include "Ease.h"
 
 class CollisionManager;
 class Player;
@@ -81,6 +82,18 @@ public: // メンバ関数
 	/// </summary>
 	void CameraMove();
 	/// <summary>
+	/// カメラのアングル
+	/// </summary>
+	void CameraAngle(XMFLOAT2 angle);
+	/// <summary>
+	/// カメラリセット
+	/// </summary>
+	void CameraReset();
+	/// <summary>
+	/// カメラをtargetに向ける
+	/// </summary>
+	void CameraLockOn();
+	/// <summary>
 	/// プレイヤーの攻撃判定
 	/// </summary>
 	void PlayerAttack();
@@ -126,6 +139,10 @@ private: // メンバ変数
 	bool stratFlag_ = false;
 	//
 	bool endFlag_ = false;
+	//
+	bool cameraResetFlag = false;
 	// イージングの進行度用
-	float easeTimer_ = 0.0f;
+	std::unique_ptr<EaseData> easeCamera;
+
+	bool LockOnFlag = false;
 };

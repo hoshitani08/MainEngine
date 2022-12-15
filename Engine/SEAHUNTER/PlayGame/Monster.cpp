@@ -275,7 +275,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	BehaviorTree();
+	//BehaviorTree();
 
 	if (colorTimer_ >= 30)
 	{
@@ -933,6 +933,7 @@ bool Monster::AttackModeSelection()
 		return true;
 	}
 
+	attackEnd_ = true;
 	return false;
 }
 
