@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "Hunter.h"
 #include "Monster.h"
+#include "Ease.h"
 
 class UserInterface
 {
@@ -117,6 +118,10 @@ private: // メンバ変数
 	std::array<std::unique_ptr<Sprite>, 10> tenDigits_;
 	// アイテムのフレーム
 	std::unique_ptr<Sprite> itemFrame_;
+	// アイテムの背景
+	std::unique_ptr<Sprite> itemBackground_;
+	// アイテムの選択時の背景
+	std::unique_ptr<Sprite> itemSBackground_;
 	// マップ
 	std::unique_ptr<Sprite> mapSprite_;
 	// プレイヤーアイコン
@@ -133,15 +138,21 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> xButtonIcon_;
 	// Bボタンのアイコン
 	std::unique_ptr<Sprite> bButtonIcon_;
+	// モンスター用のイージングの進行度用
+	std::unique_ptr<EaseData> monsterEase_;
+	// ハンター用のイージングの進行度用
+	std::unique_ptr<EaseData> hunterEase_;
+	// アイテム用のイージングの進行度用
+	std::unique_ptr<EaseData> itemEase_;
+	// アイテムのフレーム用のイージングの進行度用
+	std::unique_ptr<EaseData> frameEase_;
+	std::unique_ptr<EaseData> frameEase2_;
 
 	// 一桁
 	int oneCount_ = 0;
 	// 十桁
 	int tenCount_ = 0;
 
-	//イージングの進行度用
-	float hunterEaseTimer_ = 0.0f;
-	float monsterEaseTimer_ = 0.0f;
 	//モンスターのHP
 	float monsterHp_ = 0.0f;
 	//ハンターのHP

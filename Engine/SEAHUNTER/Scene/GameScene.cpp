@@ -121,31 +121,6 @@ void GameScene::Update()
 
 	ui_->ClockCalculate(quest_.minute);
 
-	XMFLOAT3 vector = { monster_->GetPosition().x - hunter_->GetPosition().x, monster_->GetPosition().y - hunter_->GetPosition().y, monster_->GetPosition().z - hunter_->GetPosition().z };
-	XMFLOAT3 enemyRot = {};
-
-	enemyRot.y = -atan2(vector.z - 0.0f, vector.x - 0.0f) * (180.0f / 3.14159265359f);
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
-	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
-	XMFLOAT3 result
-	{
-		(vector.x * rotM.r[0].m128_f32[0] + vector.y * rotM.r[1].m128_f32[0] + vector.z * rotM.r[2].m128_f32[0] + rotM.r[3].m128_f32[0]) / w,
-		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
-		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
-	};
-	enemyRot.z = atan2(-vector.y - 0.0f, vector.x - 0.0f) * (180.0f / 3.14159265359f);
-
-	DebugText::GetInstance()->VariablePrint(0, 80, "enemyRot.y", enemyRot.y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 96, "enemyRot.z", enemyRot.z, 1.0f);
-
-
-	DebugText::GetInstance()->VariablePrint(0, 0, "angle.x", angle_.x, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 16, "angle.y", angle_.y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 32, "playerAngle.x", hunter_->GetRotation().x, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 48, "playerAngle.y", hunter_->GetRotation().y, 1.0f);
-	DebugText::GetInstance()->VariablePrint(0, 64, "playerAngle.z", hunter_->GetRotation().z, 1.0f);
-
 	hunter_->Update();
 	monster_->Update();
 	hitSphere_->Update();
@@ -186,7 +161,7 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 	// デバッグテキストの描画
 	DebugText::GetInstance()->DrawAll(cmdList);
-	//ui_->NearDraw();
+	ui_->NearDraw();
 	sceneChange_->Draw();
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -232,7 +207,7 @@ void GameScene::CameraMove()
 {
 	Input* input = Input::GetInstance();
 
-	if ((input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f) && !LockOnFlag &&!cameraResetFlag)
+	if ((input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f) &&!cameraResetFlag)
 	{
 		XMFLOAT2 speed = { input->PadRightStickGradient().x * 5.5f, input->PadRightStickGradient().y * 5.5f };
 
@@ -249,18 +224,7 @@ void GameScene::CameraMove()
 		angle_.y += input->PadRightStickGradient().y * speed.y;
 	}
 
-	if (input->TriggerPadKey(BUTTON_RIGHT_THUMB))
-	{
-		/*if (!LockOnFlag)
-		{
-			LockOnFlag = true;
-		}
-		else
-		{
-			LockOnFlag = false;
-		}*/
-	}
-	else if (input->TriggerPadLeft() && !cameraResetFlag)
+	if (input->TriggerPadLeft() && !cameraResetFlag)
 	{
 		cameraResetFlag = true;
 
@@ -270,25 +234,19 @@ void GameScene::CameraMove()
 		CameraAngle(angle_);
 	}
 
-	if (LockOnFlag)
-	{
-		CameraLockOn();
-	}
-	else if (cameraResetFlag)
+	if (cameraResetFlag)
 	{
 		CameraReset();
 	}
 
-	int count = 0;
+	//アングルの制限
 	if (angle_.x >= RESTRICTION_ANGLE.x)
 	{
-		count = (int)angle_.x % (int)RESTRICTION_ANGLE.x;
 		angle_.x = (angle_.x - RESTRICTION_ANGLE.x);
 	}
 	else if (angle_.x <= -RESTRICTION_ANGLE.x)
 	{
-		count = (int)angle_.x % (int)RESTRICTION_ANGLE.x;
-		angle_.x = (angle_.x - -RESTRICTION_ANGLE.x) + (float)count;
+		angle_.x = (angle_.x - -RESTRICTION_ANGLE.x);
 	}
 
 	if (angle_.y >= RESTRICTION_ANGLE.y)
@@ -338,37 +296,6 @@ void GameScene::CameraReset()
 	}
 }
 
-void GameScene::CameraLockOn()
-{
-	XMFLOAT3 vector = { monster_->GetPosition().x - hunter_->GetPosition().x, monster_->GetPosition().y - hunter_->GetPosition().y, monster_->GetPosition().z - hunter_->GetPosition().z };
-	XMFLOAT3 enemyRot = {};
-
-	enemyRot.y = -atan2(vector.z - 0.0f, vector.x - 0.0f) * (180.0f / 3.14159265359f);
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationY(XMConvertToRadians(-enemyRot.y));
-	float w = vector.x * rotM.r[0].m128_f32[3] + vector.y * rotM.r[1].m128_f32[3] + vector.z * rotM.r[2].m128_f32[3] + rotM.r[3].m128_f32[3];
-	XMFLOAT3 result
-	{
-		(vector.x * rotM.r[0].m128_f32[0] + vector.y * rotM.r[1].m128_f32[0] + vector.z * rotM.r[2].m128_f32[0] + rotM.r[3].m128_f32[0]) / w,
-		(vector.x * rotM.r[0].m128_f32[1] + vector.y * rotM.r[1].m128_f32[1] + vector.z * rotM.r[2].m128_f32[1] + rotM.r[3].m128_f32[1]) / w,
-		(vector.x * rotM.r[0].m128_f32[2] + vector.y * rotM.r[1].m128_f32[2] + vector.z * rotM.r[2].m128_f32[2] + rotM.r[3].m128_f32[2]) / w,
-	};
-	enemyRot.z = atan2(-vector.y - 0.0f, vector.x - 0.0f) * (180.0f / 3.14159265359f);
-
-	XMFLOAT2 tempAngle = { 1.0f, 1.0f };
-
-	if((enemyRot.y < 0.0f && enemyRot.y > -90.0f || enemyRot.y > 0.0f && enemyRot.y < 90.0f))
-	{
-		tempAngle.y = 1.0f;
-	}
-	else if ((enemyRot.y < -90.0f && enemyRot.y > -180.0f || enemyRot.y > 90.0f && enemyRot.y < 180.0f))
-	{
-		tempAngle.y = -1.0f;
-	}
-
-	CameraAngle({ enemyRot.y + (90 * tempAngle.y), enemyRot.z });
-}
-
 void GameScene::PlayerAttack()
 {
 	if (hunter_->IsAttackFlag())
@@ -386,10 +313,10 @@ void GameScene::PlayerAttack()
 		XMFLOAT3 pos = f;
 
 		Sphere hitSphere;
-		hitSphere.center = { pos.x, pos.y, pos.z, 1 };
+		hitSphere.center = { hunter_->GetWeaponPosition().x, hunter_->GetWeaponPosition().y, hunter_->GetWeaponPosition().z, 1};
 
 		monster_->DamageHit(hitSphere);
-		hitSphere_->SetPosition(pos);
+		hitSphere_->SetPosition(hunter_->GetWeaponPosition());
 	}
 }
 

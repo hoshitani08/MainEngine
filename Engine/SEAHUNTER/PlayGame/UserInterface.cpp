@@ -1,7 +1,6 @@
 #include "UserInterface.h"
 #include "DebugText.h"
 #include "Input.h"
-#include "Ease.h"
 #include "ItemManager.h"
 
 UserInterface::UserInterface(Hunter* hunter, Monster* monster)
@@ -16,6 +15,11 @@ UserInterface::~UserInterface()
 
 void UserInterface::Initialize()
 {
+	// アンカーポイント
+	XMFLOAT2 anchorPoint = { 0.5f, 0.5f };
+	// 色
+	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	//playerのステータス
 	lifeFrame_ =      Sprite::Create(1, { 60, 17 });
 	strengthFrame_ =  Sprite::Create(1, { 60, 35 });
@@ -31,47 +35,71 @@ void UserInterface::Initialize()
 	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
 
 	// 時計
-	clockFrame_ =  Sprite::Create(10, { 0,0 });
-	clockNeedle_ = Sprite::Create(11, { 32, 32 }, { 1,1,1,1 }, { 0.5f,0.5f });
+	clockFrame_ =  Sprite::Create(10, { 32, 32 }, color, anchorPoint);
+	clockNeedle_ = Sprite::Create(11, { 32, 32 }, color, anchorPoint);
 
 	// ステージ
 	mapSprite_ =  Sprite::Create(12, { 50, 420 });
 	mapSprite_->SetSize({ 200,200 });
-	playerIcon_ = Sprite::Create(13, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
-	enemyIcon_ =  Sprite::Create(14, { 50, 420 }, { 1,1,1,1 }, { 0.5f,0.5f });
+	playerIcon_ = Sprite::Create(13, { 50, 420 }, color, anchorPoint);
+	enemyIcon_ =  Sprite::Create(14, { 50, 420 }, color, anchorPoint);
 
 	// アイテム
-	itemFrame_ = Sprite::Create(20, { 1020, 530 });
+
+	XMFLOAT2 itemPos = { 1080, 580 };
+	float itemSize = 0.7f;
+	itemBackground_ = Sprite::Create(20, itemPos, color, anchorPoint);
+	itemBackground_->SetScale(itemSize);
 	for (int i = 0; i < itemSprite_.size(); i++)
 	{
-		itemSprite_[i] = Sprite::Create(21 + i, { 1050, 550 });
+		itemSprite_[i] = Sprite::Create(21 + i, itemPos, color, anchorPoint);
+		itemSprite_[i]->SetScale(itemSize);
 	}
+	itemFrame_ = Sprite::Create(24, itemPos, color, anchorPoint);
+	itemFrame_->SetScale(itemSize);
+
+	itemSBackground_ = Sprite::Create(25, itemPos, color, anchorPoint);
+	itemSBackground_->SetScale(itemSize);
+	itemSBackground_->SetSize({ 64, 126 });
+	//最大 { 510, 125 }
 
 	// 数字
+	XMFLOAT2 countPos = { 1112, 625 };
 	XMFLOAT2 size = { 16, 16 };
 	for (int i = 0; i < oneDigits_.size(); i++)
 	{
-		oneDigits_[i] = Sprite::Create(30 + i, { 1110, 610 });
+		oneDigits_[i] = Sprite::Create(30 + i, countPos, color, anchorPoint);
 		oneDigits_[i]->SetSize(size);
 	}
 	for (int i = 0; i < tenDigits_.size(); i++)
 	{
-		tenDigits_[i] = Sprite::Create(30 + i, { 1100, 610 });
+		tenDigits_[i] = Sprite::Create(30 + i, { countPos.x - 10, countPos.y }, color, anchorPoint);
 		tenDigits_[i]->SetSize(size);
 	}
 
 	// ボタン
-	lbButtonIcon_ = Sprite::Create(40, { 970, 560 });
+	lbButtonIcon_ = Sprite::Create(40, { itemPos.x - 60, itemPos.y }, color, anchorPoint);
+	lbButtonIcon_->SetScale(itemSize);
 
-	xButtonIcon_ = Sprite::Create(42, { 1065, 640 });
+	xButtonIcon_ = Sprite::Create(42, { itemPos.x - 30, countPos.y }, color, anchorPoint);
 	xButtonIcon_->SetSize({ 32,32 });
 
-	bButtonIcon_ = Sprite::Create(41, { 1095, 640 });
+	bButtonIcon_ = Sprite::Create(41, { itemPos.x + 30, countPos.y }, color, anchorPoint);
 	bButtonIcon_->SetSize({ 32,32 });
 
 	monsterHp_ = monster_->MAX_HP;
 	hunterHp_ = hunter_->MAX_HP;
 	hunterstamina_ = hunter_->MAX_STAMINA;
+
+	// イージングの初期化
+	monsterEase_ = std::make_unique<EaseData>(20);
+	monsterEase_->SetActFlag(false);
+	hunterEase_ = std::make_unique<EaseData>(20);
+	hunterEase_->SetActFlag(false);
+	frameEase_ = std::make_unique<EaseData>(5);
+	frameEase_->SetActFlag(false);
+	frameEase2_ = std::make_unique<EaseData>(5);
+	frameEase2_->SetActFlag(false);
 }
 
 void UserInterface::Finalize()
@@ -93,6 +121,11 @@ void UserInterface::Update()
 	}
 
 	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
+
+	monsterEase_->Update();
+	hunterEase_->Update();
+	frameEase_->Update();
+	frameEase2_->Update();
 }
 
 void UserInterface::BackDraw()
@@ -115,19 +148,24 @@ void UserInterface::NearDraw()
 	enemyLifeGauge_->Draw();
 
 	// アイテム関係
-	itemFrame_->Draw();
+	itemBackground_->Draw();
+	if (hunter_->GetItemSelectionFlag())
+	{
+		itemSBackground_->Draw();
+		bButtonIcon_->Draw();
+	}
 	itemSprite_[hunter_->GetItemType()]->Draw();
+	itemFrame_->Draw();
 	oneDigits_[oneCount_]->Draw();
 	if (isTenCountFlag_)
 	{
 		tenDigits_[tenCount_]->Draw();
 	}
-	lbButtonIcon_->Draw();
-	xButtonIcon_->Draw();
-	if (hunter_->GetItemSelectionFlag())
+	if (!hunter_->GetItemSelectionFlag())
 	{
-		bButtonIcon_->Draw();
+		lbButtonIcon_->Draw();
 	}
+	xButtonIcon_->Draw();
 
 	if (ItemManager::GetInstance()->IsAttackBuff())
 	{
@@ -154,31 +192,30 @@ void UserInterface::NearDraw()
 
 void UserInterface::HpEase()
 {
-	float countNum = 20;
-
 	if (lifeGauge_->GetSize().x < innerLifeGauge_->GetSize().x)
 	{
-		float timeRate = hunterEaseTimer_ / countNum;
-		hunterEaseTimer_++;
+		hunterEase_->SetActFlag(true);
+		hunterEase_->GetEndFlag();
 
-		innerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), timeRate));
+		innerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), hunterEase_->GetTimeRate()));
 
-		if (hunterEaseTimer_ > countNum)
+		if (hunterEase_->GetEndFlag())
 		{
-			hunterEaseTimer_ = 0;
+			hunterEase_->SetEndFlag(false);
+			hunterEase_->Reset();
 		}
 	}
 
 	if (enemyLifeGauge_->GetSize().x < enemyInnerLifeGauge_->GetSize().x)
 	{
-		float timeRate = monsterEaseTimer_ / countNum;
-		monsterEaseTimer_++;
+		monsterEase_->SetActFlag(true);
 
-		enemyInnerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), timeRate));
+		enemyInnerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), monsterEase_->GetTimeRate()));
 
-		if (monsterEaseTimer_ > countNum)
+		if (monsterEase_->GetEndFlag())
 		{
-			monsterEaseTimer_ = 0;
+			monsterEase_->SetEndFlag(false);
+			monsterEase_->Reset();
 		}
 	}
 }
@@ -260,16 +297,45 @@ void UserInterface::ItemSelection()
 {
 	int count = ItemManager::GetInstance()->GetItemQuantity(hunter_->GetItemType());
 
+	if (ItemManager::GetInstance()->GetItemQuantity(hunter_->GetItemType()) >= ItemManager::GetInstance()->GetItemMaxCount(hunter_->GetItemType()))
+	{
+		XMFLOAT4 color = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+		for (int i = 0; i < oneDigits_.size(); i++)
+		{
+			oneDigits_[i]->SetColor(color);
+		}
+		for (int i = 0; i < tenDigits_.size(); i++)
+		{
+			tenDigits_[i]->SetColor(color);
+		}
+	}
+	else
+	{
+		XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		for (int i = 0; i < oneDigits_.size(); i++)
+		{
+			oneDigits_[i]->SetColor(color);
+		}
+		for (int i = 0; i < tenDigits_.size(); i++)
+		{
+			tenDigits_[i]->SetColor(color);
+		}
+	}
+
 	tenCount_ = count / 10;
 	oneCount_ = (count - (tenCount_ * 10));
+
+	XMFLOAT2 countPos = { 1112, 625 };
 	if (count / 10 == 0)
 	{
-		oneDigits_[oneCount_]->SetPosition({ 1105, 610 });
+		oneDigits_[oneCount_]->SetPosition({ countPos.x - 5, countPos.y });
 		isTenCountFlag_ = false;
 	}
 	else
 	{
-		oneDigits_[oneCount_]->SetPosition({ 1110, 610 });
+		oneDigits_[oneCount_]->SetPosition(countPos);
 		isTenCountFlag_ = true;
 	}
 
@@ -282,13 +348,44 @@ void UserInterface::ItemSelection()
 		defenseIcon_->SetPosition({ 70, 60 });
 	}
 
+	XMFLOAT2 buttonPos = { 1080, 625 };
+	XMFLOAT2 size = { 510, 126 };
 	if (hunter_->GetItemSelectionFlag())
 	{
-		xButtonIcon_->SetPosition({ 1040, 640 });
+		frameEase2_->Reset();
+
+		if (xButtonIcon_->GetPosition().x > buttonPos.x - 100)
+		{
+			frameEase_->SetActFlag(true);
+
+			xButtonIcon_->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, xButtonIcon_->GetPosition(), { buttonPos.x - 100, buttonPos.y }, frameEase_->GetTimeRate()));
+			bButtonIcon_->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, bButtonIcon_->GetPosition(), { buttonPos.x + 100, buttonPos.y }, frameEase_->GetTimeRate()));
+			itemSBackground_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemSBackground_->GetSize().x, size.y }, size, frameEase_->GetTimeRate()));
+
+			if (frameEase_->GetEndFlag())
+			{
+				frameEase_->SetActFlag(false);
+			}
+		}
+		
 	}
 	else
 	{
-		xButtonIcon_->SetPosition({ 1065, 640 });
+		frameEase_->Reset();
+
+		if (xButtonIcon_->GetPosition().x < buttonPos.x - 30)
+		{
+			frameEase2_->SetActFlag(true);
+
+			xButtonIcon_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, xButtonIcon_->GetPosition(), { buttonPos.x - 30, buttonPos.y }, frameEase2_->GetTimeRate()));
+			bButtonIcon_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, bButtonIcon_->GetPosition(), { buttonPos.x + 30, buttonPos.y }, frameEase2_->GetTimeRate()));
+			itemSBackground_->SetSize(Ease::Action(EaseType::Out, EaseFunctionType::Quad, { itemSBackground_->GetSize().x, size.y }, { 64, size.y }, frameEase2_->GetTimeRate()));
+
+			if (frameEase2_->GetEndFlag())
+			{
+				frameEase2_->SetActFlag(false);
+			}
+		}
 	}
 }
 

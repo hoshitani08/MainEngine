@@ -74,6 +74,7 @@ void ItemManager::Initialize()
 			if (j != 0)
 			{
 				tempData.quantity = GetChipNum(j, i, "item");
+				tempData.maxCount = tempData.quantity;
 				itemData_.push_back(tempData);
 			}
 		}

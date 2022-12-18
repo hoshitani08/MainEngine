@@ -90,10 +90,6 @@ public: // メンバ関数
 	/// </summary>
 	void CameraReset();
 	/// <summary>
-	/// カメラをtargetに向ける
-	/// </summary>
-	void CameraLockOn();
-	/// <summary>
 	/// プレイヤーの攻撃判定
 	/// </summary>
 	void PlayerAttack();
@@ -143,6 +139,4 @@ private: // メンバ変数
 	bool cameraResetFlag = false;
 	// イージングの進行度用
 	std::unique_ptr<EaseData> easeCamera;
-
-	bool LockOnFlag = false;
 };

@@ -45,6 +45,7 @@ public: // サブクラス
 	{
 		ItemType name = ItemType::Max;
 		int quantity = 0;
+		int maxCount = 0;
 	};
 
 	struct BuffData
@@ -117,6 +118,12 @@ public: // メンバ関数
 	/// <param name="count">番号</param>
 	/// <returns></returns>
 	int GetItemQuantity(int count) { return itemData_[count].quantity; }
+	/// <summary>
+	/// アイテムの最大個数の取得
+	/// </summary>
+	/// <param name="count">番号</param>
+	/// <returns></returns>
+	int GetItemMaxCount(int count) { return itemData_[count].maxCount; }
 	/// <summary>
 	/// アイテムの個数の設定
 	/// </summary>

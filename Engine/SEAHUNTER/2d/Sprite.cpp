@@ -300,6 +300,8 @@ void Sprite::SetSize(XMFLOAT2 size)
 	size_ = size;
 	defSize_ = size;
 
+	size_ = { defSize_.x * scale_, defSize_.y * scale_ };
+
 	// 頂点バッファへのデータ転送
 	TransferVertices();
 }
@@ -309,6 +311,14 @@ void Sprite::SetScale(float scale)
 	scale_ = scale;
 	size_ = { defSize_.x * scale_, defSize_.y * scale_ };
 
+
+	// 頂点バッファへのデータ転送
+	TransferVertices();
+}
+
+void Sprite::SetColor(XMFLOAT4 _color)
+{
+	color_ = _color;
 
 	// 頂点バッファへのデータ転送
 	TransferVertices();

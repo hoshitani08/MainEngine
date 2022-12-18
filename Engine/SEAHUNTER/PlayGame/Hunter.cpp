@@ -43,13 +43,13 @@ void Hunter::Initialize()
 	falg_.halt = true;
 	hunter_[animationType_]->PlayAnimation();
 
-	buki_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
+	weapon_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
 	float s = 0.05f;
-	buki_->SetScale({ s,s,s });
-	buki_->SetBoneName("mixamorig:LeftHandThumb4");
-	buki_->SetParent(hunter_[animationType_].get());
-	buki_->SetPosition({ 0.0f,0.0f,2.3f });
-	buki_->SetRotation({ -60.0f,90.0f,45.0f });
+	weapon_->SetScale({ s,s,s });
+	weapon_->SetBoneName("mixamorig:LeftHandThumb4");
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 
 	itemParticle_ = std::make_unique<ObjParticle>();
 	itemParticle_->SetParent(hunter_[animationType_].get());
@@ -88,7 +88,7 @@ void Hunter::Update()
 	}
 
 	hunter_[animationType_]->Update();
-	buki_->Update();
+	weapon_->Update();
 	itemEmitter_->Update();
 	healEmitter_->Update();
 }
@@ -97,7 +97,7 @@ void Hunter::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	hunter_[animationType_]->Draw(cmdList);
 
-	buki_->Draw(cmdList);
+	weapon_->Draw(cmdList);
 	itemEmitter_->Draw(cmdList);
 	healEmitter_->Draw(cmdList);
 }
@@ -125,9 +125,9 @@ void Hunter::Behavior()
 			animationType_ = 3;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// Ž€–S
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f, 0.0f, 2.3f });
-			buki_->SetRotation({ -100.0f, 0.0f, 90.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f, 0.0f, 2.3f });
+			weapon_->SetRotation({ -100.0f, 0.0f, 90.0f });
 		}
 		if (falg_.death && hunter_[4]->AnimationEnd())
 		{
@@ -201,9 +201,9 @@ void Hunter::BaseMove()
 			animationType_ = 4;
 			hunter_[animationType_]->PlayAnimation();
 			// ˆÚ“®
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
 		else if (!falg_.move && !isDash_ && !falg_.dodge)
@@ -214,9 +214,9 @@ void Hunter::BaseMove()
 			animationType_ = 1;
 			hunter_[animationType_]->PlayAnimation();
 			// ˆÚ“®
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
 	}
@@ -230,9 +230,9 @@ void Hunter::BaseMove()
 			animationType_ = 0;
 			hunter_[animationType_]->PlayAnimation();
 			// ’âŽ~
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
 	}
@@ -249,7 +249,7 @@ void Hunter::AvoidMove()
 	Input* input = Input::GetInstance();
 
 	// ‰ñ”ð
-	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_ && !falg_.damage)
+	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_ && !falg_.damage && !isAttackFlag_ && (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f))
 	{
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
@@ -261,9 +261,9 @@ void Hunter::AvoidMove()
 			falg_.dodge = true;
 			animationType_ = 5;
 			hunter_[animationType_]->PlayAnimation();
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -60.0f,90.0f,45.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetCount(20);
 			data_->SetActFlag(true);
 		}
@@ -282,7 +282,6 @@ void Hunter::AttackMove()
 	// UŒ‚
 	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ &&  attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
 	{
-		isAttackFlag_ = true;
 		attackCoolTimer_ = 0;
 		comboFlag_ = true;
 	}
@@ -302,9 +301,9 @@ void Hunter::AttackMove()
 			actFlag_ = true;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// UŒ‚
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
 			data_->SetCount(60);
 			data_->SetActFlag(true);
@@ -319,9 +318,9 @@ void Hunter::AttackMove()
 			actFlag_ = true;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// UŒ‚
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
 			data_->SetCount(40);
 			data_->SetActFlag(true);
@@ -335,9 +334,9 @@ void Hunter::AttackMove()
 			actFlag_ = true;
 			hunter_[animationType_]->PlayAnimation(0, false);
 			// UŒ‚
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ -90.0f,180.0f,0.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
 			data_->SetCount(40);
 			data_->SetActFlag(true);
@@ -547,9 +546,9 @@ void Hunter::DamageHit()
 			animationType_ = 2;
 			hunter_[animationType_]->PlayAnimation();
 			// ƒ_ƒ[ƒW
-			buki_->SetParent(hunter_[animationType_].get());
-			buki_->SetPosition({ 0.0f,0.0f,2.3f });
-			buki_->SetRotation({ 0.0f,90.0f,0.0f });
+			weapon_->SetParent(hunter_[animationType_].get());
+			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+			weapon_->SetRotation({ 0.0f,90.0f,0.0f });
 			data_->SetCount(30);
 			data_->SetActFlag(true);
 		}

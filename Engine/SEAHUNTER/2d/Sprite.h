@@ -154,6 +154,11 @@ public: // メンバ関数
 	/// <returns>倍率</returns>
 	float GetScale() { return scale_; }
 	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="_color">色</param>
+	void SetColor(XMFLOAT4 _color);
+	/// <summary>
 	/// アンカーポイントの設定
 	/// </summary>
 	/// <param name="anchorpoint">アンカーポイント</param>

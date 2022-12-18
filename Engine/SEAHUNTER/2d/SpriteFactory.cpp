@@ -65,7 +65,7 @@ void SpriteFactory::Initialize()
 	}
 
 	// ƒAƒCƒeƒ€ŠÖŒW
-	if (!Sprite::LoadTexture(20, L"Resources/UI/play/enn.png"))
+	if (!Sprite::LoadTexture(20, L"Resources/UI/play/itemBackground.png"))
 	{
 		assert(0);
 	}
@@ -78,6 +78,14 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(23, L"Resources/UI/item/defenseBuff.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(24, L"Resources/UI/play/itemframe.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(25, L"Resources/UI/play/itemSelect.png"))
 	{
 		assert(0);
 	}

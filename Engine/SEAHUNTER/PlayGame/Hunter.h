@@ -160,6 +160,20 @@ public: // メンバ関数
 	/// <returns>生存フラグ</returns>
 	bool GetIsDeath() { return isDeath_; }
 	/// <summary>
+	/// 武器の座標の取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const XMFLOAT3& GetWeaponPosition()
+	{
+		XMFLOAT3 pos = {};
+
+		pos.x = weapon_->GetMatWorld().r[3].m128_f32[0];
+		pos.y = weapon_->GetMatWorld().r[3].m128_f32[1];
+		pos.z = weapon_->GetMatWorld().r[3].m128_f32[2];
+
+		return pos;
+	}
+	/// <summary>
 	/// アングルの設定
 	/// </summary>
 	/// <param name="angle">アングル</param>
@@ -198,7 +212,7 @@ public: // メンバ関数
 private: // メンバ変数
 	//　モデル
 	std::array<std::unique_ptr<FbxObject3d>, 9> hunter_;
-	std::unique_ptr<Object3d> buki_;
+	std::unique_ptr<Object3d> weapon_;
 	// アイテム用パーティクル
 	std::unique_ptr<ParticleEmitter> itemEmitter_;
 	std::unique_ptr<ObjParticle> itemParticle_;
