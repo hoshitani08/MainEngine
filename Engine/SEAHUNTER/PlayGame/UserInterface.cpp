@@ -100,6 +100,10 @@ void UserInterface::Initialize()
 	frameEase_->SetActFlag(false);
 	frameEase2_ = std::make_unique<EaseData>(5);
 	frameEase2_->SetActFlag(false);
+	selectionEase_ = std::make_unique<EaseData>(10);
+	selectionEase_->SetActFlag(false);
+	buttonEase_ = std::make_unique<EaseData>(10);
+	buttonEase_->SetActFlag(false);
 }
 
 void UserInterface::Finalize()
@@ -121,11 +125,6 @@ void UserInterface::Update()
 	}
 
 	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
-
-	monsterEase_->Update();
-	hunterEase_->Update();
-	frameEase_->Update();
-	frameEase2_->Update();
 }
 
 void UserInterface::BackDraw()
@@ -153,8 +152,15 @@ void UserInterface::NearDraw()
 	{
 		itemSBackground_->Draw();
 		bButtonIcon_->Draw();
+		for (auto& m : itemSprite_)
+		{
+			m->Draw();
+		}
 	}
-	itemSprite_[hunter_->GetItemType()]->Draw();
+	else
+	{
+		itemSprite_[hunter_->GetItemType()]->Draw();
+	}
 	itemFrame_->Draw();
 	oneDigits_[oneCount_]->Draw();
 	if (isTenCountFlag_)
@@ -195,7 +201,7 @@ void UserInterface::HpEase()
 	if (lifeGauge_->GetSize().x < innerLifeGauge_->GetSize().x)
 	{
 		hunterEase_->SetActFlag(true);
-		hunterEase_->GetEndFlag();
+		hunterEase_->Update();
 
 		innerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, innerLifeGauge_->GetSize(), lifeGauge_->GetSize(), hunterEase_->GetTimeRate()));
 
@@ -209,6 +215,7 @@ void UserInterface::HpEase()
 	if (enemyLifeGauge_->GetSize().x < enemyInnerLifeGauge_->GetSize().x)
 	{
 		monsterEase_->SetActFlag(true);
+		monsterEase_->Update();
 
 		enemyInnerLifeGauge_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, enemyInnerLifeGauge_->GetSize(), enemyLifeGauge_->GetSize(), monsterEase_->GetTimeRate()));
 
@@ -354,20 +361,117 @@ void UserInterface::ItemSelection()
 	{
 		frameEase2_->Reset();
 
+		XMFLOAT2 itemPos = { 1080, 580 };
+		float itemAddPos = 100.0f;
+		XMFLOAT4 startColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+		XMFLOAT4 endColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 		if (xButtonIcon_->GetPosition().x > buttonPos.x - 100)
 		{
 			frameEase_->SetActFlag(true);
+			frameEase_->Update();
 
 			xButtonIcon_->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, xButtonIcon_->GetPosition(), { buttonPos.x - 100, buttonPos.y }, frameEase_->GetTimeRate()));
 			bButtonIcon_->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, bButtonIcon_->GetPosition(), { buttonPos.x + 100, buttonPos.y }, frameEase_->GetTimeRate()));
 			itemSBackground_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemSBackground_->GetSize().x, size.y }, size, frameEase_->GetTimeRate()));
 
+			bool countFlag = false;
+			for (int i = 0; i < itemSprite_.size(); i++)
+			{
+				if (hunter_->GetItemType() != i)
+				{
+					itemSprite_[i]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, frameEase_->GetTimeRate()));
+				}
+			}
+			if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+			{
+				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(itemPos);
+				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+			}
+			else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+			{
+				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(itemPos);
+				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+			}
+			else
+			{
+				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(itemPos);
+			}
+
 			if (frameEase_->GetEndFlag())
 			{
+				hunter_->SetIsItemSelection(true);
 				frameEase_->SetActFlag(false);
 			}
 		}
-		
+		else if(!hunter_->GetIsItemSelection())
+		{
+			selectionEase_->SetActFlag(true);
+			selectionEase_->Update();
+
+			if (hunter_->GetButtonFlag())
+			{
+				if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+				}
+				else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+				}
+				else
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+				}
+
+				xButtonIcon_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { 48, 48 }, { 32, 32 }, selectionEase_->GetTimeRate()));
+			}
+			else
+			{
+				if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+				}
+				else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+				}
+				else
+				{
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+				}
+
+				bButtonIcon_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { 48, 48 }, { 32, 32 }, selectionEase_->GetTimeRate()));
+			}
+
+			if (selectionEase_->GetEndFlag())
+			{
+				hunter_->SetIsItemSelection(true);
+				selectionEase_->Reset();
+			}
+		}
 	}
 	else
 	{
@@ -376,6 +480,7 @@ void UserInterface::ItemSelection()
 		if (xButtonIcon_->GetPosition().x < buttonPos.x - 30)
 		{
 			frameEase2_->SetActFlag(true);
+			frameEase2_->Update();
 
 			xButtonIcon_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, xButtonIcon_->GetPosition(), { buttonPos.x - 30, buttonPos.y }, frameEase2_->GetTimeRate()));
 			bButtonIcon_->SetPosition(Ease::Action(EaseType::Out, EaseFunctionType::Quad, bButtonIcon_->GetPosition(), { buttonPos.x + 30, buttonPos.y }, frameEase2_->GetTimeRate()));
@@ -384,6 +489,21 @@ void UserInterface::ItemSelection()
 			if (frameEase2_->GetEndFlag())
 			{
 				frameEase2_->SetActFlag(false);
+			}
+		}
+
+		if (hunter_->GetButtonEaseFlag())
+		{
+			buttonEase_->SetActFlag(true);
+			buttonEase_->Update();
+
+			xButtonIcon_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { 48, 48 }, { 32, 32 }, buttonEase_->GetTimeRate()));
+
+			if (buttonEase_->GetEndFlag())
+			{
+				hunter_->SetButtonEaseFlag(false);
+				buttonEase_->SetActFlag(false);
+				buttonEase_->Reset();
 			}
 		}
 	}

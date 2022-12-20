@@ -147,6 +147,8 @@ private: // メンバ変数
 	// アイテムのフレーム用のイージングの進行度用
 	std::unique_ptr<EaseData> frameEase_;
 	std::unique_ptr<EaseData> frameEase2_;
+	std::unique_ptr<EaseData> selectionEase_;
+	std::unique_ptr<EaseData> buttonEase_;
 
 	// 一桁
 	int oneCount_ = 0;

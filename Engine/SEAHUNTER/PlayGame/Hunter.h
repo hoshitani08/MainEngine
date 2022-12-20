@@ -174,6 +174,21 @@ public: // メンバ関数
 		return pos;
 	}
 	/// <summary>
+	/// アイテム選択のイージングが終わったか
+	/// </summary>
+	/// <returns></returns>
+	bool GetIsItemSelection() { return isItemSelectionEase_; }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool GetButtonFlag() { return buttonFlag_; }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool GetButtonEaseFlag() { return buttonEaseFlag_; }
+	/// <summary>
 	/// アングルの設定
 	/// </summary>
 	/// <param name="angle">アングル</param>
@@ -204,10 +219,25 @@ public: // メンバ関数
 	/// <param name="isAttackFlag">攻撃フラグ</param>
 	void AttackHit(bool isAttackFlag);
 	/// <summary>
-	/// 
+	/// コンボ用
 	/// </summary>
 	/// <param name="f"></param>
 	void SetActFalg(bool f) { actFlag_ = f; }
+	/// <summary>
+	/// アイテム選択のイージングが終わったか
+	/// </summary>
+	/// <param name="f"></param>
+	void SetIsItemSelection(bool f) { isItemSelectionEase_ = f; }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="f"></param>
+	void SetButtonFlag(bool f) { buttonFlag_ = f; }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="f"></param>
+	void SetButtonEaseFlag(bool f) { buttonEaseFlag_ = f; }
 
 private: // メンバ変数
 	//　モデル
@@ -258,14 +288,20 @@ private: // メンバ変数
 	bool isAttackFlag_ = false;
 	// アイテムの選択してるか
 	bool itemSelectionFlag_ = false;
+	// アイテム選択のイージングが終わったか
+	bool isItemSelectionEase_ = false;
 	// 生きているかどうか
 	bool isDeath_ = false;
-	//
+	// ダッシュしているか
 	bool isDash_ = false;
-	//
+	// 攻撃を継続するか
 	bool comboFlag_ = false;
-	//
+	// 攻撃が切れたか
 	bool actFlag_ = false;
+	// ボタン
+	bool buttonFlag_ = false;
+	// ボタンのイージング
+	bool buttonEaseFlag_ = false;
 	// アニメーションのタイプフラグ
 	AnimationFlag falg_ = {};
 };

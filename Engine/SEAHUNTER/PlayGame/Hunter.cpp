@@ -408,13 +408,17 @@ void Hunter::ItemUse()
 	// アイテムの選択
 	if (input->PushPadKey(BUTTON_LEFT_SHOULDER))
 	{
-		if (input->TriggerPadKey(BUTTON_X))
+		if (input->TriggerPadKey(BUTTON_X) && isItemSelectionEase_)
 		{
 			itemType_++;
+			isItemSelectionEase_ = false;
+			buttonFlag_ = true;
 		}
-		else if (input->TriggerPadKey(BUTTON_B))
+		else if (input->TriggerPadKey(BUTTON_B) && isItemSelectionEase_)
 		{
 			itemType_--;
+			isItemSelectionEase_ = false;
+			buttonFlag_ = false;
 		}
 
 		if (itemType_ > 2)
@@ -436,10 +440,10 @@ void Hunter::ItemUse()
 	// アイテムの使用
 	itemParticle_->SetParent(hunter_[animationType_].get());
 	healParticle_->SetParent(hunter_[animationType_].get());
-	if (input->TriggerPadKey(BUTTON_X) && !itemSelectionFlag_)
+	if (input->TriggerPadKey(BUTTON_X) && !itemSelectionFlag_ && !buttonEaseFlag_)
 	{
 		int count = ItemManager::GetInstance()->GetItemQuantity(itemType_);
-		
+		buttonEaseFlag_ = true;
 
 		if (ItemManager::GetInstance()->GetItemType(itemType_) == ItemManager::ItemType::Healing && count > 0 && hp_ < MAX_HP)
 		{
@@ -474,13 +478,14 @@ void Hunter::ItemUse()
 		ItemManager::GetInstance()->SetItemQuantity(itemType_, count);
 	}
 
+	// パーティクルの数
 	int count = 4;
-
 	if (ItemManager::GetInstance()->IsAttackBuff() && ItemManager::GetInstance()->IsDefenseBuff())
 	{
 		count = 2;
 	}
 
+	// 攻撃パーティクル
 	if (ItemManager::GetInstance()->IsAttackBuff())
 	{
 		attack.timer++;
@@ -498,7 +503,7 @@ void Hunter::ItemUse()
 		attack.timer = 0;
 		attack.count = 0;
 	}
-
+	// 防御パーティクル
 	if (ItemManager::GetInstance()->IsDefenseBuff())
 	{
 		defense.timer++;
