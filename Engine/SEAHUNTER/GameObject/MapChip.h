@@ -66,13 +66,13 @@ public:
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>最大の横幅</returns>
-	const int& GetMapChipMaxX(std::string fName);
+	int GetMapChipMaxX(std::string fName);
 	/// <summary>
 	/// 最大の縦幅を取得
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>最大の縦幅</returns>
-	const int& GetMapChipMaxY(std::string fName);
+	int GetMapChipMaxY(std::string fName);
 
 private:
 	std::vector<MapChipData> mapData_;

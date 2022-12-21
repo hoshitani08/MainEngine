@@ -74,7 +74,7 @@ int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 	return map[static_cast<std::vector<int, std::allocator<int>>::size_type>(Y) * mapData_[count].mapChipMaxX + X];
 }
 
-const int& MapChip::GetMapChipMaxX(std::string fName)
+int MapChip::GetMapChipMaxX(std::string fName)
 {
 	int count = 0;
 
@@ -90,7 +90,7 @@ const int& MapChip::GetMapChipMaxX(std::string fName)
 	return 0;
 }
 
-const int& MapChip::GetMapChipMaxY(std::string fName)
+int MapChip::GetMapChipMaxY(std::string fName)
 {
 	int count = 0;
 

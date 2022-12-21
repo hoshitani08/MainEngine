@@ -79,12 +79,12 @@ public: //メンバ関数
 	/// 左スティックの傾き
 	/// </summary>
 	/// <returns></returns>
-	XMFLOAT2& PadStickGradient();
+	XMFLOAT2 PadStickGradient();
 	/// <summary>
 	/// 右スティックの傾き
 	/// </summary>
 	/// <returns></returns>
-	XMFLOAT2& PadRightStickGradient();
+	XMFLOAT2 PadRightStickGradient();
 	/// <summary>
 	/// 左スティックの角度
 	/// </summary>

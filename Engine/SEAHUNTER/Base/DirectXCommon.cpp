@@ -193,12 +193,12 @@ bool DirectXCommon::InitializeDXGIDevice()
 	HRESULT result = S_FALSE;
 
 #ifdef _DEBUG
-	//ComPtr<ID3D12Debug> debugController;
-	////デバッグレイヤーをオンに
-	//if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-	//{
-	//	debugController->EnableDebugLayer();
-	//}
+	ComPtr<ID3D12Debug> debugController;
+	//デバッグレイヤーをオンに
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
+	{
+		debugController->EnableDebugLayer();
+	}
 #endif
 
 	// 対応レベルの配列

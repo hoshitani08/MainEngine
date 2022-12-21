@@ -149,7 +149,10 @@ void FbxObject3d::Update()
 		if (animationEaseData_ != nullptr && animationEaseData_->GetActFlag())
 		{
 			animationEaseData_->Update();
-			currentTime_.SetFrame(Ease::Action(EaseType::In, EaseFunctionType::Linear, startTime_.GetFrameCount(), endTime_.GetFrameCount(), animationEaseData_->GetTimeRate()));
+			float start = (float)startTime_.GetFrameCount();
+			float end = (float)endTime_.GetFrameCount();
+
+			currentTime_.SetFrame((FbxLongLong)Ease::Action(EaseType::In, EaseFunctionType::Linear, start, end, animationEaseData_->GetTimeRate()));
 		}
 		else
 		{

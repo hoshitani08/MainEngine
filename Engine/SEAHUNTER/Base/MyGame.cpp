@@ -31,7 +31,7 @@ void MyGame::Initialize()
 	t2.join();
 	t3.join();
 	//シーンマネージャーに最初のシーンをセット
-	SceneManager::GetInstance()->ChangeScene("GameScene");
+	SceneManager::GetInstance()->ChangeScene("TitleScene");
 }
 
 void MyGame::Finalize()

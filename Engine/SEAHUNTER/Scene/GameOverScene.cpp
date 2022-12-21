@@ -74,7 +74,7 @@ void GameOverScene::Update()
 		{
 			if (determinationFlag_)
 			{
-				sceneChange_->SceneChangeStart("TitleScene");
+				sceneChange_->SceneChangeStart("GameScene");
 			}
 			else if (!determinationFlag_)
 			{

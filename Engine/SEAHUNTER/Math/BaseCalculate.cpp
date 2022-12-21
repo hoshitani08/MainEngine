@@ -230,5 +230,5 @@ const float RandCalculate(float a, float b)
 	// [a, b)‚Ì’l‚Ì”ÍˆÍ‚ÅA“™Šm—¦‚ÉÀ”‚ğ¶¬‚·‚é
 	std::uniform_real_distribution<> dist1(a, b);
 
-	return dist1(engine);
+	return float(dist1(engine));
 }

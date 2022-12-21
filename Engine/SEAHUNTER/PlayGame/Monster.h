@@ -276,6 +276,8 @@ private: // メンバ変数
 	bool isDead_ = false;
 	// 尻尾が切れたか
 	bool tailDestructionFlag_ = false;
+	//
+	bool colorChangeFlag_ = false;
 #pragma endregion ステータス
 #pragma region 
 	// sin波のタイマー

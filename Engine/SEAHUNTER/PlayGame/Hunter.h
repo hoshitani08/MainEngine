@@ -163,13 +163,14 @@ public: // ƒƒ“ƒoŠÖ”
 	/// •Ší‚ÌÀ•W‚Ìæ“¾
 	/// </summary>
 	/// <returns>À•W</returns>
-	const XMFLOAT3& GetWeaponPosition()
+	XMFLOAT3 GetWeaponPosition()
 	{
-		XMFLOAT3 pos = {};
-
-		pos.x = weapon_->GetMatWorld().r[3].m128_f32[0];
-		pos.y = weapon_->GetMatWorld().r[3].m128_f32[1];
-		pos.z = weapon_->GetMatWorld().r[3].m128_f32[2];
+		const XMFLOAT3 pos =
+		{
+			weapon_->GetMatWorld().r[3].m128_f32[0],
+			weapon_->GetMatWorld().r[3].m128_f32[1],
+			weapon_->GetMatWorld().r[3].m128_f32[2]
+		};
 
 		return pos;
 	}

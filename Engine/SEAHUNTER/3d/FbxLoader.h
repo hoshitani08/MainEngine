@@ -113,7 +113,7 @@ private:
 	/// <param name="model"></param>
 	void BuildTangentAndBiNormalImp(FbxModel* model);
 
-	const XMFLOAT3& Add(XMFLOAT3 m, XMFLOAT3 k);
-	const XMFLOAT3& Normalize(XMFLOAT3 m);
-	const XMFLOAT3& Cross(XMFLOAT3 m, XMFLOAT3 k);
+	XMFLOAT3 Add(XMFLOAT3 m, XMFLOAT3 k);
+	XMFLOAT3 Normalize(XMFLOAT3 m);
+	XMFLOAT3 Cross(XMFLOAT3 m, XMFLOAT3 k);
 };

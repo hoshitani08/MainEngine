@@ -274,7 +274,7 @@ BOOL CALLBACK Input::DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 	return DIENUM_CONTINUE;
 }
 
-XMFLOAT2& Input::PadStickGradient()
+XMFLOAT2 Input::PadStickGradient()
 {
 	float x = padData_.lX / 1000.0f;
 	float y = padData_.lY / 1000.0f;
@@ -291,7 +291,7 @@ XMFLOAT2& Input::PadStickGradient()
 	return XMFLOAT2(x, y);
 }
 
-XMFLOAT2& Input::PadRightStickGradient()
+XMFLOAT2 Input::PadRightStickGradient()
 {
 	float x = padData_.lRx / 1000.0f;
 	float y = padData_.lRy / 1000.0f;

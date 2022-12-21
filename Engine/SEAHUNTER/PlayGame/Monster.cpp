@@ -275,7 +275,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	//BehaviorTree();
+	BehaviorTree();
 
 	if (colorTimer_ >= 30)
 	{
@@ -308,11 +308,8 @@ void Monster::AllMove()
 		{
 			tail_[i]->SetColor({ 0.5f, 0.5f, 0.0f, 1.0f });
 		}
-	}
-
-	if (damageHitFlag_)
-	{
-		colorTimer_++;
+		colorTimer_ = 0;
+		colorChangeFlag_ = false;
 	}
 
 	if (hunter_->GetActFlag())
@@ -320,6 +317,11 @@ void Monster::AllMove()
 		colorTimer_ = 0;
 		damageHitFlag_ = false;
 		hunter_->SetActFalg(false);
+	}
+
+	if (colorChangeFlag_)
+	{
+		colorTimer_++;
 	}
 
 	PartsTailDestruction();
@@ -397,6 +399,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
@@ -424,6 +427,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
@@ -451,6 +455,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
@@ -478,6 +483,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
@@ -505,6 +511,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
@@ -518,7 +525,7 @@ void Monster::DamageHit(Sphere hitSphere)
 	// K”ö
 	for (int i = 0; i < tail_.size(); i++)
 	{
-		if (!hunter_->IsAttackFlag())
+		if (!hunter_->IsAttackFlag() || tailDestructionFlag_)
 		{
 			break;
 		}
@@ -532,6 +539,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
 		{
 			damageHitFlag_ = true;
+			colorChangeFlag_ = true;
 			tailDestruction_ += 10;
 			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
@@ -796,14 +804,11 @@ void Monster::PartsTailDestruction()
 {
 	if (tailDestruction_ >= 150 && !tailDestructionFlag_)
 	{
+		XMFLOAT3 ppos = tail_[0]->GetWorldPosition();
+
 		tail_[0]->SetParent((Object3d*)nullptr);
 
-		XMFLOAT3 ppos = tail_[0]->GetPosition();
 		XMFLOAT3 prot = tail_[0]->GetRotation();
-
-		ppos.x += body_[4]->GetWorldPosition().x;
-		ppos.y += body_[4]->GetWorldPosition().y;
-		ppos.z += body_[4]->GetWorldPosition().z;
 
 		prot.x += nucleus_->GetRotation().x;
 		prot.y += nucleus_->GetRotation().y;

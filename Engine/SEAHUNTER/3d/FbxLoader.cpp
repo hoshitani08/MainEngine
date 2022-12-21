@@ -189,7 +189,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 
 	//必要数だけ頂点データ配列を確保
 	FbxModel::VertexPosNormalUvSkin vert{};
-	model->vertices_.resize(polygonCount * 3, vert);
+	model->vertices_.resize(static_cast<std::vector<FbxModel::VertexPosNormalUvSkin, std::allocator<FbxModel::VertexPosNormalUvSkin>>::size_type>(polygonCount) * 3, vert);
 
 	//FBXメッシュの頂点座標配列を取得
 	FbxVector4* pCoord = fbxMesh->GetControlPoints();
@@ -595,8 +595,8 @@ void FbxLoader::BuildTangentAndBiNormalImp(FbxModel* model)
 	{
 		auto no = polyNo * 3;
 		auto vertNo_0 = indices[no];
-		auto vertNo_1 = indices[no + 1];
-		auto vertNo_2 = indices[no + 2];
+		auto vertNo_1 = indices[static_cast<std::vector<unsigned short, std::allocator<unsigned short>>::size_type>(no) + 1];
+		auto vertNo_2 = indices[static_cast<std::vector<unsigned short, std::allocator<unsigned short>>::size_type>(no) + 2];
 
 		auto& vert_0 = vertices[vertNo_0];
 		auto& vert_1 = vertices[vertNo_1];
@@ -624,7 +624,7 @@ void FbxLoader::BuildTangentAndBiNormalImp(FbxModel* model)
 		};
 
 		// 平面パラメータからUV軸座標算出する。
-		float U[3], V[3];
+		float U[3]{}, V[3]{};
 		for (int i = 0; i < 3; ++i)
 		{
 			XMFLOAT3 V1 =
@@ -680,7 +680,7 @@ void FbxLoader::BuildTangentAndBiNormalImp(FbxModel* model)
 	}
 }
 
-const XMFLOAT3& FbxLoader::Add(XMFLOAT3 m, XMFLOAT3 k)
+XMFLOAT3 FbxLoader::Add(XMFLOAT3 m, XMFLOAT3 k)
 {
 	XMVECTOR xmv0 = XMLoadFloat3(&m);
 	XMVECTOR xmv1 = XMLoadFloat3(&k);
@@ -689,7 +689,7 @@ const XMFLOAT3& FbxLoader::Add(XMFLOAT3 m, XMFLOAT3 k)
 	return XMFLOAT3(xmvr.m128_f32[0], xmvr.m128_f32[1], xmvr.m128_f32[2]);
 }
 
-const XMFLOAT3& FbxLoader::Normalize(XMFLOAT3 m)
+XMFLOAT3 FbxLoader::Normalize(XMFLOAT3 m)
 {
 	XMVECTOR xmv = XMLoadFloat3(&m);
 	xmv = XMVector3Normalize(xmv);
@@ -697,7 +697,7 @@ const XMFLOAT3& FbxLoader::Normalize(XMFLOAT3 m)
 	return XMFLOAT3(xmv.m128_f32[0], xmv.m128_f32[1], xmv.m128_f32[2]);
 }
 
-const XMFLOAT3& FbxLoader::Cross(XMFLOAT3 m, XMFLOAT3 k)
+XMFLOAT3 FbxLoader::Cross(XMFLOAT3 m, XMFLOAT3 k)
 {
 	XMVECTOR xmv0 = DirectX::XMLoadFloat3(&m);
 	XMVECTOR xmv1 = DirectX::XMLoadFloat3(&k);
