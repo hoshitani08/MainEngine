@@ -138,6 +138,10 @@ private: // メンバ変数
 	std::unique_ptr<Sprite> xButtonIcon_;
 	// Bボタンのアイコン
 	std::unique_ptr<Sprite> bButtonIcon_;
+	// 敵の名前
+	std::unique_ptr<Sprite> enemyText_;
+	// フレームの背景
+	std::array<std::unique_ptr<Sprite>, 3> frameBackground_;
 	// モンスター用のイージングの進行度用
 	std::unique_ptr<EaseData> monsterEase_;
 	// ハンター用のイージングの進行度用
@@ -166,4 +170,6 @@ private: // メンバ変数
 	bool isPlayerDeath_ = false;
 	// 十桁目があるか
 	bool isTenCountFlag_ = false;
+	//
+	bool buttonReset = false;
 };

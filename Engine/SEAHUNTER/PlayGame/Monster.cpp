@@ -212,6 +212,37 @@ void Monster::Finalize()
 
 void Monster::Update()
 {
+	XMFLOAT3 pos = nucleus_->GetPosition();
+
+	if (pos.x <= -48.0f)
+	{
+		pos.x = -48.0f;
+	}
+	else if (pos.x >= 48.0f)
+	{
+		pos.x = 48.0f;
+	}
+
+	if (pos.y <= 1.0f)
+	{
+		pos.y = 1.0f;
+	}
+	else if (pos.y >= 58.0f)
+	{
+		pos.y = 58.0f;
+	}
+
+	if (pos.z <= -48.0f)
+	{
+		pos.z = -48.0f;
+	}
+	else if (pos.z >= 48.0f)
+	{
+		pos.z = 48.0f;
+	}
+
+	nucleus_->SetPosition(pos);
+
 	//XV
 	nucleus_->Update();
 	for (int i = 0; i < body_.size(); i++)
@@ -988,33 +1019,6 @@ bool Monster::AttackMode1()
 	pos.y += saveVector_.y;
 	pos.z += saveVector_.z;
 
-	if (pos.x <= -48.0f)
-	{
-		pos.x = -48.0f;
-	}
-	else if (pos.x >= 48.0f)
-	{
-		pos.x = 48.0f;
-	}
-
-	if (pos.y <= 1.0f)
-	{
-		pos.y = 1.0f;
-	}
-	else if (pos.y >= 58.0f)
-	{
-		pos.y = 58.0f;
-	}
-
-	if (pos.z <= -48.0f)
-	{
-		pos.z = -48.0f;
-	}
-	else if (pos.z >= 48.0f)
-	{
-		pos.z = 48.0f;
-	}
-
 	nucleus_->SetPosition(pos);
 
 	return true;
@@ -1170,33 +1174,6 @@ bool Monster::WaitingMode2()
 	pos.y += vector.y;
 	pos.z += vector.z;
 
-	if (pos.x <= -48.0f)
-	{
-		pos.x = -48.0f;
-	}
-	else if (pos.x >= 48.0f)
-	{
-		pos.x = 48.0f;
-	}
-
-	if (pos.y <= 1.0f)
-	{
-		pos.y = 1.0f;
-	}
-	else if (pos.y >= 58.0f)
-	{
-		pos.y = 58.0f;
-	}
-
-	if (pos.z <= -48.0f)
-	{
-		pos.z = -48.0f;
-	}
-	else if (pos.z >= 48.0f)
-	{
-		pos.z = 48.0f;
-	}
-
 	nucleus_->SetPosition(pos);
 
 	return true;
@@ -1223,33 +1200,6 @@ bool Monster::WaitingMode3()
 	pos.x += vector.x;
 	pos.y += vector.y;
 	pos.z += vector.z;
-
-	if (pos.x <= -48.0f)
-	{
-		pos.x = -48.0f;
-	}
-	else if (pos.x >= 48.0f)
-	{
-		pos.x = 48.0f;
-	}
-
-	if (pos.y <= 1.0f)
-	{
-		pos.y = 1.0f;
-	}
-	else if (pos.y >= 58.0f)
-	{
-		pos.y = 58.0f;
-	}
-
-	if (pos.z <= -48.0f)
-	{
-		pos.z = -48.0f;
-	}
-	else if (pos.z >= 48.0f)
-	{
-		pos.z = 48.0f;
-	}
 
 	nucleus_->SetPosition(pos);
 

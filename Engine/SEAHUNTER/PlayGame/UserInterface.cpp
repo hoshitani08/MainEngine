@@ -21,18 +21,22 @@ void UserInterface::Initialize()
 	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//playerのステータス
-	lifeFrame_ =      Sprite::Create(1, { 60, 17 });
-	strengthFrame_ =  Sprite::Create(1, { 60, 35 });
-	lifeGauge_ =      Sprite::Create(2, { 62, 19 });
-	innerLifeGauge_ = Sprite::Create(3, { 62, 19 });
-	strengthGauge_ =  Sprite::Create(4, { 62, 37 });
-	attackIcon_ =     Sprite::Create(5, { 70, 55 });
-	defenseIcon_ =    Sprite::Create(6, { 90, 60 });
+	lifeFrame_ =          Sprite::Create(1, { 60, 17 });
+	strengthFrame_ =      Sprite::Create(1, { 60, 35 });
+	lifeGauge_ =          Sprite::Create(2, { 62, 19 });
+	innerLifeGauge_ =     Sprite::Create(3, { 62, 19 });
+	strengthGauge_ =      Sprite::Create(4, { 62, 37 });
+	attackIcon_ =         Sprite::Create(5, { 70, 55 });
+	defenseIcon_ =        Sprite::Create(6, { 90, 60 });
+	frameBackground_[0] = Sprite::Create(7, { 60, 17 });
+	frameBackground_[1] = Sprite::Create(7, { 60, 35 });
 
 	//enemyのステータス
 	enemyLifeFrame_ =      Sprite::Create(1, { 390, 620 });
 	enemyLifeGauge_ =      Sprite::Create(3, { 392, 622 });
 	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
+	enemyText_ = Sprite::Create(104, { 640, 590 }, color, anchorPoint);
+	frameBackground_[2] = Sprite::Create(7, { 390, 620 });
 
 	// 時計
 	clockFrame_ =  Sprite::Create(10, { 32, 32 }, color, anchorPoint);
@@ -123,8 +127,6 @@ void UserInterface::Update()
 	{
 		isPlayerDeath_ = true;
 	}
-
-	DebugText::GetInstance()->Print("ENEMY", 615, 580, 1.5f);
 }
 
 void UserInterface::BackDraw()
@@ -133,18 +135,23 @@ void UserInterface::BackDraw()
 
 void UserInterface::NearDraw()
 {
-	strengthFrame_->Draw();
-	lifeFrame_->Draw();
+	for (auto& a : frameBackground_)
+	{
+		a->Draw();
+	}
 	innerLifeGauge_->Draw();
 	strengthGauge_->Draw();
 	lifeGauge_->Draw();
+	strengthFrame_->Draw();
+	lifeFrame_->Draw();
 
 	clockFrame_->Draw();
 	clockNeedle_->Draw();
 
-	enemyLifeFrame_->Draw();
 	enemyInnerLifeGauge_->Draw();
 	enemyLifeGauge_->Draw();
+	enemyLifeFrame_->Draw();
+	enemyText_->Draw();
 
 	// アイテム関係
 	itemBackground_->Draw();
@@ -357,14 +364,15 @@ void UserInterface::ItemSelection()
 
 	XMFLOAT2 buttonPos = { 1080, 625 };
 	XMFLOAT2 size = { 510, 126 };
+	XMFLOAT2 itemPos = { 1080, 580 };
+	XMFLOAT4 startColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+	XMFLOAT4 endColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	if (hunter_->GetItemSelectionFlag())
 	{
 		frameEase2_->Reset();
+		buttonReset = false;
 
-		XMFLOAT2 itemPos = { 1080, 580 };
 		float itemAddPos = 100.0f;
-		XMFLOAT4 startColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-		XMFLOAT4 endColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		if (xButtonIcon_->GetPosition().x > buttonPos.x - 100)
 		{
@@ -476,6 +484,16 @@ void UserInterface::ItemSelection()
 	else
 	{
 		frameEase_->Reset();
+
+		if (!buttonReset)
+		{
+			itemSprite_[hunter_->GetItemType()]->SetPosition(itemPos);
+			itemSprite_[hunter_->GetItemType()]->SetColor(endColor);
+			xButtonIcon_->SetSize({ 32, 32 });
+			bButtonIcon_->SetSize({ 32, 32 });
+			buttonReset = true;
+		}
+		
 
 		if (xButtonIcon_->GetPosition().x < buttonPos.x - 30)
 		{
