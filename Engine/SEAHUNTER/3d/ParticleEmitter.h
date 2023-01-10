@@ -56,6 +56,14 @@ public: // メンバ関数
 	/// <param name="model">モデル</param>
 	void HealAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr, float size = 0.5f);
 	/// <summary>
+	/// 追加(砂埃)
+	/// </summary>
+	/// <param name="count">数</param>
+	/// <param name="life">生存時間</param>
+	/// <param name="position">座標</param>
+	/// <param name="model">モデル</param>
+	void SandAdd(int count, int life, XMFLOAT3 position = { 0,0,0 }, Model* model = nullptr);
+	/// <summary>
 	/// 追加
 	/// </summary>
 	/// <param name="count">数</param>

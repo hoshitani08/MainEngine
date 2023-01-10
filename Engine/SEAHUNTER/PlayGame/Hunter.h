@@ -190,6 +190,11 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool GetButtonEaseFlag() { return buttonEaseFlag_; }
 	/// <summary>
+	/// 動いているか
+	/// </summary>
+	/// <returns></returns>
+	bool IsMoveFlag() { return isMoveFlag_; }
+	/// <summary>
 	/// アングルの設定
 	/// </summary>
 	/// <param name="angle">アングル</param>
@@ -303,6 +308,8 @@ private: // メンバ変数
 	bool buttonFlag_ = false;
 	// ボタンのイージング
 	bool buttonEaseFlag_ = false;
+	// 動いているか
+	bool isMoveFlag_ = false;
 	// アニメーションのタイプフラグ
 	AnimationFlag falg_ = {};
 };

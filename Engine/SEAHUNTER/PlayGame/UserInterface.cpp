@@ -362,15 +362,20 @@ void UserInterface::ItemSelection()
 		defenseIcon_->SetPosition({ 70, 60 });
 	}
 
+	// ボタンの位置
 	XMFLOAT2 buttonPos = { 1080, 625 };
+	// アイテム入れ替え時の背景のサイズ
 	XMFLOAT2 size = { 510, 126 };
+	// アイテムの中心の位置
 	XMFLOAT2 itemPos = { 1080, 580 };
+	// 最初の色
 	XMFLOAT4 startColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+	// 最後の色
 	XMFLOAT4 endColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	if (hunter_->GetItemSelectionFlag())
 	{
 		frameEase2_->Reset();
-		buttonReset = false;
+		buttonReset_ = false;
 
 		float itemAddPos = 100.0f;
 
@@ -485,13 +490,13 @@ void UserInterface::ItemSelection()
 	{
 		frameEase_->Reset();
 
-		if (!buttonReset)
+		if (!buttonReset_)
 		{
 			itemSprite_[hunter_->GetItemType()]->SetPosition(itemPos);
 			itemSprite_[hunter_->GetItemType()]->SetColor(endColor);
 			xButtonIcon_->SetSize({ 32, 32 });
 			bButtonIcon_->SetSize({ 32, 32 });
-			buttonReset = true;
+			buttonReset_ = true;
 		}
 		
 

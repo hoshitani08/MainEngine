@@ -171,5 +171,5 @@ private: // ƒƒ“ƒo•Ï”
 	// \Œ…–Ú‚ª‚ ‚é‚©
 	bool isTenCountFlag_ = false;
 	//
-	bool buttonReset = false;
+	bool buttonReset_ = false;
 };

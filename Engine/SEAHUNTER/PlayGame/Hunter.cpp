@@ -219,6 +219,8 @@ void Hunter::BaseMove()
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
+
+		isMoveFlag_ = true;
 	}
 	else if (!isAttackFlag_ && !falg_.damage && !isDash_ && !falg_.dodge)
 	{
@@ -235,6 +237,8 @@ void Hunter::BaseMove()
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
+
+		isMoveFlag_ = false;
 	}
 
 	for (int i = 0; i < hunter_.size(); i++)

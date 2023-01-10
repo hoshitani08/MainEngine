@@ -6,6 +6,10 @@
 
 #include "Object3d.h"
 #include "Block.h"
+#include "Hunter.h"
+#include "Monster.h"
+#include "ObjParticle.h"
+#include "ParticleEmitter.h"
 
 class Stage
 {
@@ -23,7 +27,7 @@ public: // メンバ関数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Stage();
+	Stage(Monster* monster, Hunter* hunter);
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -51,5 +55,13 @@ private: // メンバ変数
 	std::vector<std::unique_ptr<Block>> block_;
 	//
 	std::unique_ptr<Object3d> field_;
+	//
+	Monster* monster_ = nullptr;
+	//
+	Hunter* hunter_ = nullptr;
+	// 砂埃のエミッター
+	std::unique_ptr<ParticleEmitter> fugitiveBustEmitter;
+	// 砂埃のパーティクル
+	std::unique_ptr<ObjParticle> fugitiveBustParticle;
 };
 

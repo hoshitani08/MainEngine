@@ -57,11 +57,11 @@ void GameScene::Initialize()
 	// 3Dオブジェクト生成
 	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
-	stage_ = std::make_unique<Stage>();
-
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
 	monster_ = Monster::Create(camera_.get(), hunter_.get());
+
+	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get());
 
 	//UI
 	ui_ = std::make_unique<UserInterface>(hunter_.get(), monster_.get());
