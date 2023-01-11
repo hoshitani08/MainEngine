@@ -10,6 +10,7 @@
 #include "Monster.h"
 #include "ObjParticle.h"
 #include "ParticleEmitter.h"
+#include "ParticleManager.h"
 
 class Stage
 {
@@ -27,7 +28,7 @@ public: // メンバ関数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Stage(Monster* monster, Hunter* hunter);
+	Stage(Monster* monster, Hunter* hunter, Camera* camera);
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -59,9 +60,11 @@ private: // メンバ変数
 	Monster* monster_ = nullptr;
 	//
 	Hunter* hunter_ = nullptr;
+	//カメラ
+	Camera* camera_ = nullptr;
 	// 砂埃のエミッター
 	std::unique_ptr<ParticleEmitter> fugitiveBustEmitter;
 	// 砂埃のパーティクル
-	std::unique_ptr<ObjParticle> fugitiveBustParticle;
+	std::unique_ptr<ParticleManager> fugitiveBustParticle;
 };
 

@@ -156,7 +156,7 @@ private: // メンバ変数
 	float endScale_ = 0.0f;
 	XMFLOAT3 objEndScale_ = { 0.0f, 0.0f, 0.0f };
 	// 色(RGBA)初期値
-	XMFLOAT4 startColor_ = { 1, 1, 1, 1};
+	XMFLOAT4 startColor_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// 色(RGBA)最終値
 	XMFLOAT4 endColor_ = {};
 	//X,Y,Z全て[-5.0,+5.0]でランダムに分布

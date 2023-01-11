@@ -129,7 +129,7 @@ void Hunter::Behavior()
 			weapon_->SetPosition({ 0.0f, 0.0f, 2.3f });
 			weapon_->SetRotation({ -100.0f, 0.0f, 90.0f });
 		}
-		if (falg_.death && hunter_[4]->AnimationEnd())
+		if (falg_.death)
 		{
 			isDeath_ = true;
 		}
@@ -219,8 +219,6 @@ void Hunter::BaseMove()
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
-
-		isMoveFlag_ = true;
 	}
 	else if (!isAttackFlag_ && !falg_.damage && !isDash_ && !falg_.dodge)
 	{
@@ -237,8 +235,6 @@ void Hunter::BaseMove()
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
-
-		isMoveFlag_ = false;
 	}
 
 	for (int i = 0; i < hunter_.size(); i++)

@@ -61,7 +61,7 @@ void GameScene::Initialize()
 	hunter_ = Hunter::Create();
 	monster_ = Monster::Create(camera_.get(), hunter_.get());
 
-	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get());
+	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get(), camera_.get());
 
 	//UI
 	ui_ = std::make_unique<UserInterface>(hunter_.get(), monster_.get());

@@ -1,11 +1,13 @@
 #include "Stage.h"
 #include "ObjFactory.h"
 #include "MapChip.h"
+#include "DirectXCommon.h"
 
-Stage::Stage(Monster* monster, Hunter* hunter)
+Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera)
 {
 	hunter_ = hunter;
 	monster_ = monster;
+	camera_ = camera;
 	Initialize();
 }
 
@@ -43,13 +45,10 @@ void Stage::Initialize()
 		}
 	}
 
-	fugitiveBustParticle = std::make_unique<ObjParticle>();
+	fugitiveBustParticle = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_, L"sandEffect");
 	fugitiveBustEmitter = std::make_unique<ParticleEmitter>(fugitiveBustParticle.get());
-	float scale = 0.02f;
 	fugitiveBustEmitter->SetCenter(1);
-	fugitiveBustEmitter->SetObjStartScale({ scale, scale, scale });
-	fugitiveBustEmitter->SetObjEndScale({});
-	XMFLOAT4 color = { 0.8f, 0.8f, 0.6f, 1.0f };
+	XMFLOAT4 color = { 0.1f, 0.1f, 0.1f, 1.0f };
 	fugitiveBustEmitter->SetStartColor(color);
 	fugitiveBustEmitter->SetEndColor(color);
 	fugitiveBustEmitter->SetVelocity(0.03f);
@@ -70,7 +69,7 @@ void Stage::Update()
 	{
 		XMFLOAT3 pos = hunter_->GetPosition();
 		pos.y -= 1.0f;
-		fugitiveBustEmitter->SandAdd(10, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
+		fugitiveBustEmitter->SandAdd(8, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
 	}
 
 	skydome_->Update();

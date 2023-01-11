@@ -15,7 +15,7 @@ void SpriteFactory::Initialize()
 
 	//UI : GamePlay関係
 	//playerのステータス
-	if (!Sprite::LoadTexture(1, L"Resources/UI/play/playerframe.png"))
+	if (!Sprite::LoadTexture(1, L"Resources/UI/play/frame.png"))
 	{
 		assert(0);
 	}
@@ -167,6 +167,14 @@ void SpriteFactory::Initialize()
 		assert(0);
 	}
 	if (!Sprite::LoadTexture(104, L"Resources/UI/play/enemytext.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(105, L"Resources/UI/play/enemyframe.png"))
+	{
+		assert(0);
+	}
+	if (!Sprite::LoadTexture(106, L"Resources/UI/play/enemyframeBackground.png"))
 	{
 		assert(0);
 	}

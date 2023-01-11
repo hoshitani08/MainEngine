@@ -193,7 +193,14 @@ public: // ƒƒ“ƒoŠÖ”
 	/// “®‚¢‚Ä‚¢‚é‚©
 	/// </summary>
 	/// <returns></returns>
-	bool IsMoveFlag() { return isMoveFlag_; }
+	bool IsMoveFlag()
+	{
+		if (falg_.move || falg_.dash)
+		{
+			return true;
+		}
+		return false;
+	}
 	/// <summary>
 	/// ƒAƒ“ƒOƒ‹‚Ìİ’è
 	/// </summary>

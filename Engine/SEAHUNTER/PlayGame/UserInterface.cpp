@@ -21,22 +21,24 @@ void UserInterface::Initialize()
 	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//playerのステータス
-	lifeFrame_ =          Sprite::Create(1, { 60, 17 });
-	strengthFrame_ =      Sprite::Create(1, { 60, 35 });
-	lifeGauge_ =          Sprite::Create(2, { 62, 19 });
-	innerLifeGauge_ =     Sprite::Create(3, { 62, 19 });
+	lifeFrame_ =          Sprite::Create(1, { 47, 14 });
+	strengthFrame_ =      Sprite::Create(1, { 47, 50 });
+	strengthFrame_->SetIsFlipY(true);
+	lifeGauge_ =          Sprite::Create(2, { 62, 16 });
+	innerLifeGauge_ =     Sprite::Create(3, { 62, 16 });
 	strengthGauge_ =      Sprite::Create(4, { 62, 37 });
 	attackIcon_ =         Sprite::Create(5, { 70, 55 });
 	defenseIcon_ =        Sprite::Create(6, { 90, 60 });
-	frameBackground_[0] = Sprite::Create(7, { 60, 17 });
-	frameBackground_[1] = Sprite::Create(7, { 60, 35 });
+	frameBackground_[0] = Sprite::Create(7, { 47, 14 });
+	frameBackground_[1] = Sprite::Create(7, { 47, 50 });
+	frameBackground_[1]->SetIsFlipY(true);
 
 	//enemyのステータス
-	enemyLifeFrame_ =      Sprite::Create(1, { 390, 620 });
+	enemyLifeFrame_ = Sprite::Create(105, { 376, 620 });
 	enemyLifeGauge_ =      Sprite::Create(3, { 392, 622 });
 	enemyInnerLifeGauge_ = Sprite::Create(4, { 392, 622 });
 	enemyText_ = Sprite::Create(104, { 640, 590 }, color, anchorPoint);
-	frameBackground_[2] = Sprite::Create(7, { 390, 620 });
+	frameBackground_[2] = Sprite::Create(106, { 376, 620 });
 
 	// 時計
 	clockFrame_ =  Sprite::Create(10, { 32, 32 }, color, anchorPoint);
