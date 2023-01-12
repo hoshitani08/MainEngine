@@ -17,6 +17,7 @@ void ObjFactory::Initialize()
 	LoadModel("katana");
 	LoadModel("coral");
 	LoadModel("Rock");
+	LoadModel("Rock2");
 	LoadModel("cube");
 	LoadModel("bubble", true);
 	LoadModel("blood", true);

@@ -52,6 +52,24 @@ void Block::Initialize(int type, XMFLOAT3 pos)
 
 		blockType_ = BlockType::Coral;
 	}
+	else if (type == (int)BlockType::Rock2)
+	{
+		float size = RandCalculate(1.0f, 2.0f);
+
+		for (int i = 0; i < 2; i++)
+		{
+			std::unique_ptr<Object3d> tmp;
+			tmp = Object3d::Create(ObjFactory::GetInstance()->GetModel("Rock2"));
+			tmp->SetScale({ size, size, size });
+
+			tmp->SetPosition({ pos.x, 0.8f + pos.y, pos.z });
+			tmp->SetRotation({ RandCalculate(0.0f,180.0f), RandCalculate(0.0f,180.0f), RandCalculate(0.0f,180.0f) });
+
+			rock2Block_.push_back(std::move(tmp));
+		}
+
+		blockType_ = BlockType::Rock2;
+	}
 }
 
 void Block::Finalize()
@@ -87,6 +105,10 @@ void Block::Update()
 		a.coralBlock->Update();
 		a.bubbleEmitter->Update();
 	}
+	for (auto& a : rock2Block_)
+	{
+		a->Update();
+	}
 }
 
 void Block::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -99,5 +121,9 @@ void Block::Draw(ID3D12GraphicsCommandList* cmdList)
 	{
 		a.coralBlock->Draw(cmdList);
 		a.bubbleEmitter->Draw(cmdList);
+	}
+	for (auto& a : rock2Block_)
+	{
+		a->Draw(cmdList);
 	}
 }

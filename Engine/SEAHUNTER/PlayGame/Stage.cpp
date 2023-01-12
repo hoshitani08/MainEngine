@@ -36,9 +36,15 @@ void Stage::Initialize()
 
 				block_.push_back(std::move(block));
 			}
-			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
+			else if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
 			{
 				block = std::make_unique<Block>(1, pos);
+
+				block_.push_back(std::move(block));
+			}
+			else if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 3)
+			{
+				block = std::make_unique<Block>(2, pos);
 
 				block_.push_back(std::move(block));
 			}

@@ -128,6 +128,13 @@ void Hunter::Behavior()
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f, 0.0f, 2.3f });
 			weapon_->SetRotation({ -100.0f, 0.0f, 90.0f });
+			hunter_[animationType_]->SetRotation({});
+			XMFLOAT3 position = hunter_[animationType_]->GetPosition();
+			if (position.y <= 2.0f)
+			{
+				position.y = 2.0f;
+			}
+			hunter_[animationType_]->SetPosition(position);
 		}
 		if (falg_.death)
 		{

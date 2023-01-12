@@ -241,6 +241,34 @@ void Monster::Update()
 		pos.z = 48.0f;
 	}
 
+	XMFLOAT3 pos1 = rightForeFoot_[2]->GetWorldPosition();
+
+	if (pos1.y <= 1.0f)
+	{
+		pos.y -= pos1.y - 1.0f;
+	}
+
+	pos1 = leftForeFoot_[2]->GetWorldPosition();
+
+	if (pos1.y <= 1.0f)
+	{
+		pos.y -= pos1.y - 1.0f;
+	}
+
+	pos1 = rightHindFoot_[2]->GetWorldPosition();
+
+	if (pos1.y <= 1.0f)
+	{
+		pos.y -= pos1.y - 1.0f;
+	}
+
+	pos1 = leftHindFoot_[2]->GetWorldPosition();
+
+	if (pos1.y <= 1.0f)
+	{
+		pos.y -= pos1.y - 1.0f;
+	}
+
 	nucleus_->SetPosition(pos);
 
 	//çXêV

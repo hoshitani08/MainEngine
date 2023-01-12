@@ -13,7 +13,7 @@ void MyGame::Initialize()
 	BaseGame::Initialize();
 
 	//ゲームで必要なマップデータのロード
-	MapChip::GetInstance()->CsvLoad(26, 26, "map");
+	MapChip::GetInstance()->CsvLoad(30, 30, "map");
 	//ゲームで必要な画像のロード
 	std::thread t = std::thread([&] { SpriteFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なモデル(.fbx)のロード

@@ -25,6 +25,8 @@ public: // サブクラス
 	{
 		Rock,
 		Coral,
+		Rock2,
+		Rock3,
 	};
 
 	struct CoralData
@@ -71,6 +73,8 @@ private: // メンバ変数
 	std::unique_ptr<Object3d> rockBlock_;
 	// 珊瑚のデータ
 	std::vector<CoralData> coralBlock_;
+	// 岩2
+	std::vector<std::unique_ptr<Object3d>> rock2Block_;
 	// ブロックのタイプ
 	BlockType blockType_;
 };
