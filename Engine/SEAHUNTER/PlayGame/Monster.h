@@ -298,6 +298,8 @@ private: // メンバ変数
 	int maxCount_ = 0;
 	//
 	int colorTimer_ = 0;
+	//
+	int howlTimer_ = 0;
 #pragma endregion アニメーション
 #pragma region 
 	// 行動のセレクター

@@ -27,6 +27,7 @@ private: // エイリアス
 public: // 定数
 	const float MAX_HP = 150.0f;
 	const float MAX_STAMINA = 150.0f;
+	const float ANGLE_RESTRICTION = 0.6f;
 
 public: // サブクラス
 	struct AnimationFlag
@@ -264,6 +265,7 @@ private: // メンバ変数
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
+	XMFLOAT2 playerAngle_ = {};
 
 	// 回避タイマー
 	int avoidTimer_ = 0;
@@ -283,7 +285,7 @@ private: // メンバ変数
 	std::unique_ptr<EaseData> data_;
 
 	// 移動倍率
-	float speed_ = 0.0f;
+	XMFLOAT2 speed_ = {};
 	// ヒットポイント
 	float hp_ = MAX_HP;
 	// スタミナ

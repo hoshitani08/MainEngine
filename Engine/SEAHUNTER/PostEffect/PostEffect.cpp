@@ -8,7 +8,7 @@
 using namespace DirectX;
 
 // 静的メンバ変数の実体
-const float PostEffect::CLEAR_COLOR[4] = { 0.25f, 0.5f, 0.1f, 1.0f };
+const float PostEffect::CLEAR_COLOR[4] = { 0.1f,0.25f, 0.5f,1.0f };
 
 void PostEffect::Initialize(ID3D12Device* device)
 {
@@ -232,6 +232,7 @@ void PostEffect::Initialize(ID3D12Device* device)
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	timer_+=0.01f;
 	// 定数バッファにデータ転送
 	ConstBufferData* constMap = nullptr;
 	HRESULT result = this->constBuff_->Map(0, nullptr, (void**)&constMap);
@@ -240,6 +241,7 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 		constMap->color = this->color_;
 		constMap->brightnessColor = this->brightnessColor_;
 		constMap->mat = XMMatrixIdentity();
+		constMap->timer = timer_;
 		this->constBuff_->Unmap(0, nullptr);
 	}
 

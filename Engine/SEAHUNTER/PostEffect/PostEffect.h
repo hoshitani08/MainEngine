@@ -33,6 +33,7 @@ public: // サブクラス
 		XMFLOAT4 color; // 色 (RGBA)
 		float brightnessColor; // 明度
 		XMMATRIX mat; // ３Ｄ変換行列
+		float timer; // タイマ
 	};
 
 public: // メンバ関数
@@ -84,5 +85,7 @@ private: // メンバ変数
 	XMFLOAT4 color_ = { 1, 1, 1, 1 };
 	// 明度
 	float brightnessColor_ = 1.0f;
+	// タイマ
+	float timer_ = 0.0f;
 };
 

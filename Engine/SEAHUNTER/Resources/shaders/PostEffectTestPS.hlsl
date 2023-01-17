@@ -55,43 +55,14 @@ float4 GaussianBlur(float2 uv, float sigma, float shiftWidth)
 	return col;
 }
 
+float wave(float2 uv, float2 emitter, float speed, float phase)
+{
+	float dst = distance(uv, emitter);
+	return pow((0.5f + 0.5f * sin(dst * phase - timer * speed)), 2.0f);
+}
+
 float4 main(VSOutput input) : SV_TARGET
 {
-	//float4 texColor = tex0.Sample(smp, input.uv);
-	////swssfloat depth = tex2.Sample(smp, input.uv);
-	//float _Depth = 1 - 0.015f;
-	//float _NWidth = 0.015f;
-	//float _FWidth = 0.02f;
-	//float depth = tex2.Sample(smp, input.uv);
-	//float far = smoothstep(_NWidth / 2, _NWidth / 2 + _FWidth / 2, abs(depth - _Depth));
-	//float4 color = { texColor.rgb, (1 - far) };
-
-	//float4 finalColor = 0.0f;
-
-	/*for (int j = 0; j < BLUR_SAMPLE_COUNT; j++)
-	{
-		finalColor += tex0.Sample(smp, input.uv + BLUR_KERNEL[j]);
-	}*/
-
-	//finalColor += float4(texColor.rgb * brightnessColor, 1);
-	//色反転
-	//finalColor = Reverse(finalColor);
-
-	//// 最後にサンプリング数で割る
-	//finalColor.rgb /= BLUR_SAMPLE_COUNT;
-	//finalColor.a = 1;
-
-	/*float4 colortex0 = tex0.Sample(smp, input.uv);
-	float4 colortex1 = tex1.Sample(smp, input.uv);
-
-	float4 color = colortex0;
-	if (fmod(input.uv.y, 0.1f) < 0.05f)
-	{
-		color = colortex1;
-	}*/
-
-	//return texColor;
-
 	float _Depth = 1 - 0.02f;
 	float _NWidth = 0.02f;
 	float _FWidth = 0.02f;
@@ -100,10 +71,24 @@ float4 main(VSOutput input) : SV_TARGET
 	float far = smoothstep(_NWidth / 2, _NWidth / 2 + _FWidth / 2, abs(depth - _Depth));
 	float4 pintColor = tex0.Sample(smp, input.uv);
 	float4 nearColor = tex0.Sample(smp, input.uv);
+
+	float speed = 10.0f;
+	float power = 0.02f;
+
+	float w = wave(input.uv, float2(0.5f,   0.5f),   speed, 200.0f);
+	w +=      wave(input.uv, float2(0.6f,   0.11f),  speed, 20.0f);
+	w +=      wave(input.uv, float2(0.9f,   0.6f),   speed, 90.0f);
+	w +=      wave(input.uv, float2(0.1f,   0.84f),  speed, 150.0f);
+	w +=      wave(input.uv, float2(0.32,   0.81f),  speed, 150.0f);
+	w +=      wave(input.uv, float2(0.16f,  0.211f), speed, 150.0f);
+	w +=      wave(input.uv, float2(0.39f,  0.46f),  speed, 150.0f);
+	w +=      wave(input.uv, float2(0.51f,  0.484f), speed, 150.0f);
+	w +=      wave(input.uv, float2(0.732f, 0.91f),  speed, 150.0f);
+	w *= 0.116 * power;
+	input.uv += w;
+
 	float4 farColor = GaussianBlur(input.uv, 0.003f, 0.0005f);
 	float4 color = { farColor.rgb, (1 - far) };
 
 	return (1 - near) * pintColor + near * ((1 - far) * nearColor + far * color);
-
-	//return color;
 }

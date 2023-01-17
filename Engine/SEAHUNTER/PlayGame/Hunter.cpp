@@ -24,12 +24,12 @@ std::unique_ptr<Hunter> Hunter::Create()
 void Hunter::Initialize()
 {
 	float size = 0.006f;
-	hunter_[0] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("halt"), L"BasicFBX", true);
-	hunter_[1] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("move"), L"BasicFBX", true);
+	hunter_[0] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("halt"),   L"BasicFBX", true);
+	hunter_[1] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("move"),   L"BasicFBX", true);
 	hunter_[2] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("damage"), L"BasicFBX", true);
-	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"), L"BasicFBX", true);
-	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dash"), L"BasicFBX", true);
-	hunter_[5] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dodge"), L"BasicFBX", true);
+	hunter_[3] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("death"),  L"BasicFBX", true);
+	hunter_[4] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dash"),   L"BasicFBX", true);
+	hunter_[5] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("dodge"),  L"BasicFBX", true);
 	hunter_[6] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo1"), L"BasicFBX", true);
 	hunter_[7] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo2"), L"BasicFBX", true);
 	hunter_[8] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("combo3"), L"BasicFBX", true);
@@ -106,8 +106,6 @@ void Hunter::Behavior()
 {
 	if (hp_ >= 1.0f)
 	{
-		// スピード計算
-		SpeedCalculate();
 		// 移動
 		BaseMove();
 		// 回避
@@ -150,55 +148,26 @@ void Hunter::BaseMove()
 	XMFLOAT3 position = hunter_[animationType_]->GetPosition();
 	XMFLOAT3 rotation = hunter_[animationType_]->GetRotation();
 
-	if ((input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f) && !isAttackFlag_ && !falg_.damage)
+	if (((input->PadStickGradient().x <= -ANGLE_RESTRICTION || input->PadStickGradient().x >= ANGLE_RESTRICTION) ||
+		(input->PadStickGradient().y <= -ANGLE_RESTRICTION || input->PadStickGradient().y >= ANGLE_RESTRICTION)) && !isAttackFlag_ && !falg_.damage)
 	{
-		XMFLOAT2 angle = { cameraAngle_.x + (float)input->PadStickAngle(), cameraAngle_.y };
+		// スピード計算
+		SpeedCalculate();
 
-		float speed = speed_;
+		playerAngle_ = { cameraAngle_.x + (float)input->PadStickAngle(), cameraAngle_.y };
+
 		if (input->PadStickGradient().y < 0.0f)
 		{
-			speed *= -1.0f;
+			speed_.y *= -1.0f;
 		}
-
-		position.x +=  cosf((angle.x * 3.14f) / 180.0f) * speed_;
-		position.y +=  sinf((angle.y * 3.14f) / 180.0f) * speed;
-		position.z += -sinf((angle.x * 3.14f) / 180.0f) * speed_;
-
-		if (position.x <= -48.0f)
-		{
-			position.x = -48.0f;
-		}
-		else if (position.x >= 48.0f)
-		{
-			position.x = 48.0f;
-		}
-
-		if (position.y <= 1.0f)
-		{
-			position.y = 1.0f;
-		}
-		else if (position.y >= 58.0f)
-		{
-			position.y = 58.0f;
-		}
-
-		if (position.z <= -48.0f)
-		{
-			position.z = -48.0f;
-		}
-		else if (position.z >= 48.0f)
-		{
-			position.z = 48.0f;
-		}
-
 
 		if (input->PadStickGradient().y > 0.0f)
 		{
-			angle.y = -angle.y;
+			playerAngle_.y = -playerAngle_.y;
 		}
 
-		rotation.y = angle.x + 90;
-		rotation.x = angle.y;
+		rotation.y = playerAngle_.x + 90;
+		rotation.x = playerAngle_.y;
 
 		if (isDash_ && !falg_.dash && !falg_.dodge)
 		{
@@ -242,6 +211,46 @@ void Hunter::BaseMove()
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
 		}
+	}
+
+	position.x +=  cosf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
+	position.y +=  sinf((playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
+	position.z += -sinf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
+
+	if (position.x <= -48.0f)
+	{
+		position.x = -48.0f;
+	}
+	else if (position.x >= 48.0f)
+	{
+		position.x = 48.0f;
+	}
+
+	if (position.y <= 1.0f)
+	{
+		position.y = 1.0f;
+	}
+	else if (position.y >= 58.0f)
+	{
+		position.y = 58.0f;
+	}
+
+	if (position.z <= -48.0f)
+	{
+		position.z = -48.0f;
+	}
+	else if (position.z >= 48.0f)
+	{
+		position.z = 48.0f;
+	}
+
+	if (speed_.x != 0.0f)
+	{
+		speed_.x *= 0.925f;
+	}
+	if (speed_.y != 0.0f)
+	{
+		speed_.y *= 0.925f;
 	}
 
 	for (int i = 0; i < hunter_.size(); i++)
@@ -374,7 +383,7 @@ void Hunter::SpeedCalculate()
 
 		avoidTimer_++;
 
-		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f;
+		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f;
 
 		if (avoidTimer_ >= 10 && !falg_.dodge)
 		{
@@ -385,14 +394,14 @@ void Hunter::SpeedCalculate()
 	}
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
-		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
+		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
 		stamina_ -= 0.5f;
 		avoidTimer_++;
 		isDash_ = true;
 	}
 	else
 	{
-		speed_ = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
+		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
 		avoidTimer_++;
 		isDash_ = false;
 	}

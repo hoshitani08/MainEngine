@@ -2,6 +2,8 @@ cbuffer cbuff0 : register(b0)
 {
 	float4 color; // 色(RGBA)
 	float brightnessColor; // 明度
+	matrix mat; //ビュープロジェクション行列
+	float timer;
 };
 
 //頂点シェーダーからピクセルシェーダーへのやり取りに使用する構造体

@@ -334,7 +334,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	BehaviorTree();
+	//BehaviorTree();
 
 	if (colorTimer_ >= 30)
 	{
@@ -773,7 +773,7 @@ void Monster::Animation(AnimationType type)
 			isEaseFlag_ = true;
 		}
 
-		bubbleEmitter_->SetCenter(1.0f);
+		bubbleEmitter_->SetCenter(2.5f);
 		for (auto& a : tail_)
 		{
 			bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
@@ -897,8 +897,16 @@ bool Monster::Howl()
 	{
 		return false;
 	}
+	else
+	{
+		Animation(AnimationType::Waiting);
+		howlTimer_++;
+	}
 
-	howlflag_ = true;
+	if (howlTimer_ >= 90)
+	{
+		howlflag_ = true;
+	}
 
 	return true;
 }
