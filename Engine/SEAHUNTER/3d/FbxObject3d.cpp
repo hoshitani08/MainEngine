@@ -140,9 +140,6 @@ void FbxObject3d::Update()
 		constBuffTransform_->Unmap(0, nullptr);
 	}
 
-	//ボーン配列
-	std::vector<FbxModel::Bone>& bones = model_->GetBones();
-
 	//アニメーション
 	if (isPlay_)
 	{
@@ -171,6 +168,9 @@ void FbxObject3d::Update()
 			currentTime_ = endTime_;
 		}
 	}
+
+	//ボーン配列
+	std::vector<FbxModel::Bone>& bones = model_->GetBones();
 
 	// 定数バッファ(スキン)へデータ転送
 	ConstBufferDataSkin* constMatSkin = nullptr;
