@@ -23,6 +23,7 @@ protected: // エイリアス
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	using XMVECTOR = DirectX::XMVECTOR;
 
 public:// 定数
 	//ボーンの最大数
@@ -178,8 +179,14 @@ public: // メンバ関数
 	/// </summary>
 	/// <returns></returns>
 	bool AnimationEnd() { return currentTime_ >= endTime_; }
-
+	/// <summary>
+	/// アニメーション用イージングセット
+	/// </summary>
+	/// <param name="data"></param>
 	void SetEaseData(EaseData* data) { animationEaseData_ = data; }
+
+	XMFLOAT3 ToXMFLOAT3(FbxVector4 count);
+	XMFLOAT4 ToXMFLOAT4(FbxQuaternion count);
 
 protected: // メンバ変数
 	// 定数バッファ

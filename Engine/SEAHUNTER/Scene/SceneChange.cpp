@@ -13,7 +13,7 @@ SceneChange::SceneChange()
 		{
 			std::unique_ptr<BlackBox> tempY = std::make_unique<BlackBox>();
 
-			tempY->sprite_ = Sprite::Create(103, { (float)(20 + x * 40),(float)(20 + y * 40) }, { 1,1,1,1 }, { 0.5f,0.5f });
+			tempY->sprite_ = Sprite::Create(103, { static_cast<float>(20 + x * 40),static_cast<float>(20 + y * 40) }, { 1,1,1,1 }, { 0.5f,0.5f });
 			tempY->offsetTimer_ = y;
 
 			tempX.push_back(std::move(tempY));

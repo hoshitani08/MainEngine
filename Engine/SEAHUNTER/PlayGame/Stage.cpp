@@ -26,7 +26,7 @@ void Stage::Initialize()
 		{
 			std::unique_ptr<Block> block;
 
-			XMFLOAT2 size = { (float)MapChip::GetInstance()->GetMapChipMaxX("map") / 2, (float)MapChip::GetInstance()->GetMapChipMaxY("map") / 2 };
+			XMFLOAT2 size = { static_cast<float>(MapChip::GetInstance()->GetMapChipMaxX("map") / 2), static_cast<float>(MapChip::GetInstance()->GetMapChipMaxY("map") / 2) };
 			float count = 6.0f;
 			XMFLOAT3 pos = { (i - size.x) * count, 0, (j - size.y) * count };
 

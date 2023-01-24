@@ -23,7 +23,7 @@ void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& s
 		for (int j = 0; j < 4; j++)
 		{
 			//1要素コピー
-			dst->r[i].m128_f32[j] = (float)src.Get(i, j);
+			dst->r[i].m128_f32[j] = static_cast<float>(src.Get(i, j));
 		}
 	}
 }
@@ -111,9 +111,9 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	FbxDouble3 translation = fbxNode->LclTranslation.Get();
 
 	// 形式変換して代入
-	node.rotation = { (float)rotation[0] * (XM_PI / 180.0f), (float)rotation[1] * (XM_PI / 180.0f), (float)rotation[2] * (XM_PI / 180.0f), 0.0f };
-	node.scaling = { (float)scaling[0], (float)scaling[1], (float)scaling[2], 0.0f };
-	node.translation = { (float)translation[0], (float)translation[1], (float)translation[2], 1.0f };
+	node.rotation = { static_cast<float>(rotation[0]) * (XM_PI / 180.0f), static_cast<float>(rotation[1]) * (XM_PI / 180.0f), static_cast<float>(rotation[2]) * (XM_PI / 180.0f), 0.0f };
+	node.scaling =  { static_cast<float>(scaling[0]), static_cast<float>(scaling[1]), static_cast<float>(scaling[2]), 0.0f };
+	node.translation = { static_cast<float>(translation[0]), static_cast<float>(translation[1]), static_cast<float>(translation[2]), 1.0f };
 
 	// スケール、回転、平行移動行列の計算
 	XMMATRIX matScaling, matRotation, matTranslation;
@@ -215,17 +215,17 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 
 			FbxModel::VertexPosNormalUvSkin& vertex = vertices[indexCount];
 			// 座標のコピー
-			vertex.pos.x = (float)pCoord[controlPointIndex][0];
-			vertex.pos.y = (float)pCoord[controlPointIndex][1];
-			vertex.pos.z = (float)pCoord[controlPointIndex][2];
+			vertex.pos.x = static_cast<float>(pCoord[controlPointIndex][0]);
+			vertex.pos.y = static_cast<float>(pCoord[controlPointIndex][1]);
+			vertex.pos.z = static_cast<float>(pCoord[controlPointIndex][2]);
 
 			// 頂点法線読込
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
-				vertex.normal.x = (float)normal[0];
-				vertex.normal.y = (float)normal[1];
-				vertex.normal.z = (float)normal[2];
+				vertex.normal.x = static_cast<float>(normal[0]);
+				vertex.normal.y = static_cast<float>(normal[1]);
+				vertex.normal.z = static_cast<float>(normal[2]);
 			}
 
 			// テクスチャUV読込
@@ -236,8 +236,8 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 				// 0番決め打ちで読込
 				if (fbxMesh->GetPolygonVertexUV(i, j, uvNames[0], uvs, lUnmappedUV))
 				{
-					vertex.uv.x = (float)uvs[0];
-					vertex.uv.y = (float)uvs[1] * -1.0f;
+					vertex.uv.x = static_cast<float>(uvs[0]);
+					vertex.uv.y = static_cast<float>(uvs[1] * -1.0f);
 				}
 			}
 
@@ -284,15 +284,15 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 
 				//環境光係数
 				FbxPropertyT<FbxDouble3> ambient = lambert->Ambient;
-				model->ambient_.x = (float)ambient.Get()[0];
-				model->ambient_.y = (float)ambient.Get()[1];
-				model->ambient_.z = (float)ambient.Get()[2];
+				model->ambient_.x = static_cast<float>(ambient.Get()[0]);
+				model->ambient_.y = static_cast<float>(ambient.Get()[1]);
+				model->ambient_.z = static_cast<float>(ambient.Get()[2]);
 
 				//拡散反射光係数
 				FbxPropertyT<FbxDouble3> diffuse = lambert->Diffuse;
-				model->diffuse_.x = (float)diffuse.Get()[0];
-				model->diffuse_.y = (float)diffuse.Get()[1];
-				model->diffuse_.z = (float)diffuse.Get()[2];
+				model->diffuse_.x = static_cast<float>(diffuse.Get()[0]);
+				model->diffuse_.y = static_cast<float>(diffuse.Get()[1]);
+				model->diffuse_.z = static_cast<float>(diffuse.Get()[2]);
 			}
 
 			//マテリアル名(デバック用)
@@ -506,7 +506,7 @@ void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
 			//頂点番号
 			int controlPointIndex = controlPointIndices[j];
 			//スキンウェイト
-			float weight = (float)controPointWeights[j];
+			float weight = static_cast<float>(controPointWeights[j]);
 			//その頂点の影響を受けるボーンリストに、ボーンとウェイトのペアを追加
 			weightLists[controlPointIndex].emplace_back(WeightSet{ (UINT)i, weight });
 		}

@@ -53,7 +53,7 @@ void MeshCollider::ConstructTriangles(Model* model)
 			tri.ComputeNormal();
 		}
 		//次のメッシュは、今までの三角形番号の次から使う
-		start += (int)triangleNum;
+		start += static_cast<int>(triangleNum);
 	}
 }
 

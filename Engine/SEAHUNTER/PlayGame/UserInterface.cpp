@@ -398,23 +398,23 @@ void UserInterface::ItemSelection()
 					itemSprite_[i]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, frameEase_->GetTimeRate()));
 				}
 			}
-			if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+			if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::DefenseBuff))
 			{
-				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(itemPos);
-				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
-				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(itemPos);
+				itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
 			}
-			else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+			else if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::AttackBuff))
 			{
-				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
-				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(itemPos);
-				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(itemPos);
+				itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
 			}
 			else
 			{
-				itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
-				itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
-				itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(itemPos);
+				itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, frameEase_->GetTimeRate()));
+				itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(itemPos);
 			}
 
 			if (frameEase_->GetEndFlag())
@@ -430,52 +430,52 @@ void UserInterface::ItemSelection()
 
 			if (hunter_->GetButtonFlag())
 			{
-				if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+				if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::DefenseBuff))
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
 				}
-				else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+				else if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::AttackBuff))
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
 				}
 				else
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x + itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition({ itemPos.x - itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x - itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
 				}
 
 				xButtonIcon_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { 48, 48 }, { 32, 32 }, selectionEase_->GetTimeRate()));
 			}
 			else
 			{
-				if (hunter_->GetItemType() == (int)ItemManager::ItemType::DefenseBuff)
+				if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::DefenseBuff))
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
 				}
-				else if (hunter_->GetItemType() == (int)ItemManager::ItemType::AttackBuff)
+				else if (hunter_->GetItemType() == static_cast<int>(ItemManager::ItemType::AttackBuff))
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
 				}
 				else
 				{
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
-					itemSprite_[(int)ItemManager::ItemType::DefenseBuff]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::AttackBuff]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
-					itemSprite_[(int)ItemManager::ItemType::Healing]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetPosition({ itemPos.x + itemAddPos, itemPos.y });
+					itemSprite_[static_cast<int>(ItemManager::ItemType::DefenseBuff)]->SetColor(Ease::Action(EaseType::In, EaseFunctionType::Quad, startColor, endColor, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::AttackBuff)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, itemPos, { itemPos.x - itemAddPos, itemPos.y }, selectionEase_->GetTimeRate()));
+					itemSprite_[static_cast<int>(ItemManager::ItemType::Healing)]->SetPosition(Ease::Action(EaseType::In, EaseFunctionType::Quad, { itemPos.x + itemAddPos, itemPos.y }, itemPos, selectionEase_->GetTimeRate()));
 				}
 
 				bButtonIcon_->SetSize(Ease::Action(EaseType::In, EaseFunctionType::Quad, { 48, 48 }, { 32, 32 }, selectionEase_->GetTimeRate()));
@@ -547,7 +547,7 @@ void UserInterface::Map()
 
 void UserInterface::ClockCalculate(int timer)
 {
-	float count = (float)timer / 15.0f * 100;
-	float count2 = (90 * count) / 100;
+	float count = static_cast<float>(timer / 15.0f * 100);
+	float count2 = (90.0f * count) / 100.0f;
 	clockNeedle_->SetRotation(count2);
 }

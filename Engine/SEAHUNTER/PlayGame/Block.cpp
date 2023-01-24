@@ -13,7 +13,7 @@ Block::Block(int type, XMFLOAT3 pos)
 
 void Block::Initialize(int type, XMFLOAT3 pos)
 {
-	if (type == (int)BlockType::Rock)
+	if (type == static_cast<int>(BlockType::Rock))
 	{
 		rockBlock_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("Rock"));
 		rockBlock_->SetPosition({ pos.x, 0.8f + pos.y, pos.z });
@@ -23,9 +23,9 @@ void Block::Initialize(int type, XMFLOAT3 pos)
 
 		blockType_ = BlockType::Rock;
 	}
-	else if (type == (int)BlockType::Coral)
+	else if (type == static_cast<int>(BlockType::Coral))
 	{
-		int numCount = (int)RandCalculate(3.0f, 5.0f);
+		int numCount = static_cast<int>(RandCalculate(3.0f, 5.0f));
 
 		for (int i = 0; i < numCount; i++)
 		{
@@ -52,7 +52,7 @@ void Block::Initialize(int type, XMFLOAT3 pos)
 
 		blockType_ = BlockType::Coral;
 	}
-	else if (type == (int)BlockType::Rock2)
+	else if (type == static_cast<int>(BlockType::Rock2))
 	{
 		float size = RandCalculate(1.0f, 2.0f);
 

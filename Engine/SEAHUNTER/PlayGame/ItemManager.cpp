@@ -37,7 +37,7 @@ int ItemManager::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 	const int X = x / mapChipSize;
 	const int Y = y / mapChipSize;
 
-	int i = Y * (int)Phase::Max + X;
+	int i = Y * static_cast<int>(Phase::Max) + X;
 
 	return csvNumber_[i];
 }
@@ -53,20 +53,20 @@ void ItemManager::Initialize()
 	CsvLoad("item");
 
 	
-	for (int i = 0; i < (int)ItemType::Max; i++)
+	for (int i = 0; i < static_cast<int>(ItemType::Max); i++)
 	{
 		ItemData tempData;
-		for (int j = 0; j < (int)Phase::Max; j++)
+		for (int j = 0; j < static_cast<int>(Phase::Max); j++)
 		{
-			if (GetChipNum(j, i, "item") == (int)ItemType::Healing && j == 0)
+			if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::Healing) && j == 0)
 			{
 				tempData.name = ItemType::Healing;
 			}
-			else if (GetChipNum(j, i, "item") == (int)ItemType::AttackBuff && j == 0)
+			else if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::AttackBuff) && j == 0)
 			{
 				tempData.name = ItemType::AttackBuff;
 			}
-			else if (GetChipNum(j, i, "item") == (int)ItemType::DefenseBuff && j == 0)
+			else if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::DefenseBuff) && j == 0)
 			{
 				tempData.name = ItemType::DefenseBuff;
 			}

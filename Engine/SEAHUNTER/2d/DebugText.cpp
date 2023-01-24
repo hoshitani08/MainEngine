@@ -51,7 +51,7 @@ void DebugText::Print(const std::string& text, float x, float y, float scale = 1
 
 		// À•WŒvZ
 		spriteDatas_[spriteIndex_]->SetPosition({ x + FONT_WIDTH * scale * i, y });
-		spriteDatas_[spriteIndex_]->SetTextureRect({ (float)fontIndexX * FONT_WIDTH, (float)fontIndexY * FONT_HEIGHT }, { (float)FONT_WIDTH, (float)FONT_HEIGHT });
+		spriteDatas_[spriteIndex_]->SetTextureRect({ static_cast<float>(fontIndexX * FONT_WIDTH), static_cast<float>(fontIndexY * FONT_HEIGHT) }, { static_cast<float>(FONT_WIDTH), static_cast<float>(FONT_HEIGHT) });
 		spriteDatas_[spriteIndex_]->SetSize({ FONT_WIDTH * scale, FONT_HEIGHT * scale });
 
 		// •¶š‚ğ‚P‚Âi‚ß‚é

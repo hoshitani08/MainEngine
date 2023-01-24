@@ -30,7 +30,7 @@ void ObjParticle::Update()
 		//経過フレーム数をカウント
 		particleData_[i].frame++;
 		// 進行度を0～1の範囲に換算
-		float f = (float)particleData_[i].numFrame / particleData_[i].frame;
+		float f = static_cast<float>(particleData_[i].numFrame / particleData_[i].frame);
 		//速度に加速度を加算
 		particleData_[i].velocity = particleData_[i].velocity + particleData_[i].accel;
 		//速度による移動

@@ -146,8 +146,8 @@ void FbxObject3d::Update()
 		if (animationEaseData_ != nullptr && animationEaseData_->GetActFlag())
 		{
 			animationEaseData_->Update();
-			float start = (float)startTime_.GetFrameCount();
-			float end = (float)endTime_.GetFrameCount();
+			float start = static_cast<float>(startTime_.GetFrameCount());
+			float end = static_cast<float>(endTime_.GetFrameCount());
 
 			currentTime_.SetFrame((FbxLongLong)Ease::Action(EaseType::In, EaseFunctionType::Linear, start, end, animationEaseData_->GetTimeRate()));
 		}
@@ -181,6 +181,11 @@ void FbxObject3d::Update()
 		XMMATRIX matCurrentPose;
 		//今の姿勢行列を取得
 		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime_);
+
+		XMFLOAT3 scale = ToXMFLOAT3(fbxCurrentPose.GetS());
+		XMFLOAT4 rotate = ToXMFLOAT4(fbxCurrentPose.GetQ());
+		XMFLOAT3 translate = ToXMFLOAT3(fbxCurrentPose.GetT());
+
 		//XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 		//合成してスキニング行列に
@@ -287,4 +292,25 @@ const XMMATRIX FbxObject3d::GetBoneMatWorld(std::string name)
 	}
 
 	return {};
+}
+
+XMFLOAT3 FbxObject3d::ToXMFLOAT3(FbxVector4 count)
+{
+	XMFLOAT3 temp = {};
+	temp.x = static_cast<float>(count[0]);
+	temp.y = static_cast<float>(count[1]);
+	temp.z = static_cast<float>(count[2]);
+
+	return temp;
+}
+
+XMFLOAT4 FbxObject3d::ToXMFLOAT4(FbxQuaternion count)
+{
+	XMFLOAT4 temp = {};
+	temp.x = static_cast<float>(count[0]);
+	temp.y = static_cast<float>(count[1]);
+	temp.z = static_cast<float>(count[2]);
+	temp.w = static_cast<float>(count[3]);
+
+	return temp;
 }

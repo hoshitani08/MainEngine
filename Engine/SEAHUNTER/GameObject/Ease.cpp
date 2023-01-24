@@ -12,20 +12,20 @@ const float Ease::Action(EaseType easeType, EaseFunctionType easeFunctionType, c
 {
 	if (easeType == EaseType::In)
 	{
-		return (end - start) * funcPtr_[(int)easeFunctionType](t) + start;
+		return (end - start) * funcPtr_[static_cast<int>(easeFunctionType)](t) + start;
 	}
 	else if (easeType == EaseType::Out)
 	{
-		return (end - start) * (1.0f - funcPtr_[(int)easeFunctionType](1.0f - t)) + start;
+		return (end - start) * (1.0f - funcPtr_[static_cast<int>(easeFunctionType)](1.0f - t)) + start;
 	}
 	else if (easeType == EaseType::InOut)
 	{
 		if (t < 0.5f)
 		{
-			return (end - start) * (funcPtr_[(int)easeFunctionType](t * 2.0f) / 2.0f) + start;
+			return (end - start) * (funcPtr_[static_cast<int>(easeFunctionType)](t * 2.0f) / 2.0f) + start;
 		}
 
-		return (end - start) * (1.0f - funcPtr_[(int)easeFunctionType](2.0f - 2.0f * t) / 2.0f) + start;
+		return (end - start) * (1.0f - funcPtr_[static_cast<int>(easeFunctionType)](2.0f - 2.0f * t) / 2.0f) + start;
 	}
 
 	return 0.0f;

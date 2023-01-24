@@ -88,7 +88,7 @@ void ParticleManager::Update()
 		//経過フレーム数をカウント
 		it->frame++;
 		// 進行度を0～1の範囲に換算
-		float f = (float)it->numFrame / it->frame;
+		float f = static_cast<float>(it->numFrame / it->frame);
 		//速度に加速度を加算
 		it->velocity = it->velocity + it->accel;
 		//速度による移動

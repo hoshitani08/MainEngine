@@ -15,7 +15,7 @@ Vector3::Vector3(float x, float y, float z)
 
 float Vector3::Length() const
 {
-	return (float)sqrt(x * x + y * y + z * z);
+	return static_cast<float>(sqrt(x * x + y * y + z * z));
 }
 
 Vector3& Vector3::Normalize()

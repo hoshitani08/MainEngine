@@ -153,7 +153,7 @@ void Mesh::CalculateSmoothedVetexNormals()
 			normal += XMVectorSet(vertices_[index].normal.x, vertices_[index].normal.y, vertices_[index].normal.z, 0);
 		}
 
-		normal = XMVector3Normalize(normal / (float)v.size());
+		normal = XMVector3Normalize(normal / static_cast<float>(v.size()));
 		//共通法線を使用する全ての頂点データに書き込む
 		for (unsigned short index : v)
 		{

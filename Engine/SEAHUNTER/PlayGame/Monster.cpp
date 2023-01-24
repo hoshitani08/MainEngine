@@ -459,7 +459,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
-			hp_ -= (float)PartsDamage::Body * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::Body) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, body_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < body_.size(); i++)
@@ -487,7 +487,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
-			hp_ -= (float)PartsDamage::RightForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::RightForeFoot) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, rightForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < rightForeFoot_.size(); i++)
@@ -515,7 +515,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
-			hp_ -= (float)PartsDamage::LeftForeFoot * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::LeftForeFoot) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, leftForeFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < leftForeFoot_.size(); i++)
@@ -543,7 +543,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
-			hp_ -= (float)PartsDamage::RightHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::RightHindFoot) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, rightHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < rightHindFoot_.size(); i++)
@@ -571,7 +571,7 @@ void Monster::DamageHit(Sphere hitSphere)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
-			hp_ -= (float)PartsDamage::LeftHindFoot * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::LeftHindFoot) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, leftHindFoot_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < leftHindFoot_.size(); i++)
@@ -600,7 +600,7 @@ void Monster::DamageHit(Sphere hitSphere)
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
 			tailDestruction_ += 10;
-			hp_ -= (float)PartsDamage::Tail * ItemManager::GetInstance()->AttackBuffMagnification();
+			hp_ -= static_cast<float>(PartsDamage::Tail) * ItemManager::GetInstance()->AttackBuffMagnification();
 			bloodEmitter_->BloodAdd(count, life, tail_[i]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("blood"));
 
 			for (int i = 0; i < tail_.size(); i++)
@@ -1119,7 +1119,7 @@ bool Monster::WaitingElapsedTime()
 		if (count_ >= maxCount_)
 		{
 			count_ = 0;
-			maxCount_ = (int)RandCalculate(1.0f, 4.0f);
+			maxCount_ = static_cast<int>(RandCalculate(1.0f, 4.0f));
 		}
 		Animation(AnimationType::InitialPosture);
 		angleEaseTimer_ = 0.0f;

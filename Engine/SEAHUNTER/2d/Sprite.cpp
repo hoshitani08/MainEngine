@@ -34,8 +34,8 @@ bool Sprite::StaticInitialize(ID3D12Device* device, int window_width, int window
 	// 射影行列計算
 	matProjection_ = XMMatrixOrthographicOffCenterLH
 	(
-		0.0f, (float)window_width,
-		(float)window_height, 0.0f,
+		0.0f, static_cast<float>(window_width),
+		static_cast<float>(window_height), 0.0f,
 		0.0f, 1.0f
 	);
 
@@ -178,7 +178,7 @@ std::unique_ptr<Sprite> Sprite::Create(UINT texNumber, XMFLOAT2 position, XMFLOA
 		// テクスチャ情報取得
 		D3D12_RESOURCE_DESC resDesc = texBuff_[texNumber]->GetDesc();
 		// スプライトのサイズをテクスチャのサイズに設定
-		size = { (float)resDesc.Width, (float)resDesc.Height };
+		size = { static_cast<float>(resDesc.Width), static_cast<float>(resDesc.Height) };
 	}
 
 	// Spriteのインスタンスを生成

@@ -4,7 +4,7 @@ using namespace DirectX;
 
 Camera::Camera(int window_width, int window_height)
 {
-	aspectRatio_ = (float)window_width / window_height;
+	aspectRatio_ = static_cast<float>(window_width) / static_cast<float>(window_height);
 
 	//ビュー行列の計算
 	UpdateViewMatrix();

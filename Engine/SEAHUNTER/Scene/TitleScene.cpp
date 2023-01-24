@@ -68,7 +68,7 @@ void TitleScene::Initialize()
 		{
 			std::unique_ptr<Block> block;
 
-			XMFLOAT2 size = { (float)MapChip::GetInstance()->GetMapChipMaxX("map") / 2, (float)MapChip::GetInstance()->GetMapChipMaxY("map") / 2 };
+			XMFLOAT2 size = { static_cast<float>(MapChip::GetInstance()->GetMapChipMaxX("map") / 2), static_cast<float>(MapChip::GetInstance()->GetMapChipMaxY("map") / 2) };
 			float count = 2.5f;
 			XMFLOAT3 pos = { (i - size.x) * count, -4, (j - size.y) * count };
 

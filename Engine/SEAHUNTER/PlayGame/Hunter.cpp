@@ -154,7 +154,7 @@ void Hunter::BaseMove()
 		// スピード計算
 		SpeedCalculate();
 
-		playerAngle_ = { cameraAngle_.x + (float)input->PadStickAngle(), cameraAngle_.y };
+		playerAngle_ = { cameraAngle_.x + static_cast<float>(input->PadStickAngle()), cameraAngle_.y };
 
 		if (input->PadStickGradient().y < 0.0f)
 		{
@@ -383,7 +383,7 @@ void Hunter::SpeedCalculate()
 
 		avoidTimer_++;
 
-		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f;
+		speed_.x = speed_.y = static_cast<float>(sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) * 1.2f);
 
 		if (avoidTimer_ >= 10 && !falg_.dodge)
 		{
@@ -394,14 +394,14 @@ void Hunter::SpeedCalculate()
 	}
 	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
-		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y);
+		speed_.x = speed_.y = static_cast<float>(sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y));
 		stamina_ -= 0.5f;
 		avoidTimer_++;
 		isDash_ = true;
 	}
 	else
 	{
-		speed_.x = speed_.y = (float)sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2;
+		speed_.x = speed_.y = static_cast<float>(sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y) / 2.0f);
 		avoidTimer_++;
 		isDash_ = false;
 	}
