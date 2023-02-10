@@ -83,7 +83,7 @@ void ParticleEmitter::ItemAdd(int count, int life, XMFLOAT3 position, Model* mod
 
 		if (objParticle_ != nullptr && model != nullptr)
 		{
-			XMFLOAT3 size = { objStartScale_.x,  static_cast<float>(((rand() % 11) + 1) / 10), objStartScale_.z };
+			XMFLOAT3 size = { objStartScale_.x,  RandCalculate(objStartScale_.y, 1.5f), objStartScale_.z };
 			
 			objParticle_->Add(life, position_, velocity_, accel_, size, objEndScale_, startColor_, endColor_, model);
 		}

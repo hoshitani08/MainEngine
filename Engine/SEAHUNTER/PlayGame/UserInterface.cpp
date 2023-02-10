@@ -299,7 +299,7 @@ void UserInterface::StrengthCalculate()
 	{
 		float stamina = hunter_->GetStamina();
 
-		stamina++;
+		stamina += 0.4f;
 
 		if (stamina >= hunter_->MAX_STAMINA)
 		{

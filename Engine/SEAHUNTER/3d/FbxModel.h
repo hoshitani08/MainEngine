@@ -126,6 +126,11 @@ public:
 	/// <returns>ボーン</returns>
 	std::vector<Bone>& GetBones() { return bones_; }
 	/// <summary>
+	/// ノードの取得
+	/// </summary>
+	/// <returns></returns>
+	std::vector<Node>& GetNodes() { return nodes_; }
+	/// <summary>
 	/// FBXシーンの取得デストラクタ
 	/// </summary>
 	/// <returns>FBXシーン</returns>

@@ -156,7 +156,7 @@ void Hunter::BaseMove()
 
 		playerAngle_ = { cameraAngle_.x + static_cast<float>(input->PadStickAngle()), cameraAngle_.y };
 
-		if (input->PadStickGradient().y < 0.0f)
+		if (input->PadStickGradient().y < 0.0f || cameraAngle_.y < 0.0f || input->PadStickGradient().y > 0.0f && cameraAngle_.y > 0.0f)
 		{
 			speed_.y *= -1.0f;
 		}
@@ -187,16 +187,21 @@ void Hunter::BaseMove()
 			AnimationFlag temp = {};
 			falg_ = temp;
 			falg_.move = true;
+
+			int count = animationType_;
 			animationType_ = 1;
 			hunter_[animationType_]->PlayAnimation();
+			hunter_[animationType_]->SetInterpolationModel(hunter_[count]->GetModel());
+			hunter_[animationType_]->SetInterpolationTime(hunter_[count]->GetAnimationNowTime());
 			// ˆÚ“®
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 			data_->SetActFlag(false);
+			
 		}
 	}
-	else if (!isAttackFlag_ && !falg_.damage && !isDash_ && !falg_.dodge)
+	else if (!isAttackFlag_ && !falg_.damage && !falg_.dodge)
 	{
 		if (!falg_.halt)
 		{

@@ -459,9 +459,6 @@
     <Filter Include="エンジンシステム\3d\FBX">
       <UniqueIdentifier>{e2b5b59f-7ceb-4351-8904-04e2d413cbff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="エンジンシステム\3d\Ligth">
-      <UniqueIdentifier>{71eff164-37a0-4850-8d14-dc98dc98a3bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="エンジンシステム\3d\Particle">
       <UniqueIdentifier>{b3f0a7b3-44d4-4f84-a40a-3230de0c8366}</UniqueIdentifier>
     </Filter>
@@ -491,6 +488,9 @@
     </Filter>
     <Filter Include="ゲームシステム\PostEffect">
       <UniqueIdentifier>{a4f540fe-ad45-484e-a63e-389c9651ec26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="エンジンシステム\3d\Ligth">
+      <UniqueIdentifier>{71eff164-37a0-4850-8d14-dc98dc98a3bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
