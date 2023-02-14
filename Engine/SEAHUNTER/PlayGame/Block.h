@@ -21,6 +21,7 @@ private: // エイリアス
 	using XMVECTOR = DirectX::XMVECTOR;
 
 public: // サブクラス
+	// ブロックのタイプ
 	enum class BlockType
 	{
 		Rock,
@@ -29,6 +30,7 @@ public: // サブクラス
 		Rock3,
 	};
 
+	// 珊瑚のデータ
 	struct CoralData
 	{
 		//珊瑚

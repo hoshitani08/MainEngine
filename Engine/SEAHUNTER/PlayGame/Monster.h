@@ -37,6 +37,7 @@ public: // 定数
 	const float MAX_HP = 500.0f;
 
 public: // サブクラス
+	// アニメーションのタイプ
 	enum class AnimationType
 	{
 		InitialPosture,
@@ -47,6 +48,7 @@ public: // サブクラス
 		Waiting,
 	};
 
+	// パーツごとに受けるダメージの設定
 	enum class PartsDamage
 	{
 		Body = 10,
@@ -254,11 +256,13 @@ private: // メンバ変数
 	std::array<std::unique_ptr<Object3d>, 4> tail_;
 	// プレイヤーのデータ
 	Hunter* hunter_ = nullptr;
-	// 血のパーティクル
+	// 血のエミッター
 	std::unique_ptr<ParticleEmitter> bloodEmitter_;
+	// 血のパーティクル
 	std::unique_ptr<ObjParticle> bloodParticle_;
-	// 泡のパーティクル
+	// 泡のエミッター
 	std::unique_ptr<ParticleEmitter> bubbleEmitter_;
+	// 泡のパーティクル
 	std::unique_ptr<ObjParticle> bubbleParticle_;
 #pragma endregion モデル
 #pragma region
@@ -293,12 +297,13 @@ private: // メンバ変数
 	float addAngle_ = 5.0f;
 	// パンチし終わったか
 	bool isPunch_ = false;
-	//
+	// 行動の経過したカウント
 	int count_ = 0;
+	// 行動の経過したカウント最大
 	int maxCount_ = 0;
-	//
+	// 色変化のタイマー
 	int colorTimer_ = 0;
-	//
+	// 咆哮する時間
 	int howlTimer_ = 0;
 #pragma endregion アニメーション
 #pragma region 
@@ -327,8 +332,4 @@ private: // メンバ変数
 	// 待機の終了
 	bool waitingEnd_ = false;
 #pragma endregion ビヘイビアツリー
-#pragma region 
-	//
-	bool debugFlag = false;
-#pragma endregion デバック
 };

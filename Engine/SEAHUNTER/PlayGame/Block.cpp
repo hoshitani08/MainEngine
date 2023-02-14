@@ -13,7 +13,8 @@ Block::Block(int type, XMFLOAT3 pos)
 
 void Block::Initialize(int type, XMFLOAT3 pos)
 {
-	if (type == static_cast<int>(BlockType::Rock))
+	// ブロック生成
+	if (type == static_cast<int>(BlockType::Rock)) // 岩1
 	{
 		rockBlock_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("Rock"));
 		rockBlock_->SetPosition({ pos.x, 0.8f + pos.y, pos.z });
@@ -23,7 +24,7 @@ void Block::Initialize(int type, XMFLOAT3 pos)
 
 		blockType_ = BlockType::Rock;
 	}
-	else if (type == static_cast<int>(BlockType::Coral))
+	else if (type == static_cast<int>(BlockType::Coral)) // 珊瑚
 	{
 		int numCount = static_cast<int>(RandCalculate(3.0f, 5.0f));
 
@@ -52,7 +53,7 @@ void Block::Initialize(int type, XMFLOAT3 pos)
 
 		blockType_ = BlockType::Coral;
 	}
-	else if (type == static_cast<int>(BlockType::Rock2))
+	else if (type == static_cast<int>(BlockType::Rock2)) // 岩2
 	{
 		float size = RandCalculate(1.0f, 2.0f);
 
@@ -78,6 +79,7 @@ void Block::Finalize()
 
 void Block::Update()
 {
+	// ブロックタイプが珊瑚だったら泡を出す
 	if (blockType_ == BlockType::Coral)
 	{
 		for (auto& a : coralBlock_)

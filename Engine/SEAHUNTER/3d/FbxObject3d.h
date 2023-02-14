@@ -189,12 +189,6 @@ public: // メンバ関数
 	/// <param name="data"></param>
 	void SetEaseData(EaseData* data) { animationEaseData_ = data; }
 
-	void SetInterpolationModel(FbxModel* model) { interpolationModel_ = model; }
-
-	void SetInterpolationTime(FbxTime interpolationTime) { interpolationTime_ = interpolationTime; }
-
-	FbxTime GetAnimationNowTime() { return currentTime_; }
-
 	XMFLOAT3 ToXMFLOAT3(FbxVector4 count);
 	XMFLOAT4 ToXMFLOAT4(FbxQuaternion count);
 
@@ -231,10 +225,4 @@ protected: // メンバ変数
 	std::wstring fName_ = L"";
 	// アニメーションイージング
 	EaseData* animationEaseData_ = nullptr;
-	// 補間用
-	std::unique_ptr<EaseData> interpolationEase = nullptr;
-	//
-	FbxModel* interpolationModel_ = nullptr;
-	//
-	FbxTime interpolationTime_ = {};
 };

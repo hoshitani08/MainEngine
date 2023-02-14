@@ -214,6 +214,7 @@ void Monster::Update()
 {
 	XMFLOAT3 pos = nucleus_->GetPosition();
 
+	// “–‚½‚è”»’è
 	if (pos.x <= -48.0f)
 	{
 		pos.x = -48.0f;
@@ -334,7 +335,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	//BehaviorTree();
+	BehaviorTree();
 
 	if (colorTimer_ >= 30)
 	{
@@ -584,7 +585,7 @@ void Monster::DamageHit(Sphere hitSphere)
 	// K”ö
 	for (int i = 0; i < tail_.size(); i++)
 	{
-		if (!hunter_->IsAttackFlag() || tailDestructionFlag_)
+		if (!hunter_->IsAttackFlag())
 		{
 			break;
 		}
@@ -595,7 +596,7 @@ void Monster::DamageHit(Sphere hitSphere)
 			tail_[i]->GetWorldPosition().z, 1.0f
 		};
 
-		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_)
+		if (Collision::CheckSphere2Sphere(eSphere, hitSphere) && !damageHitFlag_ && !tailDestructionFlag_)
 		{
 			damageHitFlag_ = true;
 			colorChangeFlag_ = true;
@@ -773,10 +774,13 @@ void Monster::Animation(AnimationType type)
 			isEaseFlag_ = true;
 		}
 
-		bubbleEmitter_->SetCenter(2.5f);
-		for (auto& a : tail_)
+		if (!tailDestructionFlag_)
 		{
-			bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+			bubbleEmitter_->SetCenter(2.5f);
+			for (auto& a : tail_)
+			{
+				bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+			}
 		}
 	}
 	//ƒpƒ“ƒ`UŒ‚

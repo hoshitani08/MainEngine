@@ -148,10 +148,13 @@ private: // メンバ変数
 	std::unique_ptr<EaseData> hunterEase_;
 	// アイテム用のイージングの進行度用
 	std::unique_ptr<EaseData> itemEase_;
-	// アイテムのフレーム用のイージングの進行度用
+	// フレーム用のイージングの進行度用
 	std::unique_ptr<EaseData> frameEase_;
+	// フレーム用のイージングの進行度用
 	std::unique_ptr<EaseData> frameEase2_;
+	// 選択時用のイージングの進行度用
 	std::unique_ptr<EaseData> selectionEase_;
+	// ボタン用のイージングの進行度用
 	std::unique_ptr<EaseData> buttonEase_;
 
 	// 一桁
@@ -170,6 +173,6 @@ private: // メンバ変数
 	bool isPlayerDeath_ = false;
 	// 十桁目があるか
 	bool isTenCountFlag_ = false;
-	//
+	// ボタンのリセットフラグ
 	bool buttonReset_ = false;
 };

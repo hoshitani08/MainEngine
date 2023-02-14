@@ -100,9 +100,6 @@ bool FbxObject3d::Initialize()
 	}
 	constBuffSkin_->Unmap(0, nullptr);
 
-	interpolationEase = std::make_unique<EaseData>(5);
-	interpolationEase->SetActFlag(false);
-
 	return true;
 }
 
@@ -144,7 +141,7 @@ void FbxObject3d::Update()
 	}
 
 	//アニメーション
-	if (isPlay_ && interpolationModel_ == nullptr)
+	if (isPlay_)
 	{
 		if (animationEaseData_ != nullptr && animationEaseData_->GetActFlag())
 		{
@@ -175,12 +172,6 @@ void FbxObject3d::Update()
 	//ボーン配列
 	std::vector<FbxModel::Bone>& bones = model_->GetBones();
 
-	std::vector<FbxModel::Bone>& interpolationBones = model_->GetBones();
-	if (interpolationModel_ != nullptr)
-	{
-		interpolationBones = interpolationModel_->GetBones();
-	}
-
 	// 定数バッファ(スキン)へデータ転送
 	ConstBufferDataSkin* constMatSkin = nullptr;
 	result = constBuffSkin_->Map(0, nullptr, (void**)&constMatSkin);
@@ -191,54 +182,12 @@ void FbxObject3d::Update()
 		//今の姿勢行列を取得
 		FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime_);
 
-		if (!interpolationEase->GetEndFlag() && interpolationModel_ != nullptr)
-		{
-			FbxAMatrix interpolationFbxCurrentPose = interpolationBones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(interpolationTime_);
-
-			XMFLOAT3 scaleF = ToXMFLOAT3(fbxCurrentPose.GetS());
-			XMFLOAT4 rotateF = ToXMFLOAT4(fbxCurrentPose.GetQ());
-			XMFLOAT3 translateF = ToXMFLOAT3(fbxCurrentPose.GetT());
-
-			XMFLOAT3 interpolationScaleF = ToXMFLOAT3(interpolationFbxCurrentPose.GetS());
-			XMFLOAT4 interpolationRotateF = ToXMFLOAT4(interpolationFbxCurrentPose.GetQ());
-			XMFLOAT3 interpolationTranslateF = ToXMFLOAT3(interpolationFbxCurrentPose.GetT());
-
-			// 補間の計算
-			XMVECTOR scaleV = XMLoadFloat3(&scaleF);
-			XMVECTOR rotateV = XMLoadFloat4(&rotateF);
-			XMVECTOR translateV = XMLoadFloat3(&translateF);
-
-			XMVECTOR interpolationScaleV = XMLoadFloat3(&interpolationScaleF);
-			XMVECTOR interpolationRotateV = XMLoadFloat4(&interpolationRotateF);
-			XMVECTOR interpolationTranslateV = XMLoadFloat3(&interpolationTranslateF);
-
-			scaleV = XMVectorLerp(interpolationScaleV, scaleV, interpolationEase->GetTimeRate());
-			rotateV = XMVectorLerp(interpolationRotateV, rotateV, interpolationEase->GetTimeRate());
-			translateV = XMVectorLerp(interpolationTranslateV, translateV, interpolationEase->GetTimeRate());
-
-			// スケール、回転、平行移動行列の計算
-			XMMATRIX matScaling, matRotation, matTranslation;
-			matScaling = XMMatrixScalingFromVector(scaleV);
-			matRotation = XMMatrixRotationQuaternion(rotateV);
-			matTranslation = XMMatrixTranslationFromVector(translateV);
-
-			// 変形行列の計算
-			matCurrentPose *= matScaling; // ワールド行列にスケーリングを反映
-			matCurrentPose *= matRotation; // ワールド行列に回転を反映
-			matCurrentPose *= matTranslation; // ワールド行列に平行移動を反映
-		}
-		else
-		{
-			//XMMATRIXに変換
-			FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
-		}
-
+		//XMMATRIXに変換
+		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose, fbxCurrentPose);
 		//合成してスキニング行列に
 		constMatSkin->bones[i] = model_->GetModelTransform() * bones[i].invInitialPose * matCurrentPose * XMMatrixInverse(nullptr, model_->GetModelTransform());
 	}
 	constBuffSkin_->Unmap(0, nullptr);
-
-	interpolationEase->Update();
 }
 
 void FbxObject3d::Draw(ID3D12GraphicsCommandList* cmdList)
@@ -307,9 +256,6 @@ void FbxObject3d::PlayAnimation(int animationNumber, bool isLoop)
 	{
 		animationEaseData_->Reset();
 	}
-	interpolationEase->SetActFlag(true);
-	interpolationEase->Reset();
-	interpolationModel_ = nullptr;
 }
 
 XMFLOAT3 FbxObject3d::GetWorldPosition()

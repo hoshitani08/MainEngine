@@ -23,6 +23,7 @@ std::unique_ptr<Hunter> Hunter::Create()
 
 void Hunter::Initialize()
 {
+	// プレイヤー関係
 	float size = 0.006f;
 	hunter_[0] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("halt"),   L"BasicFBX", true);
 	hunter_[1] = FbxObject3d::Create(FbxFactory::GetInstance()->GetModel("move"),   L"BasicFBX", true);
@@ -43,6 +44,7 @@ void Hunter::Initialize()
 	falg_.halt = true;
 	hunter_[animationType_]->PlayAnimation();
 
+	// 武器関係
 	weapon_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("katana"));
 	float s = 0.05f;
 	weapon_->SetScale({ s,s,s });
@@ -51,6 +53,7 @@ void Hunter::Initialize()
 	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
 
+	// アイテム用のパーティクル
 	itemParticle_ = std::make_unique<ObjParticle>();
 	itemParticle_->SetParent(hunter_[animationType_].get());
 	itemEmitter_ = std::make_unique<ParticleEmitter>(itemParticle_.get());
@@ -66,12 +69,12 @@ void Hunter::Initialize()
 	healEmitter_->SetStartColor({ 0.2f, 1.0f, 0.0f, 1.0f });
 	healEmitter_->SetEndColor({ 0.2f, 1.0f, 0.0f, 1.0f });
 
-	data_ = std::make_unique<EaseData>(40);
-	data_->SetActFlag(false);
+	animationEaseData_ = std::make_unique<EaseData>(40);
+	animationEaseData_->SetActFlag(false);
 
 	for (int i = 0; i < hunter_.size(); i++)
 	{
-		hunter_[i]->SetEaseData(data_.get());
+		hunter_[i]->SetEaseData(animationEaseData_.get());
 	}
 }
 
@@ -180,7 +183,7 @@ void Hunter::BaseMove()
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			data_->SetActFlag(false);
+			animationEaseData_->SetActFlag(false);
 		}
 		else if (!falg_.move && !isDash_ && !falg_.dodge)
 		{
@@ -191,13 +194,11 @@ void Hunter::BaseMove()
 			int count = animationType_;
 			animationType_ = 1;
 			hunter_[animationType_]->PlayAnimation();
-			hunter_[animationType_]->SetInterpolationModel(hunter_[count]->GetModel());
-			hunter_[animationType_]->SetInterpolationTime(hunter_[count]->GetAnimationNowTime());
 			// 移動
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			data_->SetActFlag(false);
+			animationEaseData_->SetActFlag(false);
 			
 		}
 	}
@@ -214,7 +215,7 @@ void Hunter::BaseMove()
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			data_->SetActFlag(false);
+			animationEaseData_->SetActFlag(false);
 		}
 	}
 
@@ -285,8 +286,8 @@ void Hunter::AvoidMove()
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			data_->SetCount(20);
-			data_->SetActFlag(true);
+			animationEaseData_->SetCount(20);
+			animationEaseData_->SetActFlag(true);
 		}
 	}
 
@@ -307,6 +308,7 @@ void Hunter::AttackMove()
 		comboFlag_ = true;
 	}
 
+	// コンボしていたら
 	if (comboFlag_)
 	{
 		isAttackFlag_ = true;
@@ -326,8 +328,8 @@ void Hunter::AttackMove()
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
-			data_->SetCount(60);
-			data_->SetActFlag(true);
+			animationEaseData_->SetCount(60);
+			animationEaseData_->SetActFlag(true);
 		}
 		else if (falg_.attack1 && !falg_.attack2 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
@@ -343,8 +345,8 @@ void Hunter::AttackMove()
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
-			data_->SetCount(40);
-			data_->SetActFlag(true);
+			animationEaseData_->SetCount(40);
+			animationEaseData_->SetActFlag(true);
 		}
 		else if (!falg_.attack1 || falg_.attack1 && falg_.attack2 && falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
@@ -359,8 +361,8 @@ void Hunter::AttackMove()
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
 			comboFlag_ = false;
-			data_->SetCount(40);
-			data_->SetActFlag(true);
+			animationEaseData_->SetCount(40);
+			animationEaseData_->SetActFlag(true);
 		}
 	}
 
@@ -575,8 +577,8 @@ void Hunter::DamageHit()
 			weapon_->SetParent(hunter_[animationType_].get());
 			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
 			weapon_->SetRotation({ 0.0f,90.0f,0.0f });
-			data_->SetCount(30);
-			data_->SetActFlag(true);
+			animationEaseData_->SetCount(30);
+			animationEaseData_->SetActFlag(true);
 		}
 	}
 	else

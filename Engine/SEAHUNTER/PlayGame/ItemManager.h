@@ -26,6 +26,7 @@ public:
 	static const string BASE_DIRECTORY;
 
 public: // サブクラス
+	// アイテムのタイプ
 	enum class ItemType
 	{
 		Healing,
@@ -34,6 +35,7 @@ public: // サブクラス
 		Max,
 	};
 
+	// 読み込む段階
 	enum class Phase
 	{
 		ItemType,
@@ -41,6 +43,7 @@ public: // サブクラス
 		Max,
 	};
 
+	// アイテムのデータ
 	struct ItemData
 	{
 		ItemType name = ItemType::Max;
@@ -48,6 +51,7 @@ public: // サブクラス
 		int maxCount = 0;
 	};
 
+	// バフのデータ
 	struct BuffData
 	{
 		bool isBuff = false;

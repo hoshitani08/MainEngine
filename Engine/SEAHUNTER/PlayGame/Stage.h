@@ -48,17 +48,17 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private: // メンバ変数
-	//
-	std::unique_ptr<Object3d> skydome_;
-	//
+	// 水面
+	std::unique_ptr<Object3d> watersurface_;
+	// 地面
 	std::unique_ptr<Object3d> ground_;
-	//
+	// 岩や珊瑚のオブジェクト
 	std::vector<std::unique_ptr<Block>> block_;
-	//
+	// 行動範囲
 	std::unique_ptr<Object3d> field_;
-	//
+	// モンスターのポインタ
 	Monster* monster_ = nullptr;
-	//
+	// ハンターのポインタ
 	Hunter* hunter_ = nullptr;
 	//カメラ
 	Camera* camera_ = nullptr;

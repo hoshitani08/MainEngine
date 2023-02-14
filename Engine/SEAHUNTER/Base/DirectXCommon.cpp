@@ -134,30 +134,6 @@ void DirectXCommon::PostDraw()
 		CloseHandle(event);
 	}
 
-	//// max 60fps 固定
-	//std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-	//std::chrono::microseconds elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
-
-	//// 60ギリギリだとちょっとばかし高いリフレッシュレートのモニタで逆にかくついてしまうので少しバッファを取る
-	//static const std::chrono::microseconds kMinCheckTime(uint64_t(1000000.0f / 62.0f));
-	//// 実際にwaitするのは60基準
-	//static const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
-	//std::chrono::microseconds check = kMinCheckTime - elapsed;
-	//if (std::chrono::microseconds(0) < check)
-	//{
-	//	std::chrono::microseconds waitTime = kMinTime - elapsed;
-
-	//	// sleepは信用ならないので1uでポーリング
-	//	std::chrono::steady_clock::time_point waitStart = std::chrono::steady_clock::now();
-	//	do
-	//	{
-	//		std::this_thread::sleep_for(std::chrono::microseconds(1));
-	//	} while (std::chrono::steady_clock::now() - waitStart < waitTime);
-	//}
-
-	//elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - reference_);
-	//reference_ = std::chrono::steady_clock::now();
-
 	commandAllocator_->Reset(); // キューをクリア
 	commandList_->Reset(commandAllocator_.Get(), nullptr); // 再びコマンドリストを貯める準備
 }

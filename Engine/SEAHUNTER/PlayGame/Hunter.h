@@ -30,6 +30,7 @@ public: // 定数
 	const float ANGLE_RESTRICTION = 0.6f;
 
 public: // サブクラス
+	// アニメーションフラグ
 	struct AnimationFlag
 	{
 		bool halt = false;
@@ -43,6 +44,7 @@ public: // サブクラス
 		bool dodge = false;
 	};
 
+	// タイムデータ
 	struct TimeData
 	{
 		int count = 0;
@@ -50,6 +52,10 @@ public: // サブクラス
 	};
 
 public: // 静的メンバ関数
+	/// <summary>
+	/// 生成
+	/// </summary>
+	/// <returns>Hunter</returns>
 	static std::unique_ptr<Hunter> Create();
 
 public: // メンバ関数
@@ -281,8 +287,8 @@ private: // メンバ変数
 	TimeData attack;
 	// 攻撃の効果の時間
 	TimeData defense;
-	//
-	std::unique_ptr<EaseData> data_;
+	// アニメーション用のイージングデータ
+	std::unique_ptr<EaseData> animationEaseData_;
 
 	// 移動倍率
 	XMFLOAT2 speed_ = {};

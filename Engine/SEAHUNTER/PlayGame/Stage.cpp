@@ -13,9 +13,9 @@ Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera)
 
 void Stage::Initialize()
 {
-	skydome_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("watersurface"));
-	skydome_->SetPosition({ 0,100,0 });
-	skydome_->SetScale({ 2,2,2 });
+	watersurface_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("watersurface"));
+	watersurface_->SetPosition({ 0,100,0 });
+	watersurface_->SetScale({ 2,2,2 });
 	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
 	ground_->SetScale({ 2,2,2 });
 	ground_->SetPosition({ -11,0,0 });
@@ -78,7 +78,7 @@ void Stage::Update()
 		fugitiveBustEmitter->SandAdd(8, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
 	}
 
-	skydome_->Update();
+	watersurface_->Update();
 	ground_->Update();
 	field_->Update();
 	fugitiveBustEmitter->Update();
@@ -90,7 +90,7 @@ void Stage::Update()
 
 void Stage::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	skydome_->Draw(cmdList);
+	watersurface_->Draw(cmdList);
 	ground_->Draw(cmdList);
 	for (auto& a : block_)
 	{

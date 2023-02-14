@@ -63,6 +63,7 @@ float wave(float2 uv, float2 emitter, float speed, float phase)
 
 float4 main(VSOutput input) : SV_TARGET
 {
+	// îÌé äEê[ìx
 	float _Depth = 1 - 0.02f;
 	float _NWidth = 0.02f;
 	float _FWidth = 0.02f;
@@ -72,6 +73,7 @@ float4 main(VSOutput input) : SV_TARGET
 	float4 pintColor = tex0.Sample(smp, input.uv);
 	float4 nearColor = tex0.Sample(smp, input.uv);
 
+	// îgñ‰ê∂ê¨
 	float speed = 10.0f;
 	float power = 0.02f;
 

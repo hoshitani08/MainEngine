@@ -52,7 +52,7 @@ void ItemManager::Initialize()
 {
 	CsvLoad("item");
 
-	
+	// アイテムの読み込み
 	for (int i = 0; i < static_cast<int>(ItemType::Max); i++)
 	{
 		ItemData tempData;
@@ -95,6 +95,7 @@ void ItemManager::Update()
 
 void ItemManager::BuffUpdate()
 {
+	// 防御バフの時間管理
 	if (defense_.isBuff)
 	{
 		defense_.buffTimer++;
@@ -114,6 +115,7 @@ void ItemManager::BuffUpdate()
 		}
 	}
 
+	// 攻撃バフの時間管理
 	if (attack_.isBuff)
 	{
 		attack_.buffTimer++;
