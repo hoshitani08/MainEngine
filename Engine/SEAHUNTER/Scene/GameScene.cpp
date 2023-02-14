@@ -297,58 +297,62 @@ void GameScene::CameraReset()
 
 void GameScene::PlayerAttack()
 {
-	if (hunter_->IsAttackFlag())
+	if (!hunter_->IsAttackFlag())
 	{
-		//UŒ‚”ÍˆÍ
-		XMVECTOR v0 = { 0, 0, 1, 0 };
-		XMMATRIX  rotM = XMMatrixIdentity();
-		rotM *= XMMatrixRotationX(XMConvertToRadians(hunter_->GetRotation().x));
-		rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y));
-		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-		XMVECTOR v3 = bossTarget + v;
-		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-		XMFLOAT3 pos = f;
-
-		Sphere hitSphere;
-		hitSphere.center = { hunter_->GetWeaponPosition().x, hunter_->GetWeaponPosition().y, hunter_->GetWeaponPosition().z, 1};
-
-		monster_->DamageHit(hitSphere);
-		hitSphere_->SetPosition(hunter_->GetWeaponPosition());
+		return;
 	}
+
+	//UŒ‚”ÍˆÍ
+	XMVECTOR v0 = { 0, 0, 1, 0 };
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationX(XMConvertToRadians(hunter_->GetRotation().x));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y));
+	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+	XMVECTOR v3 = bossTarget + v;
+	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+	XMFLOAT3 pos = f;
+
+	Sphere hitSphere;
+	hitSphere.center = { hunter_->GetWeaponPosition().x, hunter_->GetWeaponPosition().y, hunter_->GetWeaponPosition().z, 1 };
+
+	monster_->DamageHit(hitSphere);
+	hitSphere_->SetPosition(hunter_->GetWeaponPosition());
 }
 
 void GameScene::StratCameraMove()
 {
+	if (stratFlag_)
+	{
+		return;
+	}
+
 	float timeRate = 0.0f;
 
-	if (!stratFlag_)
+	easeCamera->SetActFlag(true);
+	easeCamera->SetCount(120);
+
+	XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3.0f, -10.0f, easeCamera->GetTimeRate()), 0 };
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0.0f, easeCamera->GetTimeRate())));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0.0f, easeCamera->GetTimeRate())));
+	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+	XMVECTOR v3 = bossTarget + v;
+	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+	XMFLOAT3 pos = f;
+
+	camera_->SetTarget(center);
+	camera_->SetEye(pos);
+	camera_->Update();
+
+	if (easeCamera->GetEndFlag())
 	{
-		easeCamera->SetActFlag(true);
-		easeCamera->SetCount(120);
-
-		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3.0f, -10.0f, easeCamera->GetTimeRate()), 0 };
-		XMMATRIX  rotM = XMMatrixIdentity();
-		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0.0f, easeCamera->GetTimeRate())));
-		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0.0f, easeCamera->GetTimeRate())));
-		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-		XMVECTOR v3 = bossTarget + v;
-		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-		XMFLOAT3 pos = f;
-
-		camera_->SetTarget(center);
-		camera_->SetEye(pos);
-		camera_->Update();
-
-		if (easeCamera->GetEndFlag())
-		{
-			stratFlag_ = true;
-			easeCamera->Reset();
-			easeCamera->SetActFlag(false);
-		}
+		stratFlag_ = true;
+		easeCamera->Reset();
+		easeCamera->SetActFlag(false);
 	}
 }
 

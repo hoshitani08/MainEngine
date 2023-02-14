@@ -141,17 +141,14 @@
     <ClCompile Include="Math\Vector.cpp">
       <Filter>エンジンシステム\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Base\BaseGame.cpp">
-      <Filter>ゲームシステム\Base\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Base\MyGame.cpp">
-      <Filter>ゲームシステム\Base\Game</Filter>
+      <Filter>ゲームシステム\Game</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneFactory.cpp">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\ClearScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
@@ -164,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>ゲームシステム</Filter>
     </ClCompile>
     <ClCompile Include="PlayGame\Hunter.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
@@ -200,6 +194,12 @@
     </ClCompile>
     <ClCompile Include="Scene\SceneChange.cpp">
       <Filter>ゲームシステム\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\BaseGame.cpp">
+      <Filter>エンジンシステム\Base\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>エンジンシステム\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -323,23 +323,20 @@
     <ClInclude Include="Math\Vector.h">
       <Filter>エンジンシステム\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Base\BaseGame.h">
-      <Filter>ゲームシステム\Base\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Base\MyGame.h">
-      <Filter>ゲームシステム\Base\Game</Filter>
+      <Filter>ゲームシステム\Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene\AbstractSceneFactory.h">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Base\BaseScene.h">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneFactory.h">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneManager.h">
-      <Filter>ゲームシステム\Base\Scene</Filter>
+      <Filter>エンジンシステム\Base\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\ClearScene.h">
       <Filter>ゲームシステム\Scene</Filter>
@@ -385,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Scene\SceneChange.h">
       <Filter>ゲームシステム\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\BaseGame.h">
+      <Filter>エンジンシステム\Base\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -465,17 +465,8 @@
     <Filter Include="エンジンシステム\3d\OBJ">
       <UniqueIdentifier>{02655b71-8e46-4553-93ad-b363335fa778}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ゲームシステム\Base">
-      <UniqueIdentifier>{6e6de445-edb1-46f5-a563-29dc560738b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ゲームシステム\Scene">
       <UniqueIdentifier>{22e70019-f7ca-45cb-8977-3d63a8fc73d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\Base\Game">
-      <UniqueIdentifier>{2e54c52b-3942-4807-9e8a-70670abdb0bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ゲームシステム\Base\Scene">
-      <UniqueIdentifier>{dfaa2646-c784-45a9-897c-df99c2c05d15}</UniqueIdentifier>
     </Filter>
     <Filter Include="シェーダファイル\PMX">
       <UniqueIdentifier>{e2874ba0-af65-459f-b973-211e921725f0}</UniqueIdentifier>
@@ -491,6 +482,15 @@
     </Filter>
     <Filter Include="エンジンシステム\3d\Ligth">
       <UniqueIdentifier>{71eff164-37a0-4850-8d14-dc98dc98a3bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="エンジンシステム\Base\Game">
+      <UniqueIdentifier>{36a202ae-aa5d-48a6-9810-2f081519b837}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="エンジンシステム\Base\Scene">
+      <UniqueIdentifier>{dfaa2646-c784-45a9-897c-df99c2c05d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\Game">
+      <UniqueIdentifier>{2e54c52b-3942-4807-9e8a-70670abdb0bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

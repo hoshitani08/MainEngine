@@ -16,6 +16,13 @@ namespace
 		FadeIn = 1,
 	};
 
+	//フェードタイプ
+	enum class SIZEMAX
+	{
+		Width = 32,
+		Height = 18,
+	};
+
 	class BlackBox
 	{
 	public: // メンバ関数

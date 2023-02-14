@@ -166,7 +166,8 @@ void GameOverScene::Shake()
 {
 	Input* input = Input::GetInstance();
 
-	if (!determinationFlag_ && isShake_) {
+	if (!determinationFlag_ && isShake_)
+	{
 		XMFLOAT3 shake = {};
 		shakeTimer_++;
 
