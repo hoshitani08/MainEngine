@@ -31,15 +31,15 @@ void GameScene::Initialize()
 	collisionManager_ = CollisionManager::GetInstance();
 
 	// カメラ生成
-	camera_ = std::make_unique<Camera>(WinApp::WINDOW_WIDTH, WinApp::WINDOW_HEIGHT);
+	camera_ = std::make_unique<GameCamera>();
 
 	// 3Dオブジェクトにカメラをセット
-	Object3d::SetCamera(camera_.get());
+	Object3d::SetCamera(camera_->GetCamerapoint());
 	// FBXオブジェクトにカメラをセット
-	FbxObject3d::SetCamera(camera_.get());
+	FbxObject3d::SetCamera(camera_->GetCamerapoint());
 
 	// パーティクルマネージャ生成
-	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_.get());
+	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_->GetCamerapoint());
 
 	//ライト生成
 	light_ = LightGroup::Create();
@@ -59,23 +59,24 @@ void GameScene::Initialize()
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
-	monster_ = Monster::Create(camera_.get(), hunter_.get());
-
-	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get(), camera_.get());
+	monster_ = Monster::Create(camera_->GetCamerapoint(), hunter_.get());
+	//ステージ生成
+	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get(), camera_->GetCamerapoint());
+	// カメラのターゲットの設定
+	camera_->SetHunter(hunter_.get());
 
 	//UI
 	ui_ = std::make_unique<UserInterface>(hunter_.get(), monster_.get());
 	ui_->Initialize();
-
+	// アイテム関係の初期化
 	ItemManager::GetInstance()->Initialize();
-
+	// シーン遷移の演出の初期化
 	sceneChange_ = std::make_unique<SceneChange>();
 
-	easeCamera = std::make_unique<EaseData>(0);
-
-	func_.push_back(std::bind(&GameScene::StratCameraMove, this));
+	// 段階の構築
+	func_.push_back(std::bind(&GameScene::GameStrat, this));
 	func_.push_back(std::bind(&GameScene::GamePlay, this));
-	func_.push_back(std::bind(&GameScene::EndCameraMove, this));
+	func_.push_back(std::bind(&GameScene::GameOverEnd, this));
 }
 
 void GameScene::Finalize()
@@ -99,7 +100,6 @@ void GameScene::Update()
 	ui_->Update();
 	stage_->Update();
 	sceneChange_->Update();
-	easeCamera->Update();
 	// 全ての衝突をチェック
 	collisionManager_->CheckAllCollisions();
 }
@@ -157,99 +157,6 @@ void GameScene::EffectDraw()
 #pragma endregion パーティクル
 }
 
-void GameScene::CameraMove()
-{
-	Input* input = Input::GetInstance();
-
-	if ((input->PadRightStickGradient().x != 0.0f || input->PadRightStickGradient().y != 0.0f) &&!cameraResetFlag)
-	{
-		XMFLOAT2 speed = { input->PadRightStickGradient().x * 5.5f, input->PadRightStickGradient().y * 5.5f };
-
-		if (speed.x < 0)
-		{
-			speed.x *= -1;
-		}
-		if (speed.y < 0)
-		{
-			speed.y *= -1;
-		}
-
-		angle_.x += input->PadRightStickGradient().x * speed.x;
-		angle_.y += input->PadRightStickGradient().y * speed.y;
-	}
-
-	if (input->TriggerPadLeft() && !cameraResetFlag)
-	{
-		cameraResetFlag = true;
-
-	}
-	else if (!cameraResetFlag)
-	{
-		CameraAngle(angle_);
-	}
-
-	if (cameraResetFlag)
-	{
-		CameraReset();
-	}
-
-	//アングルの制限
-	if (angle_.x >= RESTRICTION_ANGLE.x)
-	{
-		angle_.x = (angle_.x - RESTRICTION_ANGLE.x);
-	}
-	else if (angle_.x <= -RESTRICTION_ANGLE.x)
-	{
-		angle_.x = (angle_.x - -RESTRICTION_ANGLE.x);
-	}
-
-	if (angle_.y >= RESTRICTION_ANGLE.y)
-	{
-		angle_.y = 80.0f;
-	}
-	else if (angle_.y <= -RESTRICTION_ANGLE.y)
-	{
-		angle_.y = -80.0f;
-	}
-}
-
-void GameScene::CameraAngle(XMFLOAT2 angle)
-{
-	//半径は-10
-	XMVECTOR v0 = { 0, 0, -10, 0 };
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(angle.y));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(angle.x));
-	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-	XMVECTOR v3 = bossTarget + v;
-	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-	XMFLOAT3 pos = f;
-
-	camera_->SetTarget(center);
-	camera_->SetEye(pos);
-	camera_->Update();
-}
-
-void GameScene::CameraReset()
-{
-	XMFLOAT2 tempAngle = { hunter_->GetRotation().y, hunter_->GetRotation().x };
-
-	easeCamera->SetActFlag(true);
-	easeCamera->SetCount(10);
-
-	CameraAngle(Ease::Action(EaseType::In, EaseFunctionType::Quad, angle_, tempAngle, easeCamera->GetTimeRate()));
-
-	if (easeCamera->GetEndFlag())
-	{
-		cameraResetFlag = false;
-		angle_ = tempAngle;
-		easeCamera->Reset();
-		easeCamera->SetActFlag(false);
-	}
-}
-
 void GameScene::PlayerAttack()
 {
 	if (!hunter_->IsAttackFlag())
@@ -276,61 +183,26 @@ void GameScene::PlayerAttack()
 	hitSphere_->SetPosition(hunter_->GetWeaponPosition());
 }
 
-void GameScene::StratCameraMove()
+void GameScene::GameStrat()
 {
-	float timeRate = 0.0f;
+	camera_->StratCameraMove();
 
-	easeCamera->SetActFlag(true);
-	easeCamera->SetCount(120);
-
-	XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3.0f, -10.0f, easeCamera->GetTimeRate()), 0 };
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 30.0f, 0.0f, easeCamera->GetTimeRate())));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -130.0f, 0.0f, easeCamera->GetTimeRate())));
-	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-	XMVECTOR v3 = bossTarget + v;
-	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-	XMFLOAT3 pos = f;
-
-	camera_->SetTarget(center);
-	camera_->SetEye(pos);
-	camera_->Update();
-
-	if (easeCamera->GetEndFlag() && sceneChange_->GetinEndFlag())
+	if (camera_->GetCameraMoveEnd() && sceneChange_->GetinEndFlag())
 	{
 		phase_ = 1;
-		easeCamera->Reset();
-		easeCamera->SetActFlag(false);
+		camera_->EaseDataReset();
 	}
 }
 
-void GameScene::EndCameraMove()
+void GameScene::GameOverEnd()
 {
-	if (easeCamera->GetEndFlag())
+	if (camera_->GetCameraMoveEnd())
 	{
 		sceneChange_->SceneChangeStart("GameOverScene");
 		return;
 	}
 
-	easeCamera->SetCount(250);
-	easeCamera->SetActFlag(true);
-
-	XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -20, easeCamera->GetTimeRate()), 0 };
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 0.0f, 50, easeCamera->GetTimeRate())));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -180.0f, 150.0f, easeCamera->GetTimeRate())));
-	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-	XMVECTOR v3 = bossTarget + v;
-	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-	XMFLOAT3 pos = f;
-
-	camera_->SetTarget(center);
-	camera_->SetEye(pos);
-	camera_->Update();
+	camera_->EndCameraMove();
 }
 
 void GameScene::GamePlay()
@@ -347,9 +219,9 @@ void GameScene::GamePlay()
 		quest_.second = 0;
 	}
 
-	CameraMove();
+	camera_->GamePlayCameraMove();
 
-	hunter_->SetAngle(angle_);
+	hunter_->SetAngle(camera_->GetCameraAngle());
 	hunter_->Behavior();
 	PlayerAttack();
 

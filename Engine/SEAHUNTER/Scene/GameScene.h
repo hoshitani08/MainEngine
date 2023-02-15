@@ -21,6 +21,7 @@
 #include "Stage.h"
 #include "SceneChange.h"
 #include "Ease.h"
+#include "GameCamera.h"
 
 class CollisionManager;
 class Player;
@@ -49,9 +50,6 @@ public: // サブクラス
 private: // 静的定数
 	static const int DEBUG_TEXT_TEX_NUMBER = 0;
 
-private: // 定数
-	const XMFLOAT2 RESTRICTION_ANGLE = { 360.0f, 80.0f };
-
 public: // メンバ関数
 	/// <summary>
 	/// デストラクタ
@@ -78,35 +76,25 @@ public: // メンバ関数
 	/// </summary>
 	void EffectDraw() override;
 	/// <summary>
-	/// カメラの動き
-	/// </summary>
-	void CameraMove();
-	/// <summary>
-	/// カメラのアングル
-	/// </summary>
-	void CameraAngle(XMFLOAT2 angle);
-	/// <summary>
-	/// カメラリセット
-	/// </summary>
-	void CameraReset();
-	/// <summary>
 	/// プレイヤーの攻撃判定
 	/// </summary>
 	void PlayerAttack();
 	/// <summary>
-	/// 開始時のカメラ演出
+	/// 開始
 	/// </summary>
-	void StratCameraMove();
+	void GameStrat();
 	/// <summary>
-	/// 終了時のカメラ演出
+	/// 終了
 	/// </summary>
-	void EndCameraMove();
-
+	void GameOverEnd();
+	/// <summary>
+	/// ゲーム中
+	/// </summary>
 	void GamePlay();
 
 private: // メンバ変数
 	//カメラ
-	std::unique_ptr<Camera> camera_;
+	std::unique_ptr<GameCamera> camera_;
 	//UI
 	std::unique_ptr<UserInterface> ui_;
 	//パーティクル
@@ -120,25 +108,12 @@ private: // メンバ変数
 	std::unique_ptr<SceneChange> sceneChange_;
 	//ライト
 	std::unique_ptr<LightGroup> light_;
-	//光線方向初期値
-	float circleShadowDir_[3] = { 0,-1,0 };
-	float circleShadowPos_[3] = { 1,2,0 };
-	float circleShadowAtten_[3] = { 0.5f,0.6f,0.0f };
-	float circleShadowFactorAngle_[2] = { 0.0f, 0.5f };
-
-	float fighterPos_[3] = { 1, 0.0f, 0 };
 	//当たり判定
 	CollisionManager* collisionManager_ = nullptr;
-	// 角度
-	XMFLOAT2 angle_ = { 0.0f, 0.0f};
 	// タイマー
 	Quest quest_;
-	//
-	bool cameraResetFlag = false;
-	// イージングの進行度用
-	std::unique_ptr<EaseData> easeCamera;
-	//
+	// 関数の管理
 	std::vector<std::function<void()>> func_;
-	//
+	// 関数の番号
 	size_t phase_ = 0;
 };

@@ -201,6 +201,9 @@
     <ClCompile Include="main.cpp">
       <Filter>エンジンシステム\Base</Filter>
     </ClCompile>
+    <ClCompile Include="PlayGame\GameCamera.cpp">
+      <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="Base\BaseGame.h">
       <Filter>エンジンシステム\Base\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\GameCamera.h">
+      <Filter>ゲームシステム\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
