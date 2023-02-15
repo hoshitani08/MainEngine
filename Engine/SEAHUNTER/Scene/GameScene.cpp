@@ -72,6 +72,10 @@ void GameScene::Initialize()
 	sceneChange_ = std::make_unique<SceneChange>();
 
 	easeCamera = std::make_unique<EaseData>(0);
+
+	func_.push_back(std::bind(&GameScene::StratCameraMove, this));
+	func_.push_back(std::bind(&GameScene::GamePlay, this));
+	func_.push_back(std::bind(&GameScene::EndCameraMove, this));
 }
 
 void GameScene::Finalize()
@@ -86,40 +90,8 @@ void GameScene::Update()
 	light_->Update();
 	particleMan_->Update();
 
-	if (!stratFlag_)
-	{
-		StratCameraMove();
-	}
-	else if (sceneChange_->GetinEndFlag())
-	{
-		quest_.timer++;
-		if (quest_.timer >= 60)
-		{
-			quest_.second++;
-			quest_.timer = 0;
-		}
-		if (quest_.second >= 60)
-		{
-			quest_.minute++;
-			quest_.second = 0;
-		}
-
-		CameraMove();
-
-		hunter_->SetAngle(angle_);
-		hunter_->Behavior();
-		PlayerAttack();
-
-		monster_->AllMove();
-	}
-
-	if (monster_->GetIsDead())
-	{
-		sceneChange_->SceneChangeStart("ClearScene");
-	}
-	EndCameraMove();
-
-	ui_->ClockCalculate(quest_.minute);
+	// 階層分け
+	func_[phase_]();
 
 	hunter_->Update();
 	monster_->Update();
@@ -172,16 +144,6 @@ void GameScene::EffectDraw()
 {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = DirectXCommon::GetInstance()->GetCommandList();
-#pragma region 背景スプライト描画
-	// 背景スプライト描画前処理
-	Sprite::PreDraw(cmdList);
-	// 背景スプライト描画
-
-	// スプライト描画後処理
-	Sprite::PostDraw();
-	// 深度バッファクリア
-	DirectXCommon::GetInstance()->ClearDepthBuffer();
-#pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
 	stage_->Draw(cmdList);
@@ -193,13 +155,6 @@ void GameScene::EffectDraw()
 	// パーティクルの描画
 	particleMan_->Draw(cmdList);
 #pragma endregion パーティクル
-#pragma region 前景スプライト描画
-	// 前景スプライト描画前処理
-	Sprite::PreDraw(cmdList);
-	
-	// スプライト描画後処理
-	Sprite::PostDraw();
-#pragma endregion 前景スプライト描画
 }
 
 void GameScene::CameraMove()
@@ -228,7 +183,7 @@ void GameScene::CameraMove()
 		cameraResetFlag = true;
 
 	}
-	else if (!endFlag_ && !cameraResetFlag)
+	else if (!cameraResetFlag)
 	{
 		CameraAngle(angle_);
 	}
@@ -323,11 +278,6 @@ void GameScene::PlayerAttack()
 
 void GameScene::StratCameraMove()
 {
-	if (stratFlag_)
-	{
-		return;
-	}
-
 	float timeRate = 0.0f;
 
 	easeCamera->SetActFlag(true);
@@ -348,9 +298,9 @@ void GameScene::StratCameraMove()
 	camera_->SetEye(pos);
 	camera_->Update();
 
-	if (easeCamera->GetEndFlag())
+	if (easeCamera->GetEndFlag() && sceneChange_->GetinEndFlag())
 	{
-		stratFlag_ = true;
+		phase_ = 1;
 		easeCamera->Reset();
 		easeCamera->SetActFlag(false);
 	}
@@ -358,36 +308,61 @@ void GameScene::StratCameraMove()
 
 void GameScene::EndCameraMove()
 {
-	if ((ui_->GetIsPlayerDeath() && hunter_->GetIsDeath() || quest_.minute >= 15) && !endFlag_)
+	if (easeCamera->GetEndFlag())
 	{
-		easeCamera->SetCount(250);
-		easeCamera->SetActFlag(true);
-
-		XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -20, easeCamera->GetTimeRate()), 0 };
-		XMMATRIX  rotM = XMMatrixIdentity();
-		rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 0.0f, 50, easeCamera->GetTimeRate())));
-		rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -180.0f, 150.0f, easeCamera->GetTimeRate())));
-		XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-		XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-		XMVECTOR v3 = bossTarget + v;
-		XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-		XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-		XMFLOAT3 pos = f;
-
-		camera_->SetTarget(center);
-		camera_->SetEye(pos);
-		camera_->Update();
-
-		if (easeCamera->GetEndFlag())
-		{
-			endFlag_ = true;
-			easeCamera->Reset();
-			easeCamera->SetActFlag(false);
-		}
-
-		if (endFlag_)
-		{
-			sceneChange_->SceneChangeStart("GameOverScene");
-		}
+		sceneChange_->SceneChangeStart("GameOverScene");
+		return;
 	}
+
+	easeCamera->SetCount(250);
+	easeCamera->SetActFlag(true);
+
+	XMVECTOR v0 = { 0, 0, Ease::Action(EaseType::Out, EaseFunctionType::Quad, -3, -20, easeCamera->GetTimeRate()), 0 };
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationX(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, 0.0f, 50, easeCamera->GetTimeRate())));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(Ease::Action(EaseType::Out, EaseFunctionType::Quad, -180.0f, 150.0f, easeCamera->GetTimeRate())));
+	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
+	XMVECTOR v3 = bossTarget + v;
+	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+	XMFLOAT3 pos = f;
+
+	camera_->SetTarget(center);
+	camera_->SetEye(pos);
+	camera_->Update();
+}
+
+void GameScene::GamePlay()
+{
+	quest_.timer++;
+	if (quest_.timer >= 60)
+	{
+		quest_.second++;
+		quest_.timer = 0;
+	}
+	if (quest_.second >= 60)
+	{
+		quest_.minute++;
+		quest_.second = 0;
+	}
+
+	CameraMove();
+
+	hunter_->SetAngle(angle_);
+	hunter_->Behavior();
+	PlayerAttack();
+
+	monster_->AllMove();
+
+	if (ui_->GetIsPlayerDeath() && hunter_->GetIsDeath() || quest_.minute >= 15)
+	{
+		phase_ = 2;
+	}
+	else if (monster_->GetIsDead())
+	{
+		sceneChange_->SceneChangeStart("ClearScene");
+	}
+
+	ui_->ClockCalculate(quest_.minute);
 }

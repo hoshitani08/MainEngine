@@ -102,6 +102,8 @@ public: // メンバ関数
 	/// </summary>
 	void EndCameraMove();
 
+	void GamePlay();
+
 private: // メンバ変数
 	//カメラ
 	std::unique_ptr<Camera> camera_;
@@ -131,12 +133,12 @@ private: // メンバ変数
 	XMFLOAT2 angle_ = { 0.0f, 0.0f};
 	// タイマー
 	Quest quest_;
-	// 
-	bool stratFlag_ = false;
-	//
-	bool endFlag_ = false;
 	//
 	bool cameraResetFlag = false;
 	// イージングの進行度用
 	std::unique_ptr<EaseData> easeCamera;
+	//
+	std::vector<std::function<void()>> func_;
+	//
+	size_t phase_ = 0;
 };
