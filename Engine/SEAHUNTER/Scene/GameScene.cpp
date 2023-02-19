@@ -38,9 +38,6 @@ void GameScene::Initialize()
 	// FBXオブジェクトにカメラをセット
 	FbxObject3d::SetCamera(camera_->GetCamerapoint());
 
-	// パーティクルマネージャ生成
-	particleMan_ = ParticleManager::Create(DirectXCommon::GetInstance()->GetDevice(), camera_->GetCamerapoint());
-
 	//ライト生成
 	light_ = LightGroup::Create();
 	//オブジェクトにライトをセット
@@ -53,9 +50,6 @@ void GameScene::Initialize()
 	light_->SetPointLightActive(1, false);
 	light_->SetPointLightActive(2, false);
 	light_->SetCircleShadowActive(0, false);
-
-	// 3Dオブジェクト生成
-	hitSphere_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("sphere"));
 
 	// FBXオブジェクト生成
 	hunter_ = Hunter::Create();
@@ -89,14 +83,12 @@ void GameScene::Update()
 	Input* input = Input::GetInstance();
 	input->SetVibration(false);
 	light_->Update();
-	particleMan_->Update();
 
 	// 階層分け
 	func_[phase_]();
 
 	hunter_->Update();
 	monster_->Update();
-	hitSphere_->Update();
 	ui_->Update();
 	stage_->Update();
 	sceneChange_->Update();
@@ -151,36 +143,6 @@ void GameScene::EffectDraw()
 #pragma region 3Dオブジェクト(FBX)描画
 	monster_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト(FBX)描画
-#pragma region パーティクル
-	// パーティクルの描画
-	particleMan_->Draw(cmdList);
-#pragma endregion パーティクル
-}
-
-void GameScene::PlayerAttack()
-{
-	if (!hunter_->IsAttackFlag())
-	{
-		return;
-	}
-
-	//攻撃範囲
-	XMVECTOR v0 = { 0, 0, 1, 0 };
-	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(hunter_->GetRotation().x));
-	rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_->GetRotation().y));
-	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
-	XMVECTOR bossTarget = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
-	XMVECTOR v3 = bossTarget + v;
-	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
-	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
-	XMFLOAT3 pos = f;
-
-	Sphere hitSphere;
-	hitSphere.center = { hunter_->GetWeaponPosition().x, hunter_->GetWeaponPosition().y, hunter_->GetWeaponPosition().z, 1 };
-
-	monster_->DamageHit(hitSphere);
-	hitSphere_->SetPosition(hunter_->GetWeaponPosition());
 }
 
 void GameScene::GameStrat()
@@ -223,7 +185,11 @@ void GameScene::GamePlay()
 
 	hunter_->SetAngle(camera_->GetCameraAngle());
 	hunter_->Behavior();
-	PlayerAttack();
+
+	if (hunter_->IsAttackFlag())
+	{
+		monster_->DamageHit(hunter_->GetAttackHit());
+	}
 
 	monster_->AllMove();
 

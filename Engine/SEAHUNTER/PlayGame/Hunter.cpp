@@ -4,7 +4,6 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Vector.h"
-#include "Collision.h"
 #include "DebugText.h"
 #include "ItemManager.h"
 
@@ -548,10 +547,30 @@ void Hunter::ItemUse()
 	ItemManager::GetInstance()->BuffUpdate();
 }
 
-void Hunter::AttackHit(bool isAttackFlag)
+void Hunter::SetAttackFlag(bool isAttackFlag)
 {
 	isAttackFlag_ = isAttackFlag;
 	attackCoolTimer_ = 0;
+}
+
+Sphere Hunter::GetAttackHit()
+{
+	//UŒ‚”ÍˆÍ
+	XMVECTOR v0 = { 0, 0, 1, 0 };
+	XMMATRIX  rotM = XMMatrixIdentity();
+	rotM *= XMMatrixRotationX(XMConvertToRadians(hunter_[animationType_]->GetRotation().x));
+	rotM *= XMMatrixRotationY(XMConvertToRadians(hunter_[animationType_]->GetRotation().y));
+	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
+	XMVECTOR bossTarget = { hunter_[animationType_]->GetPosition().x, hunter_[animationType_]->GetPosition().y, hunter_[animationType_]->GetPosition().z };
+	XMVECTOR v3 = bossTarget + v;
+	XMFLOAT3 f = { v3.m128_f32[0], v3.m128_f32[1], v3.m128_f32[2] };
+	XMFLOAT3 center = { bossTarget.m128_f32[0], bossTarget.m128_f32[1], bossTarget.m128_f32[2] };
+	XMFLOAT3 pos = f;
+
+	Sphere hitSphere;
+	hitSphere.center = { weapon_->GetMatWorld().r[3].m128_f32[0], weapon_->GetMatWorld().r[3].m128_f32[1], weapon_->GetMatWorld().r[3].m128_f32[2], 1 };
+
+	return hitSphere;
 }
 
 void Hunter::DamageHit()

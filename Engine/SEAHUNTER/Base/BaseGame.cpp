@@ -95,7 +95,6 @@ void BaseGame::Update()
 
 void BaseGame::Draw()
 {
-
 	postEffect_->PreDrawScene(DirectXCommon::GetInstance()->GetCommandList());
 
 	// ƒQ[ƒ€ƒV[ƒ“‚Ì•`‰æ

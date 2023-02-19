@@ -11,6 +11,7 @@
 #include "ParticleEmitter.h"
 #include "ObjParticle.h"
 #include "Ease.h"
+#include "Collision.h"
 
 class Hunter
 {
@@ -167,21 +168,6 @@ public: // メンバ関数
 	/// <returns>生存フラグ</returns>
 	bool GetIsDeath() { return isDeath_; }
 	/// <summary>
-	/// 武器の座標の取得
-	/// </summary>
-	/// <returns>座標</returns>
-	XMFLOAT3 GetWeaponPosition()
-	{
-		const XMFLOAT3 pos =
-		{
-			weapon_->GetMatWorld().r[3].m128_f32[0],
-			weapon_->GetMatWorld().r[3].m128_f32[1],
-			weapon_->GetMatWorld().r[3].m128_f32[2]
-		};
-
-		return pos;
-	}
-	/// <summary>
 	/// アイテム選択のイージングが終わったか
 	/// </summary>
 	/// <returns></returns>
@@ -237,7 +223,7 @@ public: // メンバ関数
 	/// 攻撃フラグの設定
 	/// </summary>
 	/// <param name="isAttackFlag">攻撃フラグ</param>
-	void AttackHit(bool isAttackFlag);
+	void SetAttackFlag(bool isAttackFlag);
 	/// <summary>
 	/// コンボ用
 	/// </summary>
@@ -249,15 +235,20 @@ public: // メンバ関数
 	/// <param name="f"></param>
 	void SetIsItemSelection(bool f) { isItemSelectionEase_ = f; }
 	/// <summary>
-	/// 
+	/// ボタンフラグの設定
 	/// </summary>
 	/// <param name="f"></param>
 	void SetButtonFlag(bool f) { buttonFlag_ = f; }
 	/// <summary>
-	/// 
+	/// ボタン用のイージングデータフラグの設定
 	/// </summary>
 	/// <param name="f"></param>
 	void SetButtonEaseFlag(bool f) { buttonEaseFlag_ = f; }
+	/// <summary>
+	/// 攻撃した時の当たり判定の取得
+	/// </summary>
+	/// <returns>判定</returns>
+	Sphere GetAttackHit();
 
 private: // メンバ変数
 	//　モデル

@@ -76,10 +76,6 @@ public: // メンバ関数
 	/// </summary>
 	void EffectDraw() override;
 	/// <summary>
-	/// プレイヤーの攻撃判定
-	/// </summary>
-	void PlayerAttack();
-	/// <summary>
 	/// 開始
 	/// </summary>
 	void GameStrat();
@@ -97,12 +93,9 @@ private: // メンバ変数
 	std::unique_ptr<GameCamera> camera_;
 	//UI
 	std::unique_ptr<UserInterface> ui_;
-	//パーティクル
-	std::unique_ptr<ParticleManager> particleMan_;
 	//オブジェクト
 	std::unique_ptr<Hunter> hunter_;
 	std::unique_ptr<Monster> monster_;
-	std::unique_ptr<Object3d> hitSphere_;
 	std::unique_ptr<Stage> stage_;
 	// シーンチェンジ
 	std::unique_ptr<SceneChange> sceneChange_;
