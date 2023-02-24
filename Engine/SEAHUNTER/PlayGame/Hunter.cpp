@@ -75,6 +75,17 @@ void Hunter::Initialize()
 	{
 		hunter_[i]->SetEaseData(animationEaseData_.get());
 	}
+
+	// ’iŠK‚Ì\’z
+	animationFunc_.push_back(std::bind(&Hunter::Halt, this));
+	animationFunc_.push_back(std::bind(&Hunter::Move, this));
+	animationFunc_.push_back(std::bind(&Hunter::Damage, this));
+	animationFunc_.push_back(std::bind(&Hunter::Death, this));
+	animationFunc_.push_back(std::bind(&Hunter::Dash, this));
+	animationFunc_.push_back(std::bind(&Hunter::Dodge, this));
+	animationFunc_.push_back(std::bind(&Hunter::Combo1, this));
+	animationFunc_.push_back(std::bind(&Hunter::Combo2, this));
+	animationFunc_.push_back(std::bind(&Hunter::Combo3, this));
 }
 
 void Hunter::Finalize()
@@ -119,26 +130,7 @@ void Hunter::Behavior()
 	{
 		if (!falg_.death)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.death = true;
-			animationType_ = 3;
-			hunter_[animationType_]->PlayAnimation(0, false);
-			// Ž€–S
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f, 0.0f, 2.3f });
-			weapon_->SetRotation({ -100.0f, 0.0f, 90.0f });
-			hunter_[animationType_]->SetRotation({});
-			XMFLOAT3 position = hunter_[animationType_]->GetPosition();
-			if (position.y <= 2.0f)
-			{
-				position.y = 2.0f;
-			}
-			hunter_[animationType_]->SetPosition(position);
-		}
-		if (falg_.death)
-		{
-			isDeath_ = true;
+			animationFunc_[static_cast<int>(AnimationType::DEATH)]();
 		}
 	}
 }
@@ -173,48 +165,18 @@ void Hunter::BaseMove()
 
 		if (isDash_ && !falg_.dash && !falg_.dodge)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.dash = true;
-			animationType_ = 4;
-			hunter_[animationType_]->PlayAnimation();
-			// ˆÚ“®
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			animationEaseData_->SetActFlag(false);
+			animationFunc_[static_cast<int>(AnimationType::DASH)]();
 		}
 		else if (!falg_.move && !isDash_ && !falg_.dodge)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.move = true;
-
-			int count = animationType_;
-			animationType_ = 1;
-			hunter_[animationType_]->PlayAnimation();
-			// ˆÚ“®
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			animationEaseData_->SetActFlag(false);
-			
+			animationFunc_[static_cast<int>(AnimationType::MOVE)]();
 		}
 	}
 	else if (!isAttackFlag_ && !falg_.damage && !falg_.dodge)
 	{
 		if (!falg_.halt)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.halt = true;
-			animationType_ = 0;
-			hunter_[animationType_]->PlayAnimation();
-			// ’âŽ~
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			animationEaseData_->SetActFlag(false);
+			animationFunc_[static_cast<int>(AnimationType::HALT)]();
 		}
 	}
 
@@ -277,16 +239,7 @@ void Hunter::AvoidMove()
 
 		if (!falg_.dodge)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.dodge = true;
-			animationType_ = 5;
-			hunter_[animationType_]->PlayAnimation();
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -60.0f,90.0f,45.0f });
-			animationEaseData_->SetCount(20);
-			animationEaseData_->SetActFlag(true);
+			animationFunc_[static_cast<int>(AnimationType::DODGE)]();
 		}
 	}
 
@@ -314,54 +267,15 @@ void Hunter::AttackMove()
 		attackCoolTimer_ = 0;
 		if (falg_.attack1 && falg_.attack2 && !falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.attack1 = true;
-			falg_.attack2 = true;
-			falg_.attack3 = true;
-			animationType_ = 8;
-			actFlag_ = true;
-			hunter_[animationType_]->PlayAnimation(0, false);
-			// UŒ‚
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
-			comboFlag_ = false;
-			animationEaseData_->SetCount(60);
-			animationEaseData_->SetActFlag(true);
+			animationFunc_[static_cast<int>(AnimationType::COMBO3)]();
 		}
 		else if (falg_.attack1 && !falg_.attack2 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.attack1 = true;
-			falg_.attack2 = true;
-			animationType_ = 7;
-			actFlag_ = true;
-			hunter_[animationType_]->PlayAnimation(0, false);
-			// UŒ‚
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
-			comboFlag_ = false;
-			animationEaseData_->SetCount(40);
-			animationEaseData_->SetActFlag(true);
+			animationFunc_[static_cast<int>(AnimationType::COMBO2)]();
 		}
 		else if (!falg_.attack1 || falg_.attack1 && falg_.attack2 && falg_.attack3 && hunter_[animationType_]->AnimationEnd() && !actFlag_)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.attack1 = true;
-			animationType_ = 6;
-			actFlag_ = true;
-			hunter_[animationType_]->PlayAnimation(0, false);
-			// UŒ‚
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ -90.0f,180.0f,0.0f });
-			comboFlag_ = false;
-			animationEaseData_->SetCount(40);
-			animationEaseData_->SetActFlag(true);
+			animationFunc_[static_cast<int>(AnimationType::COMBO1)]();
 		}
 	}
 
@@ -573,6 +487,152 @@ Sphere Hunter::GetAttackHit()
 	return hitSphere;
 }
 
+void Hunter::Halt()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.halt = true;
+	animationType_ = static_cast<int>(AnimationType::HALT);
+	hunter_[animationType_]->PlayAnimation();
+	// ’âŽ~
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
+	animationEaseData_->SetActFlag(false);
+}
+
+void Hunter::Move()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.move = true;
+	animationType_ = static_cast<int>(AnimationType::MOVE);
+	hunter_[animationType_]->PlayAnimation();
+	// ˆÚ“®
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
+	animationEaseData_->SetActFlag(false);
+}
+
+void Hunter::Damage()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.damage = true;
+	animationType_ = static_cast<int>(AnimationType::DAMAGE);
+	hunter_[animationType_]->PlayAnimation();
+	// ƒ_ƒ[ƒW
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ 0.0f,90.0f,0.0f });
+	animationEaseData_->SetCount(30);
+	animationEaseData_->SetActFlag(true);
+}
+
+void Hunter::Death()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.death = true;
+	animationType_ = static_cast<int>(AnimationType::DEATH);
+	hunter_[animationType_]->PlayAnimation(0, false);
+	// Ž€–S
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f, 0.0f, 2.3f });
+	weapon_->SetRotation({ -100.0f, 0.0f, 90.0f });
+	hunter_[animationType_]->SetRotation({});
+	XMFLOAT3 position = hunter_[animationType_]->GetPosition();
+	if (position.y <= 2.0f)
+	{
+		position.y = 2.0f;
+	}
+	hunter_[animationType_]->SetPosition(position);
+	isDeath_ = true;
+}
+
+void Hunter::Dash()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.dash = true;
+	animationType_ = static_cast<int>(AnimationType::DASH);
+	hunter_[animationType_]->PlayAnimation();
+	// ˆÚ“®
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
+	animationEaseData_->SetActFlag(false);
+}
+
+void Hunter::Dodge()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.dodge = true;
+	animationType_ = static_cast<int>(AnimationType::DODGE);
+	hunter_[animationType_]->PlayAnimation();
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -60.0f,90.0f,45.0f });
+	animationEaseData_->SetCount(20);
+	animationEaseData_->SetActFlag(true);
+}
+
+void Hunter::Combo1()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.attack1 = true;
+	animationType_ = static_cast<int>(AnimationType::COMBO1);
+	actFlag_ = true;
+	hunter_[animationType_]->PlayAnimation(0, false);
+	// UŒ‚
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -90.0f,180.0f,0.0f });
+	comboFlag_ = false;
+	animationEaseData_->SetCount(40);
+	animationEaseData_->SetActFlag(true);
+}
+
+void Hunter::Combo2()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.attack1 = true;
+	falg_.attack2 = true;
+	animationType_ = static_cast<int>(AnimationType::COMBO2);
+	actFlag_ = true;
+	hunter_[animationType_]->PlayAnimation(0, false);
+	// UŒ‚
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -90.0f,180.0f,0.0f });
+	comboFlag_ = false;
+	animationEaseData_->SetCount(40);
+	animationEaseData_->SetActFlag(true);
+}
+
+void Hunter::Combo3()
+{
+	AnimationFlag temp = {};
+	falg_ = temp;
+	falg_.attack1 = true;
+	falg_.attack2 = true;
+	falg_.attack3 = true;
+	animationType_ = static_cast<int>(AnimationType::COMBO3);
+	actFlag_ = true;
+	hunter_[animationType_]->PlayAnimation(0, false);
+	// UŒ‚
+	weapon_->SetParent(hunter_[animationType_].get());
+	weapon_->SetPosition({ 0.0f,0.0f,2.3f });
+	weapon_->SetRotation({ -90.0f,180.0f,0.0f });
+	comboFlag_ = false;
+	animationEaseData_->SetCount(60);
+	animationEaseData_->SetActFlag(true);
+}
+
 void Hunter::DamageHit()
 {
 	if (damageFlag_ && invincibleTimer_ >= 60 && !falg_.damage)
@@ -587,17 +647,7 @@ void Hunter::DamageHit()
 
 		if (!falg_.damage)
 		{
-			AnimationFlag temp = {};
-			falg_ = temp;
-			falg_.damage = true;
-			animationType_ = 2;
-			hunter_[animationType_]->PlayAnimation();
-			// ƒ_ƒ[ƒW
-			weapon_->SetParent(hunter_[animationType_].get());
-			weapon_->SetPosition({ 0.0f,0.0f,2.3f });
-			weapon_->SetRotation({ 0.0f,90.0f,0.0f });
-			animationEaseData_->SetCount(30);
-			animationEaseData_->SetActFlag(true);
+			animationFunc_[static_cast<int>(AnimationType::DAMAGE)]();
 		}
 	}
 	else

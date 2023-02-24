@@ -31,6 +31,20 @@ public: // 定数
 	const float ANGLE_RESTRICTION = 0.6f;
 
 public: // サブクラス
+	// アニメーションのタイプ
+	enum class AnimationType
+	{
+		HALT,
+		MOVE,
+		DAMAGE,
+		DEATH,
+		DASH,
+		DODGE,
+		COMBO1,
+		COMBO2,
+		COMBO3,
+	};
+
 	// アニメーションフラグ
 	struct AnimationFlag
 	{
@@ -250,6 +264,44 @@ public: // メンバ関数
 	/// <returns>判定</returns>
 	Sphere GetAttackHit();
 
+private: // メンバ関数(アニメーション用)
+	/// <summary>
+	/// 停止
+	/// </summary>
+	void Halt();
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+	/// <summary>
+	/// ダメージを受けた
+	/// </summary>
+	void Damage();
+	/// <summary>
+	/// 死亡
+	/// </summary>
+	void Death();
+	/// <summary>
+	/// ダッシュ
+	/// </summary>
+	void Dash();
+	/// <summary>
+	/// 回避
+	/// </summary>
+	void Dodge();
+	/// <summary>
+	/// コンボ攻撃1
+	/// </summary>
+	void Combo1();
+	/// <summary>
+	/// コンボ攻撃2
+	/// </summary>
+	void Combo2();
+	/// <summary>
+	/// コンボ攻撃3
+	/// </summary>
+	void Combo3();
+
 private: // メンバ変数
 	//　モデル
 	std::array<std::unique_ptr<FbxObject3d>, 9> hunter_;
@@ -259,6 +311,9 @@ private: // メンバ変数
 	std::unique_ptr<ObjParticle> itemParticle_;
 	std::unique_ptr<ParticleEmitter> healEmitter_;
 	std::unique_ptr<ObjParticle> healParticle_;
+
+	// アニメーション関数の管理
+	std::vector<std::function<void()>> animationFunc_;
 
 	// カメラの角度
 	XMFLOAT2 cameraAngle_ = {};
