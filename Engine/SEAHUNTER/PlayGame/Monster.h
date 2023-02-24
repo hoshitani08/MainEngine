@@ -59,6 +59,17 @@ public: // サブクラス
 		Tail = 8,
 	};
 
+	// パーツ
+	enum class Parts
+	{
+		Body,
+		RightForeFoot,
+		LeftForeFoot,
+		RightHindFoot,
+		LeftHindFoot,
+		Tail,
+	};
+
 public: // 静的メンバ関数
 	/// <summary>
 	/// オブジェクト生成
@@ -205,6 +216,8 @@ public: // メンバ関数
 	/// ビヘイビアツリーのリセット
 	/// </summary>
 	void TreeReset();
+
+	void DamageCalculate(float partsDamage, Parts parts, Sphere hitSphere, Object3d* temp);
 
 public: // メンバ関数
 	/// <summary>
