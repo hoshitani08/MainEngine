@@ -9,6 +9,7 @@
 #include "BaseCalculate.h"
 
 #include <math.h>
+#include <algorithm>
 
 std::unique_ptr<Monster> Monster::Create(Camera* camera, Hunter* hunter)
 {
@@ -223,32 +224,9 @@ void Monster::Update()
 	XMFLOAT3 pos = nucleus_->GetPosition();
 
 	// “–‚½‚è”»’è
-	if (pos.x <= -48.0f)
-	{
-		pos.x = -48.0f;
-	}
-	else if (pos.x >= 48.0f)
-	{
-		pos.x = 48.0f;
-	}
-
-	if (pos.y <= 1.0f)
-	{
-		pos.y = 1.0f;
-	}
-	else if (pos.y >= 58.0f)
-	{
-		pos.y = 58.0f;
-	}
-
-	if (pos.z <= -48.0f)
-	{
-		pos.z = -48.0f;
-	}
-	else if (pos.z >= 48.0f)
-	{
-		pos.z = 48.0f;
-	}
+	pos.x = std::clamp(pos.x, -48.0f, 48.0f);
+	pos.y = std::clamp(pos.y, 1.0f, 58.0f);
+	pos.z = std::clamp(pos.z, -48.0f, 48.0f);
 
 	XMFLOAT3 pos1 = rightForeFoot_[2]->GetWorldPosition();
 

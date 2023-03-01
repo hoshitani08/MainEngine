@@ -168,9 +168,6 @@
     <ClCompile Include="PlayGame\ItemManager.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="PlayGame\Monster.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="PlayGame\UserInterface.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClCompile>
@@ -186,12 +183,6 @@
     <ClCompile Include="Scene\LoadScene.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="PlayGame\Block.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayGame\Stage.cpp">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\SceneChange.cpp">
       <Filter>ゲームシステム\Scene</Filter>
     </ClCompile>
@@ -203,6 +194,15 @@
     </ClCompile>
     <ClCompile Include="PlayGame\GameCamera.cpp">
       <Filter>ゲームシステム\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\Monster.cpp">
+      <Filter>ゲームシステム\GameObject\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\Stage.cpp">
+      <Filter>ゲームシステム\GameObject\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGame\Block.cpp">
+      <Filter>ゲームシステム\GameObject\stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -359,9 +359,6 @@
     <ClInclude Include="PlayGame\ItemManager.h">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="PlayGame\Monster.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="PlayGame\UserInterface.h">
       <Filter>ゲームシステム\GameObject</Filter>
     </ClInclude>
@@ -377,12 +374,6 @@
     <ClInclude Include="Scene\LoadScene.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="PlayGame\Block.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayGame\Stage.h">
-      <Filter>ゲームシステム\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneChange.h">
       <Filter>ゲームシステム\Scene</Filter>
     </ClInclude>
@@ -391,6 +382,15 @@
     </ClInclude>
     <ClInclude Include="PlayGame\GameCamera.h">
       <Filter>ゲームシステム\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\Monster.h">
+      <Filter>ゲームシステム\GameObject\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\Stage.h">
+      <Filter>ゲームシステム\GameObject\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGame\Block.h">
+      <Filter>ゲームシステム\GameObject\stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -497,6 +497,12 @@
     </Filter>
     <Filter Include="ゲームシステム\Game">
       <UniqueIdentifier>{2e54c52b-3942-4807-9e8a-70670abdb0bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\GameObject\enemy">
+      <UniqueIdentifier>{a9fed99f-62df-4b66-aea9-50350ab692bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ゲームシステム\GameObject\stage">
+      <UniqueIdentifier>{7fb86347-d83a-460c-9508-f44929ba17f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

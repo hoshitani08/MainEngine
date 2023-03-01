@@ -7,6 +7,8 @@
 #include "DebugText.h"
 #include "ItemManager.h"
 
+#include <algorithm>
+
 std::unique_ptr<Hunter> Hunter::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
@@ -184,32 +186,9 @@ void Hunter::BaseMove()
 	position.y +=  sinf((playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
 	position.z += -sinf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
 
-	if (position.x <= -48.0f)
-	{
-		position.x = -48.0f;
-	}
-	else if (position.x >= 48.0f)
-	{
-		position.x = 48.0f;
-	}
-
-	if (position.y <= 1.0f)
-	{
-		position.y = 1.0f;
-	}
-	else if (position.y >= 58.0f)
-	{
-		position.y = 58.0f;
-	}
-
-	if (position.z <= -48.0f)
-	{
-		position.z = -48.0f;
-	}
-	else if (position.z >= 48.0f)
-	{
-		position.z = 48.0f;
-	}
+	position.x = std::clamp(position.x, -48.0f, 48.0f);
+	position.y = std::clamp(position.y, 1.0f, 58.0f);
+	position.z = std::clamp(position.z, -48.0f, 48.0f);
 
 	if (speed_.x != 0.0f)
 	{

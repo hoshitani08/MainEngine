@@ -19,21 +19,6 @@ DirectXCommon::DirectXCommon()
 
 DirectXCommon::~DirectXCommon()
 {
-	// Direct3DŠÖ˜A
-	dxgiFactory_.Reset();
-	commandList_.Reset();
-	commandAllocator_.Reset();
-	commandQueue_.Reset();
-	for (auto& a : backBuffers_)
-	{
-		a.Reset();
-	}
-	swapChain_.Reset();
-	depthBuffer_.Reset();
-	rtvHeaps_.Reset();
-	dsvHeap_.Reset();
-	fence_.Reset();
-	device_.Reset();
 }
 
 void DirectXCommon::Initialize(WinApp* winApp)

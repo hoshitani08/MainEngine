@@ -110,7 +110,7 @@ void TitleScene::Update()
 			{
 				sceneChange_->SceneChangeStart("GameScene");
 			}
-			else if (!determinationFlag_)
+			else
 			{
 				exit(1);
 			}
@@ -122,7 +122,7 @@ void TitleScene::Update()
 				determinationFlag_ = true;
 				savePos_ = { 30,-5,0 };
 			}
-			else if (determinationFlag_)
+			else
 			{
 				determinationFlag_ = false;
 				savePos_ = { 30,-15,0 };
@@ -212,7 +212,7 @@ void TitleScene::Select()
 		quitTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 		quitTile_->SetScale({ 30, 1, 10 });
 	}
-	else if (determinationFlag_)
+	else
 	{
 		startTile_->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
 		startTile_->SetScale({ 30, 1, 10 });
