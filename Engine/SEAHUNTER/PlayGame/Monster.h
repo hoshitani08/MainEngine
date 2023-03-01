@@ -120,11 +120,6 @@ public: // メンバ関数
 	/// <param name="hitSphere">球</param>
 	void DamageHit(Sphere hitSphere);
 	/// <summary>
-	/// 基本のアニメーション
-	/// </summary>
-	/// <param name="type">アニメーションタイプ</param>
-	void Animation(AnimationType type);
-	/// <summary>
 	/// 部位破壊
 	/// </summary>
 	void PartsTailDestruction();
@@ -216,7 +211,13 @@ public: // メンバ関数
 	/// ビヘイビアツリーのリセット
 	/// </summary>
 	void TreeReset();
-
+	/// <summary>
+	/// ダメージ計算
+	/// </summary>
+	/// <param name="partsDamage">ダメージ量</param>
+	/// <param name="parts">どこの部位か</param>
+	/// <param name="hitSphere">判定</param>
+	/// <param name="temp">部位のオブジェクト</param>
 	void DamageCalculate(float partsDamage, Parts parts, Sphere hitSphere, Object3d* temp);
 
 public: // メンバ関数
@@ -250,6 +251,32 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="hp">HP</param>
 	void SetHp(float hp) { hp_ = hp; }
+
+private: // メンバ関数(アニメーション用)
+	/// <summary>
+	/// 初期姿勢
+	/// </summary>
+	void InitialPosture();
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+	/// <summary>
+	/// 突進
+	/// </summary>
+	void Assault();
+	/// <summary>
+	/// 尻尾攻撃
+	/// </summary>
+	void TailAttack();
+	/// <summary>
+	/// 右パンチ
+	/// </summary>
+	void RightPunch();
+	/// <summary>
+	/// 待機
+	/// </summary>
+	void Waiting();
 
 private: // メンバ変数
 #pragma region
@@ -297,6 +324,8 @@ private: // メンバ変数
 	bool colorChangeFlag_ = false;
 #pragma endregion ステータス
 #pragma region 
+	// アニメーション関数の管理
+	std::vector<std::function<void()>> animationFunc_;
 	// sin波のタイマー
 	float waveTimer_ = 0.0f;
 	// イージング用位置
