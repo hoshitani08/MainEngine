@@ -182,6 +182,7 @@ void Monster::Initialize(Camera* camera)
 	attackSelector_.push_back(std::bind(&Monster::AttackMode1, this));
 	attackSelector_.push_back(std::bind(&Monster::AttackMode2, this));
 	attackSelector_.push_back(std::bind(&Monster::AttackMode3, this));
+	attackSelector_.push_back(std::bind(&Monster::AttackMode4, this));
 
 	waitingSelector_.push_back(std::bind(&Monster::WaitingMode1, this));
 	waitingSelector_.push_back(std::bind(&Monster::WaitingMode2, this));
@@ -212,6 +213,7 @@ void Monster::Initialize(Camera* camera)
 	animationFunc_.push_back(std::bind(&Monster::Assault, this));
 	animationFunc_.push_back(std::bind(&Monster::TailAttack, this));
 	animationFunc_.push_back(std::bind(&Monster::RightPunch, this));
+	animationFunc_.push_back(std::bind(&Monster::LeftPunch, this));
 	animationFunc_.push_back(std::bind(&Monster::Waiting, this));
 }
 
@@ -589,7 +591,7 @@ bool Monster::AttackElapsedTime()
 	}
 
 	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) ||
-		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_)
+		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_ || attackSelect_[3] && isEaseFlag_)
 	{
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
@@ -608,7 +610,7 @@ bool Monster::AttackElapsedTime()
 
 bool Monster::AttackModeSelection()
 {
-	if (attackSelect_[0] || attackSelect_[1] || attackSelect_[2])
+	if (attackSelect_[0] || attackSelect_[1] || attackSelect_[2] || attackSelect_[3])
 	{
 		return true;
 	}
@@ -627,11 +629,18 @@ bool Monster::AttackModeSelection()
 		attackSelect_[1] = true;
 		return true;
 	}
-	else if (Hit(body_[2]->GetWorldPosition(), 4.5f, 1.0f))
+	else if (Hit(rightForeFoot_[2]->GetWorldPosition(), 4.5f, 1.0f))
 	{
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
 		attackSelect_[2] = true;
+		return true;
+	}
+	else if (Hit(leftForeFoot_[2]->GetWorldPosition(), 4.5f, 1.0f))
+	{
+		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
+		angleEaseTimer_ = 0.0f;
+		attackSelect_[3] = true;
 		return true;
 	}
 
@@ -719,7 +728,7 @@ bool Monster::AttackMode2()
 
 bool Monster::AttackMode3()
 {
-	animationFunc_[static_cast<int>(AnimationType::Punch)]();
+	animationFunc_[static_cast<int>(AnimationType::RightPunch)]();
 
 	if (!trackingEnd_)
 	{
@@ -734,6 +743,33 @@ bool Monster::AttackMode3()
 			continue;
 		}
 		if (Hit(rightForeFoot_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamage(10.0f);
+			hitFlag_ = true;
+		}
+	}
+
+	return true;
+}
+
+bool Monster::AttackMode4()
+{
+	animationFunc_[static_cast<int>(AnimationType::LeftPunch)]();
+
+	if (!trackingEnd_)
+	{
+		AngleAdjustment();
+		trackingEnd_ = true;
+	}
+
+	for (int i = 0; i < leftForeFoot_.size(); i++)
+	{
+		if (hitFlag_)
+		{
+			continue;
+		}
+		if (Hit(leftForeFoot_[i]->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
 		{
 			hunter_->SetDamageFlag(true);
 			hunter_->SetDamage(10.0f);
@@ -1182,6 +1218,45 @@ void Monster::RightPunch()
 		}
 		bubbleEmitter_->SetCenter(1.0f);
 		bubbleEmitter_->BubbleAdd(count, life, rightForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+	}
+}
+
+void Monster::LeftPunch()
+{
+	int count = 10;
+	int life = 60;
+	float timeRate = 0.0f;
+
+	if (!isPunch_)
+	{
+		int countNum = 20;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
+
+		leftForeFoot_[0]->SetRotation(Ease::Action(EaseType::In, EaseFunctionType::Quad, {}, { 0.0f, 45.0f, -100.0f }, timeRate));
+
+		if (easeTimer_ > countNum)
+		{
+			easeTimer_ = 0.0f;
+			isPunch_ = true;
+		}
+	}
+	else if (isPunch_)
+	{
+		int countNum = 10;
+		timeRate = easeTimer_ / countNum;
+		easeTimer_++;
+
+		leftForeFoot_[0]->SetRotation(Ease::Action(EaseType::Out, EaseFunctionType::Quad, { 0.0f, 45.0f, 100.0f }, { 0.0f, -90.0f, 0.0f }, timeRate));
+
+		if (easeTimer_ > countNum)
+		{
+			easeTimer_ = 0.0f;
+			isPunch_ = false;
+			isEaseFlag_ = true;
+		}
+		bubbleEmitter_->SetCenter(1.0f);
+		bubbleEmitter_->BubbleAdd(count, life, leftForeFoot_[2]->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
 	}
 }
 

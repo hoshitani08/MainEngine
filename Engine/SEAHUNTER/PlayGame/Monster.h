@@ -44,7 +44,8 @@ public: // サブクラス
 		Move,
 		Assault,
 		TailAttack,
-		Punch,
+		RightPunch,
+		LeftPunch,
 		Waiting,
 	};
 
@@ -173,10 +174,15 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool AttackMode2();
 	/// <summary>
-	/// パンチ攻撃
+	/// 右パンチ攻撃
 	/// </summary>
 	/// <returns></returns>
 	bool AttackMode3();
+	/// <summary>
+	/// 左パンチ攻撃
+	/// </summary>
+	/// <returns></returns>
+	bool AttackMode4();
 	/// <summary>
 	/// 待機の経過時間
 	/// </summary>
@@ -273,6 +279,10 @@ private: // メンバ関数(アニメーション用)
 	/// 右パンチ
 	/// </summary>
 	void RightPunch();
+	/// <summary>
+	/// 左パンチ
+	/// </summary>
+	void LeftPunch();
 	/// <summary>
 	/// 待機
 	/// </summary>
