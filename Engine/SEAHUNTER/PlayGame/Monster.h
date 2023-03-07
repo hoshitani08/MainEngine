@@ -225,6 +225,10 @@ public: // メンバ関数
 	/// <param name="hitSphere">判定</param>
 	/// <param name="temp">部位のオブジェクト</param>
 	void DamageCalculate(float partsDamage, Parts parts, Sphere hitSphere, Object3d* temp);
+	/// <summary>
+	/// 切れた尻尾による攻撃
+	/// </summary>
+	void TailBullet();
 
 public: // メンバ関数
 	/// <summary>
@@ -330,16 +334,18 @@ private: // メンバ変数
 	bool isDead_ = false;
 	// 尻尾が切れたか
 	bool tailDestructionFlag_ = false;
-	//
+	// カラーを変えるためのフラグ
 	bool colorChangeFlag_ = false;
+	// 尻尾が動くまでのタイマー
+	int tailMoveTimer_ = 0;
+	// 尻尾の移動の方向のリセットフラグ
+	std::array<bool, 4> tailMoveResetFlag_;
 #pragma endregion ステータス
 #pragma region 
 	// アニメーション関数の管理
 	std::vector<std::function<void()>> animationFunc_;
 	// sin波のタイマー
 	float waveTimer_ = 0.0f;
-	// イージング用位置
-	XMFLOAT3 endRotation_ = {0,360,0};
 	// イージングの進行度用
 	float easeTimer_ = 0.0f;
 	float angleEaseTimer_ = 0.0f;

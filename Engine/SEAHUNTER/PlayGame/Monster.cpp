@@ -207,6 +207,11 @@ void Monster::Initialize(Camera* camera)
 
 	nucleus_->SetRotation(enemyRot);
 
+	for (auto& a : tailMoveResetFlag_)
+	{
+		a = true;
+	}
+
 	// ’iŠK‚Ì\’z
 	animationFunc_.push_back(std::bind(&Monster::InitialPosture, this));
 	animationFunc_.push_back(std::bind(&Monster::Move, this));
@@ -373,6 +378,7 @@ void Monster::AllMove()
 	}
 
 	PartsTailDestruction();
+	TailBullet();
 }
 
 void Monster::AngleAdjustment()
@@ -1009,6 +1015,49 @@ void Monster::DamageCalculate(float partsDamage, Parts parts, Sphere hitSphere, 
 			}
 			tail_[i]->SetColor(color);
 		}
+	}
+}
+
+void Monster::TailBullet()
+{
+	if (!tailDestructionFlag_)
+	{
+		return;
+	}
+
+	tailMoveTimer_++;
+
+	if (tailMoveTimer_ >= 120)
+	{
+		return;
+	}
+
+	int count = 0;
+	for (auto& a : tail_)
+	{
+		if (a->GetWorldPosition().x <= -48.0f || a->GetWorldPosition().x >= 48.0f ||
+			a->GetWorldPosition().y <=   1.0f || a->GetWorldPosition().y >= 58.0f ||
+			a->GetWorldPosition().z <= -48.0f || a->GetWorldPosition().z >= 48.0f)
+		{
+			tailMoveResetFlag_[count] = true;
+		}
+
+		XMFLOAT3 rot = a->GetRotation();
+		if (tailMoveResetFlag_[count])
+		{
+			rot.x = RandCalculate(0.0f, 360.0f);
+			rot.y = RandCalculate(0.0f, 360.0f);
+			rot.z = RandCalculate(0.0f, 360.0f);
+
+			a->SetRotation(rot);
+		}
+
+		XMFLOAT3 pos = a->GetPosition();
+		pos.x +=  cosf((rot.x * 3.14f) / 180.0f) * 1.0f;
+		pos.y +=  sinf((rot.y * 3.14f) / 180.0f) * 1.0f;
+		pos.z += -sinf((rot.x * 3.14f) / 180.0f) * 1.0f;
+
+		count++;
 	}
 }
 
