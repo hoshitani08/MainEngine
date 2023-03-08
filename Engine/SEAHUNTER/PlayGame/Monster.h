@@ -113,7 +113,7 @@ public: // メンバ関数
 	/// <param name="partsPosition">座標</param>
 	/// <param name="enemyRange">半径</param>
 	/// <param name="playerRange">半径</param>
-	/// <returns></returns>
+	/// <returns>当たったかどうか</returns>
 	bool Hit(XMFLOAT3 partsPosition, float enemyRange = 1.0f, float playerRange = 1.0f);
 	/// <summary>
 	/// ダメージ判定

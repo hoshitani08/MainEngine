@@ -235,6 +235,33 @@ void Monster::Update()
 	pos.y = std::clamp(pos.y, 1.0f, 58.0f);
 	pos.z = std::clamp(pos.z, -48.0f, 48.0f);
 
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && !tailDestructionFlag_)
+	{
+		XMFLOAT3 ppos = tail_[0]->GetWorldPosition();
+
+		tail_[0]->SetParent((Object3d*)nullptr);
+
+		XMFLOAT3 prot = tail_[0]->GetRotation();
+
+		prot.x += nucleus_->GetRotation().x;
+		prot.y += nucleus_->GetRotation().y;
+		prot.z += nucleus_->GetRotation().z;
+
+		tail_[0]->SetPosition(ppos);
+		tail_[0]->SetRotation(prot);
+
+		for (int i = 1; i < tail_.size(); i++)
+		{
+			XMFLOAT3 ppos = tail_[i]->GetWorldPosition();
+
+			tail_[i]->SetParent((Object3d*)nullptr);
+
+			tail_[i]->SetPosition(ppos);
+		}
+
+		tailDestructionFlag_ = true;
+	}
+
 	XMFLOAT3 pos1 = rightForeFoot_[2]->GetWorldPosition();
 
 	if (pos1.y <= 1.0f)
@@ -328,7 +355,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	BehaviorTree();
+	//BehaviorTree();
 
 	if (colorTimer_ >= 30)
 	{
@@ -513,6 +540,15 @@ void Monster::PartsTailDestruction()
 
 		tail_[0]->SetPosition(ppos);
 		tail_[0]->SetRotation(prot);
+
+		for (int i = 1; i < tail_.size(); i++)
+		{
+			XMFLOAT3 ppos = tail_[i]->GetWorldPosition();
+
+			tail_[i]->SetParent((Object3d*)nullptr);
+
+			tail_[i]->SetPosition(ppos);
+		}
 
 		tailDestructionFlag_ = true;
 	}
@@ -1027,23 +1063,25 @@ void Monster::TailBullet()
 
 	tailMoveTimer_++;
 
-	if (tailMoveTimer_ >= 120)
+	if (tailMoveTimer_ <= 120)
 	{
 		return;
 	}
 
-	int count = 0;
+	int num = 0;
+	int count = 5;
+	int life = 60;
 	for (auto& a : tail_)
 	{
-		if (a->GetWorldPosition().x <= -48.0f || a->GetWorldPosition().x >= 48.0f ||
-			a->GetWorldPosition().y <=   1.0f || a->GetWorldPosition().y >= 58.0f ||
-			a->GetWorldPosition().z <= -48.0f || a->GetWorldPosition().z >= 48.0f)
+		if ((a->GetPosition().x <= -48.0f || a->GetPosition().x >= 48.0f ||
+			a->GetPosition().y <=   1.0f || a->GetPosition().y >= 58.0f ||
+			a->GetPosition().z <= -48.0f || a->GetPosition().z >= 48.0f) && !tailMoveResetFlag_[num])
 		{
-			tailMoveResetFlag_[count] = true;
+			tailMoveResetFlag_[num] = true;
 		}
 
 		XMFLOAT3 rot = a->GetRotation();
-		if (tailMoveResetFlag_[count])
+		if (tailMoveResetFlag_[num])
 		{
 			rot.x = RandCalculate(0.0f, 360.0f);
 			rot.y = RandCalculate(0.0f, 360.0f);
@@ -1053,11 +1091,28 @@ void Monster::TailBullet()
 		}
 
 		XMFLOAT3 pos = a->GetPosition();
-		pos.x +=  cosf((rot.x * 3.14f) / 180.0f) * 1.0f;
-		pos.y +=  sinf((rot.y * 3.14f) / 180.0f) * 1.0f;
-		pos.z += -sinf((rot.x * 3.14f) / 180.0f) * 1.0f;
+		pos.x +=  cosf((rot.x * 3.14f) / 180.0f) * 0.5f;
+		pos.y +=  sinf((rot.y * 3.14f) / 180.0f) * 0.5f;
+		pos.z += -sinf((rot.x * 3.14f) / 180.0f) * 0.5f;
 
-		count++;
+		pos.x = std::clamp(pos.x, -48.0f, 48.0f);
+		pos.y = std::clamp(pos.y, 1.0f, 58.0f);
+		pos.z = std::clamp(pos.z, -48.0f, 48.0f);
+
+		a->SetPosition(pos);
+
+		if (Hit(a->GetWorldPosition(), 1.0f, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamage(10.0f);
+			hitFlag_ = true;
+		}
+
+		bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+
+		tailMoveResetFlag_[num] = false;
+
+		num++;
 	}
 }
 
