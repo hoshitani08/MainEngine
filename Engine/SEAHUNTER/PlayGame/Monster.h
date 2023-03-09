@@ -340,6 +340,9 @@ private: // メンバ変数
 	int tailMoveTimer_ = 0;
 	// 尻尾の移動の方向のリセットフラグ
 	std::array<bool, 4> tailMoveResetFlag_;
+	std::array<bool, 4> tailMoveChangeFlag_;
+	// 尻尾が動く移動量の保存
+	XMFLOAT3 saveTailMoveVector_ = {};
 #pragma endregion ステータス
 #pragma region 
 	// アニメーション関数の管理
