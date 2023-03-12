@@ -34,6 +34,8 @@ void GameCamera::CameraAngle(XMFLOAT2 angle)
 	XMFLOAT3 center = { target.m128_f32[0], target.m128_f32[1], target.m128_f32[2] };
 	XMFLOAT3 pos = f;
 
+	pos.y = max(pos.y, 1.0f);
+
 	camera_->SetTarget(center);
 	camera_->SetEye(pos);
 	camera_->Update();
@@ -108,14 +110,7 @@ void GameCamera::GamePlayCameraMove()
 		angle_.x = (angle_.x - -RESTRICTION_ANGLE.x);
 	}
 
-	if (angle_.y >= RESTRICTION_ANGLE.y)
-	{
-		angle_.y = 80.0f;
-	}
-	else if (angle_.y <= -RESTRICTION_ANGLE.y)
-	{
-		angle_.y = -80.0f;
-	}
+	angle_.y = std::clamp(angle_.y, -RESTRICTION_ANGLE.y, RESTRICTION_ANGLE.y);
 }
 
 void GameCamera::EndCameraMove()
