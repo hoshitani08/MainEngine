@@ -19,7 +19,7 @@ MapChip* MapChip::GetInstance()
 	return &instance;
 }
 
-void MapChip::CsvLoad(int mapChipMaxX, int mapChipMaxY, std::string fName)
+void MapChip::CsvLoad(int mapChipMaxX, int mapChipMaxY, const std::string& fName)
 {
 	std::ifstream ifs(baseDirectory + fName + ".csv");
 	std::string line;
@@ -49,7 +49,7 @@ void MapChip::CsvLoad(int mapChipMaxX, int mapChipMaxY, std::string fName)
 	mapData_.push_back(tempData);
 }
 
-int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
+int MapChip::GetChipNum(int x, int y, const std::string& fName, int mapChipSize)
 {
 	const int X = x / mapChipSize;
 	const int Y = y / mapChipSize;
@@ -74,7 +74,7 @@ int MapChip::GetChipNum(int x, int y, std::string fName, int mapChipSize)
 	return map[static_cast<std::vector<int, std::allocator<int>>::size_type>(Y) * mapData_[count].mapChipMaxX + X];
 }
 
-int MapChip::GetMapChipMaxX(std::string fName)
+int MapChip::GetMapChipMaxX(const std::string& fName)
 {
 	int count = 0;
 
@@ -90,7 +90,7 @@ int MapChip::GetMapChipMaxX(std::string fName)
 	return 0;
 }
 
-int MapChip::GetMapChipMaxY(std::string fName)
+int MapChip::GetMapChipMaxY(const std::string& fName)
 {
 	int count = 0;
 

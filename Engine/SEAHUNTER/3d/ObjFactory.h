@@ -40,13 +40,13 @@ public:
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <param name="smoothing">エッジ平滑化フラグ</param>
-	void LoadModel(std::string fName, bool smoothing = false);
+	void LoadModel(const std::string& fName, bool smoothing = false);
 	/// <summary>
 	/// モデルの取得
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>検索したモデル</returns>
-	Model* GetModel(std::string fName);
+	Model* GetModel(const std::string& fName);
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>

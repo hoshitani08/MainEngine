@@ -51,7 +51,7 @@ public:
 	/// <param name="mapChipMaxX">最大の横幅</param>
 	/// <param name="mapChipMaxY">最大の縦幅</param>
 	/// <param name="fName">ファイル名</param>
-	void CsvLoad(int mapChipMaxX, int mapChipMaxY, std::string fName);
+	void CsvLoad(int mapChipMaxX, int mapChipMaxY, const std::string& fName);
 	/// <summary>
 	/// マップナンバー指定
 	/// </summary>
@@ -60,19 +60,19 @@ public:
 	/// <param name="fName">ファイル名</param>
 	/// <param name="mapChipSize"></param>
 	/// <returns></returns>
-	int GetChipNum(int x, int y, std::string fName, int mapChipSize = 1);
+	int GetChipNum(int x, int y, const std::string& fName, int mapChipSize = 1);
 	/// <summary>
 	/// 最大の横幅を取得
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>最大の横幅</returns>
-	int GetMapChipMaxX(std::string fName);
+	int GetMapChipMaxX(const std::string& fName);
 	/// <summary>
 	/// 最大の縦幅を取得
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>最大の縦幅</returns>
-	int GetMapChipMaxY(std::string fName);
+	int GetMapChipMaxY(const std::string& fName);
 
 private:
 	std::vector<MapChipData> mapData_;

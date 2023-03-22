@@ -29,11 +29,11 @@ public: // メンバ関数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Stage(Monster* monster, Hunter* hunter, Camera* camera, std::string fName);
+	Stage(Monster* monster, Hunter* hunter, Camera* camera, const std::string& fName);
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(std::string fName);
+	void Initialize(const std::string& fName);
 	/// <summary>
 	/// 終了
 	/// </summary>

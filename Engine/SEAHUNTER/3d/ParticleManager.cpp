@@ -10,7 +10,7 @@
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, Camera* camera, std::wstring fName)
+std::unique_ptr<ParticleManager> ParticleManager::Create(ID3D12Device* device, Camera* camera, const std::wstring& fName)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	ParticleManager* partMan = new ParticleManager(device, camera);
@@ -34,7 +34,7 @@ ParticleManager::~ParticleManager()
 	descHeap_.Reset();
 }
 
-void ParticleManager::Initialize(std::wstring fName)
+void ParticleManager::Initialize(const std::wstring& fName)
 {
 	// nullptrチェック
 	assert(device_);
@@ -206,7 +206,7 @@ void ParticleManager::InitializeDescriptorHeap()
 	descriptorHandleIncrementSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void ParticleManager::LoadTexture(std::wstring fName)
+void ParticleManager::LoadTexture(const std::wstring& fName)
 {
 	HRESULT result = S_FALSE;
 

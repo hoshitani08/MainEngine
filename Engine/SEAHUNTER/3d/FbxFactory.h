@@ -40,13 +40,13 @@ public:
 	/// モデルのロード
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
-	void LoadModel(std::string fName);
+	void LoadModel(const std::string& fName);
 	/// <summary>
 	/// モデルの取得
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
 	/// <returns>検索したモデル</returns>
-	FbxModel* GetModel(std::string fName);
+	FbxModel* GetModel(const std::string& fName);
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>

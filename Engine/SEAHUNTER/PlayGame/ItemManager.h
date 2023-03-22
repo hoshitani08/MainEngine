@@ -73,7 +73,7 @@ private: // メンバ関数
 	/// CSVファイル読み込み
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
-	void CsvLoad(std::string fName);
+	void CsvLoad(const std::string& fName);
 	/// <summary>
 	/// マップナンバー指定
 	/// </summary>
@@ -82,7 +82,7 @@ private: // メンバ関数
 	/// <param name="fName">ファイル名</param>
 	/// <param name="mapChipSize"></param>
 	/// <returns></returns>
-	int GetChipNum(int x, int y, std::string fName, int mapChipSize = 1);
+	int GetChipNum(int x, int y, const std::string& fName, int mapChipSize = 1);
 
 public: // メンバ関数
 	ItemManager(const ItemManager& r) = delete;

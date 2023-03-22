@@ -27,7 +27,7 @@ void ShaderManager::Finalize()
 	}
 }
 
-void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, std::wstring fName, std::string typeName, Type type)
+void ShaderManager::CreateGraphicsPipeline(ID3D12Device* device, const std::wstring& fName, const std::string& typeName, Type type)
 {
 	HRESULT result = S_FALSE;
 
@@ -810,7 +810,7 @@ void ShaderManager::PostEffectPipeline(ID3D12Device* device, ShaderData tempData
 	shaderData_.push_back(tempData);
 }
 
-ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName, Type type)
+ID3D12RootSignature* ShaderManager::GetRootSignature(const std::wstring& fName, Type type)
 {
 	for (int i = 0; i < shaderData_.size(); i++)
 	{
@@ -823,7 +823,7 @@ ID3D12RootSignature* ShaderManager::GetRootSignature(std::wstring fName, Type ty
 	return nullptr;
 }
 
-ID3D12PipelineState* ShaderManager::GetPipelineState(std::wstring fName, Type type)
+ID3D12PipelineState* ShaderManager::GetPipelineState(const std::wstring& fName, Type type)
 {
 	for (int i = 0; i < shaderData_.size(); i++)
 	{

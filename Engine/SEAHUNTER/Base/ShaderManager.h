@@ -63,7 +63,7 @@ public:
 	/// <param name="fName">シェーダファイル名</param>
 	/// <param name="typeName">タイプ</param>
 	/// <param name="type">プリミティブ形状のタイプ</param>
-	void CreateGraphicsPipeline(ID3D12Device * device, std::wstring fName, std::string typeName, Type type = Type::Triangle);
+	void CreateGraphicsPipeline(ID3D12Device * device, const std::wstring& fName, const std::string& typeName, Type type = Type::Triangle);
 	void FbxPipeline(ID3D12Device* device, ShaderData tempData);
 	void ObjPipeline(ID3D12Device* device, ShaderData tempData);
 	void PmxPipeline(ID3D12Device* device, ShaderData tempData);
@@ -76,14 +76,14 @@ public:
 	/// <param name="fName">シェーダファイル名</param>
 	/// <param name="type">プリミティブ形状のタイプ</param>
 	/// <returns>ルートシグネチャ</returns>
-	ID3D12RootSignature* GetRootSignature(std::wstring fName, Type type = Type::Triangle);
+	ID3D12RootSignature* GetRootSignature(const std::wstring& fName, Type type = Type::Triangle);
 	/// <summary>
 	/// パイプラインステートオブジェクトの取得
 	/// </summary>
 	/// <param name="fName">シェーダファイル名</param>
 	/// <param name="type">プリミティブ形状のタイプ</param>
 	/// <returns>パイプラインステートオブジェクト</returns>
-	ID3D12PipelineState* GetPipelineState(std::wstring fName, Type type = Type::Triangle);
+	ID3D12PipelineState* GetPipelineState(const std::wstring& fName, Type type = Type::Triangle);
 	/// <summary>
 	/// シングルトンインスタンスの取得
 	/// </summary>

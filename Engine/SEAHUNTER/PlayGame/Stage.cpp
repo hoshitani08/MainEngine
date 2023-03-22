@@ -7,7 +7,7 @@
 #include <sstream>
 #include <iomanip>
 
-Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera, std::string fName)
+Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera, const std::string& fName)
 {
 	hunter_ = hunter;
 	monster_ = monster;
@@ -15,7 +15,7 @@ Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera, std::string fName
 	Initialize(fName);
 }
 
-void Stage::Initialize(std::string fName)
+void Stage::Initialize(const std::string& fName)
 {
 	// レベルデータの読み込み
 	levelData = LevelLoader::LoadFile(fName);

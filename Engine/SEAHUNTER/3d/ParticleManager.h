@@ -84,7 +84,7 @@ public: // 静的メンバ関数
 	/// <param name="camera">カメラ</param>
 	/// <param name="fName">ファイル名</param>
 	/// <returns></returns>
-	static std::unique_ptr<ParticleManager> Create(ID3D12Device* device, Camera* camera, std::wstring fName = L"effect1");
+	static std::unique_ptr<ParticleManager> Create(ID3D12Device* device, Camera* camera, const std::wstring& fName = L"effect1");
 
 public: // メンバ関数
 	/// <summary>
@@ -95,7 +95,7 @@ public: // メンバ関数
 	/// 初期化
 	/// </summary>
 	/// <param name="fName">ファイル名</param>
-	void Initialize(std::wstring fName);
+	void Initialize(const std::wstring& fName);
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
@@ -126,7 +126,7 @@ public: // メンバ関数
 	/// テクスチャ読み込み
 	/// </summary>
 	/// <param name="fName"></param>
-	void LoadTexture(std::wstring fName);
+	void LoadTexture(const std::wstring& fName);
 	/// <summary>
 	/// モデル作成
 	/// </summary>

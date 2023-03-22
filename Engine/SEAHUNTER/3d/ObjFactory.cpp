@@ -36,7 +36,7 @@ void ObjFactory::Finalize()
 	}
 }
 
-void ObjFactory::LoadModel(std::string fName, bool smoothing)
+void ObjFactory::LoadModel(const std::string& fName, bool smoothing)
 {
 	ModelData tempData;
 	tempData.fName = BASE_DIRECTORY + fName + ".obj";
@@ -45,7 +45,7 @@ void ObjFactory::LoadModel(std::string fName, bool smoothing)
 	modelData_.push_back(std::move(tempData));
 }
 
-Model* ObjFactory::GetModel(std::string fName)
+Model* ObjFactory::GetModel(const std::string& fName)
 {
 	for (int i = 0; i < modelData_.size(); i++)
 	{

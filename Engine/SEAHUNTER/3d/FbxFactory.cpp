@@ -35,7 +35,7 @@ void FbxFactory::Finalize()
 	}
 }
 
-void FbxFactory::LoadModel(std::string fName)
+void FbxFactory::LoadModel(const std::string& fName)
 {
 	ModelData tempData;
 	tempData.fName = BASE_DIRECTORY + fName + ".fbx";
@@ -44,7 +44,7 @@ void FbxFactory::LoadModel(std::string fName)
 	modelData_.push_back(std::move(tempData));
 }
 
-FbxModel* FbxFactory::GetModel(std::string fName)
+FbxModel* FbxFactory::GetModel(const std::string& fName)
 {
 	for (int i = 0; i < modelData_.size(); i++)
 	{

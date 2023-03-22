@@ -11,7 +11,7 @@ ItemManager::~ItemManager()
 {
 }
 
-void ItemManager::CsvLoad(std::string fName)
+void ItemManager::CsvLoad(const std::string& fName)
 {
 	std::ifstream ifs(BASE_DIRECTORY + fName + ".csv");
 	std::string line;
@@ -32,7 +32,7 @@ void ItemManager::CsvLoad(std::string fName)
 	}
 }
 
-int ItemManager::GetChipNum(int x, int y, std::string fName, int mapChipSize)
+int ItemManager::GetChipNum(int x, int y, const std::string& fName, int mapChipSize)
 {
 	const int X = x / mapChipSize;
 	const int Y = y / mapChipSize;
