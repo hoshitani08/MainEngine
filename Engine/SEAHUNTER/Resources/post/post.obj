@@ -1,4 +1,4 @@
-# Blender v2.92.0 OBJ File: ''
+# Blender v2.92.0 OBJ File: 'post.blend'
 # www.blender.org
 mtllib post.mtl
 o 円柱_円柱.002
@@ -1685,7 +1685,7 @@ vn -0.2080 -0.0014 -0.9781
 vn 0.1483 0.0390 -0.9882
 vn 0.4333 -0.0146 -0.9012
 vn 0.6006 -0.0064 -0.7995
-usemtl None
+usemtl マテリアル
 s off
 f 79/1/1 2/2/1 4/3/1 80/4/1
 f 80/4/2 4/3/2 6/5/2 95/6/2
