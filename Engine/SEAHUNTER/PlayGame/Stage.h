@@ -29,11 +29,11 @@ public: // メンバ関数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Stage(Monster* monster, Hunter* hunter, Camera* camera);
+	Stage(Monster* monster, Hunter* hunter, Camera* camera, std::string fName);
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(std::string fName);
 	/// <summary>
 	/// 終了
 	/// </summary>
@@ -47,6 +47,10 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="cmdList">描画コマンドリスト</param>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
+	/// <summary>
+	/// 砂埃のパーティクル
+	/// </summary>
+	void SandParticle();
 
 private: // メンバ変数
 	// jsonデータ

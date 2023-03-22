@@ -58,38 +58,8 @@ void TitleScene::Initialize()
 	endPosition_[1] = { startPosition_[1].x, startPosition_[1].y, 0 };
 	endPosition_[2] = { startPosition_[2].x, startPosition_[2].y, 0 };
 
-	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
-	ground_->SetScale({ 2,2,2 });
-	ground_->SetPosition({ 0,-4,0 });
-
-	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxX("map"); i++)
-	{
-		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxY("map"); j++)
-		{
-			std::unique_ptr<Block> block;
-
-			XMFLOAT2 size = { static_cast<float>(MapChip::GetInstance()->GetMapChipMaxX("map") / 2), static_cast<float>(MapChip::GetInstance()->GetMapChipMaxY("map") / 2) };
-			float count = 2.5f;
-			XMFLOAT3 pos = { (i - size.x) * count, -4, (j - size.y) * count };
-
-			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 1)
-			{
-				block = std::make_unique<Block>(0, pos);
-
-				block_.push_back(std::move(block));
-			}
-			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
-			{
-				block = std::make_unique<Block>(1, pos);
-
-				block_.push_back(std::move(block));
-			}
-		}
-	}
-
-	// カメラ注視点をセット
-	camera_->SetTarget({ 0, 0, 0 });
-	camera_->SetEye({ 0,1,-15 });
+	//ステージ生成
+	stage_ = std::make_unique<Stage>(nullptr, nullptr, camera_.get(), "title");
 
 	sceneChange_ = std::make_unique<SceneChange>();
 }
@@ -137,11 +107,7 @@ void TitleScene::Update()
 	titleTile_->Update();
 	startTile_->Update();
 	quitTile_->Update();
-	ground_->Update();
-	for (auto& a : block_)
-	{
-		a->Update();
-	}
+	stage_->Update();
 	sceneChange_->Update();
 }
 
@@ -188,11 +154,7 @@ void TitleScene::EffectDraw()
 #pragma endregion 背景スプライト描画
 #pragma region 3Dオブジェクト描画
 	// 3Dオブクジェクトの描画
-	for (auto& a : block_)
-	{
-		a->Draw(cmdList);
-	}
-	ground_->Draw(cmdList);
+	stage_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト描画
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理

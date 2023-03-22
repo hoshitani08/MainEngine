@@ -1,0 +1,533 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "Type": "MESH",
+            "name": "ground",
+            "transform": {
+                "translation": [
+                    2.514397144317627,
+                    0.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            },
+            "file_name": "ground"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral",
+            "transform": {
+                "translation": [
+                    -17.48560333251953,
+                    7.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock",
+            "transform": {
+                "translation": [
+                    -29.98560333251953,
+                    20.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.001",
+            "transform": {
+                "translation": [
+                    -27.48560333251953,
+                    -30.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.001",
+            "transform": {
+                "translation": [
+                    -19.98560333251953,
+                    -5.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.002",
+            "transform": {
+                "translation": [
+                    -14.985603332519531,
+                    -27.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.002",
+            "transform": {
+                "translation": [
+                    -14.985603332519531,
+                    -15.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.003",
+            "transform": {
+                "translation": [
+                    -7.485602855682373,
+                    -32.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.004",
+            "transform": {
+                "translation": [
+                    -7.485602855682373,
+                    12.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.005",
+            "transform": {
+                "translation": [
+                    -4.985602855682373,
+                    -7.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.003",
+            "transform": {
+                "translation": [
+                    2.514397144317627,
+                    10.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.004",
+            "transform": {
+                "translation": [
+                    -2.485602855682373,
+                    2.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.005",
+            "transform": {
+                "translation": [
+                    5.014397144317627,
+                    -22.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.006",
+            "transform": {
+                "translation": [
+                    -4.6330180168151855,
+                    -16.95655632019043,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.006",
+            "transform": {
+                "translation": [
+                    10.014396667480469,
+                    15.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.007",
+            "transform": {
+                "translation": [
+                    15.014396667480469,
+                    -12.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.007",
+            "transform": {
+                "translation": [
+                    15.014396667480469,
+                    5.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.008",
+            "transform": {
+                "translation": [
+                    17.51439666748047,
+                    -27.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.008",
+            "transform": {
+                "translation": [
+                    25.01439666748047,
+                    -15.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.009",
+            "transform": {
+                "translation": [
+                    25.01439666748047,
+                    20.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.010",
+            "transform": {
+                "translation": [
+                    30.01439666748047,
+                    -32.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "Rock.011",
+            "transform": {
+                "translation": [
+                    27.51439666748047,
+                    5.0,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "Rock"
+        },
+        {
+            "Type": "MESH",
+            "name": "coral.009",
+            "transform": {
+                "translation": [
+                    30.01439666748047,
+                    17.5,
+                    -4.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "coral"
+        },
+        {
+            "Type": "MESH",
+            "name": "wall",
+            "transform": {
+                "translation": [
+                    30.47913932800293,
+                    -45.83711624145508,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "file_name": "wall"
+        }
+    ]
+}

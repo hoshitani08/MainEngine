@@ -15,6 +15,7 @@
 #include "MapChip.h"
 #include "Block.h"
 #include "SceneChange.h"
+#include "Stage.h"
 
 class TitleScene : public BaseScene
 {
@@ -75,8 +76,7 @@ private: // メンバ変数
 	std::unique_ptr<Object3d> titleTile_;
 	std::unique_ptr<Object3d> startTile_;
 	std::unique_ptr<Object3d> quitTile_;
-	std::unique_ptr<Object3d> ground_;
-	std::vector<std::unique_ptr<Block>> block_;
+	std::unique_ptr<Stage> stage_;
 	// シーンチェンジ
 	std::unique_ptr<SceneChange> sceneChange_;
 	// 決定フラグ

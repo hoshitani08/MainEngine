@@ -11,9 +11,6 @@ void MyGame::Initialize()
 {
 	//基底クラスの初期化
 	BaseGame::Initialize();
-
-	//ゲームで必要なマップデータのロード
-	MapChip::GetInstance()->CsvLoad(30, 30, "map");
 	//ゲームで必要な画像のロード
 	std::thread t = std::thread([&] { SpriteFactory::GetInstance()->Initialize(); });
 	//ゲームで必要なモデル(.fbx)のロード

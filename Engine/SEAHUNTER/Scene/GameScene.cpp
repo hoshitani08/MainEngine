@@ -55,7 +55,7 @@ void GameScene::Initialize()
 	hunter_ = Hunter::Create();
 	monster_ = Monster::Create(camera_->GetCamerapoint(), hunter_.get());
 	//ステージ生成
-	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get(), camera_->GetCamerapoint());
+	stage_ = std::make_unique<Stage>(monster_.get(), hunter_.get(), camera_->GetCamerapoint(), "Stage");
 	// カメラのターゲットの設定
 	camera_->SetHunter(hunter_.get());
 

@@ -7,18 +7,18 @@
 #include <sstream>
 #include <iomanip>
 
-Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera)
+Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera, std::string fName)
 {
 	hunter_ = hunter;
 	monster_ = monster;
 	camera_ = camera;
-	Initialize();
+	Initialize(fName);
 }
 
-void Stage::Initialize()
+void Stage::Initialize(std::string fName)
 {
 	// レベルデータの読み込み
-	levelData = LevelLoader::LoadFile("Stage");
+	levelData = LevelLoader::LoadFile(fName);
 
 	for (auto& objectData : levelData->objects)
 	{
@@ -108,12 +108,7 @@ void Stage::Finalize()
 
 void Stage::Update()
 {
-	if (hunter_->GetPosition().y <= 1.0f && hunter_->IsMoveFlag())
-	{
-		XMFLOAT3 pos = hunter_->GetPosition();
-		pos.y -= 1.0f;
-		fugitiveBustEmitter->SandAdd(8, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
-	}
+	SandParticle();
 
 	fugitiveBustEmitter->Update();
 	for (auto& object : objects)
@@ -138,4 +133,19 @@ void Stage::Draw(ID3D12GraphicsCommandList* cmdList)
 	}
 	
 	fugitiveBustEmitter->Draw(cmdList);
+}
+
+void Stage::SandParticle()
+{
+	if (hunter_ == nullptr)
+	{
+		return;
+	}
+
+	if (hunter_->GetPosition().y <= 1.0f && hunter_->IsMoveFlag())
+	{
+		XMFLOAT3 pos = hunter_->GetPosition();
+		pos.y -= 1.0f;
+		fugitiveBustEmitter->SandAdd(8, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
+	}
 }
