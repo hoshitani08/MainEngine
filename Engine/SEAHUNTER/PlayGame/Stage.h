@@ -11,6 +11,7 @@
 #include "ObjParticle.h"
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
+#include "LevelLoader.h"
 
 class Stage
 {
@@ -48,14 +49,12 @@ public: // メンバ関数
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
 private: // メンバ変数
-	// 水面
-	std::unique_ptr<Object3d> watersurface_;
-	// 地面
-	std::unique_ptr<Object3d> ground_;
+	// jsonデータ
+	std::unique_ptr<LevelData> levelData;
+	//
+	std::vector<std::unique_ptr<Object3d>> objects;
 	// 岩や珊瑚のオブジェクト
 	std::vector<std::unique_ptr<Block>> block_;
-	// 行動範囲
-	std::unique_ptr<Object3d> field_;
 	// モンスターのポインタ
 	Monster* monster_ = nullptr;
 	// ハンターのポインタ

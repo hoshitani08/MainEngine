@@ -23,6 +23,8 @@ void ObjFactory::Initialize()
 	LoadModel("blood", true);
 	LoadModel("heal");
 	LoadModel("itemEffect");
+	LoadModel("wall");
+	LoadModel("post");
 }
 
 void ObjFactory::Finalize()

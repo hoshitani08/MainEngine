@@ -3,6 +3,10 @@
 #include "MapChip.h"
 #include "DirectXCommon.h"
 
+#include <cassert>
+#include <sstream>
+#include <iomanip>
+
 Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera)
 {
 	hunter_ = hunter;
@@ -13,41 +17,79 @@ Stage::Stage(Monster* monster, Hunter* hunter, Camera* camera)
 
 void Stage::Initialize()
 {
-	watersurface_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("watersurface"));
-	watersurface_->SetPosition({ 0,100,0 });
-	watersurface_->SetScale({ 2,2,2 });
-	ground_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("ground"));
-	ground_->SetScale({ 2,2,2 });
-	ground_->SetPosition({ -11,0,0 });
+	// レベルデータの読み込み
+	levelData = LevelLoader::LoadFile("Stage");
 
-	for (int i = 0; i < MapChip::GetInstance()->GetMapChipMaxX("map"); i++)
+	for (auto& objectData : levelData->objects)
 	{
-		for (int j = 0; j < MapChip::GetInstance()->GetMapChipMaxY("map"); j++)
+		bool flag = false;
+
+		if (objectData.fileName == "Rock" || objectData.fileName == "Rock2" || objectData.fileName == "coral")
+		{
+			flag = true;
+		}
+
+		if (flag)
 		{
 			std::unique_ptr<Block> block;
 
-			XMFLOAT2 size = { static_cast<float>(MapChip::GetInstance()->GetMapChipMaxX("map") / 2), static_cast<float>(MapChip::GetInstance()->GetMapChipMaxY("map") / 2) };
-			float count = 6.0f;
-			XMFLOAT3 pos = { (i - size.x) * count, 0, (j - size.y) * count };
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
 
-			if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 1)
+			if (objectData.fileName == "Rock")
 			{
 				block = std::make_unique<Block>(0, pos);
 
 				block_.push_back(std::move(block));
 			}
-			else if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 2)
+			else if (objectData.fileName == "coral")
 			{
 				block = std::make_unique<Block>(1, pos);
 
 				block_.push_back(std::move(block));
 			}
-			else if (MapChip::GetInstance()->GetChipNum(i, j, "map") == 3)
+			else if (objectData.fileName == "Rock2")
 			{
 				block = std::make_unique<Block>(2, pos);
 
 				block_.push_back(std::move(block));
 			}
+		}
+		else
+		{
+			// ファイル名から登録済みモデルを検索
+			Model* model = ObjFactory::GetInstance()->GetModel(objectData.fileName);
+			if (model == nullptr)
+			{
+				model = ObjFactory::GetInstance()->GetModel("cube");
+			}
+
+			// モデルを指定して3Dオブジェクトを生成
+			std::unique_ptr<Object3d> newObject = Object3d::Create(model);
+
+			// 座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
+
+			// 回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
+
+			// サイズ
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+
+			if (objectData.fileName == "cube")
+			{
+				newObject->SetPrimitiveType(ShaderManager::Type::Line);
+			}
+
+			// 配列に登録
+			objects.push_back(std::move(newObject));
 		}
 	}
 
@@ -58,11 +100,6 @@ void Stage::Initialize()
 	fugitiveBustEmitter->SetStartColor(color);
 	fugitiveBustEmitter->SetEndColor(color);
 	fugitiveBustEmitter->SetVelocity(0.03f);
-
-	field_ = Object3d::Create(ObjFactory::GetInstance()->GetModel("cube"));
-	float size = 50.0f;
-	field_->SetScale({ size ,30 ,size });
-	field_->SetPrimitiveType(ShaderManager::Type::Line);
 }
 
 void Stage::Finalize()
@@ -78,10 +115,11 @@ void Stage::Update()
 		fugitiveBustEmitter->SandAdd(8, 120, pos, ObjFactory::GetInstance()->GetModel("sand"));
 	}
 
-	watersurface_->Update();
-	ground_->Update();
-	field_->Update();
 	fugitiveBustEmitter->Update();
+	for (auto& object : objects)
+	{
+		object->Update();
+	}
 	for (auto& a : block_)
 	{
 		a->Update();
@@ -90,12 +128,14 @@ void Stage::Update()
 
 void Stage::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	watersurface_->Draw(cmdList);
-	ground_->Draw(cmdList);
+	for (auto& object : objects)
+	{
+		object->Draw(cmdList);
+	}
 	for (auto& a : block_)
 	{
 		a->Draw(cmdList);
 	}
-	field_->Draw(cmdList);
+	
 	fugitiveBustEmitter->Draw(cmdList);
 }
