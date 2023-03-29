@@ -27,6 +27,24 @@ enum  PadKey
 	BUTTON_DPAD_RIGHT // デジタル方向ボタン右
 };
 
+enum XPadKey
+{
+	XINPUT_BUTTON_A = XINPUT_GAMEPAD_A, // Aボタン
+	XINPUT_BUTTON_B = XINPUT_GAMEPAD_B, // Bボタン
+	XINPUT_BUTTON_X = XINPUT_GAMEPAD_X, // Xボタン
+	XINPUT_BUTTON_Y = XINPUT_GAMEPAD_Y, // Yボタン
+	XINPUT_BUTTON_LEFT_SHOULDER = XINPUT_GAMEPAD_LEFT_SHOULDER, // LBボタン
+	XINPUT_BUTTON_RIGHT_SHOULDER = XINPUT_GAMEPAD_RIGHT_SHOULDER, // RBボタン
+	XINPUT_BUTTON_BACK = XINPUT_GAMEPAD_BACK, // BACKボタン
+	XINPUT_BUTTON_START = XINPUT_GAMEPAD_START, // STARTボタン
+	XINPUT_BUTTON_LEFT_THUMB = XINPUT_GAMEPAD_LEFT_THUMB, // 左スティック押し込み
+	XINPUT_BUTTON_RIGHT_THUMB = XINPUT_GAMEPAD_RIGHT_THUMB, // 右スティック押し込み
+	XINPUT_BUTTON_DPAD_UP = XINPUT_GAMEPAD_DPAD_UP, // デジタル方向ボタン上
+	XINPUT_BUTTON_DPAD_DOWN = XINPUT_GAMEPAD_DPAD_DOWN, // デジタル方向ボタン下
+	XINPUT_BUTTON_DPAD_LEFT = XINPUT_GAMEPAD_DPAD_LEFT, // デジタル方向ボタン左
+	XINPUT_BUTTON_DPAD_RIGHT = XINPUT_GAMEPAD_DPAD_RIGHT // デジタル方向ボタン右
+};
+
 class Input final
 {
 private:
@@ -121,12 +139,14 @@ public: //メンバ関数
 	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
 	/// <returns>押されているか</returns>
 	bool PushPadKey(PadKey keyNumber);
+	bool PushPadKey(XPadKey keyNumber);
 	/// <summary>
 	/// キーのトリガーをチェック
 	/// </summary>
 	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
 	/// <returns>トリガーか</returns>
 	bool TriggerPadKey(PadKey keyNumber);
+	bool TriggerPadKey(XPadKey keyNumber);
 	/// <summary>
 	/// キーの左ボタン押下をチェック
 	/// </summary>

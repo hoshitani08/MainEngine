@@ -74,7 +74,7 @@ void TitleScene::Update()
 
 	if (isEaseFlag_ && sceneChange_->GetinEndFlag())
 	{
-		if (input->TriggerPadKey(BUTTON_A))
+		if (input->TriggerPadKey(XINPUT_BUTTON_A))
 		{
 			if (determinationFlag_)
 			{
@@ -85,7 +85,7 @@ void TitleScene::Update()
 				exit(1);
 			}
 		}
-		if (input->TriggerPadKey(BUTTON_DPAD_UP) || input->TriggerPadKey(BUTTON_DPAD_DOWN) || (input->PadStickGradient().y != 0 && input->PadStickTriggerY()))
+		if (input->TriggerPadKey(XINPUT_BUTTON_DPAD_UP) || input->TriggerPadKey(XINPUT_BUTTON_DPAD_DOWN) || (input->PadStickGradient().y != 0 && input->PadStickTriggerY()))
 		{
 			if (!determinationFlag_)
 			{

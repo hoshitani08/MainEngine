@@ -257,8 +257,8 @@ bool Input::TriggerKey(BYTE keyNumber)
 
 bool Input::PadStickTriggerY()
 {
-	float y = padData_.lY / 1000.0f;
-	float oldY = padDataPre_.lY / 1000.0f;
+	float y    = state_.Gamepad.sThumbLY / 32767.0f;
+	float oldY = statePre_.Gamepad.sThumbLY / 32767.0f;
 
 	if ((fabsf(y) > 0.2f && fabsf(oldY) < 0.2f) || (fabsf(y) < -0.2f && fabsf(oldY) > -0.2f))
 	{
@@ -276,8 +276,8 @@ BOOL CALLBACK Input::DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 
 XMFLOAT2 Input::PadStickGradient()
 {
-	float x = padData_.lX / 1000.0f;
-	float y = padData_.lY / 1000.0f;
+	float x = state_.Gamepad.sThumbLX / 32767.0f;
+	float y = state_.Gamepad.sThumbLY / 32767.0f;
 
 	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
 	{
@@ -378,6 +378,16 @@ bool Input::PushPadKey(PadKey keyNumber)
 	return false;
 }
 
+bool Input::PushPadKey(XPadKey keyNumber)
+{
+	// 0でなければ押している
+	if (state_.Gamepad.wButtons == static_cast<WORD>(keyNumber))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool Input::TriggerPadKey(PadKey keyNumber)
 {
 	// 前回が0で、今回が0でなければトリガー
@@ -416,6 +426,17 @@ bool Input::TriggerPadKey(PadKey keyNumber)
 	}
 
 	// トリガーでない
+	return false;
+}
+
+bool Input::TriggerPadKey(XPadKey keyNumber)
+{
+	// 前回が0で、今回が0でなければトリガー
+	if (statePre_.Gamepad.wButtons != static_cast<WORD>(keyNumber) && state_.Gamepad.wButtons == static_cast<WORD>(keyNumber))
+	{
+		return true;
+	}
+
 	return false;
 }
 

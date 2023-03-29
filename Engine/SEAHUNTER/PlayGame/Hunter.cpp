@@ -291,7 +291,7 @@ void Hunter::SpeedCalculate()
 		}
 		isDash_ = false;
 	}
-	else if (input->PushPadKey(BUTTON_RIGHT_SHOULDER) && isStamina_)
+	else if (input->PushPadKey(XINPUT_BUTTON_RIGHT_SHOULDER) && isStamina_)
 	{
 		speed_.x = speed_.y = static_cast<float>(sqrt(input->PadStickGradient().x * input->PadStickGradient().x + input->PadStickGradient().y * input->PadStickGradient().y));
 		stamina_ -= 0.5f;
