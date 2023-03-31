@@ -163,7 +163,7 @@ void Hunter::BaseMove()
 		}
 
 		rotation.y = playerAngle_.x + 90;
-		rotation.x = playerAngle_.y;
+		rotation.x = -playerAngle_.y;
 
 		if (isDash_ && !falg_.dash && !falg_.dodge)
 		{
@@ -183,7 +183,7 @@ void Hunter::BaseMove()
 	}
 
 	position.x +=  cosf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
-	position.y +=  sinf((playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
+	position.y +=  sinf((-playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
 	position.z += -sinf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
 
 	position.x = std::clamp(position.x, -48.0f, 48.0f);
@@ -211,7 +211,7 @@ void Hunter::AvoidMove()
 	Input* input = Input::GetInstance();
 
 	// ‰ñ”ð
-	if (input->TriggerPadKey(BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_ && !falg_.damage && !isAttackFlag_ && (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f))
+	if (input->TriggerPadKey(XINPUT_BUTTON_A) && !avoidFlag_ && avoidTimer_ >= 10 && isStamina_ && !falg_.damage && !isAttackFlag_ && (input->PadStickGradient().x != 0.0f || input->PadStickGradient().y != 0.0f))
 	{
 		avoidFlag_ = true;
 		avoidTimer_ = 0;
@@ -233,7 +233,7 @@ void Hunter::AttackMove()
 	Input* input = Input::GetInstance();
 
 	// UŒ‚
-	if ((input->TriggerPadKey(BUTTON_Y) || input->TriggerPadKey(BUTTON_B)) && !avoidFlag_ &&  attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
+	if ((input->TriggerPadKey(XINPUT_BUTTON_Y) || input->TriggerPadKey(XINPUT_BUTTON_B)) && !avoidFlag_ &&  attackCoolTimer_ >= 10 && !itemSelectionFlag_ && !falg_.damage)
 	{
 		attackCoolTimer_ = 0;
 		comboFlag_ = true;

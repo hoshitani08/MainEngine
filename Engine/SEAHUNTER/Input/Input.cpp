@@ -293,8 +293,8 @@ XMFLOAT2 Input::PadStickGradient()
 
 XMFLOAT2 Input::PadRightStickGradient()
 {
-	float x = padData_.lRx / 1000.0f;
-	float y = padData_.lRy / 1000.0f;
+	float x = state_.Gamepad.sThumbRX / 32767.0f;
+	float y = state_.Gamepad.sThumbRY / 32767.0f;
 
 	if (fabsf(x) < 0.2f && fabsf(x) > -0.2f)
 	{
@@ -310,13 +310,13 @@ XMFLOAT2 Input::PadRightStickGradient()
 
 double Input::PadStickAngle()
 {
-	double radian = atan2(padData_.lY - 0, padData_.lX - 0);
+	double radian = -atan2(state_.Gamepad.sThumbLY - 0, state_.Gamepad.sThumbLX - 0);
 	return radian * (180.0f / 3.14159265359f);
 }
 
 double Input::PadRightStickAngle()
 {
-	double radian = atan2(padData_.lRy - 0, padData_.lRx - 0);
+	double radian = atan2(state_.Gamepad.sThumbRY - 0, state_.Gamepad.sThumbRX - 0);
 	return radian * (180.0f / 3.14159265359f);
 }
 
