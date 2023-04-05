@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "ObjParticle.h"
 #include "Vector.h"
+#include "BehaviorTree.h"
 
 class Monster
 {

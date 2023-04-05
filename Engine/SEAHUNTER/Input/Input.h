@@ -139,6 +139,11 @@ public: //メンバ関数
 	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
 	/// <returns>押されているか</returns>
 	bool PushPadKey(PadKey keyNumber);
+	/// <summary>
+	/// ゲームパッドのキーの押下をチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( XINPUT_BUTTON_A 等)</param>
+	/// <returns></returns>
 	bool PushPadKey(XPadKey keyNumber);
 	/// <summary>
 	/// キーのトリガーをチェック
@@ -146,6 +151,11 @@ public: //メンバ関数
 	/// <param name="keyNumber">キー番号( BUTTON_A 等)</param>
 	/// <returns>トリガーか</returns>
 	bool TriggerPadKey(PadKey keyNumber);
+	/// <summary>
+	/// キーのトリガーをチェック
+	/// </summary>
+	/// <param name="keyNumber">キー番号( XINPUT_BUTTON_A 等)</param>
+	/// <returns></returns>
 	bool TriggerPadKey(XPadKey keyNumber);
 	/// <summary>
 	/// キーの左ボタン押下をチェック

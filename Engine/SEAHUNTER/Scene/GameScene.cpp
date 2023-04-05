@@ -115,7 +115,7 @@ void GameScene::Draw()
 
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
-	hunter_->Draw(cmdList);
+	
 #pragma endregion 3Dオブジェクト(FBX)描画
 #pragma region パーティクル
 	// パーティクルの描画
@@ -142,6 +142,7 @@ void GameScene::EffectDraw()
 #pragma endregion 3Dオブジェクト描画
 #pragma region 3Dオブジェクト(FBX)描画
 	monster_->Draw(cmdList);
+	hunter_->Draw(cmdList);
 #pragma endregion 3Dオブジェクト(FBX)描画
 }
 

@@ -163,7 +163,7 @@ void Hunter::BaseMove()
 		}
 
 		rotation.y = playerAngle_.x + 90;
-		rotation.x = -playerAngle_.y;
+		rotation.x = playerAngle_.y;
 
 		if (isDash_ && !falg_.dash && !falg_.dodge)
 		{
@@ -183,7 +183,7 @@ void Hunter::BaseMove()
 	}
 
 	position.x +=  cosf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
-	position.y +=  sinf((-playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
+	position.y +=  sinf((playerAngle_.y * 3.14f) / 180.0f) * speed_.y;
 	position.z += -sinf((playerAngle_.x * 3.14f) / 180.0f) * speed_.x;
 
 	position.x = std::clamp(position.x, -48.0f, 48.0f);

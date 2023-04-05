@@ -207,6 +207,8 @@
     <ClCompile Include="GameObject\LevelLoader.cpp">
       <Filter>エンジンシステム\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="BehaviorTreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -398,6 +400,8 @@
     <ClInclude Include="GameObject\LevelLoader.h">
       <Filter>エンジンシステム\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="BehaviorTreeNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">

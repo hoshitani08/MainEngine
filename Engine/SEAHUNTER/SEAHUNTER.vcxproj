@@ -223,6 +223,8 @@
     <ClCompile Include="Base\MyGame.cpp" />
     <ClCompile Include="Base\ShaderManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="BehaviorTreeNode.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\Collision.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
@@ -287,6 +289,8 @@
     <ClInclude Include="Base\MyGame.h" />
     <ClInclude Include="Base\ShaderManager.h" />
     <ClInclude Include="Base\WinApp.h" />
+    <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="BehaviorTreeNode.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
     <ClInclude Include="Collision\Collision.h" />

@@ -25,7 +25,7 @@ void GameCamera::CameraAngle(XMFLOAT2 angle)
 	//”¼Œa‚Í-10
 	XMVECTOR v0 = { 0, 0, -10, 0 };
 	XMMATRIX  rotM = XMMatrixIdentity();
-	rotM *= XMMatrixRotationX(XMConvertToRadians(angle.y));
+	rotM *= XMMatrixRotationX(XMConvertToRadians(-angle.y));
 	rotM *= XMMatrixRotationY(XMConvertToRadians(angle.x));
 	XMVECTOR v = XMVector3TransformNormal(v0, rotM);
 	XMVECTOR target = { hunter_->GetPosition().x, hunter_->GetPosition().y, hunter_->GetPosition().z };
