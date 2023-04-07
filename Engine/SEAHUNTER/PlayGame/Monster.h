@@ -126,10 +126,6 @@ public: // メンバ関数
 	/// </summary>
 	void PartsTailDestruction();
 	/// <summary>
-	/// ビヘイビアツリー
-	/// </summary>
-	void BehaviorTree();
-	/// <summary>
 	/// 咆哮
 	/// </summary>
 	/// <returns></returns>
@@ -369,8 +365,8 @@ private: // メンバ変数
 	int howlTimer_ = 0;
 #pragma endregion アニメーション
 #pragma region 
-	// 行動のセレクター
-	std::vector<std::function<bool()>> activitySelector_;
+	// ビヘイビアツリー
+	std::unique_ptr<BehaviorTree> behaviorTree_;
 	// 攻撃のシークエンス
 	std::vector<std::function<bool()>> attackSequence_;
 	// 待機のシークエンス

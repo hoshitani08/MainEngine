@@ -223,8 +223,6 @@
     <ClCompile Include="Base\MyGame.cpp" />
     <ClCompile Include="Base\ShaderManager.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
-    <ClCompile Include="BehaviorTree.cpp" />
-    <ClCompile Include="BehaviorTreeNode.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Collision\Collision.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
@@ -235,6 +233,8 @@
     <ClCompile Include="Collision\CollisionPrimitive.cpp" />
     <ClCompile Include="Collision\MeshCollider.cpp" />
     <ClCompile Include="Collision\SphereCollider.cpp" />
+    <ClCompile Include="GameObject\BehaviorTree.cpp" />
+    <ClCompile Include="GameObject\BehaviorTreeNode.cpp" />
     <ClCompile Include="GameObject\ContactableObject.cpp" />
     <ClCompile Include="GameObject\Ease.cpp" />
     <ClCompile Include="GameObject\LevelLoader.cpp" />
@@ -289,8 +289,6 @@
     <ClInclude Include="Base\MyGame.h" />
     <ClInclude Include="Base\ShaderManager.h" />
     <ClInclude Include="Base\WinApp.h" />
-    <ClInclude Include="BehaviorTree.h" />
-    <ClInclude Include="BehaviorTreeNode.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Collision\BaseCollider.h" />
     <ClInclude Include="Collision\Collision.h" />
@@ -302,6 +300,8 @@
     <ClInclude Include="Collision\QueryCallback.h" />
     <ClInclude Include="Collision\RaycastHit.h" />
     <ClInclude Include="Collision\SphereCollider.h" />
+    <ClInclude Include="GameObject\BehaviorTree.h" />
+    <ClInclude Include="GameObject\BehaviorTreeNode.h" />
     <ClInclude Include="GameObject\ContactableObject.h" />
     <ClInclude Include="GameObject\Ease.h" />
     <ClInclude Include="GameObject\LevelLoader.h" />

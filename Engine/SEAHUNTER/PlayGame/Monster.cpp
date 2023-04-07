@@ -166,27 +166,29 @@ void Monster::Initialize(Camera* camera)
 	bubbleEmitter_->SetEndColor({ 1.0f, 1.0f, 1.0f, 0.0f });
 
 	//ビヘイビアツリーの初期化
-	activitySelector_.push_back(std::bind(&Monster::Howl, this));
-	activitySelector_.push_back(std::bind(&Monster::AttackMode, this));
-	activitySelector_.push_back(std::bind(&Monster::WaitingMode, this));
-	activitySelector_.push_back(std::bind(&Monster::Dead, this));
+	behaviorTree_ = std::make_unique<BehaviorTree>();
 
-	attackSequence_.push_back(std::bind(&Monster::AttackElapsedTime, this));
-	attackSequence_.push_back(std::bind(&Monster::AttackModeSelection, this));
-	attackSequence_.push_back(std::bind(&Monster::AttackModeMove, this));
+	behaviorTree_->AddNodeFunc([this]() { return Howl(); }, BehaviorTree::CreateType::End);
+	behaviorTree_->AddNodeFunc([this]() { return AttackMode(); }, BehaviorTree::CreateType::End);
+	behaviorTree_->AddNodeFunc([this]() { return WaitingMode(); }, BehaviorTree::CreateType::End);
+	behaviorTree_->AddNodeFunc([this]() { return Dead(); }, BehaviorTree::CreateType::End);
 
-	waitingSequence_.push_back(std::bind(&Monster::WaitingElapsedTime, this));
-	waitingSequence_.push_back(std::bind(&Monster::WaitingModeSelection, this));
-	waitingSequence_.push_back(std::bind(&Monster::WaitingModeMove, this));
+	attackSequence_.push_back([this]() { return AttackElapsedTime(); });
+	attackSequence_.push_back([this]() { return AttackModeSelection(); });
+	attackSequence_.push_back([this]() { return AttackModeMove(); });
 
-	attackSelector_.push_back(std::bind(&Monster::AttackMode1, this));
-	attackSelector_.push_back(std::bind(&Monster::AttackMode2, this));
-	attackSelector_.push_back(std::bind(&Monster::AttackMode3, this));
-	attackSelector_.push_back(std::bind(&Monster::AttackMode4, this));
+	waitingSequence_.push_back([this]() { return WaitingElapsedTime(); });
+	waitingSequence_.push_back([this]() { return WaitingModeSelection(); });
+	waitingSequence_.push_back([this]() { return WaitingModeMove(); });
 
-	waitingSelector_.push_back(std::bind(&Monster::WaitingMode1, this));
-	waitingSelector_.push_back(std::bind(&Monster::WaitingMode2, this));
-	waitingSelector_.push_back(std::bind(&Monster::WaitingMode3, this));
+	attackSelector_.push_back([this]() { return AttackMode1(); });
+	attackSelector_.push_back([this]() { return AttackMode2(); });
+	attackSelector_.push_back([this]() { return AttackMode3(); });
+	attackSelector_.push_back([this]() { return AttackMode4(); });
+
+	waitingSelector_.push_back([this]() { return WaitingMode1(); });
+	waitingSelector_.push_back([this]() { return WaitingMode2(); });
+	waitingSelector_.push_back([this]() { return WaitingMode3(); });
 
 	TreeReset();
 
@@ -332,7 +334,7 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 
 void Monster::AllMove()
 {
-	BehaviorTree();
+	behaviorTree_->Run();
 
 	if (colorTimer_ >= 30)
 	{
@@ -528,17 +530,6 @@ void Monster::PartsTailDestruction()
 		}
 
 		tailDestructionFlag_ = true;
-	}
-}
-
-void Monster::BehaviorTree()
-{
-	for (auto& a : activitySelector_)
-	{
-		if (a())
-		{
-			break;
-		}
 	}
 }
 

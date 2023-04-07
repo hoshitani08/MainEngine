@@ -207,8 +207,12 @@
     <ClCompile Include="GameObject\LevelLoader.cpp">
       <Filter>エンジンシステム\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorTree.cpp" />
-    <ClCompile Include="BehaviorTreeNode.cpp" />
+    <ClCompile Include="GameObject\BehaviorTree.cpp">
+      <Filter>エンジンシステム\GameObject\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\BehaviorTreeNode.cpp">
+      <Filter>エンジンシステム\GameObject\Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h">
@@ -400,8 +404,12 @@
     <ClInclude Include="GameObject\LevelLoader.h">
       <Filter>エンジンシステム\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorTree.h" />
-    <ClInclude Include="BehaviorTreeNode.h" />
+    <ClInclude Include="GameObject\BehaviorTree.h">
+      <Filter>エンジンシステム\GameObject\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\BehaviorTreeNode.h">
+      <Filter>エンジンシステム\GameObject\Behavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\FBX.hlsli">
@@ -513,6 +521,9 @@
     </Filter>
     <Filter Include="ゲームシステム\GameObject\stage">
       <UniqueIdentifier>{7fb86347-d83a-460c-9508-f44929ba17f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="エンジンシステム\GameObject\Behavior">
+      <UniqueIdentifier>{b0320b29-b74f-4f4b-a626-349eefd5fbe1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
