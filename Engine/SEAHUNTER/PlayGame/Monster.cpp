@@ -169,17 +169,18 @@ void Monster::Initialize(Camera* camera)
 	behaviorTree_ = std::make_unique<BehaviorTree>();
 
 	behaviorTree_->AddNodeFunc([this]() { return Howl(); }, BehaviorTree::CreateType::End);
-	behaviorTree_->AddNodeFunc([this]() { return AttackMode(); }, BehaviorTree::CreateType::End);
-	behaviorTree_->AddNodeFunc([this]() { return WaitingMode(); }, BehaviorTree::CreateType::End);
+
+	behaviorTree_->SetNodeFuncType(BehaviorTreeNode::NodeType::Sequence);
+	behaviorTree_->AddNodeFunc([this]() { return AttackElapsedTime(); }, BehaviorTree::CreateType::Add);
+	behaviorTree_->AddNodeFunc([this]() { return AttackModeSelection(); }, BehaviorTree::CreateType::Add);
+	behaviorTree_->AddNodeFunc([this]() { return AttackModeMove(); }, BehaviorTree::CreateType::End);
+
+	behaviorTree_->SetNodeFuncType(BehaviorTreeNode::NodeType::Sequence);
+	behaviorTree_->AddNodeFunc([this]() { return WaitingElapsedTime(); }, BehaviorTree::CreateType::Add);
+	behaviorTree_->AddNodeFunc([this]() { return WaitingModeSelection(); }, BehaviorTree::CreateType::Add);
+	behaviorTree_->AddNodeFunc([this]() { return WaitingModeMove(); }, BehaviorTree::CreateType::End);
+
 	behaviorTree_->AddNodeFunc([this]() { return Dead(); }, BehaviorTree::CreateType::End);
-
-	attackSequence_.push_back([this]() { return AttackElapsedTime(); });
-	attackSequence_.push_back([this]() { return AttackModeSelection(); });
-	attackSequence_.push_back([this]() { return AttackModeMove(); });
-
-	waitingSequence_.push_back([this]() { return WaitingElapsedTime(); });
-	waitingSequence_.push_back([this]() { return WaitingModeSelection(); });
-	waitingSequence_.push_back([this]() { return WaitingModeMove(); });
 
 	attackSelector_.push_back([this]() { return AttackMode1(); });
 	attackSelector_.push_back([this]() { return AttackMode2(); });
@@ -548,32 +549,6 @@ bool Monster::Howl()
 	if (howlTimer_ >= 90)
 	{
 		howlflag_ = true;
-	}
-
-	return true;
-}
-
-bool Monster::AttackMode()
-{
-	for (auto& a : attackSequence_)
-	{
-		if (!a())
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool Monster::WaitingMode()
-{
-	for (auto& a : waitingSequence_)
-	{
-		if (!a())
-		{
-			return false;
-		}
 	}
 
 	return true;

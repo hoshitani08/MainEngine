@@ -131,16 +131,6 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool Howl();
 	/// <summary>
-	/// 攻撃
-	/// </summary>
-	/// <returns></returns>
-	bool AttackMode();
-	/// <summary>
-	/// 待機
-	/// </summary>
-	/// <returns></returns>
-	bool WaitingMode();
-	/// <summary>
 	/// 死亡
 	/// </summary>
 	/// <returns></returns>
@@ -367,10 +357,6 @@ private: // メンバ変数
 #pragma region 
 	// ビヘイビアツリー
 	std::unique_ptr<BehaviorTree> behaviorTree_;
-	// 攻撃のシークエンス
-	std::vector<std::function<bool()>> attackSequence_;
-	// 待機のシークエンス
-	std::vector<std::function<bool()>> waitingSequence_;
 	// 攻撃のセレクター
 	std::vector<std::function<bool()>> attackSelector_;
 	std::vector<bool> attackSelect_;

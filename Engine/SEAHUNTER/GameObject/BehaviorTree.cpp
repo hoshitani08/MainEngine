@@ -32,8 +32,4 @@ void BehaviorTree::Run()
 			break;
 		}
 	}
-
-	/*func_([this]() {
-		Run();
-		});*/
 }

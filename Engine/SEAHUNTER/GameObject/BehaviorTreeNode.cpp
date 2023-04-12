@@ -9,11 +9,28 @@ bool BehaviorTreeNode::Run()
 {
 	for (auto& a : func_)
 	{
-		if (a())
+		if (nodeType_ == NodeType::Selector)
 		{
-			return false;
+			if (a())
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if (!a())
+			{
+				return true;
+			}
 		}
 	}
 
-	return true;
+	if (nodeType_ == NodeType::Selector)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

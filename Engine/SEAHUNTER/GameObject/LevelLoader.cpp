@@ -84,41 +84,6 @@ std::unique_ptr<LevelData> LevelLoader::LoadFile(const std::string& fileName)
 			// TODO: コライダーのパラメータ読み込み
 		}
 
-		//// CAMERA
-		//if (type.compare("CAMERA") == 0)
-		//{
-		//	// 要素追加
-		//	levelData->camera = LevelData::CameraData{};
-		//	// 今追加した要素の参照を得る
-		//	LevelData::CameraData& cameraData = levelData->camera;
-
-		//	if (object.contains("file_name"))
-		//	{
-		//		// ファイル名
-		//		cameraData.fileName = object["file_name"];
-		//	}
-
-		//	// トランスフォームのパラメータ読み込み
-		//	nlohmann::json& transform = object["transform"];
-		//	// 平行移動
-		//	cameraData.translation.m128_f32[0] =  static_cast<float>(transform["translation"][1]);
-		//	cameraData.translation.m128_f32[1] =  static_cast<float>(transform["translation"][2]);
-		//	cameraData.translation.m128_f32[2] = -static_cast<float>(transform["translation"][0]);
-		//	cameraData.translation.m128_f32[3] = 1.0f;
-		//	// 回転角
-		//	cameraData.rotation.m128_f32[0] = -static_cast<float>(transform["rotation"][1]);
-		//	cameraData.rotation.m128_f32[1] = -static_cast<float>(transform["rotation"][2]);
-		//	cameraData.rotation.m128_f32[2] =  static_cast<float>(transform["rotation"][0]);
-		//	cameraData.rotation.m128_f32[3] = 0.0f;
-		//	// スケーリング
-		//	cameraData.scaling.m128_f32[0] = static_cast<float>(transform["scaling"][1]);
-		//	cameraData.scaling.m128_f32[1] = static_cast<float>(transform["scaling"][2]);
-		//	cameraData.scaling.m128_f32[2] = static_cast<float>(transform["scaling"][0]);
-		//	cameraData.scaling.m128_f32[3] = 0.0f;
-
-		//	// TODO: コライダーのパラメータ読み込み
-		//}
-
 		// TODO: オブジェクト走査を再帰関数にまとめ、再帰呼出で枝を走査する
 		if (object.contains("children"))
 		{
