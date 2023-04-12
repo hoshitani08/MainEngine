@@ -11,37 +11,6 @@ ItemManager::~ItemManager()
 {
 }
 
-void ItemManager::CsvLoad(const std::string& fName)
-{
-	std::ifstream ifs(BASE_DIRECTORY + fName + ".csv");
-	std::string line;
-
-	while (getline(ifs, line))
-	{
-		std::istringstream stream(line);
-		std::string field;
-		std::vector<int> result;
-		while (std::getline(stream, field, ','))
-		{
-			result.push_back(stoi(field));
-		}
-		for (auto i : result)
-		{
-			csvNumber_.push_back(i);
-		}
-	}
-}
-
-int ItemManager::GetChipNum(int x, int y, const std::string& fName, int mapChipSize)
-{
-	const int X = x / mapChipSize;
-	const int Y = y / mapChipSize;
-
-	int i = Y * static_cast<int>(Phase::Max) + X;
-
-	return csvNumber_[i];
-}
-
 ItemManager* ItemManager::GetInstance()
 {
 	static ItemManager instance;
@@ -50,36 +19,30 @@ ItemManager* ItemManager::GetInstance()
 
 void ItemManager::Initialize()
 {
-	CsvLoad("item");
+	// レベルデータの読み込み
+	std::unique_ptr<LevelData> levelData = LevelLoader::LoadFile("itemData");
 
-	// アイテムの読み込み
-	for (int i = 0; i < static_cast<int>(ItemType::Max); i++)
+	for (auto& itemData : levelData->items)
 	{
 		ItemData tempData;
-		for (int j = 0; j < static_cast<int>(Phase::Max); j++)
+
+		if (itemData.fileName == "Healing")
 		{
-			if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::Healing) && j == 0)
-			{
-				tempData.name = ItemType::Healing;
-			}
-			else if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::AttackBuff) && j == 0)
-			{
-				tempData.name = ItemType::AttackBuff;
-			}
-			else if (GetChipNum(j, i, "item") == static_cast<int>(ItemType::DefenseBuff) && j == 0)
-			{
-				tempData.name = ItemType::DefenseBuff;
-			}
-
-			if (j != 0)
-			{
-				tempData.quantity = GetChipNum(j, i, "item");
-				tempData.maxCount = tempData.quantity;
-				itemData_.push_back(tempData);
-			}
+			tempData.name = ItemType::Healing;
 		}
-	}
+		else if(itemData.fileName == "AttackBuff")
+		{
+			tempData.name = ItemType::AttackBuff;
+		}
+		else if (itemData.fileName == "Healing")
+		{
+			tempData.name = ItemType::DefenseBuff;
+		}
 
+		tempData.quantity = itemData.quantity;
+		tempData.maxCount = itemData.quantity;
+		itemData_.push_back(tempData);
+	}
 }
 
 void ItemManager::Finalize()

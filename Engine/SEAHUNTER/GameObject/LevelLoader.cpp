@@ -91,5 +91,34 @@ std::unique_ptr<LevelData> LevelLoader::LoadFile(const std::string& fileName)
 		}
 	}
 
+	// "objects"の全オブジェクトを走査
+	for (nlohmann::json& item : deserialized["items"])
+	{
+		assert(item.contains("Type"));
+
+		// 種別を取得
+		std::string type = item["Type"].get<std::string>();
+
+		// MESH
+		if (type.compare("ITEM") == 0)
+		{
+			// 要素追加
+			levelData->items.emplace_back(LevelData::ItemData{});
+			// 今追加した要素の参照を得る
+			LevelData::ItemData& itemData = levelData->items.back();
+
+			if (item.contains("file_name"))
+			{
+				// ファイル名
+				itemData.fileName = item["file_name"];
+			}
+
+			// トランスフォームのパラメータ読み込み
+			nlohmann::json& quantity = item["quantity"];
+			// 個数
+			itemData.quantity = static_cast<int>(quantity["quantity"][0]);
+		}
+	}
+
 	return std::unique_ptr<LevelData>(levelData);
 }

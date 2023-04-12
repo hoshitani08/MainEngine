@@ -9,6 +9,8 @@
 #include <iomanip>
 #include <cassert>
 
+#include "LevelLoader.h"
+
 class ItemManager
 {
 private: // エイリアス
@@ -69,20 +71,6 @@ private: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~ItemManager();
-	/// <summary>
-	/// CSVファイル読み込み
-	/// </summary>
-	/// <param name="fName">ファイル名</param>
-	void CsvLoad(const std::string& fName);
-	/// <summary>
-	/// マップナンバー指定
-	/// </summary>
-	/// <param name="x">最大の横幅</param>
-	/// <param name="y">最大の縦幅</param>
-	/// <param name="fName">ファイル名</param>
-	/// <param name="mapChipSize"></param>
-	/// <returns></returns>
-	int GetChipNum(int x, int y, const std::string& fName, int mapChipSize = 1);
 
 public: // メンバ関数
 	ItemManager(const ItemManager& r) = delete;
@@ -192,7 +180,6 @@ public: // メンバ関数
 	int GetDefenseBuffTimer() { return defense_.buffTimer; }
 
 private: // メンバ変数
-	std::vector<int> csvNumber_;
 	// アイテムのデータ
 	std::vector<ItemData> itemData_;
 	// 防御力の上昇

@@ -19,21 +19,17 @@ struct LevelData
 		// スケーリング
 		DirectX::XMVECTOR scaling;
 	};
-	struct CameraData
+	struct ItemData
 	{
 		// ファイル名
 		std::string fileName;
 		// 平行移動
-		DirectX::XMVECTOR translation;
-		// 回転角
-		DirectX::XMVECTOR rotation;
-		// スケーリング
-		DirectX::XMVECTOR scaling;
+		int quantity;
 	};
 
 	// オブジェクト配列
 	std::vector<ObjectData> objects;
-	CameraData camera;
+	std::vector<ItemData> items;
 };
 
 class LevelLoader
