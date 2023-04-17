@@ -43,11 +43,12 @@ void SceneManager::Update()
 		switch (loadType_)
 		{
 		case SceneManager::LoadType::NoLoad: // ロードしていない
-			th_.swap(std::thread([&] { AsyncLoad(); }));
 			// 画面=ロード画面
 			scene_ = std::move(loadScene_);
 			// ロード状態=ロード始まった
 			loadType_ = LoadType::LoadStart;
+			// 非同期
+			th_.swap(std::thread([&] { AsyncLoad(); }));
 			break;
 		case SceneManager::LoadType::LoadStart: // ロード開始
 			break;
@@ -105,13 +106,8 @@ bool SceneManager::GetLockFlag()
 
 void SceneManager::AsyncLoad()
 {
-	std::thread t = std::thread([&] { nextScene_->Initialize(); });
+	nextScene_->Initialize();
 
-	//ダミーで1秒待つ
-	auto sleepTime = std::chrono::seconds(1);
-	std::this_thread::sleep_for(sleepTime);
-
-	t.join();
 	// ロード状態=ロード終了
 	loadType_ = LoadType::LoadEnd;
 }

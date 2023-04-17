@@ -48,6 +48,7 @@ public: // サブクラス
 		RightPunch,
 		LeftPunch,
 		Waiting,
+		Tornado,
 	};
 
 	// パーツごとに受けるダメージの設定
@@ -171,6 +172,11 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool AttackMode4();
 	/// <summary>
+	/// 範囲攻撃
+	/// </summary>
+	/// <returns></returns>
+	bool AttackMode5();
+	/// <summary>
 	/// 待機の経過時間
 	/// </summary>
 	/// <returns></returns>
@@ -278,6 +284,10 @@ private: // メンバ関数(アニメーション用)
 	/// 待機
 	/// </summary>
 	void Waiting();
+	/// <summary>
+	/// トルネード
+	/// </summary>
+	void Tornado();
 
 private: // メンバ変数
 #pragma region
@@ -325,6 +335,10 @@ private: // メンバ変数
 	bool colorChangeFlag_ = false;
 	// 尻尾が動くまでのタイマー
 	int tailMoveTimer_ = 0;
+	// 範囲攻撃の範囲
+	float attackRange_ = 1.0f;
+	//
+	int tornadoTimer_ = 0;
 	// 尻尾の移動の方向のリセットフラグ
 	std::array<bool, 4> tailMoveResetFlag_;
 	std::array<bool, 4> tailMoveChangeFlag_;

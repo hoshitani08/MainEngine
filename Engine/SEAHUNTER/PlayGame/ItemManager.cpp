@@ -34,7 +34,7 @@ void ItemManager::Initialize()
 		{
 			tempData.name = ItemType::AttackBuff;
 		}
-		else if (itemData.fileName == "Healing")
+		else if (itemData.fileName == "DefenseBuff")
 		{
 			tempData.name = ItemType::DefenseBuff;
 		}

@@ -79,15 +79,15 @@ void Hunter::Initialize()
 	}
 
 	// íiäKÇÃç\íz
-	animationFunc_.push_back(std::bind(&Hunter::Halt, this));
-	animationFunc_.push_back(std::bind(&Hunter::Move, this));
-	animationFunc_.push_back(std::bind(&Hunter::Damage, this));
-	animationFunc_.push_back(std::bind(&Hunter::Death, this));
-	animationFunc_.push_back(std::bind(&Hunter::Dash, this));
-	animationFunc_.push_back(std::bind(&Hunter::Dodge, this));
-	animationFunc_.push_back(std::bind(&Hunter::Combo1, this));
-	animationFunc_.push_back(std::bind(&Hunter::Combo2, this));
-	animationFunc_.push_back(std::bind(&Hunter::Combo3, this));
+	animationFunc_.push_back([this]() { return Halt(); });
+	animationFunc_.push_back([this]() { return Move(); });
+	animationFunc_.push_back([this]() { return Damage(); });
+	animationFunc_.push_back([this]() { return Death(); });
+	animationFunc_.push_back([this]() { return Dash(); });
+	animationFunc_.push_back([this]() { return Dodge(); });
+	animationFunc_.push_back([this]() { return Combo1(); });
+	animationFunc_.push_back([this]() { return Combo2(); });
+	animationFunc_.push_back([this]() { return Combo3(); });
 }
 
 void Hunter::Finalize()

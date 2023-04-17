@@ -186,6 +186,7 @@ void Monster::Initialize(Camera* camera)
 	attackSelector_.push_back([this]() { return AttackMode2(); });
 	attackSelector_.push_back([this]() { return AttackMode3(); });
 	attackSelector_.push_back([this]() { return AttackMode4(); });
+	attackSelector_.push_back([this]() { return AttackMode5(); });
 
 	waitingSelector_.push_back([this]() { return WaitingMode1(); });
 	waitingSelector_.push_back([this]() { return WaitingMode2(); });
@@ -220,13 +221,14 @@ void Monster::Initialize(Camera* camera)
 	}
 
 	// ’iŠK‚Ì\’z
-	animationFunc_.push_back(std::bind(&Monster::InitialPosture, this));
-	animationFunc_.push_back(std::bind(&Monster::Move, this));
-	animationFunc_.push_back(std::bind(&Monster::Assault, this));
-	animationFunc_.push_back(std::bind(&Monster::TailAttack, this));
-	animationFunc_.push_back(std::bind(&Monster::RightPunch, this));
-	animationFunc_.push_back(std::bind(&Monster::LeftPunch, this));
-	animationFunc_.push_back(std::bind(&Monster::Waiting, this));
+	animationFunc_.push_back([this]() { return InitialPosture(); });
+	animationFunc_.push_back([this]() { return Move(); });
+	animationFunc_.push_back([this]() { return Assault(); });
+	animationFunc_.push_back([this]() { return TailAttack(); });
+	animationFunc_.push_back([this]() { return RightPunch(); });
+	animationFunc_.push_back([this]() { return LeftPunch(); });
+	animationFunc_.push_back([this]() { return Waiting(); });
+	animationFunc_.push_back([this]() { return Tornado(); });
 }
 
 void Monster::Finalize()
@@ -576,7 +578,7 @@ bool Monster::AttackElapsedTime()
 	}
 
 	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) ||
-		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_ || attackSelect_[3] && isEaseFlag_)
+		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_ || attackSelect_[3] && isEaseFlag_ || attackSelect_[4] && isEaseFlag_)
 	{
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
@@ -595,9 +597,12 @@ bool Monster::AttackElapsedTime()
 
 bool Monster::AttackModeSelection()
 {
-	if (attackSelect_[0] || attackSelect_[1] || attackSelect_[2] || attackSelect_[3])
+	for (auto& flag : attackSelect_)
 	{
-		return true;
+		if (flag)
+		{
+			return true;
+		}
 	}
 
 	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
@@ -609,10 +614,21 @@ bool Monster::AttackModeSelection()
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
 	{
+		int count = static_cast<int>(RandCalculate(0.0f, 2.0f));
+
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
-		attackSelect_[1] = true;
-		return true;
+
+		if (count < 1.0f)
+		{
+			attackSelect_[1] = true;
+			return true;
+		}
+		else
+		{
+			attackSelect_[4] = true;
+			return true;
+		}
 	}
 	else if (Hit(rightForeFoot_[2]->GetWorldPosition(), 4.5f, 1.0f))
 	{
@@ -760,6 +776,36 @@ bool Monster::AttackMode4()
 			hunter_->SetDamage(10.0f);
 			hitFlag_ = true;
 		}
+	}
+
+	return true;
+}
+
+bool Monster::AttackMode5()
+{
+	animationFunc_[static_cast<int>(AnimationType::Tornado)]();
+
+	if (!trackingEnd_)
+	{
+		trackingEnd_ = true;
+	}
+
+	if (tornadoTimer_ >= 300)
+	{
+		isEaseFlag_ = true;
+	}
+
+	tornadoTimer_++;
+
+	attackRange_ += 0.1f;
+
+	attackRange_ = max(attackRange_, 10.0f);
+
+	if (Hit(body_[3]->GetWorldPosition(), attackRange_, 1.0f) && hunter_->GetInvincibleTimer() >= 60 && !hitFlag_)
+	{
+		hunter_->SetDamageFlag(true);
+		hunter_->SetDamage(10.0f);
+		hitFlag_ = true;
 	}
 
 	return true;
@@ -915,6 +961,8 @@ void Monster::TreeReset()
 	easeTimer_ = 0.0f;
 	attackElapsedTimer_ = 0;
 	waitingElapsedTimer_ = 0;
+	attackRange_ = 1.0f;
+	tornadoTimer_ = 0;
 
 	trackingEnd_ = false;
 	attackEnd_ = false;
@@ -1375,4 +1423,20 @@ void Monster::Waiting()
 			isEaseFlag_ = false;
 		}
 	}
+}
+
+void Monster::Tornado()
+{
+	XMFLOAT3 rot = nucleus_->GetRotation();
+
+	rot.x = 0.0f;
+	rot.y += 10.0f;
+	rot.z = 0.0f;
+
+	if (rot.y >= 360)
+	{
+		rot.y = 0.0f;
+	}
+
+	nucleus_->SetRotation(rot);
 }

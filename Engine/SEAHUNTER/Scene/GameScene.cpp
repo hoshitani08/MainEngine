@@ -68,9 +68,9 @@ void GameScene::Initialize()
 	sceneChange_ = std::make_unique<SceneChange>();
 
 	// íiäKÇÃç\íz
-	func_.push_back(std::bind(&GameScene::GameStrat, this));
-	func_.push_back(std::bind(&GameScene::GamePlay, this));
-	func_.push_back(std::bind(&GameScene::GameOverEnd, this));
+	func_.push_back([this]() { return GameStrat(); });
+	func_.push_back([this]() { return GamePlay(); });
+	func_.push_back([this]() { return GameOverEnd(); });
 }
 
 void GameScene::Finalize()
