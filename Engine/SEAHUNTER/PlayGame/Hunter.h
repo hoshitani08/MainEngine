@@ -264,6 +264,8 @@ public: // メンバ関数
 	/// <returns>判定</returns>
 	Sphere GetAttackHit();
 
+	void SetPosition(XMFLOAT3 pos);
+
 private: // メンバ関数(アニメーション用)
 	/// <summary>
 	/// 停止

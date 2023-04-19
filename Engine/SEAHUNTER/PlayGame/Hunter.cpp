@@ -466,6 +466,14 @@ Sphere Hunter::GetAttackHit()
 	return hitSphere;
 }
 
+void Hunter::SetPosition(XMFLOAT3 pos)
+{
+	for (auto& main : hunter_)
+	{
+		main->SetPosition(pos);
+	}
+}
+
 void Hunter::Halt()
 {
 	AnimationFlag temp = {};

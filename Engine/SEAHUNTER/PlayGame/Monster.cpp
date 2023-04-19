@@ -612,7 +612,7 @@ bool Monster::AttackModeSelection()
 		attackSelect_[0] = true;
 		return true;
 	}
-	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 8.0f, 1.0f))
+	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
 	{
 		int count = static_cast<int>(RandCalculate(0.0f, 2.0f));
 
@@ -807,6 +807,19 @@ bool Monster::AttackMode5()
 		hunter_->SetDamage(10.0f);
 		hitFlag_ = true;
 	}
+
+	XMFLOAT3 pos = hunter_->GetPosition();
+	XMFLOAT3 vector = { pos.x - nucleus_->GetPosition().x, pos.y - nucleus_->GetPosition().y, pos.z - nucleus_->GetPosition().z };
+
+	float speed = 0.1f;
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	pos.x -= vector.x;
+	pos.y -= vector.y;
+	pos.z -= vector.z;
+
+	hunter_->SetPosition(pos);
 
 	return true;
 }
