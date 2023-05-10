@@ -233,6 +233,7 @@
     <ClCompile Include="Collision\CollisionPrimitive.cpp" />
     <ClCompile Include="Collision\MeshCollider.cpp" />
     <ClCompile Include="Collision\SphereCollider.cpp" />
+    <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="GameObject\BehaviorTree.cpp" />
     <ClCompile Include="GameObject\BehaviorTreeNode.cpp" />
     <ClCompile Include="GameObject\ContactableObject.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="Collision\QueryCallback.h" />
     <ClInclude Include="Collision\RaycastHit.h" />
     <ClInclude Include="Collision\SphereCollider.h" />
+    <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="GameObject\BehaviorTree.h" />
     <ClInclude Include="GameObject\BehaviorTreeNode.h" />
     <ClInclude Include="GameObject\ContactableObject.h" />

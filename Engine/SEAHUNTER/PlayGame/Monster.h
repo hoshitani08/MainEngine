@@ -15,6 +15,7 @@
 #include "ObjParticle.h"
 #include "Vector.h"
 #include "BehaviorTree.h"
+#include "EnemyBullet.h"
 
 class Monster
 {
@@ -177,6 +178,11 @@ public: // メンバ関数
 	/// <returns></returns>
 	bool AttackMode5();
 	/// <summary>
+	/// ブレス攻撃
+	/// </summary>
+	/// <returns></returns>
+	bool AttackMode6();
+	/// <summary>
 	/// 待機の経過時間
 	/// </summary>
 	/// <returns></returns>
@@ -337,8 +343,12 @@ private: // メンバ変数
 	int tailMoveTimer_ = 0;
 	// 範囲攻撃の範囲
 	float attackRange_ = 1.0f;
-	//
+	// 範囲攻撃時間
 	int tornadoTimer_ = 0;
+	// ブレスを撃ったか
+	bool bulletFlag_ = false;
+	// ブレスの弾
+	std::vector<std::unique_ptr<EnemyBullet>> bullet_;
 	// 尻尾の移動の方向のリセットフラグ
 	std::array<bool, 4> tailMoveResetFlag_;
 	std::array<bool, 4> tailMoveChangeFlag_;

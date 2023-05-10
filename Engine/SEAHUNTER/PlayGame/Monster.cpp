@@ -7,6 +7,7 @@
 #include "ItemManager.h"
 #include "Ease.h"
 #include "BaseCalculate.h"
+#include "EnemyBullet.h"
 
 #include <math.h>
 #include <algorithm>
@@ -187,6 +188,7 @@ void Monster::Initialize(Camera* camera)
 	attackSelector_.push_back([this]() { return AttackMode3(); });
 	attackSelector_.push_back([this]() { return AttackMode4(); });
 	attackSelector_.push_back([this]() { return AttackMode5(); });
+	attackSelector_.push_back([this]() { return AttackMode6(); });
 
 	waitingSelector_.push_back([this]() { return WaitingMode1(); });
 	waitingSelector_.push_back([this]() { return WaitingMode2(); });
@@ -274,6 +276,22 @@ void Monster::Update()
 
 	nucleus_->SetPosition(pos);
 
+	int count = 0;
+	for (auto& bullet : bullet_)
+	{
+		if (bullet->Hit(hunter_->GetPosition()))
+		{
+			hunter_->SetDamageFlag(true);
+			hunter_->SetDamage(10.0f);
+		}
+
+		if (bullet->IsEndFlag())
+		{
+			bullet_.erase(bullet_.begin() + count);
+		}
+		count++;
+	}
+
 	//XV
 	nucleus_->Update();
 	for (int i = 0; i < body_.size(); i++)
@@ -300,7 +318,10 @@ void Monster::Update()
 	{
 		tail_[i]->Update();
 	}
-
+	for (auto& bullet : bullet_)
+	{
+		bullet->Update();
+	}
 	bloodEmitter_->Update();
 	bubbleEmitter_->Update();
 }
@@ -330,6 +351,10 @@ void Monster::Draw(ID3D12GraphicsCommandList* cmdList)
 	for (int i = 0; i < tail_.size(); i++)
 	{
 		tail_[i]->Draw(cmdList);
+	}
+	for (auto& bullet : bullet_)
+	{
+		bullet->Draw(cmdList);
 	}
 	bloodEmitter_->Draw(cmdList);
 	bubbleEmitter_->Draw(cmdList);
@@ -578,7 +603,8 @@ bool Monster::AttackElapsedTime()
 	}
 
 	if (attackElapsedTimer_ >= 60 && (body_[0]->GetRotation().x <= 0.0f && attackSelect_[0]) ||
-		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_ || attackSelect_[3] && isEaseFlag_ || attackSelect_[4] && isEaseFlag_)
+		attackSelect_[1] && isEaseFlag_ || attackSelect_[2] && isEaseFlag_ || attackSelect_[3] && isEaseFlag_ ||
+		attackSelect_[4] && isEaseFlag_ || attackSelect_[5] && isEaseFlag_)
 	{
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
@@ -607,9 +633,21 @@ bool Monster::AttackModeSelection()
 
 	if (!Hit(body_[2]->GetWorldPosition(), 1.0f, 50.0f))
 	{
+		int count = static_cast<int>(RandCalculate(0.0f, 2.0f));
+
 		animationFunc_[static_cast<int>(AnimationType::InitialPosture)]();
 		angleEaseTimer_ = 0.0f;
-		attackSelect_[0] = true;
+
+		if (count < 1.0f)
+		{
+			attackSelect_[0] = true;
+			return true;
+		}
+		else
+		{
+			attackSelect_[5] = true;
+			return true;
+		}
 		return true;
 	}
 	else if (Hit(body_[2]->GetWorldPosition(), 15.0f, 1.0f) && !Hit(body_[2]->GetWorldPosition(), 10.0f, 1.0f))
@@ -824,6 +862,33 @@ bool Monster::AttackMode5()
 	return true;
 }
 
+bool Monster::AttackMode6()
+{
+	XMFLOAT3 pos = nucleus_->GetPosition();
+	XMFLOAT3 vector = { hunter_->GetPosition().x - pos.x, hunter_->GetPosition().y - pos.y, hunter_->GetPosition().z - pos.z };
+
+	float speed = 1.0f;
+	float v = sqrtf((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+	vector = { (vector.x / v) * speed, (vector.y / v) * speed, (vector.z / v) * speed };
+
+	if (!trackingEnd_)
+	{
+		AngleAdjustment();
+		trackingEnd_ = true;
+	}
+
+	if (!bulletFlag_)
+	{
+		std::unique_ptr<EnemyBullet> temp = EnemyBullet::Create(body_[0]->GetWorldPosition(), nucleus_->GetRotation(), vector);
+
+		bullet_.push_back(std::move(temp));
+		bulletFlag_ = true;
+		isEaseFlag_ = true;
+	}
+
+	return true;
+}
+
 bool Monster::WaitingElapsedTime()
 {
 	if (waitingElapsedTimer_ >= 60 || waitingEnd_)
@@ -976,6 +1041,7 @@ void Monster::TreeReset()
 	waitingElapsedTimer_ = 0;
 	attackRange_ = 1.0f;
 	tornadoTimer_ = 0;
+	bulletFlag_ = false;
 
 	trackingEnd_ = false;
 	attackEnd_ = false;
