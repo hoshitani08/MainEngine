@@ -1452,4 +1452,17 @@ void Monster::Tornado()
 	}
 
 	nucleus_->SetRotation(rot);
+
+
+	int count = 10;
+	int life = 60;
+
+	if (!tailDestructionFlag_)
+	{
+		bubbleEmitter_->SetCenter(2.5f);
+		for (auto& a : tail_)
+		{
+			bubbleEmitter_->BubbleAdd(count, life, a->GetWorldPosition(), ObjFactory::GetInstance()->GetModel("bubble"));
+		}
+	}
 }

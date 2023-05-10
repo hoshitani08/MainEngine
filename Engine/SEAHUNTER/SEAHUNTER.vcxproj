@@ -45,13 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\;$(ProjectDir)lib\DirectXTex\include\;$(ProjectDir)lib\nlohmann\</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug\;$(ProjectDir)lib\DirectXTex\lib\Debug\;$(ProjectDir)lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)2d;$(ProjectDir)3d;$(ProjectDir)Audio;$(ProjectDir)Base;$(ProjectDir)Camera;$(ProjectDir)Collision;$(ProjectDir)GameObject;$(ProjectDir)Input;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)lib\DirectXTex\include;$(ProjectDir)lib\nlohmann;$(ProjectDir)Math;$(ProjectDir)PlayGame;$(ProjectDir)PostEffect;$(ProjectDir)Scene;$(ProjectDir)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\debug;$(ProjectDir)lib\DirectXTex\lib\Debug;$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)2d\;$(ProjectDir)3d\;$(ProjectDir)Audio\;$(ProjectDir)Base\;$(ProjectDir)Camera\;$(ProjectDir)Collision\;$(ProjectDir)Input\;$(ProjectDir)Scene\;$(ProjectDir);$(ProjectDir)lib\fbx_sdk\include\;$(ProjectDir)GameObject\;$(ProjectDir)Math\;$(ProjectDir)PlayGame\;$(ProjectDir)PostEffect\;$(ProjectDir)lib\DirectXTex\include\;$(ProjectDir)lib\nlohmann\</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release\;$(ProjectDir)lib\DirectXTex\lib\Release\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)2d;$(ProjectDir)3d;$(ProjectDir)Audio;$(ProjectDir)Base;$(ProjectDir)Camera;$(ProjectDir)Collision;$(ProjectDir)GameObject;$(ProjectDir)Input;$(ProjectDir)lib\fbx_sdk\include;$(ProjectDir)lib\DirectXTex\include;$(ProjectDir)lib\nlohmann;$(ProjectDir)Math;$(ProjectDir)PlayGame;$(ProjectDir)PostEffect;$(ProjectDir)Scene;$(ProjectDir)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\fbx_sdk\lib\release;$(ProjectDir)lib\DirectXTex\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

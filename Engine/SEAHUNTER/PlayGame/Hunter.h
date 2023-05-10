@@ -12,6 +12,7 @@
 #include "ObjParticle.h"
 #include "Ease.h"
 #include "Collision.h"
+#include "BehaviorTree.h"
 
 class Hunter
 {
